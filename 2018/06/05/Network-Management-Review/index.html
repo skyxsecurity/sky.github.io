@@ -1,0 +1,3001 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>
+        
+        Network Management Review · Sky&#39;s blog
+        
+    </title>
+    <link rel="icon" href= /assets/favicon.ico>
+    <!-- TODO: 在font-face加载完毕后改变字体  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
+    <!-- 提前加载place holder  -->
+    <style type="text/css">
+        @font-face {
+            font-family: 'Oswald-Regular';
+            src: url(/font/Oswald-Regular.ttf);
+        }
+    </style>
+    <style type="text/css">
+        .site-intro {
+            position: relative;
+            width: 100%;
+            height: 50vh;
+            overflow: hidden;
+            box-shadow: -0.1rem 0 0.5rem 0 rgba(0, 0, 0, 0.5);
+        }
+        .site-intro-placeholder {
+            position: absolute;
+            z-index: -2;
+            top: 0;
+            left: 0px;
+            width: calc(100% + 300px);
+            height: 100%;
+            background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+            background-position: center center;
+            transform: translate3d(-226px, 0, 0);
+            animation: gradient-move 2.5s ease-out 0s 1;
+        }
+        @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+    <link rel="stylesheet" href = /css/style.css?v=20180120 />
+    <script src="//cdn.staticfile.org/jquery/3.2.1/jquery.min.js" defer></script>
+    
+    <script src="/scripts/main.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Sky&#39;s blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Network Management Review</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Sky's blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-img" style="background-image: url(/intro/post.png)"></div>
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Network Management Review
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+            <script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdMiniList": false, "bdPic": "", "bdStyle": "1", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = "/static/api/js/share.js"];</script>
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2018/06/05</span>
+                <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                    <span class="iconfont-archer">&#xe604;</span>
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+                <span class="shareWrapper">
+                    <span class="iconfont-archer shareIcon">
+                        &#xe601;
+                    </span>
+                    <span class="bdsharebuttonbox">
+                        <a href="#" class="bds_more shareText" data-cmd="more">Share</a>
+                    </span>
+                </span>
+            </div>
+        
+    </div>
+</div>
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <script>
+            var browser = {
+                    versions: function () {
+                        var u = window.navigator.userAgent;
+                        return {
+                            userAgent: u,
+                            trident: u.indexOf('Trident') > -1, //IE内核
+                            presto: u.indexOf('Presto') > -1, //opera内核
+                            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                            mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+                            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                            android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+                            iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+                            iPad: u.indexOf('iPad') > -1, //是否为iPad
+                            webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+                            weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+                            uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+                        };
+                    }()
+                }
+
+            function fontLoaded(){
+                console.log('font loaded');
+                if (document.getElementsByClassName('site-intro-meta')) {
+                    document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+                    document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+                    var postIntroTags = document.getElementsByClassName('post-intro-tags')[0],
+                        postIntroMeat = document.getElementsByClassName('post-intro-meta')[0];
+                        if (postIntroTags) {
+                            postIntroTags.classList.add('post-fade-in');
+                        }
+                        if (postIntroMeat) {
+                            postIntroMeat.classList.add('post-fade-in');
+                        }
+                    }
+                }
+                
+            console.log("userAgent:" + browser.versions.userAgent);
+            // UC不支持跨域，所以直接显示
+            if (browser.versions.uc) {
+                console.log("UCBrowser");
+                fontLoaded();
+            } else {
+                WebFont.load({
+                    custom: {
+                        families: ['Oswald-Regular']
+                    },
+                    loading: function () {  //所有字体开始加载
+                        // console.log('loading');
+                    },
+                    active: function () {  //所有字体已渲染
+                        fontLoaded();
+                    },
+                    inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+                        console.log('inactive: timeout');
+                        fontLoaded();
+                    },
+                    timeout: 7000 // Set the timeout to two seconds
+                });
+            }
+        </script>
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="第三章-ASN-1"><a href="#第三章-ASN-1" class="headerlink" title="第三章 ASN.1"></a>第三章 ASN.1</h1><p>抽象语法标记1(ASN.1)：用于提供正式、无歧义和精准的规则</p>
+<p>巴克斯范式(BNF)：<br><code>&quot;&quot;</code>双引号中的字符代表自己的本身<br><code>&lt;&gt;</code>尖括号内包含必选项<br><code>[]</code>方括号内包含可选项<br><code>{}</code>大括号内包含可重复0至无数次的项<br><code>|</code>竖线表示左右任选一项，相当于or<br><code>::=</code>表示被定义的意思</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>1.书写的布局是无效的，多个空格和制表符、空行等效于 一个空格。但是在定义符号 ::= 中不能有分隔符，否则不 能正确处理。<br>2.带小数点的小数形式不能在ASN.1中直接使用，在ASN.1 中实数实际定义为三个整数:尾数、基数和指数。<br>3.注释以两个连字符“–”开始，结束于行的结尾或者该行 中另一个双连字符。<br>4.用于表示值和字段的标识符、类型名和模块名由大小写 字母、数字和连字符“-” 组成。不能以连字符“-”结尾， 不能出现两个连字符(注释格式)，不能出现下划线“_”。<br>5.值定义标识符以小写字母开头。<br>6.类型名和模块名以大写字母开头。<br>7.ASN.1定义的内部类型全部用大写字母表示。 8.关键字全部用大写字母表示。</p>
+<h2 id="编码规则"><a href="#编码规则" class="headerlink" title="编码规则"></a>编码规则</h2><p>1.基本编码规则Basic Encoding Rules (BER)<br>2.规范编码规则Canonical Encoding Rules (CER)<br>3.唯一编码规则Distinguished Encoding Rules (DER)<br>4.XML编码规则XML Encoding Rules (XER)<br>5.压缩编码规则Packed Encoding Rules (PER)<br>6.通用串编码规则Generic String Encoding Rules (GSER)<br>7.ECN</p>
+<h2 id="ASN-1-编程"><a href="#ASN-1-编程" class="headerlink" title="ASN.1 编程"></a>ASN.1 编程</h2><p>没仔细看，我现在也不会= =</p>
+<h2 id="BER-编码"><a href="#BER-编码" class="headerlink" title="BER 编码"></a>BER 编码</h2><p>以TLV方法进行编码，分为3段：<br>T标记、L长度、V值</p>
+<h3 id="标记"><a href="#标记" class="headerlink" title="标记"></a>标记</h3><p>universal<br>1：bool<br>2：integer<br>3：bit string<br>4：octet string<br>5：null<br>6：object identifier<br>16：sequence<br>16：sequence-of<br>无标记：choice<br>无标记：ANY<br>tag组成：</p>
+<p>2bit:标签类<br>00 universal<br>01 application<br>10 context specific<br>11 private</p>
+<p>1bit:<br>0 简单类型<br>1 构造类型</p>
+<p>5bit:<br>标签</p>
+<p>tag标签值小于30时：仅在一个八位组中编码<br>tag标签值大于30时：标签值5位全部置1<br>每个后继八位组，左边第一位表示是否为最后一个八位组，1表示不是，0表示是</p>
+<p>例如标签值91513(10110010101111001)<br>改写为：<br>xxx11111 10000101 11001010 01111001</p>
+<p>再例如标签值6(110)<br>写为<br>xxx00110</p>
+<h3 id="长度"><a href="#长度" class="headerlink" title="长度"></a>长度</h3><p>当长度小于127时：0xxx xxxx即可<br>当长度大于127时：<br>第一个八位组：1+后继八位组个数<br>例如：255<br>1000 0001 1111 11111<br>再如：256<br>1000 0010 0000 00001 0000 0000<br>又如：5<br>0000 0101</p>
+<h3 id="常见编码"><a href="#常见编码" class="headerlink" title="常见编码"></a>常见编码</h3><h4 id="BOOLEAN编码"><a href="#BOOLEAN编码" class="headerlink" title="BOOLEAN编码"></a>BOOLEAN编码</h4><p>tag:0000 0001(见标记中的universal)<br>length:0000 0001<br>vaule:<br>true: 1111 1111<br>false: 0000 0000<br>即<br>true: 01 01 00<br>false: 01 01 ff</p>
+<h4 id="字符串类型的编码"><a href="#字符串类型的编码" class="headerlink" title="字符串类型的编码"></a>字符串类型的编码</h4><p>tag:0000 0100<br>length:后继八位组的个数<br>vaule:字符串的ascii码<br>例如：public<br>tag:04(见标记中的universal)<br>length:06<br>vaule:70 75 62 6c 69 63<br>最终答案:<br>04 06 70 75 62 6c 69 63</p>
+<h4 id="比特串类型的编码"><a href="#比特串类型的编码" class="headerlink" title="比特串类型的编码"></a>比特串类型的编码</h4><p>在bit串前增加一个八位组，取值0~7，表名最后补位的个数。补0/1由发送方决定<br>例如:1011011101011<br>1011 0111 0101 1<br>故最后需要补3位<br>1011 0111 0101 1xxx<br>假设补0(也可补1，由发送方决定)<br>1011 0111 0101 1000<br>计数八位组:0000 0011<br>tag:0000 0011(见标记中的universal)<br>length:后继八位组个数<br>最终答案<br>03 03 03 B7 58<br>再如：10101<br>补位后<br>1010 1000<br>计数八位组<br>0000 0011<br>最终答案<br>03 02 03 A8</p>
+<h4 id="十六进制字节串类型的编码"><a href="#十六进制字节串类型的编码" class="headerlink" title="十六进制字节串类型的编码"></a>十六进制字节串类型的编码</h4><p>tag:04<br>length:后继八位组个数<br>例如：<br>0A1B<br>答案：<br>04 02 0A 1B<br>再如：<br>01 23 45 67 89 ab cd ef<br>答案<br>04 08 01 23 45 67 89 ab cd ef<br>又如：ACE<br>答案：<br>04 02 AC E0</p>
+<h4 id="INTEGER类型的编码"><a href="#INTEGER类型的编码" class="headerlink" title="INTEGER类型的编码"></a>INTEGER类型的编码</h4><p>若value中的最高位为1，则需在前面补全一个全0的八位组<br>对于负数，value的最高位为1<br>tag：02<br>length:后继八位组的个数</p>
+<blockquote>
+<p>对于正数<br>例如：64<br>64的二进制为：<br>0100 0000<br>故此答案为：<br>02 01 40<br>再如：128<br>二进制为：<br>1000 0000<br>故此答案为<br>02 02 00 80<br>对于负数<br>绝对值二进制+按位取反+末位加1即可<br>例如：<br>-64<br>绝对值的二进制为<br>0100 0000<br>按位取反<br>1011 1111<br>末位加1<br>1100 0000<br>所以答案为<br>02 01 C0<br>再如：-257<br>二进制为：0000000100000001<br>按位取反<br>1111 1110 1111 1110<br>末位加一<br>1111 1110 1111 1111<br>答案为<br>02 02 FE FF<br>快捷运算方法<br>对于大数，强行取余倒叙排列计算2进账肯定太慢了，这里选择拆分成256(256的幂数)的因子形式<br>例如：<br>49468=193<em>256+60<br>我们知道<br>193为1100 0001即C1<br>256为1 0000 0000即100<br>60为0011 1100即3C<br>故此可以写成<br>`C1</em>100+3C<code>因此编码直接可以写为
+C1 3C
+又因为最高位为1，而该数是正数，所以补一个全0的八位组
+最终答案：
+02 03 00 C1 3C
+再如负大数：-49769
+由于256^2=65536
+但是负数最高位需要为1，作为标志位
+因此256^2最大只能表示-32768
+故此选择256^3,最大可表示-8388608
+然后我们可以将256^3-49769
+得到16727447
+即</code>255<em>256^2+61</em>256+151`<br>得到编码<br>255 61 151<br>即<br>FF 3D 97<br>故此答案为<br>02 03 FF 3D 97<br>解码<br>解码也很容易<br>先去除tag和length<br>首先看最高位是否为1<br>若为1即为负数<br>否则为正数<br>例如：02 02 96 46<br>我们计算出96 46为38470<br>由于其最高位为1<br>所以我们用它去减2^16，即可得到结果-27066</p>
+</blockquote>
+<h4 id="对象标识符编码"><a href="#对象标识符编码" class="headerlink" title="对象标识符编码"></a>对象标识符编码</h4><p>tag:06<br>首两个id：X<em>40+Y<br>如果有大于127的项，需要进行拆分<br>即最后一个字节的最高位为0，其余字节最高位为1<br>例如：810 = 11 0010 1010<br>即从后往前，8个一组<br>由于要补1或0，所以7个一组<br>1000 0110 0010 1010<br>所以答案为：86 2A<br>例如题目为：<br>1 3 6 1 810 1<br>首先将1，2项合并为<br>`1</em>40+3=43`<br>即<br>0010 1011<br>即<br>2B<br>所以为<br>2B 6 1 810 1<br>然后将超过127的部分拆分<br>即<br>2B 06 01 86 2A 01<br>最终结果为<br>06 06 2B 06 01 86 2A 01</p>
+<h4 id="空值类型编码"><a href="#空值类型编码" class="headerlink" title="空值类型编码"></a>空值类型编码</h4><p>05 00<br>就这么多</p>
+<h4 id="sequence组合类型的编码"><a href="#sequence组合类型的编码" class="headerlink" title="sequence组合类型的编码"></a>sequence组合类型的编码</h4><p>tag:30<br>length:后继八位组个数<br>value:每个类型按之前的排即可(tag+length+vaule)</p>
+<h4 id="set集合类型的编码"><a href="#set集合类型的编码" class="headerlink" title="set集合类型的编码"></a>set集合类型的编码</h4><p>tag:31<br>length:后继八位组个数</p>
+<h3 id="BER的不足"><a href="#BER的不足" class="headerlink" title="BER的不足"></a>BER的不足</h3><p>带来了大量的冗余，增加了通信量的开销<br>主要出现在TLV三个字段的每个部分<br>增加了约50%的数据</p>
+<h1 id="第四章-IETF网络管理模型"><a href="#第四章-IETF网络管理模型" class="headerlink" title="第四章 IETF网络管理模型"></a>第四章 IETF网络管理模型</h1><p>本章个人认为主要讲了tcp/ip的网络管理方式和编程</p>
+<h2 id="网络管理的发展"><a href="#网络管理的发展" class="headerlink" title="网络管理的发展"></a>网络管理的发展</h2><h3 id="ICMP协议"><a href="#ICMP协议" class="headerlink" title="ICMP协议"></a>ICMP协议</h3><p>1.提供了路由器与主机、主机与主机直接传送控制信息的方法<br>2.Echo / Echo Reply(ping)<br>测试网络时延、网络设备可达性</p>
+<h3 id="SGMP协议"><a href="#SGMP协议" class="headerlink" title="SGMP协议"></a>SGMP协议</h3><p>标志着TCP/IP专门管理工具的出现</p>
+<h3 id="CMOT协议-CMIP-over-TCP-IP"><a href="#CMOT协议-CMIP-over-TCP-IP" class="headerlink" title="CMOT协议(CMIP over TCP/IP)"></a>CMOT协议(CMIP over TCP/IP)</h3><p>基于TCP/IP协议的公共管理信息协议<br>CMOT协议集的组成:<br>1.关联控制服务元素(ISO ACSE)<br>2.远程操作服务元素(ISO DIS ROSE)<br>3.通用管理信息协议(ISO CMIP)<br>4.轻量级表示协议(LPP)<br>5.用户数据报协议(UDP)<br>6.传输控制协议(TCP)<br>7.网际协议(IP)</p>
+<h3 id="SNMP协议"><a href="#SNMP协议" class="headerlink" title="SNMP协议"></a>SNMP协议</h3><p>特点：简单，容易实现且成本低</p>
+<h2 id="SNMP协议-1"><a href="#SNMP协议-1" class="headerlink" title="SNMP协议"></a>SNMP协议</h2><h3 id="发展历程"><a href="#发展历程" class="headerlink" title="发展历程"></a>发展历程</h3><blockquote>
+<p>RMON<br>1.远程监控(RMON)为网络管理者提供了监控整个子网的能力，而不是各个单独设备的能力，是SNMP向互联网管理过渡的重要步骤。<br>2.对基本的SNMP MIB进行了扩充，可以提供有关互联网管理的主要信息。<br>SNMPv2<br>1.在管理信息结构和功能上对SNMP进行了扩充增加了安全性<br>2.1996年:去掉了SNMPv2的安全特性<br>SNMPv3<br>全面引入安全机制<br>三者相辅相成，相互兼容</p>
+</blockquote>
+<h3 id="SNMP网络管理模型"><a href="#SNMP网络管理模型" class="headerlink" title="SNMP网络管理模型"></a>SNMP网络管理模型</h3><p>SNMP网络管理模型包括四个关键元素：<br>管理站、代理者、管理信息库、网络管理协议</p>
+<blockquote>
+<p>管理站：<br>一般由专用设备构成，配置manager实体和一组管理应用程序，提供网络的故障、配置、计费、性能、安全等管理功能<br>代理者<br>装备了SNMP的平台<br>代理者对来自管理站的信息请求和动作请求进行应答，并随机地为管理站报告一些重要的意外事件。<br>管理信息库MIB<br>1.每一个被管理的资源就是一个对象，被称为managed object(MO)<br>2.各个代理系统中被管对象的集合构成该系统的MIB<br>管理站通过读取MIB中的对象的值来进行网络监控<br>在每一个网络节点(NE)都有自己私有的MIB<br>1.监视设备状态：通过读取MIB中的MO的值<br>2.控制设备：通过更改MIB中的MO的值<br>网络管理协议SNMP<br>SNMP只有两种基本的管理功能:<br>1.“读”操作，用get报文来检测各被管对象的状况;<br>2.“写”操作，用set报文来改变各被管对象的状况。管理站采用轮询的方式，SNMP 管理进程定时向被管理设备周期性地发送探询信息，对各个代理中的管理信息进行访问。<br>轮询的好处:<br>1.可使系统相对简单。<br>2.能限制通过网络所产生的管理信息通信量。<br>简单轮询方式的缺点<br>1.被管设备太多，则监测周期过长;<br>2.有些数据不需要，浪费通信资源。</p>
+</blockquote>
+<p>陷阱引导轮询(Trap-directed polling)<br>1.管理站以不太频繁的周期(1天1次)进行一次初始化。<br>2.在初始化期间，轮询所有代理，将需要监测的所有关键信息读取出来;<br>3.有了基准以后，管理站便降低轮询频度;<br>4.当被管对象的代理检测到有事件发生时，就检查其门限值;<br>5.代理进程通过Trap消息方式只向管理进程报告达到某些门限值的事件，实现信息的过滤。<br>陷阱方式的好处:<br>1.仅在严重事件发生时才发送陷阱;<br>2.陷阱信息很简单且所需字节数很少。</p>
+<p>SNMP是面向无连接的协议，管理站和代理之间没有维护中的连接，每次信息传递都是单独进行的，不同于CMIP请求和应答在一次连接中完成。且SNMP报文的传送开销较小</p>
+<h3 id="体系结构"><a href="#体系结构" class="headerlink" title="体系结构"></a>体系结构</h3><h4 id="非对称的二级体系结构"><a href="#非对称的二级体系结构" class="headerlink" title="非对称的二级体系结构"></a>非对称的二级体系结构</h4><p>基本的SNMP体系结构是非对称的Manager/Agent两级结构</p>
+<h4 id="代管体系结构"><a href="#代管体系结构" class="headerlink" title="代管体系结构"></a>代管体系结构</h4><p>由于利用SNMP网络管理需要管理站及其所有代理者支持UDP和IP<br>这限制了不支持TCP/IP协议的设备上的应用，同时很多小系统也不愿意承担维护SNMP、代理者软件和MIB的负担<br>为了容纳没有装载SNMP的设备，SNMP提出来代管（Proxy）的概念</p>
+<h4 id="RMON体系结构"><a href="#RMON体系结构" class="headerlink" title="RMON体系结构"></a>RMON体系结构</h4><p>1.RMON是一个中介代理，被置于管理站和代理之间，专门完成基于原始数据的信息计算<br>2.RMON的功能被分布式实现，从而大大补偿了网络集中管理的性能</p>
+<h4 id="多层体系结构"><a href="#多层体系结构" class="headerlink" title="多层体系结构"></a>多层体系结构</h4><p>1.OSI是对称的。管理实体既可以是manager也可以是agent，结构易于扩展，有助于架构多层结构<br>2.SNMPv2/v3支持分层</p>
+<h3 id="SNMP管理信息模型"><a href="#SNMP管理信息模型" class="headerlink" title="SNMP管理信息模型"></a>SNMP管理信息模型</h3><p>使用ASN.1描述被管对象和PDU<br>使用BER编码<br>通过传输层协议传送</p>
+<h3 id="管理信息结构SMI"><a href="#管理信息结构SMI" class="headerlink" title="管理信息结构SMI"></a>管理信息结构SMI</h3><p>宗旨是保持MIB的简单性和可扩展性<br>只允许存储标量和二维数组，不支持复杂的数据结构</p>
+<h3 id="MIB结构"><a href="#MIB结构" class="headerlink" title="MIB结构"></a>MIB结构</h3><p>管理信息库MIB使用一个层次型、结构化的形式，定义了一个设备可获得的网络管理信息。<br>这种层次树结构有3个作用：<br>1.表示管理和控制关系<br>2.提供结构化的信息组织技术<br>3.提供了对象命名机制</p>
+
+    </article>
+    <!-- 前后页  -->
+    <ul class="post-pager">
+        
+        
+            <li class="previous">
+                <a href= "/2018/06/04/Secure-Protocol-Review/" title= Secure Protocol Review >
+                    <span>Previous Post</span>
+                    <span>Secure Protocol Review</span>
+                </a>
+            </li>
+        
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC版-->
+
+    <!--PC版-->
+
+
+    
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:136244588@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/skyofkinglove" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">Theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        <span id="busuanzi_container_site_pv" style="color:black;font-size:14px">VISITOR VOLUME: <span id="busuanzi_value_site_pv"></span>
+        </span>
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper">
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#第三章-ASN-1"><span class="toc-number">1.</span> <span class="toc-text">第三章 ASN.1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据类型"><span class="toc-number">1.1.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编码规则"><span class="toc-number">1.2.</span> <span class="toc-text">编码规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ASN-1-编程"><span class="toc-number">1.3.</span> <span class="toc-text">ASN.1 编程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BER-编码"><span class="toc-number">1.4.</span> <span class="toc-text">BER 编码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标记"><span class="toc-number">1.4.1.</span> <span class="toc-text">标记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长度"><span class="toc-number">1.4.2.</span> <span class="toc-text">长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见编码"><span class="toc-number">1.4.3.</span> <span class="toc-text">常见编码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BOOLEAN编码"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">BOOLEAN编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#字符串类型的编码"><span class="toc-number">1.4.3.2.</span> <span class="toc-text">字符串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#比特串类型的编码"><span class="toc-number">1.4.3.3.</span> <span class="toc-text">比特串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十六进制字节串类型的编码"><span class="toc-number">1.4.3.4.</span> <span class="toc-text">十六进制字节串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#INTEGER类型的编码"><span class="toc-number">1.4.3.5.</span> <span class="toc-text">INTEGER类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对象标识符编码"><span class="toc-number">1.4.3.6.</span> <span class="toc-text">对象标识符编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#空值类型编码"><span class="toc-number">1.4.3.7.</span> <span class="toc-text">空值类型编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sequence组合类型的编码"><span class="toc-number">1.4.3.8.</span> <span class="toc-text">sequence组合类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#set集合类型的编码"><span class="toc-number">1.4.3.9.</span> <span class="toc-text">set集合类型的编码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BER的不足"><span class="toc-number">1.4.4.</span> <span class="toc-text">BER的不足</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第四章-IETF网络管理模型"><span class="toc-number">2.</span> <span class="toc-text">第四章 IETF网络管理模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络管理的发展"><span class="toc-number">2.1.</span> <span class="toc-text">网络管理的发展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ICMP协议"><span class="toc-number">2.1.1.</span> <span class="toc-text">ICMP协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SGMP协议"><span class="toc-number">2.1.2.</span> <span class="toc-text">SGMP协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMOT协议-CMIP-over-TCP-IP"><span class="toc-number">2.1.3.</span> <span class="toc-text">CMOT协议(CMIP over TCP/IP)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SNMP协议"><span class="toc-number">2.1.4.</span> <span class="toc-text">SNMP协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMP协议-1"><span class="toc-number">2.2.</span> <span class="toc-text">SNMP协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#发展历程"><span class="toc-number">2.2.1.</span> <span class="toc-text">发展历程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SNMP网络管理模型"><span class="toc-number">2.2.2.</span> <span class="toc-text">SNMP网络管理模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#体系结构"><span class="toc-number">2.2.3.</span> <span class="toc-text">体系结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#非对称的二级体系结构"><span class="toc-number">2.2.3.1.</span> <span class="toc-text">非对称的二级体系结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#代管体系结构"><span class="toc-number">2.2.3.2.</span> <span class="toc-text">代管体系结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RMON体系结构"><span class="toc-number">2.2.3.3.</span> <span class="toc-text">RMON体系结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多层体系结构"><span class="toc-number">2.2.3.4.</span> <span class="toc-text">多层体系结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SNMP管理信息模型"><span class="toc-number">2.2.4.</span> <span class="toc-text">SNMP管理信息模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#管理信息结构SMI"><span class="toc-number">2.2.5.</span> <span class="toc-text">管理信息结构SMI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MIB结构"><span class="toc-number">2.2.6.</span> <span class="toc-text">MIB结构</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top">&#xe639;</div>
+    <div class="sidebar">
+    <div class="sidebar-header sidebar-header-show-archive">
+        <div class="sidebar-category">
+            <span class="sidebar-archive-link"><span class="iconfont-archer">&#xe67d;</span>Archive</span>
+            <span class="sidebar-tags-link"><span class="iconfont-archer">&#xe610;</span>Tag</span>
+        </div>
+    </div>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-archive">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-archive"> Total : 114 </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/05</span><a class="archive-post-title" href= "/2018/06/05/Network-Management-Review/" >Network Management Review</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span><a class="archive-post-title" href= "/2018/06/04/Secure-Protocol-Review/" >Secure Protocol Review</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2018/06/03/2018-6-1信息安全铁人三项赛数据赛题解/" >2018.6.1信息安全铁人三项赛数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18信息安全铁人三项赛数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2018.5.5信息安全铁人三项赛数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/27</span><a class="archive-post-title" href= "/2018/05/27/2018RedHat-AD-Web/" >2018RedHat-AD-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/Json-Web-Token历险记/" >Json Web Token历险记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/2018CUMTCTF-Final-Web/" >2018CUMTCTF-Final-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2018/05/12/2018年第四届全国网络空间安全技术大赛/" >2018年第四届全国网络空间安全技术大赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span><a class="archive-post-title" href= "/2018/05/01/2018-RedHat-Web-Misc/" >2018-RedHat-Web_Misc</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href= "/2018/04/27/线下AD-代码审计-ECShop-V2-7-3/" >线下AD&代码审计&ECShop V2.7.3</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >DDCTF-bitcoin-51%Attack</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2018/04/16/2018-XCTF-HITB-PhpLover/" >2018-XCTF-HITB-PhpLover</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2018/04/15/Long-Ago-AWD-Flasky/" >Long-Ago-AWD-Flasky</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/13</span><a class="archive-post-title" href= "/2018/04/13/2018-XCTF-HITB-WEB/" >2018-XCTF-HITB-WEB</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >0ctf-ezdoor</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href= "/2018/04/09/0ctf-login-me/" >0ctf-login me</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >pwnhub time injection带来的新思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/amazing-phpinfo/" >amazing phpinfo()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2018/04/01/Python-is-the-best-language/" >Python is the best language</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span><a class="archive-post-title" href= "/2018/03/23/从sql注入到xslt再到xxe的一道ctf题目/" >从sql注入到xslt再到xxe的一道ctf题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href= "/2018/03/21/从一道题深入mysql字符集与比对方法collation/" >从一道题深入mysql字符集与比对方法collation</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/solveme-peng-kr-web/" >solveme.peng.kr-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/Some trick in ssrf and unserialize()/" >Some trick in ssrf and unserialize()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2018/03/12/N1CTF-2018-Web/" >N1CTF 2018-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/09</span><a class="archive-post-title" href= "/2018/03/09/php-command or code-injection-summary/" >php-command/code-injection summary</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/05</span><a class="archive-post-title" href= "/2018/03/05/2018安全客元宵节小礼品趣味题/" >2018安全客元宵节小礼品趣味题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2018/02/27/RingZer0-web-sql系列记录/" >RingZer0-web-sql系列记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2018/02/27/2018安恒杯2月月赛web题解/" >2018安恒杯2月月赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href= "/2018/02/25/hgame-week4-web/" >hgame-week4-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2018/02/21/week3-hgame之web粗略记录/" >week3-hgame之web粗略记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href= "/2018/02/13/happymoctf之web全题解/" >happymoctf之web全题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href= "/2018/02/02/skysql之union绕waf/" >skysql之union绕waf</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2018/02/01/HITCTF-WEB题解/" >HITCTF-WEB题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span><a class="archive-post-title" href= "/2018/01/31/moctf-Web题解/" >moctf-Web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018安恒一月月赛部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/07</span><a class="archive-post-title" href= "/2018/01/07/hackme网站边做边记录/" >hackme网站边做边记录</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/Time-Based-RCE/" >Time_Based_RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/cms小白审计-typecho反序列漏洞/" >cms小白审计-typecho反序列漏洞</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span><a class="archive-post-title" href= "/2017/12/25/一道有关密钥编排的DES题目/" >一道有关密钥编排的DES题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计之二手撸AES加解密程序/" >密码学课程设计之二手撸AES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >安恒12月赛之VSCMS审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >安恒杯-12月月赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2017/12/15/parse-url函数小记/" >parse_url函数小记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >pwnhub成功就是要梭哈之学习记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/密码学课程3道古典密码题目/" >密码学课程3道古典密码题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/padding-oracle和cbc翻转攻击/" >padding oracle和cbc翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/2017-12-11学习笔记/" >2017.12.11学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/Jarvis-OJ-Crypto/" >Jarvis-OJ-Crypto</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/算法上机题复习/" >算法上机题复习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >湖湘杯复赛web400</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >湖湘杯复赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2017/11/19/近期做的其他平台的3道注入题/" >近期做的其他平台的3道注入题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2017/11/18/第三届上海AWD线下赛感悟/" >第三届上海AWD线下赛感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/MCTF-flappybird题解/" >MCTF-flappybird题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >hctf的3道web题题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >上海赛的RSA研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >上海线上赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >XDCTF线下赛经历及感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >安恒总决赛的一道代码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >geekgame部分web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span><a class="archive-post-title" href= "/2017/10/27/江苏第六届省赛线下AWD感触/" >江苏第六届省赛线下AWD感触</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >BDCTF第一轮初赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/ss和kali源遇到的bug记录/" >ss和kali源遇到的bug记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/安恒秋季线下赛决赛wp/" >安恒秋季线下赛决赛wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/安恒杯Web安全测试赛秋季赛资格赛部分wp/" >安恒杯Web安全测试赛秋季赛部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2017/10/12/安恒秋季测试赛练习赛web部分wp/" >安恒秋季测试赛web部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2017/09/08/XSS挑战之旅-bugku/" >XSS挑战之旅-bugku</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/过气的00截断/" >过气的00截断</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/有趣的-htaccess/" >有趣的.htaccess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/sql注入—into-outfile、load-file/" >sql注入—into outfile、load_file()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >Xman线下赛源码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/SSRF学习/" >SSRF学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/xml注入攻击学习/" >xml注入攻击学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/密码学自学/" >密码学自学</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2017/08/17/Hexo报错，DEP0061/" >Hexo报错，DEP0061</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2017/08/16/jarvisoj-web/" >jarvisoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2017/08/07/搭建ShadowSocks实现翻墙/" >搭建ShadowSocks实现翻墙</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/RSA常用工具/" >RSA常用工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/github博客之page-build-failed/" >github博客之page build failed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href= "/2017/07/24/docker基础学习/" >docker基础学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Challenges)(Less-54-Less-65)/" >SQLi-LABS(Challenges)(Less-54 ~ Less-65)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Stacked)(Less-39 ~ Less-53)/" >SQLi-LABS(Stacked)(Less-39 ~ Less-53)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/22</span><a class="archive-post-title" href= "/2017/07/22/PHP函数黑魔法小总结/" >PHP函数黑魔法小总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span><a class="archive-post-title" href= "/2017/07/20/SQLi-LABS(Adv)(Less-23 ~ Less-38)/" >SQLi-LABS(Adv)(Less-23 ~ Less-38)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2017/07/19/sql注入的一些技巧原理/" >sql注入的一些技巧原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/SQLi-LABS(Basic)(Less-1 ~ Less-22)/" >SQLi-LABS(Basic)(Less-1 ~ Less-22)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/flask的excel导入与导出/" >flask的excel导入与导出</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2017/07/12/git学习-边学边记录/" >.git学习-边学边记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2017/07/11/sniperoj-web-边做边记录/" >sniperoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2017/07/10/曼切斯特与差分曼切斯特/" >曼切斯特与差分曼切斯特</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/马原闲聊/" >马原闲聊</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/openctf-writeup/" >openctf-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span><a class="archive-post-title" href= "/2017/06/26/记一次蛇皮的微机实验考试/" >记一次蛇皮的微机实验考试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/计网复习总结/" >计网复习总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/22</span><a class="archive-post-title" href= "/2017/06/22/闲着无聊随便写的微机代码/" >闲着无聊随便写的微机代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/微机实验考试代码/" >微机实验考试代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/RSA算法研究/" >RSA算法研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/GCTF的一道php反序列化题目/" >GCTF的一道php反序列化题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2017/06/19/CRC爆破总结/" >CRC32爆破总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/陕西杯web详解/" >陕西杯web详解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/微机实验代码/" >微机实验代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href= "/2017/05/17/2017-CUMTCTF-Final/" >2017-CUMTCTF-Final</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name"><a href= "#">web</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CBC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">hexo</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">RSA</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">php_black_magic</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">xss</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">cms</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">docker</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">.git</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ssrf</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">crypto</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">writeup</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">sql</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ShadowSocks</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">xml</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">misc</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ECC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">心情随笔</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">.htaccess</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">flask</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">websummary</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机实验</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">马原考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">微机实验考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">Algorithm</a></span>
+    
+    </div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: false
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tag-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var jsInfo = {
+        root: '/'
+    }
+</script>
+    <!-- 不蒜子  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ统计  -->
+    
+    </div>
+    </body>
+</html>
+
+
