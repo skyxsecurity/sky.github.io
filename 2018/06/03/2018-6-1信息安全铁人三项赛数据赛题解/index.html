@@ -204,10 +204,11 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本场比赛为2018铁三分区赛最后一场，下面是题目分享：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">链接: https://pan.baidu.com/s/145V_xyiMNOIE5bFbCTtNNg 密码: v6wu</span><br></pre></td></tr></table></figure></p>
 <h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">1.被攻击的两个服务器的内网ip分别是多少，以下简称服务器1和2(格式：空格分隔，按黑客攻击顺序排列）  </span><br><span class="line">2.两台服务器的主机名分别是什么  </span><br><span class="line">3.黑客使用了什么工具对服务器1进行的攻击(小写)  </span><br><span class="line">4.黑容成功登陆网站后台的账号密码以及验证码是什么(格式user/pass/vcode)  </span><br><span class="line">5.黑客向服务器1写入webshell的具体命令是什么(url解码后)  </span><br><span class="line">6.服务器1都开启了哪些允许外连的TCP注册端口(端口号从小到大，用空格间隔)  </span><br><span class="line">7.服务器1安装的修补程序名称  </span><br><span class="line">8.网站根目录的绝对路径(注意：大写，左斜杠，最后要有一个斜杠)  </span><br><span class="line">9.黑客使用什么命令或文件进行的内网扫描  </span><br><span class="line">10.扫描结果中服务器2开放了哪些端口(端口号从小到大，用空格隔开)  </span><br><span class="line">11.黑客执行的什么命令将administrator的密码保存到文件中  </span><br><span class="line">12.服务器1的系统管理员administrator的密码是什么  </span><br><span class="line">13.黑客进行内外扫描的ip范围(格式:xx.xx.xx.xx~xx.xx.xx.xx)  </span><br><span class="line">14.服务器1的mysql的root用户的密码是什么  </span><br><span class="line">15.黑客在服务器2中查看了哪个敏感文件(拿到shell之后)，请写出绝对路径  </span><br><span class="line">16.服务器2的web网站后台账号密码(格式:账号/密码)  </span><br><span class="line">17.黑客在redis未授权访问中反弹shell的ip和端口是多少  </span><br><span class="line">18.黑客拿到root权限后执行的第二条命令是什么  </span><br><span class="line">19.服务器2的root用户密码是什么  </span><br><span class="line">20.黑客向服务器2写入webshell的命令  </span><br><span class="line">21.pcap中哪些ip发送过无偿ARP包(空格分隔，时间顺序排序)</span><br></pre></td></tr></table></figure>
 <h2 id="题目解析-part-1"><a href="#题目解析-part-1" class="headerlink" title="题目解析(part 1)"></a>题目解析(part 1)</h2><p>首先拿到庞大的数据包，我们的第一选择肯定是找出攻击者，方便后续的大规模过滤筛选，而定位黑客的最直接的方式就是找到大量重复的探测流量，例如目录爆破、sql注入探测等<br>这里我们可以先过滤http流量，发现最瞩目的是202.1.1.2的sql探测<br><img src="/images/6.1001.png"><br>我们随便挑一个，可以清楚看到，是用sqlmap进行的注入探测，可以确定无误，202.1.1.2即黑客<br>而受害者为192.168.1.74<br>故此我们后续的过滤为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 202.1.1.2 || ip.addr == 192.168.1.74) &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
-<p>在后续数据包(第五个数据包)里可以发现另一个被攻击的ip<br>过滤规则<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ip.src == 192.168.1.74 &amp;&amp; ip.dst !=202.1.1.2 &amp;&amp; http</span><br><span class="line">``` </span><br><span class="line">&lt;img src=&quot;/images/6.1002.png&quot;&gt;</span><br></pre></td></tr></table></figure></p>
-<p>192.168.2.66<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">然后是主机名，对于主机名，我们知道，phpinfo是非常好的查看方式，不仅可以获取主机名，还可以知道根目录等有效信息，所以既然问了我们这个问题，我们不妨查看一下黑客是否查找了phpinfo()</span><br><span class="line">使用指令</span><br></pre></td></tr></table></figure></p>
-<p>ip.addr == 192.168.1.74 &amp;&amp; http contains “phpinfo”<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">可以发现第一个被攻击的主机的phpinfo流量</span><br><span class="line">&lt;img src=&quot;/images/6.1003.png&quot;&gt; </span><br><span class="line">同理，在后续数据包查找第二台</span><br></pre></td></tr></table></figure></p>
-<p>ip.addr == 192.168.2.66 &amp;&amp; http contains “phpinfo”<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;/images/6.1004.png&quot;&gt; </span><br><span class="line">然后我们将phpinfo回显的html保存到本地方便查看</span><br><span class="line">&lt;img src=&quot;/images/6.1005.png&quot;&gt; </span><br><span class="line">然后依次打开</span><br><span class="line">第一台</span><br><span class="line">&lt;img src=&quot;/images/6.1006.png&quot;&gt; </span><br><span class="line">第二台</span><br><span class="line">&lt;img src=&quot;/images/6.1007.png&quot;&gt; </span><br><span class="line">于是我们的得到答案</span><br></pre></td></tr></table></figure></p>
+<p>在后续数据包(第五个数据包)里可以发现另一个被攻击的ip<br>过滤规则</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ip.src == 192.168.1.74 &amp;&amp; ip.dst !=202.1.1.2 &amp;&amp; http</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">&lt;img src=&quot;/images/6.1002.png&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>192.168.2.66<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">然后是主机名，对于主机名，我们知道，phpinfo是非常好的查看方式，不仅可以获取主机名，还可以知道根目录等有效信息，所以既然问了我们这个问题，我们不妨查看一下黑客是否查找了phpinfo()</span><br><span class="line">使用指令</span><br></pre></td></tr></table></figure></p>
+<p>ip.addr == 192.168.1.74 &amp;&amp; http contains “phpinfo”<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">可以发现第一个被攻击的主机的phpinfo流量</span><br><span class="line">&lt;img src=&quot;/images/6.1003.png&quot;&gt; </span><br><span class="line">同理，在后续数据包查找第二台</span><br></pre></td></tr></table></figure></p>
+<p>ip.addr == 192.168.2.66 &amp;&amp; http contains “phpinfo”<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;img src=&quot;/images/6.1004.png&quot;&gt; </span><br><span class="line">然后我们将phpinfo回显的html保存到本地方便查看</span><br><span class="line">&lt;img src=&quot;/images/6.1005.png&quot;&gt; </span><br><span class="line">然后依次打开</span><br><span class="line">第一台</span><br><span class="line">&lt;img src=&quot;/images/6.1006.png&quot;&gt; </span><br><span class="line">第二台</span><br><span class="line">&lt;img src=&quot;/images/6.1007.png&quot;&gt; </span><br><span class="line">于是我们的得到答案</span><br></pre></td></tr></table></figure></p>
 <p>TEST-7E28AF8836 cloude<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">接下来一个问题就是送分题了，正是我们前面分析的</span><br></pre></td></tr></table></figure></p>
 <p>sqlmap<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">然后接下来题目问我们有关登录的信息，所以我们选择过滤黑客ip和post请求方式</span><br></pre></td></tr></table></figure></p>
 <p>ip.addr == 202.1.1.2 &amp;&amp; http.request.method == “POST”<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;/images/6.1008.png&quot;&gt; </span><br><span class="line">很容易看到我们需要的答案</span><br></pre></td></tr></table></figure></p>
@@ -343,22 +344,6 @@
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-archive">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -3033,9 +3018,9 @@
     
         <span class="sidebar-tag-name"><a href= "#">ECC</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">心情随笔</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">flask</a></span>
     
