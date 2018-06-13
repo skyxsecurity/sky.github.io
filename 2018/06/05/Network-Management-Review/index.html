@@ -215,13 +215,13 @@
 <h4 id="十六进制字节串类型的编码"><a href="#十六进制字节串类型的编码" class="headerlink" title="十六进制字节串类型的编码"></a>十六进制字节串类型的编码</h4><p>tag:04<br>length:后继八位组个数<br>例如：<br>0A1B<br>答案：<br>04 02 0A 1B<br>再如：<br>01 23 45 67 89 ab cd ef<br>答案<br>04 08 01 23 45 67 89 ab cd ef<br>又如：ACE<br>答案：<br>04 02 AC E0</p>
 <h4 id="INTEGER类型的编码"><a href="#INTEGER类型的编码" class="headerlink" title="INTEGER类型的编码"></a>INTEGER类型的编码</h4><p>若value中的最高位为1，则需在前面补全一个全0的八位组<br>对于负数，value的最高位为1<br>tag：02<br>length:后继八位组的个数</p>
 <blockquote>
-<p>对于正数<br>例如：64<br>64的二进制为：<br>0100 0000<br>故此答案为：<br>02 01 40<br>再如：128<br>二进制为：<br>1000 0000<br>故此答案为<br>02 02 00 80<br>对于负数<br>绝对值二进制+按位取反+末位加1即可<br>例如：<br>-64<br>绝对值的二进制为<br>0100 0000<br>按位取反<br>1011 1111<br>末位加1<br>1100 0000<br>所以答案为<br>02 01 C0<br>再如：-257<br>二进制为：0000000100000001<br>按位取反<br>1111 1110 1111 1110<br>末位加一<br>1111 1110 1111 1111<br>答案为<br>02 02 FE FF<br>快捷运算方法<br>对于大数，强行取余倒叙排列计算2进账肯定太慢了，这里选择拆分成256(256的幂数)的因子形式<br>例如：<br>49468=193<em>256+60<br>我们知道<br>193为1100 0001即C1<br>256为1 0000 0000即100<br>60为0011 1100即3C<br>故此可以写成<br>`C1</em>100+3C<code>因此编码直接可以写为
+<p>对于正数<br>例如：64<br>64的二进制为：<br>0100 0000<br>故此答案为：<br>02 01 40<br>再如：128<br>二进制为：<br>1000 0000<br>故此答案为<br>02 02 00 80<br>对于负数<br>绝对值二进制+按位取反+末位加1即可<br>例如：<br>-64<br>绝对值的二进制为<br>0100 0000<br>按位取反<br>1011 1111<br>末位加1<br>1100 0000<br>所以答案为<br>02 01 C0<br>再如：-257<br>二进制为：0000000100000001<br>按位取反<br>1111 1110 1111 1110<br>末位加一<br>1111 1110 1111 1111<br>答案为<br>02 02 FE FF<br>快捷运算方法<br>对于大数，强行取余倒叙排列计算2进制肯定太慢了，这里选择拆分成256(256的幂数)的因子形式<br>例如：<br>49468=193<em>256+60<br>我们知道<br>193为1100 0001即C1<br>256为1 0000 0000即100<br>60为0011 1100即3C<br>故此可以写成<br>`C1</em>100+3C<code>因此编码直接可以写为
 C1 3C
 又因为最高位为1，而该数是正数，所以补一个全0的八位组
 最终答案：
 02 03 00 C1 3C
 再如负大数：-49769
-由于256^2=65536
+由于256^2=6553620
 但是负数最高位需要为1，作为标志位
 因此256^2最大只能表示-32768
 故此选择256^3,最大可表示-8388608
@@ -255,10 +255,23 @@ C1 3C
 <h3 id="SNMP管理信息模型"><a href="#SNMP管理信息模型" class="headerlink" title="SNMP管理信息模型"></a>SNMP管理信息模型</h3><p>使用ASN.1描述被管对象和PDU<br>使用BER编码<br>通过传输层协议传送</p>
 <h3 id="管理信息结构SMI"><a href="#管理信息结构SMI" class="headerlink" title="管理信息结构SMI"></a>管理信息结构SMI</h3><p>宗旨是保持MIB的简单性和可扩展性<br>只允许存储标量和二维数组，不支持复杂的数据结构</p>
 <h3 id="MIB结构"><a href="#MIB结构" class="headerlink" title="MIB结构"></a>MIB结构</h3><p>管理信息库MIB使用一个层次型、结构化的形式，定义了一个设备可获得的网络管理信息。<br>这种层次树结构有3个作用：<br>1.表示管理和控制关系<br>2.提供结构化的信息组织技术<br>3.提供了对象命名机制</p>
+<h2 id="SMI的编码规则-BER"><a href="#SMI的编码规则-BER" class="headerlink" title="SMI的编码规则-BER"></a>SMI的编码规则-BER</h2><blockquote>
+<p>类别<br>1.通用类 00<br>2.应用类 00<br>3.上下文类 10<br>4.专用类 11</p>
+</blockquote>
+<h3 id="SMI的数据类型两大分类"><a href="#SMI的数据类型两大分类" class="headerlink" title="SMI的数据类型两大分类"></a>SMI的数据类型两大分类</h3><blockquote>
+<p>1.简单类型<br>1.1 integer<br>类别 00<br>格式 0<br>编号 00010<br>tag: 0x02<br>1.2 octet string<br>类别 00<br>格式 0<br>编号 00100<br>tag: 0x04<br>1.3 object identifier<br>类别 00<br>格式 0<br>编号 00110<br>tag: 0x06<br>1.4 null<br>类别 00<br>格式 0<br>编号 00101<br>tag: 0x05<br>1.5 sequence and sequence of<br>类别 00<br>格式 1<br>编号 10000<br>tag: 0x30<br>1.6 ipaddress<br>类别 01<br>格式 0<br>编号 00000<br>tag: 0x40<br>1.7 counter<br>类别 01<br>格式 0<br>编号 00001<br>tag: 0x41<br>1.8 gauge<br>类别 01<br>格式 0<br>编号 00010<br>tag: 0x42<br>1.9 timeticks<br>类别 01<br>格式 0<br>编号 00011<br>tag: 0x43<br>1.10 opaque<br>类别 01<br>格式 0<br>编号 00100<br>tag: 0x44<br>2.结构化类型<br>1.sequence<br>2.sequence of</p>
+</blockquote>
 
     </article>
     <!-- 前后页  -->
     <ul class="post-pager">
+        
+            <li class="next">
+                <a href= "/2018/06/13/保研机试C++算法复习/" title= 保研机试C++算法复习 >
+                    <span>Next Post</span>
+                    <span>保研机试C++算法复习</span>
+                </a>
+            </li>
         
         
             <li class="previous">
@@ -334,7 +347,7 @@ C1 3C
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#第三章-ASN-1"><span class="toc-number">1.</span> <span class="toc-text">第三章 ASN.1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据类型"><span class="toc-number">1.1.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编码规则"><span class="toc-number">1.2.</span> <span class="toc-text">编码规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ASN-1-编程"><span class="toc-number">1.3.</span> <span class="toc-text">ASN.1 编程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BER-编码"><span class="toc-number">1.4.</span> <span class="toc-text">BER 编码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标记"><span class="toc-number">1.4.1.</span> <span class="toc-text">标记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长度"><span class="toc-number">1.4.2.</span> <span class="toc-text">长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见编码"><span class="toc-number">1.4.3.</span> <span class="toc-text">常见编码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BOOLEAN编码"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">BOOLEAN编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#字符串类型的编码"><span class="toc-number">1.4.3.2.</span> <span class="toc-text">字符串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#比特串类型的编码"><span class="toc-number">1.4.3.3.</span> <span class="toc-text">比特串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十六进制字节串类型的编码"><span class="toc-number">1.4.3.4.</span> <span class="toc-text">十六进制字节串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#INTEGER类型的编码"><span class="toc-number">1.4.3.5.</span> <span class="toc-text">INTEGER类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对象标识符编码"><span class="toc-number">1.4.3.6.</span> <span class="toc-text">对象标识符编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#空值类型编码"><span class="toc-number">1.4.3.7.</span> <span class="toc-text">空值类型编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sequence组合类型的编码"><span class="toc-number">1.4.3.8.</span> <span class="toc-text">sequence组合类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#set集合类型的编码"><span class="toc-number">1.4.3.9.</span> <span class="toc-text">set集合类型的编码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BER的不足"><span class="toc-number">1.4.4.</span> <span class="toc-text">BER的不足</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第四章-IETF网络管理模型"><span class="toc-number">2.</span> <span class="toc-text">第四章 IETF网络管理模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络管理的发展"><span class="toc-number">2.1.</span> <span class="toc-text">网络管理的发展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ICMP协议"><span class="toc-number">2.1.1.</span> <span class="toc-text">ICMP协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SGMP协议"><span class="toc-number">2.1.2.</span> <span class="toc-text">SGMP协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMOT协议-CMIP-over-TCP-IP"><span class="toc-number">2.1.3.</span> <span class="toc-text">CMOT协议(CMIP over TCP/IP)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SNMP协议"><span class="toc-number">2.1.4.</span> <span class="toc-text">SNMP协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMP协议-1"><span class="toc-number">2.2.</span> <span class="toc-text">SNMP协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#发展历程"><span class="toc-number">2.2.1.</span> <span class="toc-text">发展历程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SNMP网络管理模型"><span class="toc-number">2.2.2.</span> <span class="toc-text">SNMP网络管理模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#体系结构"><span class="toc-number">2.2.3.</span> <span class="toc-text">体系结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#非对称的二级体系结构"><span class="toc-number">2.2.3.1.</span> <span class="toc-text">非对称的二级体系结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#代管体系结构"><span class="toc-number">2.2.3.2.</span> <span class="toc-text">代管体系结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RMON体系结构"><span class="toc-number">2.2.3.3.</span> <span class="toc-text">RMON体系结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多层体系结构"><span class="toc-number">2.2.3.4.</span> <span class="toc-text">多层体系结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SNMP管理信息模型"><span class="toc-number">2.2.4.</span> <span class="toc-text">SNMP管理信息模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#管理信息结构SMI"><span class="toc-number">2.2.5.</span> <span class="toc-text">管理信息结构SMI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MIB结构"><span class="toc-number">2.2.6.</span> <span class="toc-text">MIB结构</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#第三章-ASN-1"><span class="toc-number">1.</span> <span class="toc-text">第三章 ASN.1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据类型"><span class="toc-number">1.1.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编码规则"><span class="toc-number">1.2.</span> <span class="toc-text">编码规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ASN-1-编程"><span class="toc-number">1.3.</span> <span class="toc-text">ASN.1 编程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BER-编码"><span class="toc-number">1.4.</span> <span class="toc-text">BER 编码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标记"><span class="toc-number">1.4.1.</span> <span class="toc-text">标记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长度"><span class="toc-number">1.4.2.</span> <span class="toc-text">长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见编码"><span class="toc-number">1.4.3.</span> <span class="toc-text">常见编码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BOOLEAN编码"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">BOOLEAN编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#字符串类型的编码"><span class="toc-number">1.4.3.2.</span> <span class="toc-text">字符串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#比特串类型的编码"><span class="toc-number">1.4.3.3.</span> <span class="toc-text">比特串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十六进制字节串类型的编码"><span class="toc-number">1.4.3.4.</span> <span class="toc-text">十六进制字节串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#INTEGER类型的编码"><span class="toc-number">1.4.3.5.</span> <span class="toc-text">INTEGER类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对象标识符编码"><span class="toc-number">1.4.3.6.</span> <span class="toc-text">对象标识符编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#空值类型编码"><span class="toc-number">1.4.3.7.</span> <span class="toc-text">空值类型编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sequence组合类型的编码"><span class="toc-number">1.4.3.8.</span> <span class="toc-text">sequence组合类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#set集合类型的编码"><span class="toc-number">1.4.3.9.</span> <span class="toc-text">set集合类型的编码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BER的不足"><span class="toc-number">1.4.4.</span> <span class="toc-text">BER的不足</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#第四章-IETF网络管理模型"><span class="toc-number">2.</span> <span class="toc-text">第四章 IETF网络管理模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络管理的发展"><span class="toc-number">2.1.</span> <span class="toc-text">网络管理的发展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ICMP协议"><span class="toc-number">2.1.1.</span> <span class="toc-text">ICMP协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SGMP协议"><span class="toc-number">2.1.2.</span> <span class="toc-text">SGMP协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMOT协议-CMIP-over-TCP-IP"><span class="toc-number">2.1.3.</span> <span class="toc-text">CMOT协议(CMIP over TCP/IP)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SNMP协议"><span class="toc-number">2.1.4.</span> <span class="toc-text">SNMP协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMP协议-1"><span class="toc-number">2.2.</span> <span class="toc-text">SNMP协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#发展历程"><span class="toc-number">2.2.1.</span> <span class="toc-text">发展历程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SNMP网络管理模型"><span class="toc-number">2.2.2.</span> <span class="toc-text">SNMP网络管理模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#体系结构"><span class="toc-number">2.2.3.</span> <span class="toc-text">体系结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#非对称的二级体系结构"><span class="toc-number">2.2.3.1.</span> <span class="toc-text">非对称的二级体系结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#代管体系结构"><span class="toc-number">2.2.3.2.</span> <span class="toc-text">代管体系结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RMON体系结构"><span class="toc-number">2.2.3.3.</span> <span class="toc-text">RMON体系结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多层体系结构"><span class="toc-number">2.2.3.4.</span> <span class="toc-text">多层体系结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SNMP管理信息模型"><span class="toc-number">2.2.4.</span> <span class="toc-text">SNMP管理信息模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#管理信息结构SMI"><span class="toc-number">2.2.5.</span> <span class="toc-text">管理信息结构SMI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MIB结构"><span class="toc-number">2.2.6.</span> <span class="toc-text">MIB结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SMI的编码规则-BER"><span class="toc-number">2.3.</span> <span class="toc-text">SMI的编码规则-BER</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SMI的数据类型两大分类"><span class="toc-number">2.3.1.</span> <span class="toc-text">SMI的数据类型两大分类</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top">&#xe639;</div>
@@ -2327,74 +2340,7 @@ C1 3C
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <div class="total-archive"> Total : 114 </div>
+    <div class="total-archive"> Total : 115 </div>
     
     <div class="post-archive">
     
@@ -2403,6 +2349,11 @@ C1 3C
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/13</span><a class="archive-post-title" href= "/2018/06/13/保研机试C++算法复习/" >保研机试C++算法复习</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -2466,12 +2417,12 @@ C1 3C
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
         </li>
     
     
@@ -2645,12 +2596,12 @@ C1 3C
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
         </li>
     
     
@@ -2960,7 +2911,7 @@ C1 3C
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
@@ -2970,12 +2921,12 @@ C1 3C
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -2990,9 +2941,9 @@ C1 3C
     
         <span class="sidebar-tag-name"><a href= "#">web</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">CBC</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CBC</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
     
@@ -3022,15 +2973,17 @@ C1 3C
     
         <span class="sidebar-tag-name"><a href= "#">xml</a></span>
     
+        <span class="sidebar-tag-name"><a href= "#">algorithm</a></span>
+    
         <span class="sidebar-tag-name"><a href= "#">misc</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">.htaccess</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">ECC</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">心情随笔</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">ECC</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">flask</a></span>
     
