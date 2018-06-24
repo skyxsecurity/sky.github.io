@@ -223,6 +223,28 @@
 <blockquote>
 <p>安全问题<br>1.密钥的秘密分发<br>2.有可能消息可被解密，甚至伪造虚假消息<br>3.随用户数量增多，对于n个用户，我们需要n（n-1）/ 2个密钥<br>解决问题1、3：<br>此时出现公钥密码，即拥有x可以迅速求得f(x)，但是f(x)不能强行逆向运算回x，需要一个陷门<br>即知道一些秘密消息y的情况下，f(x)可以迅速求得x<br>即公开1个公钥，自己保留1个私钥，则n个用户，只需要n个私钥和n个公钥即可<br>解决问题2：<br>使用hash函数，因为hash函数的难以碰撞，我们可以用其当做消息验证码<br>即将明文和明文hash一同加密传输，解密后即可验证明文的hash是否等于hash，以确保消息完整性<br>关于公钥密码的密码协议协商：<br>1.Alice和Bob约定一个公钥密码算法<br>2.Bob向Alice发送自己的公钥<br>3.Alice用Bob的公钥加密消息，并将消息发送给Bob<br>4.Bob用私钥解密消息<br>对于公钥密码系统<br>需要一个管理所有公钥的数据库<br>协议<br>1.Alice从数据库中得到Bob的公钥<br>2.Alice用Bob的公钥加密消息，并将消息发送给Bob<br>3.Bob用私钥解密消息<br>安全问题<br>真实应用中，公钥密钥不用于消息的加解密，而用于密钥的加解密<br>原因如下：<br>1.公钥加密速度慢<br>2.易受明文攻击的影响<br>公钥密码在协议中的作用实例：<br>1.Bob把公钥发送给Alice<br>2.Alice生产一个随机数k，然后用Bob的公钥加密随机数，发送回Bob<br>3.Bob收到后，利用私钥解密消息，得到随机数k<br>4.Bob和Alice后续利用这个随机数k作为密钥进行通信<br>为确保安全性，必须进行签名<br>签名具有以下特点：<br>1.真实性<br>2.不可伪造性<br>3.不可重用性<br>4.不可改变的性<br>5.不能否认性<br>具有第三方仲裁的协议<br>1.第三方将KA分发给Alice，将KB分发给Bob<br>2.Alice用KA加密消息，并发送给第三方<br>3.第三方用KA解密消息<br>4.第三方用KB加密消息， 并加密一个凭证，然后发给Bob<br>5.Bob用KB解密，并读取Alice的消息和第三方的凭证<br>安全问题<br>1.第三方的时间延迟<br>2.第三方是通信系统中的瓶颈部分<br>3.很难找到可信的第三方<br>4.第三方必须完全安全<br>基于公钥的文档公钥密码协议<br>1.Alice用私钥对文档进行加密，从而签署文档<br>2.Alice将签署的文档发给Bob<br>3.Bob用Alice的公钥解密文档，从而验证签名<br>常见实例（RSA/DSA)<br>存在问题：可被重放攻击<br>解决方案：数字签名中加入时间戳<br>但公钥密码算法对长文档签名效率很低，所以选择hash函数<br>1.Alice根据文档生成单向哈希散列<br>2.Alice用私钥加密散列，从而签署文档<br>3.Alice将文档和签名发给Bob<br>4.Bob生成文档的单向散列，并用Alice的公钥进行解密签名，用于和哈希值进行匹配<br>优势<br>1.速度增加，散列的签名等价于对文档的签名<br>2.签名可以与文件分开保存<br>3.收件人对文档和签名的存储要求小得多<br>4.存档系统可以使用这种协议来验证文档的存在而不存储他们的内容<br>多重签名验证<br>1.Alice签署文件的散列<br>2.Bob签署文件的散列<br>3.Bob把他的签名发送给Alice<br>4.Alice把文件、签名和Bob的签名发给第三方<br>5.第三方验证了Alice和Bob的签名<br>6.第三方可以独立的验证这两个签名<br>数字签名的问题<br>Alice可以签署一份文件，然后声称没有签署。她可以说谎别人偷了他的私钥<br>解决方案<br>1.Alice签名一条消息<br>2.Alice用已签名的消息发送给第三方<br>3.第三方验证Alice的身份，添加一个时间戳，将其全部签名，并将其发送给Alice和Bob<br>4.Bob验证第三方的签名，识别Alice的签名<br>5.Alice验证第三方发送给Bob的消息，如果Alice没有发送信息，那么他会快速响应。<br>数字签名与公钥密码的结合<br>1.Alice用私钥签名<br>2.Alice用Bob的公钥加密签名消息，并发送给Bob<br>3.Bob用私钥解密消息<br>4.Bob用Alice的公钥验证消息，并恢复消息<br>注：该过程必须使用时间戳，以防消息的重放<br>确认收到消息的反馈<br>1.Alice用自己的私钥签名消息，并用Bob的公钥加密签名，然后发送给Bob<br>2.Bob用私钥解密消息，并用Alice的公钥验证消息<br>3.Bob用自己的私钥签名消息，并用Alice的公钥加密签名，然后发送给Alice<br>4.Alice用私钥解密消息，并用Bob的公钥验证消息<br>公钥密码系统的安全问题<br>1.虽然存放公钥的数据库安全，但是任何人可以访问<br>2.攻击者可以在传输中替换公钥<br>解决方案<br>密钥认证机构或密钥分发中心KDC使用自己的私钥对管理的公钥进行加密</p>
 </blockquote>
+<p>1.RSA体制<br>基于大数分解的困难性</p>
+<p>2.Rabin体制<br>基于分解因子的困难性</p>
+<p>3.散列函数<br>基于不可碰撞性，单向性</p>
+<p>消息认证三元组(K T V)<br>K:密钥生产算法<br>T:标签算法<br>V:验证算法</p>
+<p>1.接收方确信消息未被更改过<br>2.接收方确信消息来自真实的发送方</p>
+<p>数字签名五元组(P A K S V)<br>P:所有消息组成的有限集<br>A:所有签名组成的有限集<br>K:所有密钥组成的有限集<br>S:签名算法<br>V:验证算法</p>
+<h4 id="RSA签名"><a href="#RSA签名" class="headerlink" title="RSA签名"></a>RSA签名</h4><p>私钥签名，公钥验证<br>因为私钥是唯一不公开的，可以保证签名者的身份<br>而公钥是公开的，任何人可以用来验证签名者的身份</p>
+<p>1.不要直接对数据签名，而应对数据的hash值签名<br>2.要采用先签名后加密的数字签名方案，不能使用先加密后签名的数字签名方案</p>
+<h4 id="DSA签名"><a href="#DSA签名" class="headerlink" title="DSA签名"></a>DSA签名</h4><h4 id="一般的离散对数签名"><a href="#一般的离散对数签名" class="headerlink" title="一般的离散对数签名"></a>一般的离散对数签名</h4><h4 id="EIGamal签名"><a href="#EIGamal签名" class="headerlink" title="EIGamal签名"></a>EIGamal签名</h4><h4 id="Schnorr签名"><a href="#Schnorr签名" class="headerlink" title="Schnorr签名"></a>Schnorr签名</h4><h4 id="Okamoto签名"><a href="#Okamoto签名" class="headerlink" title="Okamoto签名"></a>Okamoto签名</h4><h4 id="基于椭圆曲线的数字签名算法ECDSA"><a href="#基于椭圆曲线的数字签名算法ECDSA" class="headerlink" title="基于椭圆曲线的数字签名算法ECDSA"></a>基于椭圆曲线的数字签名算法ECDSA</h4><h2 id="基本安全协议"><a href="#基本安全协议" class="headerlink" title="基本安全协议"></a>基本安全协议</h2><h3 id="秘密分割"><a href="#秘密分割" class="headerlink" title="秘密分割"></a>秘密分割</h3><p>例如将消息加密，密文给Bob,密钥给Alice<br>只有当Bob和Alice在一起时才可解密</p>
+<p>存在问题：<br>Alice或Bob带着秘密走了，那么消息永远无法复原</p>
+<h3 id="秘密共享"><a href="#秘密共享" class="headerlink" title="秘密共享"></a>秘密共享</h3><h4 id="m-n-门限方案"><a href="#m-n-门限方案" class="headerlink" title="(m,n)门限方案"></a>(m,n)门限方案</h4><p>将信息分割成n个部分，任何m部分都可以重构消息<br>优势<br>1.某个密钥暴露，整个系统也不会受到攻击<br>2.某个密钥丢失/损坏，系统依旧可以复原</p>
+<h3 id="阈下信道"><a href="#阈下信道" class="headerlink" title="阈下信道"></a>阈下信道</h3><p>1.Alice随即产生一个无害消息<br>2.Alice对这个无害信息签名，她在签名中隐藏她的阈下信息<br>3.Alice通过Walter发送签名消息给Bob<br>4.Walter不能发现这个无害消息隐匿的阈下信息，并传递给Bob<br>5.Bob检查这份无害消息的签名，确认消息来自于Alice<br>6.Bob忽略无害的消息，而用和Alice共享的秘密密钥，提取阈下信息</p>
+<h4 id="基于ElGamal数字签名的阈下信道方案"><a href="#基于ElGamal数字签名的阈下信道方案" class="headerlink" title="基于ElGamal数字签名的阈下信道方案"></a>基于ElGamal数字签名的阈下信道方案</h4><h4 id="基于RSA数字签名的阈下信道方案"><a href="#基于RSA数字签名的阈下信道方案" class="headerlink" title="基于RSA数字签名的阈下信道方案"></a>基于RSA数字签名的阈下信道方案</h4><h3 id="反阈下通信——比特承诺"><a href="#反阈下通信——比特承诺" class="headerlink" title="反阈下通信——比特承诺"></a>反阈下通信——比特承诺</h3><p>1.Alice将消息放在箱子中，并将箱子送给Bob，保留箱子的钥匙(唯一打开箱子的办法)<br>2.Alice想要向Bob证实消息的时候，将钥匙和待确认的消息给Bob<br>3.Bob打开箱子并验证信息</p>
+<h4 id="使用对称密码算法的比特承诺"><a href="#使用对称密码算法的比特承诺" class="headerlink" title="使用对称密码算法的比特承诺"></a>使用对称密码算法的比特承诺</h4><p>1.Bob产生一个随机比特串R，并发送给Alice<br>2.Alice生产一个由她想承诺的比特b组成的消息，然后用密钥K对(R,b)进行加密，并将加密结果发送给Bob<br>3.当Alice想要证明消息的时候，将密钥发给Bob<br>4.Bob解密消息，验证最初的随机比特串R，验证承诺比特</p>
+<p>随机比特串R：用于防止Alice爆破密钥，找到一个解密后可得到仅部分bit不同的消息的攻击<br>例如：Alice承诺消息010101，密钥为K<br>而在承诺以后，Alice对密文进行爆破解密，直到可以解密出<br>110101这样的密文，然后将此时的密钥G发送给Bob，即篡改了承诺</p>
+<h4 id="使用单向函数的比特承诺"><a href="#使用单向函数的比特承诺" class="headerlink" title="使用单向函数的比特承诺"></a>使用单向函数的比特承诺</h4><p>1.Alice生产两个随机比特串，R1和R2<br>2.Alice产生消息(R1,R2,b)<br>3.Alice计算该消息的单向函数值，并将结果以及其中一个随机串R1发送给Bob<br>4.Alice要证明自己的消息时，将(R1,R2,b)均发给Bob<br>5.Bob计算该消息的单向函数值，将值与之前收到的比较，并将R1与之前的R1的比较</p>
+<p>Alice不可能进行欺骗，因为除非Alice找到R2’和想篡改的b’<br>并且使H(R1,R2’,b’) =  H(R1,R2,b)<br>这对于单向函数的不可碰撞性，显然是极度困难的</p>
+<h4 id="使用伪随机数序列发生器的比特承诺"><a href="#使用伪随机数序列发生器的比特承诺" class="headerlink" title="使用伪随机数序列发生器的比特承诺"></a>使用伪随机数序列发生器的比特承诺</h4><p>1.Bob产生随机比特串Rb，并发送给Alice<br>2.Alice为伪随机比特发生器生成一个随机种子，然后对Bob随机比特串中的每一比特，她回送Bob下面两个中的一个：<br>(a)若Bob比特为0，发生器的输出<br>(b)若Bob比特为1，发生器输出与她的比特的异或<br>3.当Alice需要验证的时候，将随机种子发送给Bob<br>4.Bob完成第二步，确认Alice的行动是合理的</p>
+<p>只要Bob的随机比特串足够长，伪随机比特发生器不可预测，这时Alice就无法进行欺诈</p>
+<p>应用场景：<br>公平的硬币抛掷问题<br>1.Alice必须在Bob猜测前抛币<br>2.得到Bob的猜测结果后，Alice不再抛币<br>3.Bob在猜测前不知道硬币的抛掷结果</p>
+<p>单向函数抛币协议<br>1.Alice选择一个随机数x，她计算f(x)<br>2.Alice将f(x)发给Bob<br>3.Bob猜测x是奇数/偶数，并将猜测结果发给Alice<br>4.Alice公布结果，并将x发给Bob<br>5.Bob验证f(x)是否等于之前接收到的f(x)</p>
+<p>不可欺骗性来自于单向函数的不可碰撞性<br>若Alice可以找到一个奇数x，一个偶数x’<br>且f(x)=f(x’)，则Alice每次都可以欺骗Bob<br>但这基本不可能</p>
 
     </article>
     <!-- 前后页  -->
@@ -309,7 +331,7 @@
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一章-密码学概述"><span class="toc-number">2.</span> <span class="toc-text">第一章(密码学概述)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二章-协议概述"><span class="toc-number">3.</span> <span class="toc-text">第二章(协议概述)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#仲裁协议"><span class="toc-number">3.1.</span> <span class="toc-text">仲裁协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#判决协议"><span class="toc-number">3.2.</span> <span class="toc-text">判决协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自执行协议"><span class="toc-number">3.3.</span> <span class="toc-text">自执行协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#针对协议的攻击"><span class="toc-number">3.4.</span> <span class="toc-text">针对协议的攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#商议使用协议"><span class="toc-number">3.5.</span> <span class="toc-text">商议使用协议</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一章-密码学概述"><span class="toc-number">2.</span> <span class="toc-text">第一章(密码学概述)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二章-协议概述"><span class="toc-number">3.</span> <span class="toc-text">第二章(协议概述)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#仲裁协议"><span class="toc-number">3.1.</span> <span class="toc-text">仲裁协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#判决协议"><span class="toc-number">3.2.</span> <span class="toc-text">判决协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自执行协议"><span class="toc-number">3.3.</span> <span class="toc-text">自执行协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#针对协议的攻击"><span class="toc-number">3.4.</span> <span class="toc-text">针对协议的攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#商议使用协议"><span class="toc-number">3.5.</span> <span class="toc-text">商议使用协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#RSA签名"><span class="toc-number">3.5.1.</span> <span class="toc-text">RSA签名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DSA签名"><span class="toc-number">3.5.2.</span> <span class="toc-text">DSA签名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一般的离散对数签名"><span class="toc-number">3.5.3.</span> <span class="toc-text">一般的离散对数签名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#EIGamal签名"><span class="toc-number">3.5.4.</span> <span class="toc-text">EIGamal签名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Schnorr签名"><span class="toc-number">3.5.5.</span> <span class="toc-text">Schnorr签名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Okamoto签名"><span class="toc-number">3.5.6.</span> <span class="toc-text">Okamoto签名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#基于椭圆曲线的数字签名算法ECDSA"><span class="toc-number">3.5.7.</span> <span class="toc-text">基于椭圆曲线的数字签名算法ECDSA</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本安全协议"><span class="toc-number">4.</span> <span class="toc-text">基本安全协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#秘密分割"><span class="toc-number">4.1.</span> <span class="toc-text">秘密分割</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#秘密共享"><span class="toc-number">4.2.</span> <span class="toc-text">秘密共享</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#m-n-门限方案"><span class="toc-number">4.2.1.</span> <span class="toc-text">(m,n)门限方案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#阈下信道"><span class="toc-number">4.3.</span> <span class="toc-text">阈下信道</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基于ElGamal数字签名的阈下信道方案"><span class="toc-number">4.3.1.</span> <span class="toc-text">基于ElGamal数字签名的阈下信道方案</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#基于RSA数字签名的阈下信道方案"><span class="toc-number">4.3.2.</span> <span class="toc-text">基于RSA数字签名的阈下信道方案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#反阈下通信——比特承诺"><span class="toc-number">4.4.</span> <span class="toc-text">反阈下通信——比特承诺</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用对称密码算法的比特承诺"><span class="toc-number">4.4.1.</span> <span class="toc-text">使用对称密码算法的比特承诺</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用单向函数的比特承诺"><span class="toc-number">4.4.2.</span> <span class="toc-text">使用单向函数的比特承诺</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用伪随机数序列发生器的比特承诺"><span class="toc-number">4.4.3.</span> <span class="toc-text">使用伪随机数序列发生器的比特承诺</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top">&#xe639;</div>
@@ -2363,12 +2385,7 @@
     
     
     
-    
-    
-    
-    
-    
-    <div class="total-archive"> Total : 115 </div>
+    <div class="total-archive"> Total : 116 </div>
     
     <div class="post-archive">
     
@@ -2377,6 +2394,11 @@
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2018/06/18/DC0531-web/" >[Untitled Post]</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -2944,17 +2966,17 @@
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
@@ -2973,9 +2995,9 @@
     
         <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">hexo</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">hexo</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">php_black_magic</a></span>
     
@@ -3001,17 +3023,15 @@
     
         <span class="sidebar-tag-name"><a href= "#">xml</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">algorithm</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">misc</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">.htaccess</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">ECC</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">心情随笔</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">flask</a></span>
     
@@ -3022,6 +3042,8 @@
         <span class="sidebar-tag-name"><a href= "#">微机考试</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">马原考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">algorithm</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">微机实验考试</a></span>
     

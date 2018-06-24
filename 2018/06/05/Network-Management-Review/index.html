@@ -213,7 +213,7 @@
 <h4 id="字符串类型的编码"><a href="#字符串类型的编码" class="headerlink" title="字符串类型的编码"></a>字符串类型的编码</h4><p>tag:0000 0100<br>length:后继八位组的个数<br>vaule:字符串的ascii码<br>例如：public<br>tag:04(见标记中的universal)<br>length:06<br>vaule:70 75 62 6c 69 63<br>最终答案:<br>04 06 70 75 62 6c 69 63</p>
 <h4 id="比特串类型的编码"><a href="#比特串类型的编码" class="headerlink" title="比特串类型的编码"></a>比特串类型的编码</h4><p>在bit串前增加一个八位组，取值0~7，表名最后补位的个数。补0/1由发送方决定<br>例如:1011011101011<br>1011 0111 0101 1<br>故最后需要补3位<br>1011 0111 0101 1xxx<br>假设补0(也可补1，由发送方决定)<br>1011 0111 0101 1000<br>计数八位组:0000 0011<br>tag:0000 0011(见标记中的universal)<br>length:后继八位组个数<br>最终答案<br>03 03 03 B7 58<br>再如：10101<br>补位后<br>1010 1000<br>计数八位组<br>0000 0011<br>最终答案<br>03 02 03 A8</p>
 <h4 id="十六进制字节串类型的编码"><a href="#十六进制字节串类型的编码" class="headerlink" title="十六进制字节串类型的编码"></a>十六进制字节串类型的编码</h4><p>tag:04<br>length:后继八位组个数<br>例如：<br>0A1B<br>答案：<br>04 02 0A 1B<br>再如：<br>01 23 45 67 89 ab cd ef<br>答案<br>04 08 01 23 45 67 89 ab cd ef<br>又如：ACE<br>答案：<br>04 02 AC E0</p>
-<h4 id="INTEGER类型的编码"><a href="#INTEGER类型的编码" class="headerlink" title="INTEGER类型的编码"></a>INTEGER类型的编码</h4><p>若value中的最高位为1，则需在前面补全一个全0的八位组<br>对于负数，value的最高位为1<br>tag：02<br>length:后继八位组的个数</p>
+<h4 id="INTEGER类型的编码"><a href="#INTEGER类型的编码" class="headerlink" title="INTEGER类型的编码"></a>INTEGER类型的编码</h4><p>若value中的最高位为1，0则需在前面补全一个全0的八位组<br>对于负数，value的最高位为1<br>tag：02<br>length:后继八位组的个数</p>
 <blockquote>
 <p>对于正数<br>例如：64<br>64的二进制为：<br>0100 0000<br>故此答案为：<br>02 01 40<br>再如：128<br>二进制为：<br>1000 0000<br>故此答案为<br>02 02 00 80<br>对于负数<br>绝对值二进制+按位取反+末位加1即可<br>例如：<br>-64<br>绝对值的二进制为<br>0100 0000<br>按位取反<br>1011 1111<br>末位加1<br>1100 0000<br>所以答案为<br>02 01 C0<br>再如：-257<br>二进制为：0000000100000001<br>按位取反<br>1111 1110 1111 1110<br>末位加一<br>1111 1110 1111 1111<br>答案为<br>02 02 FE FF<br>快捷运算方法<br>对于大数，强行取余倒叙排列计算2进制肯定太慢了，这里选择拆分成256(256的幂数)的因子形式<br>例如：<br>49468=193<em>256+60<br>我们知道<br>193为1100 0001即C1<br>256为1 0000 0000即100<br>60为0011 1100即3C<br>故此可以写成<br>`C1</em>100+3C<code>因此编码直接可以写为
 C1 3C
@@ -259,7 +259,7 @@ C1 3C
 <p>类别<br>1.通用类 00<br>2.应用类 00<br>3.上下文类 10<br>4.专用类 11</p>
 </blockquote>
 <h3 id="SMI的数据类型两大分类"><a href="#SMI的数据类型两大分类" class="headerlink" title="SMI的数据类型两大分类"></a>SMI的数据类型两大分类</h3><blockquote>
-<p>1.简单类型<br>1.1 integer<br>类别 00<br>格式 0<br>编号 00010<br>tag: 0x02<br>1.2 octet string<br>类别 00<br>格式 0<br>编号 00100<br>tag: 0x04<br>1.3 object identifier<br>类别 00<br>格式 0<br>编号 00110<br>tag: 0x06<br>1.4 null<br>类别 00<br>格式 0<br>编号 00101<br>tag: 0x05<br>1.5 sequence and sequence of<br>类别 00<br>格式 1<br>编号 10000<br>tag: 0x30<br>1.6 ipaddress<br>类别 01<br>格式 0<br>编号 00000<br>tag: 0x40<br>1.7 counter<br>类别 01<br>格式 0<br>编号 00001<br>tag: 0x41<br>1.8 gauge<br>类别 01<br>格式 0<br>编号 00010<br>tag: 0x42<br>1.9 timeticks<br>类别 01<br>格式 0<br>编号 00011<br>tag: 0x43<br>1.10 opaque<br>类别 01<br>格式 0<br>编号 00100<br>tag: 0x44<br>2.结构化类型<br>1.sequence<br>2.sequence of</p>
+<p>1.简单类型<br>1.1 integer<br>类别 00<br>格式 0<br>编号 00010<br>tag: 0x02<br>1.2 octet string<br>类别 00<br>格式 0<br>编号 00100<br>tag: 0x04<br>1.3 object identifier<br>类别 00<br>格式 0<br>编号 00110<br>tag: 0x06<br>1.4 null<br>类别 00<br>格式 0<br>编号 00101<br>tag: 0x05<br>1.5 sequence and sequence of<br>类别 00<br>格式 1<br>编号 10000<br>tag: 0x30<br>1.6 ipaddress<br>类别 01<br>格式 0<br>编号 00000<br>tag: 0x40<br>1.7 counter<br>类别 01<br>格式 0<br>编号 00001<br>tag: 0x41<br>1.8 gauge<br>类别 01<br>格式 0<br>编号 00010<br>tag: 0x42<br>1.9 timeticks<br>类别 01<br>格式 0<br>编号 00011<br>tag: 0x43<br>1.10 opaque<br>类别 01<br>格式 0<br>编号 00100<br>tag: 0x44<br>2.结构化类型<br>1.sequence<br>2.sequence ofd</p>
 </blockquote>
 
     </article>
@@ -2401,12 +2401,7 @@ C1 3C
     
     
     
-    
-    
-    
-    
-    
-    <div class="total-archive"> Total : 115 </div>
+    <div class="total-archive"> Total : 116 </div>
     
     <div class="post-archive">
     
@@ -2415,6 +2410,11 @@ C1 3C
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2018/06/18/DC0531-web/" >[Untitled Post]</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -2982,17 +2982,17 @@ C1 3C
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
@@ -3011,9 +3011,9 @@ C1 3C
     
         <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">hexo</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">hexo</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">php_black_magic</a></span>
     
@@ -3039,17 +3039,15 @@ C1 3C
     
         <span class="sidebar-tag-name"><a href= "#">xml</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">algorithm</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">misc</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">.htaccess</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">ECC</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">心情随笔</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">flask</a></span>
     
@@ -3060,6 +3058,8 @@ C1 3C
         <span class="sidebar-tag-name"><a href= "#">微机考试</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">马原考试</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">algorithm</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">微机实验考试</a></span>
     
