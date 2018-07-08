@@ -1,44 +1,63 @@
 <!DOCTYPE html>
 <html>
-    <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
-    <title>
-        
-        Sky&#39;s blog
-        
-    </title>
-    <link rel="icon" href= /assets/favicon.ico>
-    <!-- TODO: 在font-face加载完毕后改变字体  -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
-    <!-- 提前加载place holder  -->
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="一叶飘零">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="一叶飘零">
+    <meta name="keywords" content="Sky's Blog | 一叶飘零">
+    <meta name="description" content="苟有恒，何必三更眠五更起。">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Sky&#39;s blog</title>
     <style type="text/css">
-        @font-face {
-            font-family: 'Oswald-Regular';
-            src: url(/font/Oswald-Regular.ttf);
-        }
-    </style>
-    <style type="text/css">
-        .site-intro {
-            position: relative;
-            width: 100%;
-            height: 50vh;
-            overflow: hidden;
-            box-shadow: -0.1rem 0 0.5rem 0 rgba(0, 0, 0, 0.5);
-        }
-        .site-intro-placeholder {
-            position: absolute;
-            z-index: -2;
-            top: 0;
-            left: 0px;
-            width: calc(100% + 300px);
-            height: 100%;
-            background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
-            background-position: center center;
-            transform: translate3d(-226px, 0, 0);
-            animation: gradient-move 2.5s ease-out 0s 1;
-        }
-        @keyframes gradient-move {
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
         0% {
             transform: translate3d(-226px, 0, 0);
         }
@@ -46,11 +65,128 @@
             transform: translate3d(0, 0, 0);
         }
     }
+
 </style>
-    <link rel="stylesheet" href = /css/style.css?v=20180120 />
-    <script src="//cdn.staticfile.org/jquery/3.2.1/jquery.min.js" defer></script>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
     
-    <script src="/scripts/main.js" defer></script>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
     <!-- 谷歌统计  -->
@@ -68,12 +204,21 @@
     <a class="home-link" href=/>Sky's blog</a>
 </header>
     <div class="wrapper">
-        <div class="site-intro">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+>
     
     <!-- 主页  -->
             
-    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
@@ -89,369 +234,412 @@
         
     </div>
 </div>
-        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <script>
-            var browser = {
-                    versions: function () {
-                        var u = window.navigator.userAgent;
-                        return {
-                            userAgent: u,
-                            trident: u.indexOf('Trident') > -1, //IE内核
-                            presto: u.indexOf('Presto') > -1, //opera内核
-                            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
-                            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
-                            mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
-                            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
-                            android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
-                            iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
-                            iPad: u.indexOf('iPad') > -1, //是否为iPad
-                            webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
-                            weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
-                            uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
-                        };
-                    }()
-                }
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
 
-            function fontLoaded(){
-                console.log('font loaded');
-                if (document.getElementsByClassName('site-intro-meta')) {
-                    document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
-                    document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
-                    var postIntroTags = document.getElementsByClassName('post-intro-tags')[0],
-                        postIntroMeat = document.getElementsByClassName('post-intro-meta')[0];
-                        if (postIntroTags) {
-                            postIntroTags.classList.add('post-fade-in');
-                        }
-                        if (postIntroMeat) {
-                            postIntroMeat.classList.add('post-fade-in');
-                        }
-                    }
-                }
-                
-            console.log("userAgent:" + browser.versions.userAgent);
-            // UC不支持跨域，所以直接显示
-            if (browser.versions.uc) {
-                console.log("UCBrowser");
-                fontLoaded();
-            } else {
-                WebFont.load({
-                    custom: {
-                        families: ['Oswald-Regular']
-                    },
-                    loading: function () {  //所有字体开始加载
-                        // console.log('loading');
-                    },
-                    active: function () {  //所有字体已渲染
-                        fontLoaded();
-                    },
-                    inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
-                        console.log('inactive: timeout');
-                        fontLoaded();
-                    },
-                    timeout: 7000 // Set the timeout to two seconds
-                });
-            }
-        </script>
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
             <main class="main index-page">
     
     
     
-        <article class="index-post">
-            <a class="abstract-title" href = "/2017/10/30/XDCTF线下赛经历及感悟/" >
-                
-                    <span>XDCTF线下赛经历及感悟</span>
-            </a>
-            <a class="content-show-full" href = "/2017/10/30/XDCTF线下赛经历及感悟/" >
-                <div class="abstract-content">
-                    比赛经过今天比赛方一共给了5台服务器：1台windows和4台linux其中2台Linux是pwn，2台Linux是web，1台linux是mobile然后我们都不太擅长pwn和Mobile，所以一天只打了2台web的linux，所以后面就写一些web的经过了。首先第一台web是一个海洋cms，版本号非常老，我们由于以前有做过这方面渗透。所以上来打的十分得心应手我直接用了前一晚准备好的群杀脚本，上去就疯狂输出了一波，然后前3轮里，只有我们在疯狂得分，然后我们意识到这样不行，开始种shell，当时不知道，因为python一般都是Linux自带的，所以我们想都没想，就执行了表哥的框架，然后就...
-                </div>
-            </a>
-            <div class="abstract-post-meta">
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/30/XDCTF线下赛经历及感悟/" >
+            
+                <span>XDCTF线下赛经历及感悟</span>
+        </a>
+        <div class="abstract-content">
+            比赛经过今天比赛方一共给了5台服务器：1台windows和4台linux其中2台Linux是pwn，2台Linux是web，1台linux是mobile然后我们都不太擅长pwn和Mobile，所以一天只打了2台web的linux，所以后面就写一些web的经过了。首先第一台web是一个海洋cms，版本号非常老，我们由于以前有做过这方面渗透。所以上来打的十分得心应手我直接用了前一晚准备好的群杀脚本，上去就疯狂输出了一波，然后前3轮里，只有我们在疯狂得分，然后我们意识到这样不行，开始种shell，当时不知道，因为python一般都是Linux自带的，所以我们想都没想，就执行了表哥的框架，然后就...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/30</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
-                
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer"></span><span class="abstract-time">2017/10/30</span>
-                </div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/29/安恒总决赛的一道代码审计/" >
+            
+                <span>安恒总决赛的一道代码审计</span>
+        </a>
+        <div class="abstract-content">
+            源码审计可疑代码index.php的登录：1234567891011121314151617if($_POST['username'] &amp;&amp; $_POST['password']) &#123;		$username = $_POST['username'];		$password = $_POST['password'];        if(strlen($username) &lt; 3 or preg_match("|'|",$username) or preg_match("|\\\\|",$username)) 			die('Invalid user nam...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/29</span>
             </div>
-        </article>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2017/10/29/安恒总决赛的一道代码审计/" >
-                
-                    <span>安恒总决赛的一道代码审计</span>
-            </a>
-            <a class="content-show-full" href = "/2017/10/29/安恒总决赛的一道代码审计/" >
-                <div class="abstract-content">
-                    源码审计可疑代码index.php的登录：1234567891011121314151617if($_POST['username'] &amp;&amp; $_POST['password']) &#123;		$username = $_POST['username'];		$password = $_POST['password'];        if(strlen($username) &lt; 3 or preg_match("|'|",$username) or preg_match("|\\\\|",$username)) 			die('Invalid user nam...
-                </div>
-            </a>
-            <div class="abstract-post-meta">
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
-                
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer"></span><span class="abstract-time">2017/10/29</span>
-                </div>
-            </div>
-        </article>
+            
+        </div>
+    </article>
     
     
     
-        <article class="index-post">
-            <a class="abstract-title" href = "/2017/10/28/geekgame部分题解/" >
-                
-                    <span>geekgame部分web题解</span>
-            </a>
-            <a class="content-show-full" href = "/2017/10/28/geekgame部分题解/" >
-                <div class="abstract-content">
-                    故道白云简单的注入，还要跨库是最坑的。。。。。。。1http://game.sycsec.com:2006/?submit=submit&amp;id=-1&apos; union select 1,(select f4ag from f1ag.flag) -- 1
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/28/geekgame部分题解/" >
+            
+                <span>geekgame部分web题解</span>
+        </a>
+        <div class="abstract-content">
+            故道白云简单的注入，还要跨库是最坑的。。。。。。。1http://game.sycsec.com:2006/?submit=submit&amp;id=-1&apos; union select 1,(select f4ag from f1ag.flag) -- 1
 得到flag：SYC{HACKEr_By-cL0und}
 粗心的李超存在index.php.bak泄露1234567891011121314151617&lt;?phpinclude &quot;flag.php&quot;;if(isset($_POST[&apos;user&apos;])&amp;&amp;isset(...
-                </div>
-            </a>
-            <div class="abstract-post-meta">
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/28</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
-                
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer"></span><span class="abstract-time">2017/10/28</span>
-                </div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/27/江苏第六届省赛线下AWD感触/" >
+            
+                <span>江苏第六届省赛线下AWD感触</span>
+        </a>
+        <div class="abstract-content">
+            比赛过程上午场上午给了我们2台服务器，分别是一台Linux和一台windowslinux开了2个服务，一个是80端口的php网页，一个是18888端口的疑似pwn服务windows开了4个服务，80端口的展示页面（应该没用），88端口的jsp服务，89端口的php服务，445端口的smb服务我们进入比赛后：首先登入了linux服务器，修改了密码，备份了文件，在php服务中，只找到一个获取shell的点，然后果断注释了一波。这里也是我们上午收分的关键点，有大概4-5支队伍，刚开始并没有及时注释，被我们拿了一波分数，放了一波表哥的框架shell，但是听说这次crontab没有开启？而且目录没...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/27</span>
             </div>
-        </article>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2017/10/27/江苏第六届省赛线下AWD感触/" >
-                
-                    <span>江苏第六届省赛线下AWD感触</span>
-            </a>
-            <a class="content-show-full" href = "/2017/10/27/江苏第六届省赛线下AWD感触/" >
-                <div class="abstract-content">
-                    比赛过程上午场上午给了我们2台服务器，分别是一台Linux和一台windowslinux开了2个服务，一个是80端口的php网页，一个是18888端口的疑似pwn服务windows开了4个服务，80端口的展示页面（应该没用），88端口的jsp服务，89端口的php服务，445端口的smb服务我们进入比赛后：首先登入了linux服务器，修改了密码，备份了文件，在php服务中，只找到一个获取shell的点，然后果断注释了一波。这里也是我们上午收分的关键点，有大概4-5支队伍，刚开始并没有及时注释，被我们拿了一波分数，放了一波表哥的框架shell，但是听说这次crontab没有开启？而且目录没...
-                </div>
-            </a>
-            <div class="abstract-post-meta">
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
-                
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer"></span><span class="abstract-time">2017/10/27</span>
-                </div>
-            </div>
-        </article>
+            
+        </div>
+    </article>
     
     
     
-        <article class="index-post">
-            <a class="abstract-title" href = "/2017/10/23/BDCTF第一轮初赛web题解/" >
-                
-                    <span>BDCTF第一轮初赛web题解</span>
-            </a>
-            <a class="content-show-full" href = "/2017/10/23/BDCTF第一轮初赛web题解/" >
-                <div class="abstract-content">
-                    前记垃圾比赛，我再也不会打第二次了！！！！（除非下次web很有趣）
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/23/BDCTF第一轮初赛web题解/" >
+            
+                <span>BDCTF第一轮初赛web题解</span>
+        </a>
+        <div class="abstract-content">
+            前记垃圾比赛，我再也不会打第二次了！！！！（除非下次web很有趣）
 web签到题直接就给了源码，是个很老的套路,sha1的数组漏洞绕过构造?id=bdctf&amp;user[]=1,post上pass[]=2就可以轻松绕过
 这不仅仅是web图片里有提示，查看源代码，有一行白色的字:文件是文本格式图片里的提示:1234567891： &lt; ZWAXGLDUBVIQHKYJPNTCRMOSFE &gt;2： &lt; KPBELFAOZDTRXMJQCYHGVSNUWI &gt;3： &lt; BDMAZIVRNSJUWFHTOQGYXPLECK &gt;4： &lt; RPLNDEH...
-                </div>
-            </a>
-            <div class="abstract-post-meta">
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/23</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
-                
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer"></span><span class="abstract-time">2017/10/23</span>
-                </div>
-            </div>
-        </article>
+            
+        </div>
+    </article>
     
     
     
-        <article class="index-post">
-            <a class="abstract-title" href = "/2017/10/22/安恒秋季线下赛决赛wp/" >
-                
-                    <span>安恒秋季线下赛决赛wp</span>
-            </a>
-            <a class="content-show-full" href = "/2017/10/22/安恒秋季线下赛决赛wp/" >
-                <div class="abstract-content">
-                    前言这里我特么不得不吐槽一波XDCTF，20号才特么告诉我，某大期间不准线下赛？？？搞得我安恒也没去（为什么安恒可以线下赛？？？）血亏啊血亏啊！！！！！
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/22/安恒秋季线下赛决赛wp/" >
+            
+                <span>安恒秋季线下赛决赛wp</span>
+        </a>
+        <div class="abstract-content">
+            前言这里我特么不得不吐槽一波XDCTF，20号才特么告诉我，某大期间不准线下赛？？？搞得我安恒也没去（为什么安恒可以线下赛？？？）血亏啊血亏啊！！！！！
 绑定host一开始以为是改hosts文件，后来发现抓包改HOST头即可:123456789GET /index.php HTTP/1.1Host: www.mooctest.netCache-Control: max-age=0Upgrade-Insecure-Requests: 1User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, li...
-                </div>
-            </a>
-            <div class="abstract-post-meta">
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
-                
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer"></span><span class="abstract-time">2017/10/22</span>
-                </div>
-            </div>
-        </article>
+            
+        </div>
+    </article>
     
     
     
-        <article class="index-post">
-            <a class="abstract-title" href = "/2017/10/15/安恒杯Web安全测试赛秋季赛资格赛部分wp/" >
-                
-                    <span>安恒杯Web安全测试赛秋季赛部分wp</span>
-            </a>
-            <a class="content-show-full" href = "/2017/10/15/安恒杯Web安全测试赛秋季赛资格赛部分wp/" >
-                <div class="abstract-content">
-                    噗噗T1访问http://118.178.18.181:57016/index.pl?file=index.pl即可看到flag:flag{flag1_song_ni_le}
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/15/安恒杯Web安全测试赛秋季赛资格赛部分wp/" >
+            
+                <span>安恒杯Web安全测试赛秋季赛部分wp</span>
+        </a>
+        <div class="abstract-content">
+            噗噗T1访问http://118.178.18.181:57016/index.pl?file=index.pl即可看到flag:flag{flag1_song_ni_le}
 信息收集直接敲命令nslookup12345678root@sky:~# nslookup 107.182.177.34Server:		192.168.130.2Address:	192.168.130.2#53Non-authoritative answer:34.177.182.107.in-addr.arpa	name = this-is-flag.Authoritative answers can be ...
-                </div>
-            </a>
-            <div class="abstract-post-meta">
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
-                
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer"></span><span class="abstract-time">2017/10/15</span>
-                </div>
-            </div>
-        </article>
+            
+        </div>
+    </article>
     
     
     
-        <article class="index-post">
-            <a class="abstract-title" href = "/2017/10/12/安恒秋季测试赛练习赛web部分wp/" >
-                
-                    <span>安恒秋季测试赛web部分wp</span>
-            </a>
-            <a class="content-show-full" href = "/2017/10/12/安恒秋季测试赛练习赛web部分wp/" >
-                <div class="abstract-content">
-                    babywaf首先抓包，然后在file中测试：12345file = test.txt(正常回显)file = te.st.txt(错误回显)file = te..st.txt(正常回显)file = te/st.txt(错误回显)file = te&lt;st.txt(正常回显)
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/12/安恒秋季测试赛练习赛web部分wp/" >
+            
+                <span>安恒秋季测试赛web部分wp</span>
+        </a>
+        <div class="abstract-content">
+            babywaf首先抓包，然后在file中测试：12345file = test.txt(正常回显)file = te.st.txt(错误回显)file = te..st.txt(正常回显)file = te/st.txt(错误回显)file = te&lt;st.txt(正常回显)
 容易发现，..，&lt;都被过滤了，根据题目提示：flag在/flag所以可以轻松构造payload：file=.&lt;./.&lt;./.&lt;./.&lt;./.&lt;./flag通过&lt;过滤的特点，轻松返回上级目录（主要原因是只过滤了一次，造成了这种问题）最后得到flag：flag{To0_y...
-                </div>
-            </a>
-            <div class="abstract-post-meta">
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/12</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
-                
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer"></span><span class="abstract-time">2017/10/12</span>
-                </div>
-            </div>
-        </article>
+            
+        </div>
+    </article>
     
     
     
-        <article class="index-post">
-            <a class="abstract-title" href = "/2017/09/06/过气的00截断/" >
-                
-                    <span>过气的00截断</span>
-            </a>
-            <a class="content-show-full" href = "/2017/09/06/过气的00截断/" >
-                <div class="abstract-content">
-                    前记为什么说%00过气了呢……因为需要满足以下条件：
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/09/06/过气的00截断/" >
+            
+                <span>过气的00截断</span>
+        </a>
+        <div class="abstract-content">
+            前记为什么说%00过气了呢……因为需要满足以下条件：
 
 php版本小于5.3.4
 php的magic_quotes_gpc为OFF状态
 
 %00截断原理截断的核心，就是chr(0)这个字符先说一下这个字符，这个字符不为空(Null)，也不是空字符(“”)，更不是空格。当程序在输出含有chr(0)变量时chr(0)后面的数据会被停止，换句话说，就是误把它当成结束符，后面的数据直接忽略，这就导致漏洞产生
 一些应用读文件12345&lt;?php$file = $_GET['file'].'PNG';$contents =  file_get_contents($file);file_put_...
-                </div>
-            </a>
-            <div class="abstract-post-meta">
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/09/06</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
-                
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer"></span><span class="abstract-time">2017/09/06</span>
-                </div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/08/21/Xman线下赛源码审计/" >
+            
+                <span>Xman线下赛源码审计</span>
+        </a>
+        <div class="abstract-content">
+            Webupload.php之任意文件上传12345678910111213141516171819202122232425262728if (isset($_FILES['file'])) &#123;	$uploadsCount = count($_FILES['file']['name']);	if($uploadsCount &gt; 0) &#123;	 $errors = array();	 $messages = array();	 for ($i=0; $i &lt; $uploadsCount; $i++) &#123;		if ($_FILES["file"]["err...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/21</span>
             </div>
-        </article>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
     
-    
-    
-        <article class="index-post">
-            <a class="abstract-title" href = "/2017/08/21/Xman线下赛源码审计/" >
-                
-                    <span>Xman线下赛源码审计</span>
-            </a>
-            <a class="content-show-full" href = "/2017/08/21/Xman线下赛源码审计/" >
-                <div class="abstract-content">
-                    Webupload.php之任意文件上传12345678910111213141516171819202122232425262728if (isset($_FILES['file'])) &#123;	$uploadsCount = count($_FILES['file']['name']);	if($uploadsCount &gt; 0) &#123;	 $errors = array();	 $messages = array();	 for ($i=0; $i &lt; $uploadsCount; $i++) &#123;		if ($_FILES["file"]["err...
-                </div>
-            </a>
-            <div class="abstract-post-meta">
-                <!-- tags  -->
-                
-                <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-href = web>web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
-                
-                <!-- date  -->
-                <div class="abstract-date">
-                    <span class="abstract-calander iconfont-archer"></span><span class="abstract-time">2017/08/21</span>
-                </div>
-            </div>
-        </article>
+            
+        </div>
+    </article>
     
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/tags/web/page/5/">#PREV</a><a class="page-number" href="/tags/web/">1</a><span class="space">&hellip;</span><a class="page-number" href="/tags/web/page/4/">4</a><a class="page-number" href="/tags/web/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/tags/web/page/7/">7</a><a class="extend next" rel="next" href="/tags/web/page/7/">#NEXT</a>
+        <a class="extend prev" rel="prev" href="/tags/web/page/5/">&#60; PREV</a><a class="page-number" href="/tags/web/">1</a><span class="space">&hellip;</span><a class="page-number" href="/tags/web/page/4/">4</a><a class="page-number" href="/tags/web/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/tags/web/page/7/">7</a><a class="extend next" rel="next" href="/tags/web/page/7/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -466,22 +654,40 @@ php的magic_quotes_gpc为OFF状态
     
         
             
-                <a href="mailto:136244588@qq.com" class="iconfont-archer email" title=email ></a>
+                <a href="mailto:skysec@aliyun.com" class="iconfont-archer email" title=email ></a>
             
         
     
         
             
-                <a href="//github.com/skyofkinglove" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="//github.com/skyofkinglove" class="iconfont-archer github" target="_blank" title=github></a>
             
         
     
         
     
         
-            
-                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
-            
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
         
     
 
@@ -489,29 +695,30 @@ php的magic_quotes_gpc为OFF状态
     
     <!-- powered by Hexo  -->
     <div class="copyright">
-        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">Theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">archer</a></span>
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
     </div>
     <!-- 不蒜子  -->
     
     <div class="busuanzi-container">
-        <span id="busuanzi_container_site_pv" style="color:black;font-size:14px">VISITOR VOLUME: <span id="busuanzi_value_site_pv"></span>
-        </span>
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
     </div>
     
 </footer>
     </div>
     <!-- toc -->
     
-    <div class="back-top">&#xe639;</div>
-    <div class="sidebar">
-    <div class="sidebar-header sidebar-header-show-archive">
-        <div class="sidebar-category">
-            <span class="sidebar-archive-link"><span class="iconfont-archer">&#xe67d;</span>Archive</span>
-            <span class="sidebar-tags-link"><span class="iconfont-archer">&#xe610;</span>Tag</span>
-        </div>
-    </div>
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
     <div class="sidebar-content sidebar-content-show-archive">
-          <div class="sidebar-archive">
+          <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
     
     
@@ -2566,7 +2773,39 @@ php的magic_quotes_gpc为OFF状态
     
     
     
-    <div class="total-archive"> Total : 117 </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 117
+        </div>
+        <!-- search  -->
+        
+    </div>
     
     <div class="post-archive">
     
@@ -2872,12 +3111,12 @@ php的magic_quotes_gpc为OFF状态
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/Jarvis-OJ-Crypto/" >Jarvis-OJ-Crypto</a>
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/2017-12-11学习笔记/" >2017.12.11学习笔记</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/2017-12-11学习笔记/" >2017.12.11学习笔记</a>
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/Jarvis-OJ-Crypto/" >Jarvis-OJ-Crypto</a>
         </li>
     
     
@@ -3172,70 +3411,71 @@ php的magic_quotes_gpc为OFF状态
     
     </div>
   </div>
-        <div class="sidebar-tags">
+        <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name"><a href= "#">web</a></span>
+        <span class="sidebar-tag-name" data-tags="web"><span class="iconfont-archer">&#xe606;</span>web</span>
     
-        <span class="sidebar-tag-name"><a href= "#">CBC</a></span>
+        <span class="sidebar-tag-name" data-tags="CBC"><span class="iconfont-archer">&#xe606;</span>CBC</span>
     
-        <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
+        <span class="sidebar-tag-name" data-tags="CRC"><span class="iconfont-archer">&#xe606;</span>CRC</span>
     
-        <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
+        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
-        <span class="sidebar-tag-name"><a href= "#">hexo</a></span>
+        <span class="sidebar-tag-name" data-tags="hexo"><span class="iconfont-archer">&#xe606;</span>hexo</span>
     
-        <span class="sidebar-tag-name"><a href= "#">php_black_magic</a></span>
+        <span class="sidebar-tag-name" data-tags="php_black_magic"><span class="iconfont-archer">&#xe606;</span>php_black_magic</span>
     
-        <span class="sidebar-tag-name"><a href= "#">RSA</a></span>
+        <span class="sidebar-tag-name" data-tags="RSA"><span class="iconfont-archer">&#xe606;</span>RSA</span>
     
-        <span class="sidebar-tag-name"><a href= "#">ssrf</a></span>
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
-        <span class="sidebar-tag-name"><a href= "#">xss</a></span>
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
-        <span class="sidebar-tag-name"><a href= "#">cms</a></span>
+        <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
     
-        <span class="sidebar-tag-name"><a href= "#">docker</a></span>
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
-        <span class="sidebar-tag-name"><a href= "#">.git</a></span>
+        <span class="sidebar-tag-name" data-tags=".git"><span class="iconfont-archer">&#xe606;</span>.git</span>
     
-        <span class="sidebar-tag-name"><a href= "#">writeup</a></span>
+        <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
-        <span class="sidebar-tag-name"><a href= "#">crypto</a></span>
+        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
-        <span class="sidebar-tag-name"><a href= "#">sql</a></span>
+        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
     
-        <span class="sidebar-tag-name"><a href= "#">ShadowSocks</a></span>
+        <span class="sidebar-tag-name" data-tags="ShadowSocks"><span class="iconfont-archer">&#xe606;</span>ShadowSocks</span>
     
-        <span class="sidebar-tag-name"><a href= "#">xml</a></span>
+        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
     
-        <span class="sidebar-tag-name"><a href= "#">misc</a></span>
+        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
-        <span class="sidebar-tag-name"><a href= "#">.htaccess</a></span>
+        <span class="sidebar-tag-name" data-tags=".htaccess"><span class="iconfont-archer">&#xe606;</span>.htaccess</span>
     
-        <span class="sidebar-tag-name"><a href= "#">ECC</a></span>
+        <span class="sidebar-tag-name" data-tags="ECC"><span class="iconfont-archer">&#xe606;</span>ECC</span>
     
-        <span class="sidebar-tag-name"><a href= "#">计网考试</a></span>
+        <span class="sidebar-tag-name" data-tags="计网考试"><span class="iconfont-archer">&#xe606;</span>计网考试</span>
     
-        <span class="sidebar-tag-name"><a href= "#">心情随笔</a></span>
+        <span class="sidebar-tag-name" data-tags="心情随笔"><span class="iconfont-archer">&#xe606;</span>心情随笔</span>
     
-        <span class="sidebar-tag-name"><a href= "#">flask</a></span>
+        <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
     
-        <span class="sidebar-tag-name"><a href= "#">websummary</a></span>
+        <span class="sidebar-tag-name" data-tags="websummary"><span class="iconfont-archer">&#xe606;</span>websummary</span>
     
-        <span class="sidebar-tag-name"><a href= "#">微机实验</a></span>
+        <span class="sidebar-tag-name" data-tags="微机实验"><span class="iconfont-archer">&#xe606;</span>微机实验</span>
     
-        <span class="sidebar-tag-name"><a href= "#">微机考试</a></span>
+        <span class="sidebar-tag-name" data-tags="微机考试"><span class="iconfont-archer">&#xe606;</span>微机考试</span>
     
-        <span class="sidebar-tag-name"><a href= "#">马原考试</a></span>
+        <span class="sidebar-tag-name" data-tags="马原考试"><span class="iconfont-archer">&#xe606;</span>马原考试</span>
     
-        <span class="sidebar-tag-name"><a href= "#">微机实验考试</a></span>
+        <span class="sidebar-tag-name" data-tags="微机实验考试"><span class="iconfont-archer">&#xe606;</span>微机实验考试</span>
     
-        <span class="sidebar-tag-name"><a href= "#">Algorithm</a></span>
+        <span class="sidebar-tag-name" data-tags="Algorithm"><span class="iconfont-archer">&#xe606;</span>Algorithm</span>
     
-        <span class="sidebar-tag-name"><a href= "#">algorithm</a></span>
+        <span class="sidebar-tag-name" data-tags="algorithm"><span class="iconfont-archer">&#xe606;</span>algorithm</span>
     
     </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
     缺失模块。<br/>
     1、请确保node版本大于6.2<br/>
@@ -3259,25 +3499,85 @@ jsonContent:
     link: false
     permalink: false
     excerpt: false
-    categories: false
+    categories: true
     tags: true</pre>
     </div> 
-    <div class="sidebar-tag-list"></div>
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="web"><span class="iconfont-archer">&#xe60a;</span>web</span>
+    
+        <span class="sidebar-category-name" data-categories="crypto"><span class="iconfont-archer">&#xe60a;</span>crypto</span>
+    
+        <span class="sidebar-category-name" data-categories="hexo"><span class="iconfont-archer">&#xe60a;</span>hexo</span>
+    
+        <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
+    
+        <span class="sidebar-category-name" data-categories="docker"><span class="iconfont-archer">&#xe60a;</span>docker</span>
+    
+        <span class="sidebar-category-name" data-categories="git"><span class="iconfont-archer">&#xe60a;</span>git</span>
+    
+        <span class="sidebar-category-name" data-categories="writeup"><span class="iconfont-archer">&#xe60a;</span>writeup</span>
+    
+        <span class="sidebar-category-name" data-categories="翻墙"><span class="iconfont-archer">&#xe60a;</span>翻墙</span>
+    
+        <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
+    
+        <span class="sidebar-category-name" data-categories="awd"><span class="iconfont-archer">&#xe60a;</span>awd</span>
+    
+        <span class="sidebar-category-name" data-categories="计网考试"><span class="iconfont-archer">&#xe60a;</span>计网考试</span>
+    
+        <span class="sidebar-category-name" data-categories="心情随笔"><span class="iconfont-archer">&#xe60a;</span>心情随笔</span>
+    
+        <span class="sidebar-category-name" data-categories="flask"><span class="iconfont-archer">&#xe60a;</span>flask</span>
+    
+        <span class="sidebar-category-name" data-categories="websummary"><span class="iconfont-archer">&#xe60a;</span>websummary</span>
+    
+        <span class="sidebar-category-name" data-categories="微机实验"><span class="iconfont-archer">&#xe60a;</span>微机实验</span>
+    
+        <span class="sidebar-category-name" data-categories="微机考试"><span class="iconfont-archer">&#xe60a;</span>微机考试</span>
+    
+        <span class="sidebar-category-name" data-categories="马原考试"><span class="iconfont-archer">&#xe60a;</span>马原考试</span>
+    
+        <span class="sidebar-category-name" data-categories="Algorithm"><span class="iconfont-archer">&#xe60a;</span>Algorithm</span>
+    
+        <span class="sidebar-category-name" data-categories="algorithm"><span class="iconfont-archer">&#xe60a;</span>algorithm</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
 </div>
     </div>
 </div> 
     <script>
-    var jsInfo = {
-        root: '/'
+    var siteMeta = {
+        root: "/",
+        author: "一叶飘零"
     }
 </script>
-    <!-- 不蒜子  -->
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
     
     <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     
-    <!-- CNZZ统计  -->
+    <!-- CNZZ  -->
     
     </div>
+    <!-- async load share.js -->
+     
     </body>
 </html>
 
