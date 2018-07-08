@@ -213,17 +213,17 @@
 <h3 id="智力扑克"><a href="#智力扑克" class="headerlink" title="智力扑克"></a>智力扑克</h3><p>能够使玩家利用虚拟扑克牌通过一条交流渠道来进行打扑克牌游戏</p>
 <h3 id="不经意传输"><a href="#不经意传输" class="headerlink" title="不经意传输"></a>不经意传输</h3><p>A掌握某个秘密信息，B不知道信息<br>协议结束后,B以1/2的概率获得信息s<br>但是A不知道B是否得到了s</p>
 <h2 id="认证与密钥建立协议"><a href="#认证与密钥建立协议" class="headerlink" title="认证与密钥建立协议"></a>认证与密钥建立协议</h2><h3 id="关于身份认证"><a href="#关于身份认证" class="headerlink" title="关于身份认证"></a>关于身份认证</h3><p>一般的交互传输，很容易产生重放攻击<br>较为好的做法是引入挑战响应机制<br>加入Nonce和hash函数，如此一来可以阻止重放攻击</p>
-<h3 id="建立一个拥有第三方的密钥建立协议"><a href="#建立一个拥有第三方的密钥建立协议" class="headerlink" title="建立一个拥有第三方的密钥建立协议"></a>建立一个拥有第三方的密钥建立协议</h3><h4 id="1-0版本"><a href="#1-0版本" class="headerlink" title="1.0版本"></a>1.0版本</h4><p><img src="./_image/2018-06-29/2018-07-04-10-49-06.png" alt=""><br>这显然存在显著攻击问题，一切传输皆明文，攻击者可窃听，伪造，中间人攻击</p>
-<h4 id="2-0版本"><a href="#2-0版本" class="headerlink" title="2.0版本"></a>2.0版本</h4><p><img src="./_image/2018-06-29/2018-07-04-10-51-44.png" alt=""><br>传输过程中，用服务器与A和B的公共密钥，分别加密KAB<br>防止明文传输，导致窃听等问题<br>但存在中间人攻击问题：<br>攻击1：<br><img src="./_image/2018-06-29/2018-07-04-10-52-38.png" alt=""><br>中间人只需要拦截最后A给B的消息，并将发送给B的人改成自己，即可和B建立连接<br>攻击2：<br><img src="./_image/2018-06-29/2018-07-04-11-12-25.png" alt=""><br>在A给服务器请求和B通信的时候，攻击者拦截消息，将想要通信的人改为自己<br>则可以轻松让A建立与自己的联系，成功伪造成B</p>
-<h4 id="3-0版本"><a href="#3-0版本" class="headerlink" title="3.0版本"></a>3.0版本</h4><p><img src="./_image/2018-06-29/2018-07-04-11-17-43.png" alt=""><br>为了让A知道自己和谁在通信，所以服务器在反馈时加入了通信对象<br>在给A的信息中，加入了即将通信对象B<br>在给B的信息中，加入了即将通信对象A<br>但依旧存在伪造攻击<br><img src="./_image/2018-06-29/2018-07-04-11-19-40.png" alt=""><br>即服务器不能确定，向自己申请的人是否和发送的消息相符<br>比如我是C，我却说自己是A，服务器无法辨别</p>
-<h4 id="4-0版本"><a href="#4-0版本" class="headerlink" title="4.0版本"></a>4.0版本</h4><p>为此加入了挑战响应机制<br><img src="./_image/2018-06-29/2018-07-04-11-28-05.png" alt=""><br>即加入了nonce，服务器即可判断给他发送消息的人是谁<br><img src="./_image/2018-06-29/2018-07-04-11-29-27.png" alt=""><br>为了保证A不被C假冒（B无法辨别A的身份）：<br><img src="./_image/2018-06-29/2018-07-04-11-30-25.png" alt=""><br>故此加入了双重挑战响应机制，来到了最后的5.0版本</p>
-<h4 id="5-0版本"><a href="#5-0版本" class="headerlink" title="5.0版本"></a>5.0版本</h4><p><img src="./_image/2018-06-29/2018-07-04-11-32-34.png" alt=""><br>最后得到了较为稳定安全的密钥建立协议</p>
-<h3 id="基于Diffie-Hellman的三方密钥建立协议"><a href="#基于Diffie-Hellman的三方密钥建立协议" class="headerlink" title="基于Diffie-Hellman的三方密钥建立协议"></a>基于Diffie-Hellman的三方密钥建立协议</h3><p><img src="./_image/2018-06-29/2018-07-04-11-40-20.png" alt=""><br>1.A选择一个随机大整数x，然后将<code>g^x%n</code>发送给B<br>2.B选择一个随机大整数y，然后将<code>g^y%n</code>发送给C<br>3.C选择一个随机大整数z，然后将<code>g^z%n</code>发送给A<br>4.A将<code>(g^zx)%n</code>发送给B<br>5.B将<code>(g^xy)%n</code>发送给C<br>6.C将<code>(g^yz)%n</code>发送给A<br>7.A将<code>(g^yzx)%n</code>发送给B<br>8.B将<code>(g^zxy)%n</code>发送给C<br>9.C将<code>(g^yxz)%n</code>发送给A<br>最后大家都得到了密钥<code>g^xyz%n</code></p>
+<h3 id="建立一个拥有第三方的密钥建立协议"><a href="#建立一个拥有第三方的密钥建立协议" class="headerlink" title="建立一个拥有第三方的密钥建立协议"></a>建立一个拥有第三方的密钥建立协议</h3><h4 id="1-0版本"><a href="#1-0版本" class="headerlink" title="1.0版本"></a>1.0版本</h4><p><img src="./../images/2018-06-29/2018-07-04-10-49-06.png" alt=""><br>这显然存在显著攻击问题，一切传输皆明文，攻击者可窃听，伪造，中间人攻击</p>
+<h4 id="2-0版本"><a href="#2-0版本" class="headerlink" title="2.0版本"></a>2.0版本</h4><p><img src="./../images/2018-06-29/2018-07-04-10-51-44.png" alt=""><br>传输过程中，用服务器与A和B的公共密钥，分别加密KAB<br>防止明文传输，导致窃听等问题<br>但存在中间人攻击问题：<br>攻击1：<br><img src="./../images/2018-06-29/2018-07-04-10-52-38.png" alt=""><br>中间人只需要拦截最后A给B的消息，并将发送给B的人改成自己，即可和B建立连接<br>攻击2：<br><img src="./../images/2018-06-29/2018-07-04-11-12-25.png" alt=""><br>在A给服务器请求和B通信的时候，攻击者拦截消息，将想要通信的人改为自己<br>则可以轻松让A建立与自己的联系，成功伪造成B</p>
+<h4 id="3-0版本"><a href="#3-0版本" class="headerlink" title="3.0版本"></a>3.0版本</h4><p><img src="./../images/2018-06-29/2018-07-04-11-17-43.png" alt=""><br>为了让A知道自己和谁在通信，所以服务器在反馈时加入了通信对象<br>在给A的信息中，加入了即将通信对象B<br>在给B的信息中，加入了即将通信对象A<br>但依旧存在伪造攻击<br><img src="./../images/2018-06-29/2018-07-04-11-19-40.png" alt=""><br>即服务器不能确定，向自己申请的人是否和发送的消息相符<br>比如我是C，我却说自己是A，服务器无法辨别</p>
+<h4 id="4-0版本"><a href="#4-0版本" class="headerlink" title="4.0版本"></a>4.0版本</h4><p>为此加入了挑战响应机制<br><img src="./../images/2018-06-29/2018-07-04-11-28-05.png" alt=""><br>即加入了nonce，服务器即可判断给他发送消息的人是谁<br><img src="./../images/2018-06-29/2018-07-04-11-29-27.png" alt=""><br>为了保证A不被C假冒（B无法辨别A的身份）：<br><img src="./../images/2018-06-29/2018-07-04-11-30-25.png" alt=""><br>故此加入了双重挑战响应机制，来到了最后的5.0版本</p>
+<h4 id="5-0版本"><a href="#5-0版本" class="headerlink" title="5.0版本"></a>5.0版本</h4><p><img src="./../images/2018-06-29/2018-07-04-11-32-34.png" alt=""><br>最后得到了较为稳定安全的密钥建立协议</p>
+<h3 id="基于Diffie-Hellman的三方密钥建立协议"><a href="#基于Diffie-Hellman的三方密钥建立协议" class="headerlink" title="基于Diffie-Hellman的三方密钥建立协议"></a>基于Diffie-Hellman的三方密钥建立协议</h3><p><img src="./../images/2018-06-29/2018-07-04-11-40-20.png" alt=""><br>1.A选择一个随机大整数x，然后将<code>g^x%n</code>发送给B<br>2.B选择一个随机大整数y，然后将<code>g^y%n</code>发送给C<br>3.C选择一个随机大整数z，然后将<code>g^z%n</code>发送给A<br>4.A将<code>(g^zx)%n</code>发送给B<br>5.B将<code>(g^xy)%n</code>发送给C<br>6.C将<code>(g^yz)%n</code>发送给A<br>7.A将<code>(g^yzx)%n</code>发送给B<br>8.B将<code>(g^zxy)%n</code>发送给C<br>9.C将<code>(g^yxz)%n</code>发送给A<br>最后大家都得到了密钥<code>g^xyz%n</code></p>
 <h3 id="基于口令的协议"><a href="#基于口令的协议" class="headerlink" title="基于口令的协议"></a>基于口令的协议</h3><p>1.在线字典攻击：加入图形码<br>2.离线字典攻击：加入salt</p>
-<h3 id="EKE协议"><a href="#EKE协议" class="headerlink" title="EKE协议"></a>EKE协议</h3><p>防止离线字典攻击：<br><img src="./_image/2018-06-29/2018-07-08-10-09-25.png" alt=""></p>
+<h3 id="EKE协议"><a href="#EKE协议" class="headerlink" title="EKE协议"></a>EKE协议</h3><p>防止离线字典攻击：<br><img src="./../images/2018-06-29/2018-07-08-10-09-25.png" alt=""></p>
 <h2 id="前向安全签名"><a href="#前向安全签名" class="headerlink" title="前向安全签名"></a>前向安全签名</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>把密钥的有效期分成时段，在每个时段的最后，签名者以一个单向的模式，从当前时段的秘密密钥得到一个新的下一个时段秘密密钥，并且安全地删除不再使用的秘密密钥。<br>整个密钥的生命周期里的公钥不改变，这个方法确保了泄露秘密的时段以前的所有签名的有效性。</p>
 <h3 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h3><p>解决问题：一旦秘密密钥丢失，由这个密钥生成的以前所有签名都变得无效。</p>
-<h3 id="station-to-station-协议"><a href="#station-to-station-协议" class="headerlink" title="station to station 协议"></a>station to station 协议</h3><p><img src="./_image/2018-06-29/2018-07-08-10-00-24.png" alt=""><br><img src="./_image/2018-06-29/2018-07-08-10-00-36.png" alt=""><br>即使得到x和y，也无法计算出k<br>存在攻击：未知密钥共享攻击<br><img src="./_image/2018-06-29/2018-07-08-10-07-04.png" alt=""><br>攻击者使用自己的签名替换第三条消息，攻击者对A使用假冒身份B，对B使用真实身份C. A以为与B通信，但B以为与C</p>
+<h3 id="station-to-station-协议"><a href="#station-to-station-协议" class="headerlink" title="station to station 协议"></a>station to station 协议</h3><p><img src="./../images/2018-06-29/2018-07-08-10-00-24.png" alt=""><br><img src="./../images/2018-06-29/2018-07-08-10-00-36.png" alt=""><br>即使得到x和y，也无法计算出k<br>存在攻击：未知密钥共享攻击<br><img src="./../images/2018-06-29/2018-07-08-10-07-04.png" alt=""><br>攻击者使用自己的签名替换第三条消息，攻击者对A使用假冒身份B，对B使用真实身份C. A以为与B通信，但B以为与C</p>
 <h2 id="零知识证明"><a href="#零知识证明" class="headerlink" title="零知识证明"></a>零知识证明</h2><p>设P表示掌握某些信息，并希望证实这一事实的实体<br>设V是证明这一事实的实体<br>假如某个协议向V证明P的确掌握某些信息，但V无法推断出这些信息是什么，我们称P实现了最小泄露证明<br>不仅如此，如果V除了知道P能够证明某一事实外，不能够得到其他任何知识，我们称P实现了零知识证明，相应的协议称作零知识证明协议</p>
 <h3 id="正确性"><a href="#正确性" class="headerlink" title="正确性"></a>正确性</h3><p>P无法欺骗V。换言之，若P不知道一个定理的证明方法，则P使V相信他会证明定理的概率很低</p>
 <h3 id="完备性"><a href="#完备性" class="headerlink" title="完备性"></a>完备性</h3><p>V无法欺骗P。若P知道了一个定理的证明方法，则P使V以绝对优势的概率相信他能证明</p>
@@ -252,34 +252,27 @@
 <h3 id="非否认服务"><a href="#非否认服务" class="headerlink" title="非否认服务"></a>非否认服务</h3><p>1.发送方非否认：提供一种保护使得发送方不能否认他发送过某条消息<br>2.接收方非否认：提供一种保护使得接收方不能否认他接受过某条消息<br>3.发送方非否认证据：非否认服务向接收方提供不可抵赖的证据，证明接受到的消息的来源<br>4.接收方非否认证据：非否认服务向发送发提供不可抵赖的证据，证明接收方已收到了某条消息</p>
 <h3 id="非否认协议的步骤"><a href="#非否认协议的步骤" class="headerlink" title="非否认协议的步骤"></a>非否认协议的步骤</h3><p>1.服务请求<br>2.证据产生<br>3.证据传递和存储<br>4.证据验证<br>5.纠纷解决</p>
 <h3 id="非否认协议性质"><a href="#非否认协议性质" class="headerlink" title="非否认协议性质"></a>非否认协议性质</h3><p>1.非否认性<br>2.可追究性<br>3.公平性<br>4.时限性<br>5.非滥用性</p>
-<h3 id="Zhou-Gollman协议"><a href="#Zhou-Gollman协议" class="headerlink" title="Zhou-Gollman协议"></a>Zhou-Gollman协议</h3><p><img src="./_image/2018-06-29/2018-07-04-14-04-14.png" alt=""><br>1.A发送密文c=Ek(m)、标签l、接受者名字B的签名。<br>B使用这个信息作为A在协议标识l下发送了Ek(m)的证据<br>2.B使用一个签名作为响应，表示在协议标识l下接收到了Ek(m)。<br>A将使用这个信息作为B在协议标识l下接收到了Ek(m)的证据<br>3.A接着把密钥K与协议标识l发送给可信服务器。<br>如果A进行欺骗而发送一个错误的密钥K’，他就不能得到他需要的证据，因为Ek(m)与K’不能提供证据说明A发送了m。<br>4和5中，A与B都可以从可信第三方获取密钥</p>
+<h3 id="Zhou-Gollman协议"><a href="#Zhou-Gollman协议" class="headerlink" title="Zhou-Gollman协议"></a>Zhou-Gollman协议</h3><p><img src="./../images/2018-06-29/2018-07-04-14-04-14.png" alt=""><br>1.A发送密文c=Ek(m)、标签l、接受者名字B的签名。<br>B使用这个信息作为A在协议标识l下发送了Ek(m)的证据<br>2.B使用一个签名作为响应，表示在协议标识l下接收到了Ek(m)。<br>A将使用这个信息作为B在协议标识l下接收到了Ek(m)的证据<br>3.A接着把密钥K与协议标识l发送给可信服务器。<br>如果A进行欺骗而发送一个错误的密钥K’，他就不能得到他需要的证据，因为Ek(m)与K’不能提供证据说明A发送了m。<br>4和5中，A与B都可以从可信第三方获取密钥</p>
 <p>最后，A可以证明B对消息m的正确性负责，且B可以证明A对消息m的正确性负责</p>
 <h2 id="公平交换协议"><a href="#公平交换协议" class="headerlink" title="公平交换协议"></a>公平交换协议</h2><h3 id="概念-5"><a href="#概念-5" class="headerlink" title="概念"></a>概念</h3><p>要么每一方都得到他所期待的信息或者物品<br>要么每一方都没有得到任何有意义的东西<br>当一个系统涉及两个或者多个互不信任的主体，就必须要考虑满足所有主体的安全性<br>从主体利益的角度考虑，如果一个系统不会损害其中任何一个诚实主体的利益，那么该系统具有公平性<br>从交换结果考虑，如果在交换结束后，要么每一方都得到了他所期待的信息或者物品，要么每一方都没有得到任何有意义的东西，我们也认为系统具有公平性</p>
 <h3 id="基本要求"><a href="#基本要求" class="headerlink" title="基本要求"></a>基本要求</h3><p>1.有效性：若两个参与者行为正确，在没有第三方干涉的情况下， 仍能获得各自所需要的东西<br>2.秘密性：交换必须保护用户的隐私信息<br>3.高效实用性：协议的效率要高，以保证实用性<br>4.不可否认性：在进行有效的交换后，交换的任何一方都不能对他所传递和收到的信息进行否认<br>5.公平性：在交换结束后，要么每一方都得到他所期待的物品，要么每一方都没有得到有意义的东西<br>6.终止性：在协议发生的任何时间，每个参与者都可以单方面的终止协议而不破坏协议的公平性<br>7.第三方可验证性：发生纠纷时第三方可以进行仲裁，对不诚实的一方可以进行制裁。<br>8.无滥用性：在多方公平交换模型中，参与交换的任意子集在协议的任何时刻，都无法向第三者证明他们有能力中止协议</p>
 <h3 id="秘密的同时交换"><a href="#秘密的同时交换" class="headerlink" title="秘密的同时交换"></a>秘密的同时交换</h3><h4 id="拥有第三方的秘密交换"><a href="#拥有第三方的秘密交换" class="headerlink" title="拥有第三方的秘密交换"></a>拥有第三方的秘密交换</h4><p>1.A发送一份签名的副本给第三方<br>2.B发送一份签名的副本给第三方<br>3.第三方通知A,B已经收到所有人的签名副本<br>4.A签名两份副本，并发给B<br>5.B签名两份副本，然后给A一份，自己保留一份<br>6.A和B通知第三方已完成<br>7.第三方销毁自己手上的签名副本</p>
 <p>第1~3步：第三方拥有每个人签名的副本，防止第4步，A签名后，B签名不给A</p>
-<h4 id="面对面同时签名"><a href="#面对面同时签名" class="headerlink" title="面对面同时签名"></a>面对面同时签名</h4><p>1.A签上自己名字的第一个字，然后发送给B<br>2.B签上自己名字的第一个字，然后发送给A<br>3.如此循环，直到签名结束<br>4.当交换多轮后，可以大致上认为两者都已经签名完成<br><img src="./_image/2018-06-29/2018-07-04-17-21-01.png" alt=""></p>
+<h4 id="面对面同时签名"><a href="#面对面同时签名" class="headerlink" title="面对面同时签名"></a>面对面同时签名</h4><p>1.A签上自己名字的第一个字，然后发送给B<br>2.B签上自己名字的第一个字，然后发送给A<br>3.如此循环，直到签名结束<br>4.当交换多轮后，可以大致上认为两者都已经签名完成<br><img src="./../images/2018-06-29/2018-07-04-17-21-01.png" alt=""></p>
 <h4 id="非面对面同时签名"><a href="#非面对面同时签名" class="headerlink" title="非面对面同时签名"></a>非面对面同时签名</h4><p>1.A和B就签约应当完成的日期达成一致意见<br>2.A和B确定一个双方都愿意的概率差，A的概率差为a，B的概率差为b<br>3.A给B发送一份p=a的已签消息<br>4.B给A发送一份p=a+b的已签消息<br>5.循环往复，直至p=1</p>
 <p>如果这个协议不能顺利完成，任何一方都可以把合约拿给法官，并同时递上另一方的最后签的消息<br>最后法官在0和1之间随机选择一个数<br>如果这个值小于另一方签名的概率，则双方都接受合约约束<br>如果这个值大于另一方签名的概率，则双方都不受约束</p>
 <h4 id="非面对面同时签名（密码协议版）"><a href="#非面对面同时签名（密码协议版）" class="headerlink" title="非面对面同时签名（密码协议版）"></a>非面对面同时签名（密码协议版）</h4><p>1.A和B都随机选择2n个DES密钥，分成一对一对，共n对<br>2.A和B都产生n对消息<br>3.A和B都用自己选择的每对密钥加密自己产生的n对消息（每对中，左密钥加密左消息，右密钥加密右消息）<br>4.A和B互相交换自己加密的2n份消息<br>5.A从自己的每一对密钥中选择一个发送给B，共计n个密钥，利用不经意传输<br>6.B从自己的每一对密钥中选择一个发送给A，共计n个密钥，利用不经意传输<br>7.A和B都用自己收到的一半的密钥解密自己能解密的那一半消息，确保解密消息是有效的<br>8.A和B交替发送自己2n个DES密钥的第一个bit，并如此循环，直到所有密钥发送给对方<br>9.A和B解密剩下的那一半消息，得到签署的合约<br>10.A和B交换在5，6步不经意传输中使用的私钥，确保对方没有欺骗</p>
 <h2 id="电子选举"><a href="#电子选举" class="headerlink" title="电子选举"></a>电子选举</h2><h3 id="安全需求"><a href="#安全需求" class="headerlink" title="安全需求"></a>安全需求</h3><p>1.只有经授权的投票者才能投票<br>2.每个人投票不得超过一次<br>3.任何人都不能确定别人投谁的票<br>4.没有人能复制其他人的选票<br>5.没有人能修改其他人的选票<br>6.每个投票者都可以保证他的选票在最后的选举计数中被计算在内<br>7.任何人都知道谁没有进行投票</p>
-<h3 id="基于盲签名的电子选举协议"><a href="#基于盲签名的电子选举协议" class="headerlink" title="基于盲签名的电子选举协议"></a>基于盲签名的电子选举协议</h3><p><img src="./_image/2018-06-29/2018-07-04-15-57-22.png" alt=""><br><img src="./_image/2018-06-29/2018-07-04-15-57-31.png" alt=""><br>1.投票者生成消息集M，内容包括n个参与选举的候选人和投票者个人的唯一标识符ID<br>2.投票者对消息集M进行盲签名<br>3.投票者将签名后的消息发送给可信第三方<br>4.可信第三方验证消息的正确性，即候选人是否正确，ID是否唯一，是否有重复投票<br>5.可信第三方用自己的密钥加密签名，反馈给投票者<br>6.投票者用可信第三方的密钥加密自己投票的人和自己的唯一标识符ID<br>7.投票者将加密结果包装成消息集M’<br>8.投票者将消息M’发送给可信第三方<br>9.可信第三方验证ID是否唯一，是否重复<br>10.可信第三方宣布投票结果</p>
+<h3 id="基于盲签名的电子选举协议"><a href="#基于盲签名的电子选举协议" class="headerlink" title="基于盲签名的电子选举协议"></a>基于盲签名的电子选举协议</h3><p><img src="./../images/2018-06-29/2018-07-04-15-57-22.png" alt=""><br><img src="./../images/2018-06-29/2018-07-04-15-57-31.png" alt=""><br>1.投票者生成消息集M，内容包括n个参与选举的候选人和投票者个人的唯一标识符ID<br>2.投票者对消息集M进行盲签名<br>3.投票者将签名后的消息发送给可信第三方<br>4.可信第三方验证消息的正确性，即候选人是否正确，ID是否唯一，是否有重复投票<br>5.可信第三方用自己的密钥加密签名，反馈给投票者<br>6.投票者用可信第三方的密钥加密自己投票的人和自己的唯一标识符ID<br>7.投票者将加密结果包装成消息集M’<br>8.投票者将消息M’发送给可信第三方<br>9.可信第三方验证ID是否唯一，是否重复<br>10.可信第三方宣布投票结果</p>
 <h2 id="电子现金"><a href="#电子现金" class="headerlink" title="电子现金"></a>电子现金</h2><h3 id="攻击方式"><a href="#攻击方式" class="headerlink" title="攻击方式"></a>攻击方式</h3><p>1.超额花费（多重花费）：多次使用同一笔电子现金<br>2.洗钱：商家从非法活动中获得电子现金，为隐藏电子现金的来源，伪造一个虚拟的交易账单<br>3.伪造：通过一些老的支付抄本，伪造有效的电子现金</p>
 <h3 id="安全需求-1"><a href="#安全需求-1" class="headerlink" title="安全需求"></a>安全需求</h3><p>1.不可伪造性<br>2.私密性<br>3.不可否认性</p>
-<h3 id="使用一般盲签名的优缺点"><a href="#使用一般盲签名的优缺点" class="headerlink" title="使用一般盲签名的优缺点"></a>使用一般盲签名的优缺点</h3><p><img src="./_image/2018-06-29/2018-07-04-16-29-23.jpg" alt=""></p>
-<h3 id="改进版部分盲签名的优势"><a href="#改进版部分盲签名的优势" class="headerlink" title="改进版部分盲签名的优势"></a>改进版部分盲签名的优势</h3><p><img src="./_image/2018-06-29/2018-07-04-16-31-37.jpg" alt=""></p>
-<h3 id="继续改进公平盲签名的优势"><a href="#继续改进公平盲签名的优势" class="headerlink" title="继续改进公平盲签名的优势"></a>继续改进公平盲签名的优势</h3><p><img src="./_image/2018-06-29/2018-07-04-16-32-45.jpg" alt=""></p>
+<h3 id="使用一般盲签名的优缺点"><a href="#使用一般盲签名的优缺点" class="headerlink" title="使用一般盲签名的优缺点"></a>使用一般盲签名的优缺点</h3><p><img src="./../images/2018-06-29/2018-07-04-16-29-23.jpg" alt=""></p>
+<h3 id="改进版部分盲签名的优势"><a href="#改进版部分盲签名的优势" class="headerlink" title="改进版部分盲签名的优势"></a>改进版部分盲签名的优势</h3><p><img src="./../images/2018-06-29/2018-07-04-16-31-37.jpg" alt=""></p>
+<h3 id="继续改进公平盲签名的优势"><a href="#继续改进公平盲签名的优势" class="headerlink" title="继续改进公平盲签名的优势"></a>继续改进公平盲签名的优势</h3><p><img src="./../images/2018-06-29/2018-07-04-16-32-45.jpg" alt=""></p>
 
     </article>
     <!-- 前后页  -->
     <ul class="post-pager">
-        
-            <li class="next">
-                <a href= "/2018/07/03/configs/sorts/" title=  >
-                    <span>Next Post</span>
-                    <span>[Untitled Post]</span>
-                </a>
-            </li>
         
         
             <li class="previous">
@@ -2391,7 +2384,38 @@
     
     
     
-    <div class="total-archive"> Total : 118 </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-archive"> Total : 117 </div>
     
     <div class="post-archive">
     
@@ -2657,12 +2681,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
         </li>
     
     
@@ -2972,31 +2996,8 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
-    
-    
-    
-    
-    
-        </ul>
-    
-    <div class="archive-year"> Invalid date </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/07/03/configs/sorts/" >[Untitled Post]</a>
-        </li>
-    
-    
-    
-    
-    
-        </ul>
-    
-    <div class="archive-year"> 2017 </div>
-    <ul class="year-list">
     
     
         <li class="archive-post-item">
@@ -3005,12 +3006,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
@@ -3025,9 +3026,9 @@
     
         <span class="sidebar-tag-name"><a href= "#">web</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">CBC</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">CRC</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">serialize</a></span>
     
@@ -3043,15 +3044,15 @@
     
         <span class="sidebar-tag-name"><a href= "#">cms</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">writeup</a></span>
-    
-        <span class="sidebar-tag-name"><a href= "#">sql</a></span>
-    
-        <span class="sidebar-tag-name"><a href= "#">crypto</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">docker</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">.git</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">writeup</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">crypto</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">sql</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">ShadowSocks</a></span>
     
