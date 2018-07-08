@@ -196,8 +196,34 @@
             <main class="main post-page">
     <article class="article-entry">
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是一篇水文，全是为了9号安全协议的考试<br>吐槽一波。。。矿大今年搞的所有考试都在夏令营这个时间段，真尴尬<br>搞的我现在一边焦虑考试，一边焦虑夏令营，还对机考提心吊胆<br>只希望这个月赶紧过去……<br>跑题了，这篇文章主要总结一下考试重点(别以为我对这个感兴趣，全都为了考试XD)</p>
-<h2 id="门限签名"><a href="#门限签名" class="headerlink" title="门限签名"></a>门限签名</h2><p>将一个群体的签名密钥分发给群体中的每个成员，使得任何成员个数不少于门限值的子集都可以产生签名。<br>任何成员个数少于门限值的子集都无法以产生签名。<br>门限签名是最普通、最常用的群体签名。<br>其方法是将一个群体的签名密钥分发给群体中的每个成员，使得任何成员个数不少于门限值的子集都可以产生签名；而任何成员个数少于门限值的子集都无法以产生签名</p>
+<h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><h3 id="破解算法的种类"><a href="#破解算法的种类" class="headerlink" title="破解算法的种类"></a>破解算法的种类</h3><p>1.完全破解<br>2.全部推导<br>3.实例破解<br>4.信息推导</p>
+<h3 id="协议的特性"><a href="#协议的特性" class="headerlink" title="协议的特性"></a>协议的特性</h3><p>1.各方必须了解协议<br>2.各方必须一致遵守。<br>3.协议必须明确<br>4.协议必须完整</p>
+<h3 id="安全协议的种类"><a href="#安全协议的种类" class="headerlink" title="安全协议的种类"></a>安全协议的种类</h3><p>1.仲裁协议：涉及可信第三方<br>2.判决协议：可信第三方，事后可做判决<br>3.自执行协议：没有可信第三方</p>
+<h3 id="协议攻击手段"><a href="#协议攻击手段" class="headerlink" title="协议攻击手段"></a>协议攻击手段</h3><p>1.密码攻击：针对协议中使用的密码算法的攻击、针对用于实现算法和协议的密码技术的攻击、对协议本身的攻击<br>2.被动攻击：窃听协议中的部分或全部<br>3.主动攻击：引入新消息，删除消息，中断，修改，回复<br>4.被动欺骗攻击：遵循协议，但尝试获得更多信息<br>5.主动欺骗攻击：破坏协议在进行中企图作弊</p>
+<h3 id="安全协议的特征"><a href="#安全协议的特征" class="headerlink" title="安全协议的特征"></a>安全协议的特征</h3><p>1.机密性：只有授权获得数据的人才能获得数据。<br>2.完整性：数据未被未经授权的实体更改。<br>3.身份验证：数据确实来源于所声称的发送者。<br>4.不可否认性：实体不能拒绝发送他们提交的数据。<br>5.新鲜度：无用的东西是不可猜测的，而且永远不会重复使用。</p>
+<h3 id="Dolev-Yao-威胁模型"><a href="#Dolev-Yao-威胁模型" class="headerlink" title="Dolev-Yao 威胁模型"></a>Dolev-Yao 威胁模型</h3><p>Dolev Yao威胁模型代表一个可以窃听、拦截和合成任何消息的攻击者，并且仅受所使用的加密方法的约束的限制。<br>假设攻击者可以：<br>1.获取通过网络传递的任何消息<br>2.作为网络的合法用户（即可以发起与任何其他用户的对话）<br>3.可以成为任何发送者的接收者<br>4.可以通过冒充任何其他实体向任何实体发送消息。<br>我们认为：<br>任何通过网络发送的消息都是攻击者发送的。<br>因此，接收到的任何消息“可能”都被攻击者操纵了。<br>攻击者可以控制事物的发送方式<br>但是攻击者不能做到<br>1.无法猜出作为安全协议的一部分选择的随机数。<br>2.如果不知道密钥，攻击者无法从密文中找出明文，也不能从明文中创建密文。<br>3.无法解决公钥的私钥配对问题<br>4.无法控制合法用户的计算设备的“内存”</p>
+<h3 id="常见攻击方式"><a href="#常见攻击方式" class="headerlink" title="常见攻击方式"></a>常见攻击方式</h3><p>1.窃听<br>2.篡改<br>3.重放<br>4.中间人攻击<br>5.反射<br>6.拒绝服务</p>
+<h2 id="秘密的分割与共享"><a href="#秘密的分割与共享" class="headerlink" title="秘密的分割与共享"></a>秘密的分割与共享</h2><h3 id="秘密分割"><a href="#秘密分割" class="headerlink" title="秘密分割"></a>秘密分割</h3><p>将一个消息分割成n份，每一块单独看都不具有意义，但所有的块集合起来能恢复出原消息<br>例如：<br>消息m，随机数r<br>m xor r = s<br>将r交给A<br>将s交给B<br>那么只有当A,B同时在场的时候，才可以复原消息m，单独来看都不具备意义</p>
+<p>存在问题：<br>若有人丢失了自己的那一份，则完整的秘密将无法复原</p>
+<h3 id="秘密共享—门限方案"><a href="#秘密共享—门限方案" class="headerlink" title="秘密共享—门限方案"></a>秘密共享—门限方案</h3><p>将一个群体的签名密钥分发给群体中的每个成员，使得任何成员个数不少于门限值的子集都可以产生签名。<br>任何成员个数少于门限值的子集都无法以产生签名。<br>门限签名是最普通、最常用的群体签名。<br>其方法是将一个群体的签名密钥分发给群体中的每个成员，使得任何成员个数不少于门限值的子集都可以产生签名<br>而任何成员个数少于门限值的子集都无法以产生签名</p>
+<p>将秘密分割为n份，只有其中m个人在一起，才能够复原秘密，这叫做(m,n)门限方案<br>一般使用函数实现：<br>例如多次方程：<br>假设是(2,n)方案，那么则使用1次方程即可：ax+b=y<br>假设是(3,n)方案，那么则使用2次方程即可：ax^2+bx+c=y<br>……<br>假设是(m,n)方案，那么则使用m-1次方程即可：ax^(m-1)+bx^(m-2)……+z=y</p>
+<h3 id="阈下信道"><a href="#阈下信道" class="headerlink" title="阈下信道"></a>阈下信道</h3><p>即消息本身不包含秘密信息，通过交换完全无害的签名消息，他们可以来回传秘密信息</p>
+<h3 id="比特承诺"><a href="#比特承诺" class="headerlink" title="比特承诺"></a>比特承诺</h3><p>A向B承诺一个消息，在有效期内，A可以向B证实承诺的消息，但是A无法欺骗B</p>
+<h3 id="抛币问题"><a href="#抛币问题" class="headerlink" title="抛币问题"></a>抛币问题</h3><p>让彼此互不信任的双方对一个随即位达成共识</p>
+<h3 id="智力扑克"><a href="#智力扑克" class="headerlink" title="智力扑克"></a>智力扑克</h3><p>能够使玩家利用虚拟扑克牌通过一条交流渠道来进行打扑克牌游戏</p>
+<h3 id="不经意传输"><a href="#不经意传输" class="headerlink" title="不经意传输"></a>不经意传输</h3><p>A掌握某个秘密信息，B不知道信息<br>协议结束后,B以1/2的概率获得信息s<br>但是A不知道B是否得到了s</p>
 <h2 id="认证与密钥建立协议"><a href="#认证与密钥建立协议" class="headerlink" title="认证与密钥建立协议"></a>认证与密钥建立协议</h2><h3 id="关于身份认证"><a href="#关于身份认证" class="headerlink" title="关于身份认证"></a>关于身份认证</h3><p>一般的交互传输，很容易产生重放攻击<br>较为好的做法是引入挑战响应机制<br>加入Nonce和hash函数，如此一来可以阻止重放攻击</p>
+<h3 id="建立一个拥有第三方的密钥建立协议"><a href="#建立一个拥有第三方的密钥建立协议" class="headerlink" title="建立一个拥有第三方的密钥建立协议"></a>建立一个拥有第三方的密钥建立协议</h3><h4 id="1-0版本"><a href="#1-0版本" class="headerlink" title="1.0版本"></a>1.0版本</h4><p><img src="./_image/2018-06-29/2018-07-04-10-49-06.png" alt=""><br>这显然存在显著攻击问题，一切传输皆明文，攻击者可窃听，伪造，中间人攻击</p>
+<h4 id="2-0版本"><a href="#2-0版本" class="headerlink" title="2.0版本"></a>2.0版本</h4><p><img src="./_image/2018-06-29/2018-07-04-10-51-44.png" alt=""><br>传输过程中，用服务器与A和B的公共密钥，分别加密KAB<br>防止明文传输，导致窃听等问题<br>但存在中间人攻击问题：<br>攻击1：<br><img src="./_image/2018-06-29/2018-07-04-10-52-38.png" alt=""><br>中间人只需要拦截最后A给B的消息，并将发送给B的人改成自己，即可和B建立连接<br>攻击2：<br><img src="./_image/2018-06-29/2018-07-04-11-12-25.png" alt=""><br>在A给服务器请求和B通信的时候，攻击者拦截消息，将想要通信的人改为自己<br>则可以轻松让A建立与自己的联系，成功伪造成B</p>
+<h4 id="3-0版本"><a href="#3-0版本" class="headerlink" title="3.0版本"></a>3.0版本</h4><p><img src="./_image/2018-06-29/2018-07-04-11-17-43.png" alt=""><br>为了让A知道自己和谁在通信，所以服务器在反馈时加入了通信对象<br>在给A的信息中，加入了即将通信对象B<br>在给B的信息中，加入了即将通信对象A<br>但依旧存在伪造攻击<br><img src="./_image/2018-06-29/2018-07-04-11-19-40.png" alt=""><br>即服务器不能确定，向自己申请的人是否和发送的消息相符<br>比如我是C，我却说自己是A，服务器无法辨别</p>
+<h4 id="4-0版本"><a href="#4-0版本" class="headerlink" title="4.0版本"></a>4.0版本</h4><p>为此加入了挑战响应机制<br><img src="./_image/2018-06-29/2018-07-04-11-28-05.png" alt=""><br>即加入了nonce，服务器即可判断给他发送消息的人是谁<br><img src="./_image/2018-06-29/2018-07-04-11-29-27.png" alt=""><br>为了保证A不被C假冒（B无法辨别A的身份）：<br><img src="./_image/2018-06-29/2018-07-04-11-30-25.png" alt=""><br>故此加入了双重挑战响应机制，来到了最后的5.0版本</p>
+<h4 id="5-0版本"><a href="#5-0版本" class="headerlink" title="5.0版本"></a>5.0版本</h4><p><img src="./_image/2018-06-29/2018-07-04-11-32-34.png" alt=""><br>最后得到了较为稳定安全的密钥建立协议</p>
+<h3 id="基于Diffie-Hellman的三方密钥建立协议"><a href="#基于Diffie-Hellman的三方密钥建立协议" class="headerlink" title="基于Diffie-Hellman的三方密钥建立协议"></a>基于Diffie-Hellman的三方密钥建立协议</h3><p><img src="./_image/2018-06-29/2018-07-04-11-40-20.png" alt=""><br>1.A选择一个随机大整数x，然后将<code>g^x%n</code>发送给B<br>2.B选择一个随机大整数y，然后将<code>g^y%n</code>发送给C<br>3.C选择一个随机大整数z，然后将<code>g^z%n</code>发送给A<br>4.A将<code>(g^zx)%n</code>发送给B<br>5.B将<code>(g^xy)%n</code>发送给C<br>6.C将<code>(g^yz)%n</code>发送给A<br>7.A将<code>(g^yzx)%n</code>发送给B<br>8.B将<code>(g^zxy)%n</code>发送给C<br>9.C将<code>(g^yxz)%n</code>发送给A<br>最后大家都得到了密钥<code>g^xyz%n</code></p>
+<h3 id="基于口令的协议"><a href="#基于口令的协议" class="headerlink" title="基于口令的协议"></a>基于口令的协议</h3><p>1.在线字典攻击：加入图形码<br>2.离线字典攻击：加入salt</p>
+<h3 id="EKE协议"><a href="#EKE协议" class="headerlink" title="EKE协议"></a>EKE协议</h3><p>防止离线字典攻击：<br><img src="./_image/2018-06-29/2018-07-08-10-09-25.png" alt=""></p>
+<h2 id="前向安全签名"><a href="#前向安全签名" class="headerlink" title="前向安全签名"></a>前向安全签名</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>把密钥的有效期分成时段，在每个时段的最后，签名者以一个单向的模式，从当前时段的秘密密钥得到一个新的下一个时段秘密密钥，并且安全地删除不再使用的秘密密钥。<br>整个密钥的生命周期里的公钥不改变，这个方法确保了泄露秘密的时段以前的所有签名的有效性。</p>
+<h3 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h3><p>解决问题：一旦秘密密钥丢失，由这个密钥生成的以前所有签名都变得无效。</p>
+<h3 id="station-to-station-协议"><a href="#station-to-station-协议" class="headerlink" title="station to station 协议"></a>station to station 协议</h3><p><img src="./_image/2018-06-29/2018-07-08-10-00-24.png" alt=""><br><img src="./_image/2018-06-29/2018-07-08-10-00-36.png" alt=""><br>即使得到x和y，也无法计算出k<br>存在攻击：未知密钥共享攻击<br><img src="./_image/2018-06-29/2018-07-08-10-07-04.png" alt=""><br>攻击者使用自己的签名替换第三条消息，攻击者对A使用假冒身份B，对B使用真实身份C. A以为与B通信，但B以为与C</p>
 <h2 id="零知识证明"><a href="#零知识证明" class="headerlink" title="零知识证明"></a>零知识证明</h2><p>设P表示掌握某些信息，并希望证实这一事实的实体<br>设V是证明这一事实的实体<br>假如某个协议向V证明P的确掌握某些信息，但V无法推断出这些信息是什么，我们称P实现了最小泄露证明<br>不仅如此，如果V除了知道P能够证明某一事实外，不能够得到其他任何知识，我们称P实现了零知识证明，相应的协议称作零知识证明协议</p>
 <h3 id="正确性"><a href="#正确性" class="headerlink" title="正确性"></a>正确性</h3><p>P无法欺骗V。换言之，若P不知道一个定理的证明方法，则P使V相信他会证明定理的概率很低</p>
 <h3 id="完备性"><a href="#完备性" class="headerlink" title="完备性"></a>完备性</h3><p>V无法欺骗P。若P知道了一个定理的证明方法，则P使V以绝对优势的概率相信他能证明</p>
@@ -209,34 +235,51 @@
 <h2 id="Hamilton回路"><a href="#Hamilton回路" class="headerlink" title="Hamilton回路"></a>Hamilton回路</h2><h3 id="Hamilton回路概念"><a href="#Hamilton回路概念" class="headerlink" title="Hamilton回路概念"></a>Hamilton回路概念</h3><p>在图论中，图G中的回路是指始点和终点相重合的路径，若回路通过图的每个顶点一次且仅一次，则称图G为哈密尔顿回路，构造图G的哈密尔顿回路是NPC问题</p>
 <h3 id="零知识证明-2"><a href="#零知识证明-2" class="headerlink" title="零知识证明"></a>零知识证明</h3><p>假定P知道图G的哈密尔顿回路，并希望向V证明这一事实，则：<br>（1）P随机地构造一个与图G同构的图W,并将W交给V<br>（2）V随机的要求P做下述两件工作之一：<br>1.证明图G和图W同构<br>2.指出图W的一条哈密尔顿回路<br>（3）P根据要求做下述两件工作之一：<br>1.证明图G和图W同构，但不能指出图G或者图W的哈密尔顿回路<br>2.指出图W的哈密尔顿回路，但不证明图G和图W同构<br>（4）P和V重复以上过程n次</p>
 <h3 id="正确性证明-1"><a href="#正确性证明-1" class="headerlink" title="正确性证明"></a>正确性证明</h3><p>协议执行完后，V无法获得任何信息是自己可以构造图G的哈密尔顿回路，因此该协议是零知识证明协议<br>事实上，如果P向V证明图G和图W同构，这个结论对V并没有意义，因为构造图G的哈密尔顿回路和构造图W的哈密尔顿图同样困难。<br>如果P向V指出图W的一条哈密尔顿回路，这一事实也无法向V提供任何帮助，因为求两个图之间的同构并不比求一个图的哈密尔顿回路容易。<br>在协议的每一轮中，P都随机地执行一个与图G同构的新图，因此不论协议执行多少轮，V都得不到任何有关构造图G的哈密尔顿回路的信息</p>
-<h2 id="盲签名"><a href="#盲签名" class="headerlink" title="盲签名"></a>盲签名</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>所谓盲签名就是指签名人只是完成对文件的签名工作，并不了解所签文件的内容<br>而平常的签名内容，都是签名者对所签内容是知道的</p>
+<h2 id="盲签名"><a href="#盲签名" class="headerlink" title="盲签名"></a>盲签名</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>所谓盲签名就是指签名人只是完成对文件的签名工作，并不了解所签文件的内容<br>而平常的签名内容，都是签名者对所签内容是知道的</p>
 <h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>（1）签名者不知道所签署的数据内容<br>（2）在签名被签名申请者泄露后，签名者不能追踪签名</p>
 <h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>（1）申请者对待签名文件进行盲化<br>（2）签名者对文件签名<br>（3）申请者将签名后文件去盲，即可得到原始数据的签名</p>
-<h2 id="部分盲签名"><a href="#部分盲签名" class="headerlink" title="部分盲签名"></a>部分盲签名</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>“部分”意味着待签名的消息是由签名申请方和签名方共同生成的<br>即待签名消息包括签名申请者提交的待签名消息和签名者提供的”身份消息”</p>
+<h2 id="部分盲签名"><a href="#部分盲签名" class="headerlink" title="部分盲签名"></a>部分盲签名</h2><h3 id="概念-2"><a href="#概念-2" class="headerlink" title="概念"></a>概念</h3><p>“部分”意味着待签名的消息是由签名申请方和签名方共同生成的<br>即待签名消息包括签名申请者提交的待签名消息和签名者提供的”身份消息”</p>
 <h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><p>允许签名者添加一些诸如签名时间、签名有效期和对签署消息性质的说明性信息等内容<br>1.保证了待签消息对签名者的盲性<br>2.阻止了签名申请者提供非法信息而滥用签名<br>3.有效的保护了签名者的合法权益</p>
-<h2 id="公平盲签名"><a href="#公平盲签名" class="headerlink" title="公平盲签名"></a>公平盲签名</h2><h3 id="概念-2"><a href="#概念-2" class="headerlink" title="概念"></a>概念</h3><p>可以在需要的时候让一个可信任第三方发布信息，允许签名人把消息——签名对和签名时的具体内容联系起来，实现对签名申请人的追踪</p>
+<h2 id="公平盲签名"><a href="#公平盲签名" class="headerlink" title="公平盲签名"></a>公平盲签名</h2><h3 id="概念-3"><a href="#概念-3" class="headerlink" title="概念"></a>概念</h3><p>可以在需要的时候让一个可信任第三方发布信息，允许签名人把消息——签名对和签名时的具体内容联系起来，实现对签名申请人的追踪</p>
 <h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><p>引入可信中心，通过可信中心的授权，签名者可追踪签名<br>在需要的时候让一个可信任第三方发布信息，允许签名人把消息——签名对和他签名时候的具体内容联系起来，揭开签名，实现对签名申请者的追踪</p>
 <h3 id="公平盲签名方案"><a href="#公平盲签名方案" class="headerlink" title="公平盲签名方案"></a>公平盲签名方案</h3><p>方案1：<br>给定盲化的消息，仲裁者能让签名者有效识别出相应的消息签名对<br>方案2：<br>给定消息签名对，仲裁者能让签名者有效的鉴别出申请签名的用户，即识别出签名时的盲化消息</p>
+<h3 id="一次性签名"><a href="#一次性签名" class="headerlink" title="一次性签名"></a>一次性签名</h3><p>至多可以用来对一个消息进行签名，否则签名就可能被伪造，我们称这种签名为一次性数字签名</p>
+<h3 id="群签名"><a href="#群签名" class="headerlink" title="群签名"></a>群签名</h3><p>群的成员可以代表群进行签名，签名可用单一的群公开密钥验证。<br>一旦消息被签名，除了指定的群管理者，没有人能够确定该签名是哪个特定的群成员签署的。<br>特点：<br>正确性、匿名性、不可伪造性、不可关联性、可跟踪性、抗合谋攻击性、防陷害攻击</p>
+<h3 id="环签名"><a href="#环签名" class="headerlink" title="环签名"></a>环签名</h3><p>环签名是作为一种没有管理者的类群签名方案，环中任何一个成员都可以代表整个环进行签名<br>而验证者只知道这个签名来自这个环，但不知道谁是真正的签名者<br>特点：<br>无须设置<br>签名者的完美匿名性</p>
 <h3 id="组成结构"><a href="#组成结构" class="headerlink" title="组成结构"></a>组成结构</h3><p>多个发送者<br>一个签名者<br>一个可信的第三方</p>
-<h2 id="前向安全签名"><a href="#前向安全签名" class="headerlink" title="前向安全签名"></a>前向安全签名</h2><h3 id="概念-3"><a href="#概念-3" class="headerlink" title="概念"></a>概念</h3><p>把密钥的有效期分成时段，在每个时段的最后，签名者以一个单向的模式，从当前时段的秘密密钥得到一个新的下一个时段秘密密钥，并且安全地删除不再使用的秘密密钥。<br>整个密钥的生命周期里的公钥不改变，这个方法确保了泄露秘密的时段以前的所有签名的有效性。</p>
-<h3 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h3><p>解决问题：一旦秘密密钥丢失，由这个密钥生成的以前所有签名都变得无效。</p>
 <h2 id="非否认协议"><a href="#非否认协议" class="headerlink" title="非否认协议"></a>非否认协议</h2><h3 id="概念-4"><a href="#概念-4" class="headerlink" title="概念"></a>概念</h3><p>防止不诚实者否认他们参与了某项事务而拒绝承担相应的责任而设计的协议</p>
 <h3 id="功能需求"><a href="#功能需求" class="headerlink" title="功能需求"></a>功能需求</h3><p>1.确保通信主体不能对通信事件抵赖<br>2.确保在协议执行的任何阶段，任何通信主体不能获得优于其他主体的好处</p>
 <h3 id="非否认服务"><a href="#非否认服务" class="headerlink" title="非否认服务"></a>非否认服务</h3><p>1.发送方非否认：提供一种保护使得发送方不能否认他发送过某条消息<br>2.接收方非否认：提供一种保护使得接收方不能否认他接受过某条消息<br>3.发送方非否认证据：非否认服务向接收方提供不可抵赖的证据，证明接受到的消息的来源<br>4.接收方非否认证据：非否认服务向发送发提供不可抵赖的证据，证明接收方已收到了某条消息</p>
 <h3 id="非否认协议的步骤"><a href="#非否认协议的步骤" class="headerlink" title="非否认协议的步骤"></a>非否认协议的步骤</h3><p>1.服务请求<br>2.证据产生<br>3.证据传递和存储<br>4.证据验证<br>5.纠纷解决</p>
 <h3 id="非否认协议性质"><a href="#非否认协议性质" class="headerlink" title="非否认协议性质"></a>非否认协议性质</h3><p>1.非否认性<br>2.可追究性<br>3.公平性<br>4.时限性<br>5.非滥用性</p>
-<h3 id="Zhou-Gollman协议"><a href="#Zhou-Gollman协议" class="headerlink" title="Zhou-Gollman协议"></a>Zhou-Gollman协议</h3><p>1.A发送密文c=Ek(m)、标签l、接受者名字B的签名。<br>B使用这个信息作为A在协议标识l下发送了Ek(m)的证据<br>2.B使用一个签名作为响应，表示在协议标识l下接收到了Ek(m)。<br>A将使用这个信息作为B在协议标识l下接收到了Ek(m)的证据<br>3.A接着把密钥K与协议标识l发送给可信服务器。<br>如果A进行欺骗而发送一个错误的密钥K’，他就不能得到他需要的证据，因为Ek(m)与K’不能提供证据说明A发送了m。<br>4和5中，A与B都可以从可信第三方获取密钥</p>
+<h3 id="Zhou-Gollman协议"><a href="#Zhou-Gollman协议" class="headerlink" title="Zhou-Gollman协议"></a>Zhou-Gollman协议</h3><p><img src="./_image/2018-06-29/2018-07-04-14-04-14.png" alt=""><br>1.A发送密文c=Ek(m)、标签l、接受者名字B的签名。<br>B使用这个信息作为A在协议标识l下发送了Ek(m)的证据<br>2.B使用一个签名作为响应，表示在协议标识l下接收到了Ek(m)。<br>A将使用这个信息作为B在协议标识l下接收到了Ek(m)的证据<br>3.A接着把密钥K与协议标识l发送给可信服务器。<br>如果A进行欺骗而发送一个错误的密钥K’，他就不能得到他需要的证据，因为Ek(m)与K’不能提供证据说明A发送了m。<br>4和5中，A与B都可以从可信第三方获取密钥</p>
 <p>最后，A可以证明B对消息m的正确性负责，且B可以证明A对消息m的正确性负责</p>
 <h2 id="公平交换协议"><a href="#公平交换协议" class="headerlink" title="公平交换协议"></a>公平交换协议</h2><h3 id="概念-5"><a href="#概念-5" class="headerlink" title="概念"></a>概念</h3><p>要么每一方都得到他所期待的信息或者物品<br>要么每一方都没有得到任何有意义的东西<br>当一个系统涉及两个或者多个互不信任的主体，就必须要考虑满足所有主体的安全性<br>从主体利益的角度考虑，如果一个系统不会损害其中任何一个诚实主体的利益，那么该系统具有公平性<br>从交换结果考虑，如果在交换结束后，要么每一方都得到了他所期待的信息或者物品，要么每一方都没有得到任何有意义的东西，我们也认为系统具有公平性</p>
 <h3 id="基本要求"><a href="#基本要求" class="headerlink" title="基本要求"></a>基本要求</h3><p>1.有效性：若两个参与者行为正确，在没有第三方干涉的情况下， 仍能获得各自所需要的东西<br>2.秘密性：交换必须保护用户的隐私信息<br>3.高效实用性：协议的效率要高，以保证实用性<br>4.不可否认性：在进行有效的交换后，交换的任何一方都不能对他所传递和收到的信息进行否认<br>5.公平性：在交换结束后，要么每一方都得到他所期待的物品，要么每一方都没有得到有意义的东西<br>6.终止性：在协议发生的任何时间，每个参与者都可以单方面的终止协议而不破坏协议的公平性<br>7.第三方可验证性：发生纠纷时第三方可以进行仲裁，对不诚实的一方可以进行制裁。<br>8.无滥用性：在多方公平交换模型中，参与交换的任意子集在协议的任何时刻，都无法向第三者证明他们有能力中止协议</p>
-<h3 id="秘密的同时交换"><a href="#秘密的同时交换" class="headerlink" title="秘密的同时交换"></a>秘密的同时交换</h3><h2 id="电子选举"><a href="#电子选举" class="headerlink" title="电子选举"></a>电子选举</h2><h3 id="安全需求"><a href="#安全需求" class="headerlink" title="安全需求"></a>安全需求</h3><p>1.只有经授权的投票者才能投票<br>2.每个人投票不得超过一次<br>3.任何人都不能确定别人投谁的票<br>4.没有任何能复制其他人的选票<br>5.没有人能修改其他人的选票<br>6.每个投票者都可以保证他的选票在最后的选举计数中被计算在内</p>
+<h3 id="秘密的同时交换"><a href="#秘密的同时交换" class="headerlink" title="秘密的同时交换"></a>秘密的同时交换</h3><h4 id="拥有第三方的秘密交换"><a href="#拥有第三方的秘密交换" class="headerlink" title="拥有第三方的秘密交换"></a>拥有第三方的秘密交换</h4><p>1.A发送一份签名的副本给第三方<br>2.B发送一份签名的副本给第三方<br>3.第三方通知A,B已经收到所有人的签名副本<br>4.A签名两份副本，并发给B<br>5.B签名两份副本，然后给A一份，自己保留一份<br>6.A和B通知第三方已完成<br>7.第三方销毁自己手上的签名副本</p>
+<p>第1~3步：第三方拥有每个人签名的副本，防止第4步，A签名后，B签名不给A</p>
+<h4 id="面对面同时签名"><a href="#面对面同时签名" class="headerlink" title="面对面同时签名"></a>面对面同时签名</h4><p>1.A签上自己名字的第一个字，然后发送给B<br>2.B签上自己名字的第一个字，然后发送给A<br>3.如此循环，直到签名结束<br>4.当交换多轮后，可以大致上认为两者都已经签名完成<br><img src="./_image/2018-06-29/2018-07-04-17-21-01.png" alt=""></p>
+<h4 id="非面对面同时签名"><a href="#非面对面同时签名" class="headerlink" title="非面对面同时签名"></a>非面对面同时签名</h4><p>1.A和B就签约应当完成的日期达成一致意见<br>2.A和B确定一个双方都愿意的概率差，A的概率差为a，B的概率差为b<br>3.A给B发送一份p=a的已签消息<br>4.B给A发送一份p=a+b的已签消息<br>5.循环往复，直至p=1</p>
+<p>如果这个协议不能顺利完成，任何一方都可以把合约拿给法官，并同时递上另一方的最后签的消息<br>最后法官在0和1之间随机选择一个数<br>如果这个值小于另一方签名的概率，则双方都接受合约约束<br>如果这个值大于另一方签名的概率，则双方都不受约束</p>
+<h4 id="非面对面同时签名（密码协议版）"><a href="#非面对面同时签名（密码协议版）" class="headerlink" title="非面对面同时签名（密码协议版）"></a>非面对面同时签名（密码协议版）</h4><p>1.A和B都随机选择2n个DES密钥，分成一对一对，共n对<br>2.A和B都产生n对消息<br>3.A和B都用自己选择的每对密钥加密自己产生的n对消息（每对中，左密钥加密左消息，右密钥加密右消息）<br>4.A和B互相交换自己加密的2n份消息<br>5.A从自己的每一对密钥中选择一个发送给B，共计n个密钥，利用不经意传输<br>6.B从自己的每一对密钥中选择一个发送给A，共计n个密钥，利用不经意传输<br>7.A和B都用自己收到的一半的密钥解密自己能解密的那一半消息，确保解密消息是有效的<br>8.A和B交替发送自己2n个DES密钥的第一个bit，并如此循环，直到所有密钥发送给对方<br>9.A和B解密剩下的那一半消息，得到签署的合约<br>10.A和B交换在5，6步不经意传输中使用的私钥，确保对方没有欺骗</p>
+<h2 id="电子选举"><a href="#电子选举" class="headerlink" title="电子选举"></a>电子选举</h2><h3 id="安全需求"><a href="#安全需求" class="headerlink" title="安全需求"></a>安全需求</h3><p>1.只有经授权的投票者才能投票<br>2.每个人投票不得超过一次<br>3.任何人都不能确定别人投谁的票<br>4.没有人能复制其他人的选票<br>5.没有人能修改其他人的选票<br>6.每个投票者都可以保证他的选票在最后的选举计数中被计算在内<br>7.任何人都知道谁没有进行投票</p>
+<h3 id="基于盲签名的电子选举协议"><a href="#基于盲签名的电子选举协议" class="headerlink" title="基于盲签名的电子选举协议"></a>基于盲签名的电子选举协议</h3><p><img src="./_image/2018-06-29/2018-07-04-15-57-22.png" alt=""><br><img src="./_image/2018-06-29/2018-07-04-15-57-31.png" alt=""><br>1.投票者生成消息集M，内容包括n个参与选举的候选人和投票者个人的唯一标识符ID<br>2.投票者对消息集M进行盲签名<br>3.投票者将签名后的消息发送给可信第三方<br>4.可信第三方验证消息的正确性，即候选人是否正确，ID是否唯一，是否有重复投票<br>5.可信第三方用自己的密钥加密签名，反馈给投票者<br>6.投票者用可信第三方的密钥加密自己投票的人和自己的唯一标识符ID<br>7.投票者将加密结果包装成消息集M’<br>8.投票者将消息M’发送给可信第三方<br>9.可信第三方验证ID是否唯一，是否重复<br>10.可信第三方宣布投票结果</p>
 <h2 id="电子现金"><a href="#电子现金" class="headerlink" title="电子现金"></a>电子现金</h2><h3 id="攻击方式"><a href="#攻击方式" class="headerlink" title="攻击方式"></a>攻击方式</h3><p>1.超额花费（多重花费）：多次使用同一笔电子现金<br>2.洗钱：商家从非法活动中获得电子现金，为隐藏电子现金的来源，伪造一个虚拟的交易账单<br>3.伪造：通过一些老的支付抄本，伪造有效的电子现金</p>
 <h3 id="安全需求-1"><a href="#安全需求-1" class="headerlink" title="安全需求"></a>安全需求</h3><p>1.不可伪造性<br>2.私密性<br>3.不可否认性</p>
-<h3 id="追踪"><a href="#追踪" class="headerlink" title="追踪"></a>追踪</h3><p>1.现金追踪：如果一个可疑者支取现金，该现金可被撤销匿名并在存款时识别出<br>2.属主追踪：如果一个可疑者存款，该现金可被撤销匿名并揭示出属主</p>
+<h3 id="使用一般盲签名的优缺点"><a href="#使用一般盲签名的优缺点" class="headerlink" title="使用一般盲签名的优缺点"></a>使用一般盲签名的优缺点</h3><p><img src="./_image/2018-06-29/2018-07-04-16-29-23.jpg" alt=""></p>
+<h3 id="改进版部分盲签名的优势"><a href="#改进版部分盲签名的优势" class="headerlink" title="改进版部分盲签名的优势"></a>改进版部分盲签名的优势</h3><p><img src="./_image/2018-06-29/2018-07-04-16-31-37.jpg" alt=""></p>
+<h3 id="继续改进公平盲签名的优势"><a href="#继续改进公平盲签名的优势" class="headerlink" title="继续改进公平盲签名的优势"></a>继续改进公平盲签名的优势</h3><p><img src="./_image/2018-06-29/2018-07-04-16-32-45.jpg" alt=""></p>
 
     </article>
     <!-- 前后页  -->
     <ul class="post-pager">
+        
+            <li class="next">
+                <a href= "/2018/07/03/configs/sorts/" title=  >
+                    <span>Next Post</span>
+                    <span>[Untitled Post]</span>
+                </a>
+            </li>
         
         
             <li class="previous">
@@ -312,7 +355,7 @@
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#门限签名"><span class="toc-number">2.</span> <span class="toc-text">门限签名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#认证与密钥建立协议"><span class="toc-number">3.</span> <span class="toc-text">认证与密钥建立协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于身份认证"><span class="toc-number">3.1.</span> <span class="toc-text">关于身份认证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#零知识证明"><span class="toc-number">4.</span> <span class="toc-text">零知识证明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#正确性"><span class="toc-number">4.1.</span> <span class="toc-text">正确性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#完备性"><span class="toc-number">4.2.</span> <span class="toc-text">完备性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#零知识性"><span class="toc-number">4.3.</span> <span class="toc-text">零知识性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图同构"><span class="toc-number">5.</span> <span class="toc-text">图同构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#图同构的概念"><span class="toc-number">5.1.</span> <span class="toc-text">图同构的概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#图同构的困难性"><span class="toc-number">5.2.</span> <span class="toc-text">图同构的困难性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#零知识证明-1"><span class="toc-number">5.3.</span> <span class="toc-text">零知识证明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正确性证明"><span class="toc-number">5.4.</span> <span class="toc-text">正确性证明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hamilton回路"><span class="toc-number">6.</span> <span class="toc-text">Hamilton回路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hamilton回路概念"><span class="toc-number">6.1.</span> <span class="toc-text">Hamilton回路概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#零知识证明-2"><span class="toc-number">6.2.</span> <span class="toc-text">零知识证明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正确性证明-1"><span class="toc-number">6.3.</span> <span class="toc-text">正确性证明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#盲签名"><span class="toc-number">7.</span> <span class="toc-text">盲签名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念"><span class="toc-number">7.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特点"><span class="toc-number">7.2.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤"><span class="toc-number">7.3.</span> <span class="toc-text">步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部分盲签名"><span class="toc-number">8.</span> <span class="toc-text">部分盲签名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念-1"><span class="toc-number">8.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#改进"><span class="toc-number">8.2.</span> <span class="toc-text">改进</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#公平盲签名"><span class="toc-number">9.</span> <span class="toc-text">公平盲签名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念-2"><span class="toc-number">9.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新特性"><span class="toc-number">9.2.</span> <span class="toc-text">新特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#公平盲签名方案"><span class="toc-number">9.3.</span> <span class="toc-text">公平盲签名方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组成结构"><span class="toc-number">9.4.</span> <span class="toc-text">组成结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前向安全签名"><span class="toc-number">10.</span> <span class="toc-text">前向安全签名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念-3"><span class="toc-number">10.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决问题"><span class="toc-number">10.2.</span> <span class="toc-text">解决问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非否认协议"><span class="toc-number">11.</span> <span class="toc-text">非否认协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念-4"><span class="toc-number">11.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#功能需求"><span class="toc-number">11.2.</span> <span class="toc-text">功能需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非否认服务"><span class="toc-number">11.3.</span> <span class="toc-text">非否认服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非否认协议的步骤"><span class="toc-number">11.4.</span> <span class="toc-text">非否认协议的步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非否认协议性质"><span class="toc-number">11.5.</span> <span class="toc-text">非否认协议性质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Zhou-Gollman协议"><span class="toc-number">11.6.</span> <span class="toc-text">Zhou-Gollman协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#公平交换协议"><span class="toc-number">12.</span> <span class="toc-text">公平交换协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念-5"><span class="toc-number">12.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本要求"><span class="toc-number">12.2.</span> <span class="toc-text">基本要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#秘密的同时交换"><span class="toc-number">12.3.</span> <span class="toc-text">秘密的同时交换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#电子选举"><span class="toc-number">13.</span> <span class="toc-text">电子选举</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安全需求"><span class="toc-number">13.1.</span> <span class="toc-text">安全需求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#电子现金"><span class="toc-number">14.</span> <span class="toc-text">电子现金</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#攻击方式"><span class="toc-number">14.1.</span> <span class="toc-text">攻击方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全需求-1"><span class="toc-number">14.2.</span> <span class="toc-text">安全需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#追踪"><span class="toc-number">14.3.</span> <span class="toc-text">追踪</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基础概念"><span class="toc-number">2.</span> <span class="toc-text">基础概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#破解算法的种类"><span class="toc-number">2.1.</span> <span class="toc-text">破解算法的种类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协议的特性"><span class="toc-number">2.2.</span> <span class="toc-text">协议的特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全协议的种类"><span class="toc-number">2.3.</span> <span class="toc-text">安全协议的种类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协议攻击手段"><span class="toc-number">2.4.</span> <span class="toc-text">协议攻击手段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全协议的特征"><span class="toc-number">2.5.</span> <span class="toc-text">安全协议的特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dolev-Yao-威胁模型"><span class="toc-number">2.6.</span> <span class="toc-text">Dolev-Yao 威胁模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见攻击方式"><span class="toc-number">2.7.</span> <span class="toc-text">常见攻击方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#秘密的分割与共享"><span class="toc-number">3.</span> <span class="toc-text">秘密的分割与共享</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#秘密分割"><span class="toc-number">3.1.</span> <span class="toc-text">秘密分割</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#秘密共享—门限方案"><span class="toc-number">3.2.</span> <span class="toc-text">秘密共享—门限方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#阈下信道"><span class="toc-number">3.3.</span> <span class="toc-text">阈下信道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#比特承诺"><span class="toc-number">3.4.</span> <span class="toc-text">比特承诺</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#抛币问题"><span class="toc-number">3.5.</span> <span class="toc-text">抛币问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#智力扑克"><span class="toc-number">3.6.</span> <span class="toc-text">智力扑克</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不经意传输"><span class="toc-number">3.7.</span> <span class="toc-text">不经意传输</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#认证与密钥建立协议"><span class="toc-number">4.</span> <span class="toc-text">认证与密钥建立协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于身份认证"><span class="toc-number">4.1.</span> <span class="toc-text">关于身份认证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#建立一个拥有第三方的密钥建立协议"><span class="toc-number">4.2.</span> <span class="toc-text">建立一个拥有第三方的密钥建立协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-0版本"><span class="toc-number">4.2.1.</span> <span class="toc-text">1.0版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-0版本"><span class="toc-number">4.2.2.</span> <span class="toc-text">2.0版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-0版本"><span class="toc-number">4.2.3.</span> <span class="toc-text">3.0版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-0版本"><span class="toc-number">4.2.4.</span> <span class="toc-text">4.0版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-0版本"><span class="toc-number">4.2.5.</span> <span class="toc-text">5.0版本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于Diffie-Hellman的三方密钥建立协议"><span class="toc-number">4.3.</span> <span class="toc-text">基于Diffie-Hellman的三方密钥建立协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于口令的协议"><span class="toc-number">4.4.</span> <span class="toc-text">基于口令的协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EKE协议"><span class="toc-number">4.5.</span> <span class="toc-text">EKE协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前向安全签名"><span class="toc-number">5.</span> <span class="toc-text">前向安全签名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念"><span class="toc-number">5.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解决问题"><span class="toc-number">5.2.</span> <span class="toc-text">解决问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#station-to-station-协议"><span class="toc-number">5.3.</span> <span class="toc-text">station to station 协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#零知识证明"><span class="toc-number">6.</span> <span class="toc-text">零知识证明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#正确性"><span class="toc-number">6.1.</span> <span class="toc-text">正确性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#完备性"><span class="toc-number">6.2.</span> <span class="toc-text">完备性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#零知识性"><span class="toc-number">6.3.</span> <span class="toc-text">零知识性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图同构"><span class="toc-number">7.</span> <span class="toc-text">图同构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#图同构的概念"><span class="toc-number">7.1.</span> <span class="toc-text">图同构的概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#图同构的困难性"><span class="toc-number">7.2.</span> <span class="toc-text">图同构的困难性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#零知识证明-1"><span class="toc-number">7.3.</span> <span class="toc-text">零知识证明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正确性证明"><span class="toc-number">7.4.</span> <span class="toc-text">正确性证明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hamilton回路"><span class="toc-number">8.</span> <span class="toc-text">Hamilton回路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hamilton回路概念"><span class="toc-number">8.1.</span> <span class="toc-text">Hamilton回路概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#零知识证明-2"><span class="toc-number">8.2.</span> <span class="toc-text">零知识证明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正确性证明-1"><span class="toc-number">8.3.</span> <span class="toc-text">正确性证明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#盲签名"><span class="toc-number">9.</span> <span class="toc-text">盲签名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念-1"><span class="toc-number">9.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特点"><span class="toc-number">9.2.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#步骤"><span class="toc-number">9.3.</span> <span class="toc-text">步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部分盲签名"><span class="toc-number">10.</span> <span class="toc-text">部分盲签名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念-2"><span class="toc-number">10.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#改进"><span class="toc-number">10.2.</span> <span class="toc-text">改进</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#公平盲签名"><span class="toc-number">11.</span> <span class="toc-text">公平盲签名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念-3"><span class="toc-number">11.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新特性"><span class="toc-number">11.2.</span> <span class="toc-text">新特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#公平盲签名方案"><span class="toc-number">11.3.</span> <span class="toc-text">公平盲签名方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一次性签名"><span class="toc-number">11.4.</span> <span class="toc-text">一次性签名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#群签名"><span class="toc-number">11.5.</span> <span class="toc-text">群签名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#环签名"><span class="toc-number">11.6.</span> <span class="toc-text">环签名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组成结构"><span class="toc-number">11.7.</span> <span class="toc-text">组成结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非否认协议"><span class="toc-number">12.</span> <span class="toc-text">非否认协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念-4"><span class="toc-number">12.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#功能需求"><span class="toc-number">12.2.</span> <span class="toc-text">功能需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非否认服务"><span class="toc-number">12.3.</span> <span class="toc-text">非否认服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非否认协议的步骤"><span class="toc-number">12.4.</span> <span class="toc-text">非否认协议的步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非否认协议性质"><span class="toc-number">12.5.</span> <span class="toc-text">非否认协议性质</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Zhou-Gollman协议"><span class="toc-number">12.6.</span> <span class="toc-text">Zhou-Gollman协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#公平交换协议"><span class="toc-number">13.</span> <span class="toc-text">公平交换协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念-5"><span class="toc-number">13.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本要求"><span class="toc-number">13.2.</span> <span class="toc-text">基本要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#秘密的同时交换"><span class="toc-number">13.3.</span> <span class="toc-text">秘密的同时交换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#拥有第三方的秘密交换"><span class="toc-number">13.3.1.</span> <span class="toc-text">拥有第三方的秘密交换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#面对面同时签名"><span class="toc-number">13.3.2.</span> <span class="toc-text">面对面同时签名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#非面对面同时签名"><span class="toc-number">13.3.3.</span> <span class="toc-text">非面对面同时签名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#非面对面同时签名（密码协议版）"><span class="toc-number">13.3.4.</span> <span class="toc-text">非面对面同时签名（密码协议版）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#电子选举"><span class="toc-number">14.</span> <span class="toc-text">电子选举</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安全需求"><span class="toc-number">14.1.</span> <span class="toc-text">安全需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于盲签名的电子选举协议"><span class="toc-number">14.2.</span> <span class="toc-text">基于盲签名的电子选举协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#电子现金"><span class="toc-number">15.</span> <span class="toc-text">电子现金</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#攻击方式"><span class="toc-number">15.1.</span> <span class="toc-text">攻击方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全需求-1"><span class="toc-number">15.2.</span> <span class="toc-text">安全需求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用一般盲签名的优缺点"><span class="toc-number">15.3.</span> <span class="toc-text">使用一般盲签名的优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#改进版部分盲签名的优势"><span class="toc-number">15.4.</span> <span class="toc-text">改进版部分盲签名的优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#继续改进公平盲签名的优势"><span class="toc-number">15.5.</span> <span class="toc-text">继续改进公平盲签名的优势</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top">&#xe639;</div>
@@ -2348,46 +2391,7 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <div class="total-archive"> Total : 117 </div>
+    <div class="total-archive"> Total : 118 </div>
     
     <div class="post-archive">
     
@@ -2968,7 +2972,35 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/07/03/configs/sorts/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
@@ -2978,12 +3010,7 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -3016,17 +3043,15 @@
     
         <span class="sidebar-tag-name"><a href= "#">cms</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">docker</a></span>
-    
-        <span class="sidebar-tag-name"><a href= "#">.git</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">writeup</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">sql</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">crypto</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">flask</a></span>
+        <span class="sidebar-tag-name"><a href= "#">docker</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">.git</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">ShadowSocks</a></span>
     
@@ -3042,6 +3067,8 @@
     
         <span class="sidebar-tag-name"><a href= "#">心情随笔</a></span>
     
+        <span class="sidebar-tag-name"><a href= "#">flask</a></span>
+    
         <span class="sidebar-tag-name"><a href= "#">websummary</a></span>
     
         <span class="sidebar-tag-name"><a href= "#">微机实验</a></span>
@@ -3052,9 +3079,9 @@
     
         <span class="sidebar-tag-name"><a href= "#">微机实验考试</a></span>
     
-        <span class="sidebar-tag-name"><a href= "#">algorithm</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">Algorithm</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">algorithm</a></span>
     
     </div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
