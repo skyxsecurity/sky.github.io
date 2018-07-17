@@ -261,7 +261,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">1,649</span> / Reading time: <span class="post-count">6 min</span></span>
+                        <span>Word count: <span class="post-count">3,091</span> / Reading time: <span class="post-count">12 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -406,6 +406,46 @@ height:50vh;
 <h2 id="USM-的三个模块和四种服务分别是什么"><a href="#USM-的三个模块和四种服务分别是什么" class="headerlink" title="USM 的三个模块和四种服务分别是什么?"></a>USM 的三个模块和四种服务分别是什么?</h2><p>3个模块：<br>1.认证<br>2.保密/私密<br>3.时限/时序<br>4个安全服务<br>1.数据完整性<br>2.数据源认证<br>3.数据保密<br>4.消息时限</p>
 <h2 id="VACM-的抽象服务接口-isAccessAllowed"><a href="#VACM-的抽象服务接口-isAccessAllowed" class="headerlink" title="VACM 的抽象服务接口 isAccessAllowed?"></a>VACM 的抽象服务接口 isAccessAllowed?</h2><p><img src="/images/2018-07-13-17-02-58.png" alt=""><br><img src="/images/2018-07-13-17-03-33.png" alt=""></p>
 <h2 id="什么是-SDN-SDN-有哪些技术特点-SDN-的体系结构"><a href="#什么是-SDN-SDN-有哪些技术特点-SDN-的体系结构" class="headerlink" title="什么是 SDN?SDN 有哪些技术特点?SDN 的体系结构?"></a>什么是 SDN?SDN 有哪些技术特点?SDN 的体系结构?</h2><p>软件定义网络，是一种新型的网络创新架构，是网络虚拟化的一种实现方式，将网络设备控制面与数据面分离开来，从而实现了网络流量的灵活控制，使网络作为管道变得更加智能。<br>1.网络协议集中处理：提高复杂协议的运算效率和收敛速度<br>2.控制的集中化，提高资源的利用效率<br>3.简化了运维管理的工作量，大幅节约运维费用<br>4.SDN可编程性扩大了传统差异化服务的程度和灵活性<br>5.业务定制的软件化有利于新业务的测试与快速部署<br>6.控制与转发分离，实施控制策略软件化，利于网络的智能化、自动化和硬件的标准化<br>分为基础设施层、控制层、应用层<br>基础设施层：负责流表的数据处理、转发和状态收集<br>控制层：负责处理数据平面资源的编排、维护网络拓扑、状态信息<br>应用层：包括各种不同的业务和应用</p>
+<h2 id="BER-编码"><a href="#BER-编码" class="headerlink" title="BER 编码"></a>BER 编码</h2><p>以TLV方法进行编码，分为3段：<br>T标记、L长度、V值</p>
+<h3 id="标记"><a href="#标记" class="headerlink" title="标记"></a>标记</h3><p>universal<br>1：bool<br>2：integer<br>3：bit string<br>4：octet string<br>5：null<br>6：object identifier<br>16：sequence<br>16：sequence-of<br>无标记：choice<br>无标记：ANY<br>tag组成：</p>
+<p>2bit:标签类<br>00 universal<br>01 application<br>10 context specific<br>11 private</p>
+<p>1bit:<br>0 简单类型<br>1 构造类型</p>
+<p>5bit:<br>标签</p>
+<p>tag标签值小于30时：仅在一个八位组中编码<br>tag标签值大于30时：标签值5位全部置1<br>每个后继八位组，左边第一位表示是否为最后一个八位组，1表示不是，0表示是</p>
+<p>例如标签值91513(10110010101111001)<br>改写为：<br>xxx11111 10000101 11001010 01111001</p>
+<p>再例如标签值6(110)<br>写为<br>xxx00110</p>
+<h3 id="长度"><a href="#长度" class="headerlink" title="长度"></a>长度</h3><p>当长度小于127时：0xxx xxxx即可<br>当长度大于127时：<br>第一个八位组：1+后继八位组个数<br>例如：255<br>1000 0001 1111 11111<br>再如：256<br>1000 0010 0000 00001 0000 0000<br>又如：5<br>0000 0101</p>
+<h3 id="常见编码"><a href="#常见编码" class="headerlink" title="常见编码"></a>常见编码</h3><h4 id="BOOLEAN编码"><a href="#BOOLEAN编码" class="headerlink" title="BOOLEAN编码"></a>BOOLEAN编码</h4><p>tag:0000 0001(见标记中的universal)<br>length:0000 0001<br>vaule:<br>true: 1111 1111<br>false: 0000 0000<br>即<br>true: 01 01 00<br>false: 01 01 ff</p>
+<h4 id="字符串类型的编码"><a href="#字符串类型的编码" class="headerlink" title="字符串类型的编码"></a>字符串类型的编码</h4><p>tag:0000 0100<br>length:后继八位组的个数<br>vaule:字符串的ascii码<br>例如：public<br>tag:04(见标记中的universal)<br>length:06<br>vaule:70 75 62 6c 69 63<br>最终答案:<br>04 06 70 75 62 6c 69 63</p>
+<h4 id="比特串类型的编码"><a href="#比特串类型的编码" class="headerlink" title="比特串类型的编码"></a>比特串类型的编码</h4><p>在bit串前增加一个八位组，取值0~7，表名最后补位的个数。补0/1由发送方决定<br>例如:1011011101011<br>1011 0111 0101 1<br>故最后需要补3位<br>1011 0111 0101 1xxx<br>假设补0(也可补1，由发送方决定)<br>1011 0111 0101 1000<br>计数八位组:0000 0011<br>tag:0000 0011(见标记中的universal)<br>length:后继八位组个数<br>最终答案<br>03 03 03 B7 58<br>再如：10101<br>补位后<br>1010 1000<br>计数八位组<br>0000 0011<br>最终答案<br>03 02 03 A8</p>
+<h4 id="十六进制字节串类型的编码"><a href="#十六进制字节串类型的编码" class="headerlink" title="十六进制字节串类型的编码"></a>十六进制字节串类型的编码</h4><p>tag:04<br>length:后继八位组个数<br>例如：<br>0A1B<br>答案：<br>04 02 0A 1B<br>再如：<br>01 23 45 67 89 ab cd ef<br>答案<br>04 08 01 23 45 67 89 ab cd ef<br>又如：ACE<br>答案：<br>04 02 AC E0</p>
+<h4 id="INTEGER类型的编码"><a href="#INTEGER类型的编码" class="headerlink" title="INTEGER类型的编码"></a>INTEGER类型的编码</h4><p>若value中的最高位为1，0则需在前面补全一个全0的八位组<br>对于负数，value的最高位为1<br>tag：02<br>length:后继八位组的个数</p>
+<blockquote>
+<p>对于正数<br>例如：64<br>64的二进制为：<br>0100 0000<br>故此答案为：<br>02 01 40<br>再如：128<br>二进制为：<br>1000 0000<br>故此答案为<br>02 02 00 80<br>对于负数<br>绝对值二进制+按位取反+末位加1即可<br>例如：<br>-64<br>绝对值的二进制为<br>0100 0000<br>按位取反<br>1011 1111<br>末位加1<br>1100 0000<br>所以答案为<br>02 01 C0<br>再如：-257<br>二进制为：0000000100000001<br>按位取反<br>1111 1110 1111 1110<br>末位加一<br>1111 1110 1111 1111<br>答案为<br>02 02 FE FF<br>快捷运算方法<br>对于大数，强行取余倒叙排列计算2进制肯定太慢了，这里选择拆分成256(256的幂数)的因子形式<br>例如：<br>49468=193<em>256+60<br>我们知道<br>193为1100 0001即C1<br>256为1 0000 0000即100<br>60为0011 1100即3C<br>故此可以写成<br>`C1</em>100+3C<code>因此编码直接可以写为
+C1 3C
+又因为最高位为1，而该数是正数，所以补一个全0的八位组
+最终答案：
+02 03 00 C1 3C
+再如负大数：-49769
+由于256^2=6553620
+但是负数最高位需要为1，作为标志位
+因此256^2最大只能表示-32768
+故此选择256^3,最大可表示-8388608
+然后我们可以将256^3-49769
+得到16727447
+即</code>255<em>256^2+61</em>256+151`<br>得到编码<br>255 61 151<br>即<br>FF 3D 97<br>故此答案为<br>02 03 FF 3D 97<br>解码<br>解码也很容易<br>先去除tag和length<br>首先看最高位是否为1<br>若为1即为负数<br>否则为正数<br>例如：02 02 96 46<br>我们计算出96 46为38470<br>由于其最高位为1<br>所以我们用它去减2^16，即可得到结果-27066</p>
+</blockquote>
+<h4 id="对象标识符编码"><a href="#对象标识符编码" class="headerlink" title="对象标识符编码"></a>对象标识符编码</h4><p>tag:06<br>首两个id：X<em>40+Y<br>如果有大于127的项，需要进行拆分<br>即最后一个字节的最高位为0，其余字节最高位为1<br>例如：810 = 11 0010 1010<br>即从后往前，8个一组<br>由于要补1或0，所以7个一组<br>1000 0110 0010 1010<br>所以答案为：86 2A<br>例如题目为：<br>1 3 6 1 810 1<br>首先将1，2项合并为<br>`1</em>40+3=43`<br>即<br>0010 1011<br>即<br>2B<br>所以为<br>2B 6 1 810 1<br>然后将超过127的部分拆分<br>即<br>2B 06 01 86 2A 01<br>最终结果为<br>06 06 2B 06 01 86 2A 01</p>
+<h4 id="空值类型编码"><a href="#空值类型编码" class="headerlink" title="空值类型编码"></a>空值类型编码</h4><p>05 00<br>就这么多</p>
+<h4 id="sequence组合类型的编码"><a href="#sequence组合类型的编码" class="headerlink" title="sequence组合类型的编码"></a>sequence组合类型的编码</h4><p>tag:30<br>length:后继八位组个数<br>value:每个类型按之前的排即可(tag+length+vaule)</p>
+<h4 id="set集合类型的编码"><a href="#set集合类型的编码" class="headerlink" title="set集合类型的编码"></a>set集合类型的编码</h4><p>tag:31<br>length:后继八位组个数</p>
+<h3 id="BER的不足"><a href="#BER的不足" class="headerlink" title="BER的不足"></a>BER的不足</h3><p>带来了大量的冗余，增加了通信量的开销<br>主要出现在TLV三个字段的每个部分<br>增加了约50%的数据</p>
+<h2 id="SMI的编码规则-BER"><a href="#SMI的编码规则-BER" class="headerlink" title="SMI的编码规则-BER"></a>SMI的编码规则-BER</h2><blockquote>
+<p>类别<br>1.通用类 00<br>2.应用类 00<br>3.上下文类 10<br>4.专用类 11</p>
+</blockquote>
+<h3 id="SMI的数据类型两大分类"><a href="#SMI的数据类型两大分类" class="headerlink" title="SMI的数据类型两大分类"></a>SMI的数据类型两大分类</h3><blockquote>
+<p>1.简单类型<br>1.1 integer<br>类别 00<br>格式 0<br>编号 00010<br>tag: 0x02<br>1.2 octet string<br>类别 00<br>格式 0<br>编号 00100<br>tag: 0x04<br>1.3 object identifier<br>类别 00<br>格式 0<br>编号 00110<br>tag: 0x06<br>1.4 null<br>类别 00<br>格式 0<br>编号 00101<br>tag: 0x05<br>1.5 sequence and sequence of<br>类别 00<br>格式 1<br>编号 10000<br>tag: 0x30<br>1.6 ipaddress<br>类别 01<br>格式 0<br>编号 00000<br>tag: 0x40<br>1.7 counter<br>类别 01<br>格式 0<br>编号 00001<br>tag: 0x41<br>1.8 gauge<br>类别 01<br>格式 0<br>编号 00010<br>tag: 0x42<br>1.9 timeticks<br>类别 01<br>格式 0<br>编号 00011<br>tag: 0x43<br>1.10 opaque<br>类别 01<br>格式 0<br>编号 00100<br>tag: 0x44<br>2.结构化类型<br>1.sequence<br>2.sequence ofd</p>
+</blockquote>
 
     </article>
     <!-- license  -->
@@ -551,7 +591,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#网络管理的定义"><span class="toc-number">2.</span> <span class="toc-text">网络管理的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#目前已经形成的网络管理标准"><span class="toc-number">2.1.</span> <span class="toc-text">目前已经形成的网络管理标准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OSI-定义的网络管理-5-大功能域"><span class="toc-number">3.</span> <span class="toc-text">OSI 定义的网络管理 5 大功能域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简述-SNMP-模型的基本体系结构"><span class="toc-number">4.</span> <span class="toc-text">简述 SNMP 模型的基本体系结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMP为什么使用-UDP-传输数据，对应的端口是如何定义的"><span class="toc-number">5.</span> <span class="toc-text">SNMP为什么使用 UDP 传输数据，对应的端口是如何定义的?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMPv1-规定了哪些协议-PDU-每个协议-PDU-的操作过程和特点？"><span class="toc-number">6.</span> <span class="toc-text">SNMPv1 规定了哪些协议 PDU?每个协议 PDU 的操作过程和特点？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMPv2-规定了哪些协议-PDU-每个协议-PDU-的操作过程和特点是什么"><span class="toc-number">7.</span> <span class="toc-text">SNMPv2 规定了哪些协议 PDU?每个协议 PDU 的操作过程和特点是什么?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#与-SNMPv1-相比，SNMPv2-的协议操作有哪些变化"><span class="toc-number">8.</span> <span class="toc-text">与 SNMPv1 相比，SNMPv2 的协议操作有哪些变化?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相比于-SNMPv2，SNMPv3-做了哪些方面的改进"><span class="toc-number">9.</span> <span class="toc-text">相比于 SNMPv2，SNMPv3 做了哪些方面的改进?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是-SNMPv3-实体引擎-包括哪几部分"><span class="toc-number">10.</span> <span class="toc-text">什么是 SNMPv3 实体引擎?包括哪几部分?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMPv3-的时限模块的作用是什么-SNMPv3-协议中权威引擎和非权威引擎的时限检查过程是什么"><span class="toc-number">11.</span> <span class="toc-text">SNMPv3 的时限模块的作用是什么?SNMPv3 协议中权威引擎和非权威引擎的时限检查过程是什么?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RMON工作流程"><span class="toc-number">12.</span> <span class="toc-text">RMON工作流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#USM-的三个模块和四种服务分别是什么"><span class="toc-number">13.</span> <span class="toc-text">USM 的三个模块和四种服务分别是什么?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VACM-的抽象服务接口-isAccessAllowed"><span class="toc-number">14.</span> <span class="toc-text">VACM 的抽象服务接口 isAccessAllowed?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是-SDN-SDN-有哪些技术特点-SDN-的体系结构"><span class="toc-number">15.</span> <span class="toc-text">什么是 SDN?SDN 有哪些技术特点?SDN 的体系结构?</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#网络管理的定义"><span class="toc-number">2.</span> <span class="toc-text">网络管理的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#目前已经形成的网络管理标准"><span class="toc-number">2.1.</span> <span class="toc-text">目前已经形成的网络管理标准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OSI-定义的网络管理-5-大功能域"><span class="toc-number">3.</span> <span class="toc-text">OSI 定义的网络管理 5 大功能域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简述-SNMP-模型的基本体系结构"><span class="toc-number">4.</span> <span class="toc-text">简述 SNMP 模型的基本体系结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMP为什么使用-UDP-传输数据，对应的端口是如何定义的"><span class="toc-number">5.</span> <span class="toc-text">SNMP为什么使用 UDP 传输数据，对应的端口是如何定义的?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMPv1-规定了哪些协议-PDU-每个协议-PDU-的操作过程和特点？"><span class="toc-number">6.</span> <span class="toc-text">SNMPv1 规定了哪些协议 PDU?每个协议 PDU 的操作过程和特点？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMPv2-规定了哪些协议-PDU-每个协议-PDU-的操作过程和特点是什么"><span class="toc-number">7.</span> <span class="toc-text">SNMPv2 规定了哪些协议 PDU?每个协议 PDU 的操作过程和特点是什么?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#与-SNMPv1-相比，SNMPv2-的协议操作有哪些变化"><span class="toc-number">8.</span> <span class="toc-text">与 SNMPv1 相比，SNMPv2 的协议操作有哪些变化?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相比于-SNMPv2，SNMPv3-做了哪些方面的改进"><span class="toc-number">9.</span> <span class="toc-text">相比于 SNMPv2，SNMPv3 做了哪些方面的改进?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是-SNMPv3-实体引擎-包括哪几部分"><span class="toc-number">10.</span> <span class="toc-text">什么是 SNMPv3 实体引擎?包括哪几部分?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SNMPv3-的时限模块的作用是什么-SNMPv3-协议中权威引擎和非权威引擎的时限检查过程是什么"><span class="toc-number">11.</span> <span class="toc-text">SNMPv3 的时限模块的作用是什么?SNMPv3 协议中权威引擎和非权威引擎的时限检查过程是什么?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RMON工作流程"><span class="toc-number">12.</span> <span class="toc-text">RMON工作流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#USM-的三个模块和四种服务分别是什么"><span class="toc-number">13.</span> <span class="toc-text">USM 的三个模块和四种服务分别是什么?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VACM-的抽象服务接口-isAccessAllowed"><span class="toc-number">14.</span> <span class="toc-text">VACM 的抽象服务接口 isAccessAllowed?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是-SDN-SDN-有哪些技术特点-SDN-的体系结构"><span class="toc-number">15.</span> <span class="toc-text">什么是 SDN?SDN 有哪些技术特点?SDN 的体系结构?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BER-编码"><span class="toc-number">16.</span> <span class="toc-text">BER 编码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标记"><span class="toc-number">16.1.</span> <span class="toc-text">标记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长度"><span class="toc-number">16.2.</span> <span class="toc-text">长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见编码"><span class="toc-number">16.3.</span> <span class="toc-text">常见编码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BOOLEAN编码"><span class="toc-number">16.3.1.</span> <span class="toc-text">BOOLEAN编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#字符串类型的编码"><span class="toc-number">16.3.2.</span> <span class="toc-text">字符串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#比特串类型的编码"><span class="toc-number">16.3.3.</span> <span class="toc-text">比特串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十六进制字节串类型的编码"><span class="toc-number">16.3.4.</span> <span class="toc-text">十六进制字节串类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#INTEGER类型的编码"><span class="toc-number">16.3.5.</span> <span class="toc-text">INTEGER类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对象标识符编码"><span class="toc-number">16.3.6.</span> <span class="toc-text">对象标识符编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#空值类型编码"><span class="toc-number">16.3.7.</span> <span class="toc-text">空值类型编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sequence组合类型的编码"><span class="toc-number">16.3.8.</span> <span class="toc-text">sequence组合类型的编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#set集合类型的编码"><span class="toc-number">16.3.9.</span> <span class="toc-text">set集合类型的编码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BER的不足"><span class="toc-number">16.4.</span> <span class="toc-text">BER的不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SMI的编码规则-BER"><span class="toc-number">17.</span> <span class="toc-text">SMI的编码规则-BER</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SMI的数据类型两大分类"><span class="toc-number">17.1.</span> <span class="toc-text">SMI的数据类型两大分类</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -2694,110 +2734,9 @@ top:50vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 119
+        Total : 120
         </div>
         <!-- search  -->
         
@@ -2898,12 +2837,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
         </li>
     
     
@@ -3392,8 +3331,31 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/07/17/configs/sorts/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
     
     
         <li class="archive-post-item">
@@ -3402,12 +3364,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -3440,9 +3402,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
     
-        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
-    
         <span class="sidebar-tag-name" data-tags=".git"><span class="iconfont-archer">&#xe606;</span>.git</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
         <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
@@ -3450,9 +3412,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
     
-        <span class="sidebar-tag-name" data-tags="ShadowSocks"><span class="iconfont-archer">&#xe606;</span>ShadowSocks</span>
-    
         <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
+    
+        <span class="sidebar-tag-name" data-tags="ShadowSocks"><span class="iconfont-archer">&#xe606;</span>ShadowSocks</span>
     
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
@@ -3460,9 +3422,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags=".htaccess"><span class="iconfont-archer">&#xe606;</span>.htaccess</span>
     
-        <span class="sidebar-tag-name" data-tags="心情随笔"><span class="iconfont-archer">&#xe606;</span>心情随笔</span>
-    
         <span class="sidebar-tag-name" data-tags="计网考试"><span class="iconfont-archer">&#xe606;</span>计网考试</span>
+    
+        <span class="sidebar-tag-name" data-tags="心情随笔"><span class="iconfont-archer">&#xe606;</span>心情随笔</span>
     
         <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
     
@@ -3521,9 +3483,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
     
-        <span class="sidebar-category-name" data-categories="docker"><span class="iconfont-archer">&#xe60a;</span>docker</span>
-    
         <span class="sidebar-category-name" data-categories="git"><span class="iconfont-archer">&#xe60a;</span>git</span>
+    
+        <span class="sidebar-category-name" data-categories="docker"><span class="iconfont-archer">&#xe60a;</span>docker</span>
     
         <span class="sidebar-category-name" data-categories="writeup"><span class="iconfont-archer">&#xe60a;</span>writeup</span>
     
@@ -3533,9 +3495,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="awd"><span class="iconfont-archer">&#xe60a;</span>awd</span>
     
-        <span class="sidebar-category-name" data-categories="心情随笔"><span class="iconfont-archer">&#xe60a;</span>心情随笔</span>
-    
         <span class="sidebar-category-name" data-categories="计网考试"><span class="iconfont-archer">&#xe60a;</span>计网考试</span>
+    
+        <span class="sidebar-category-name" data-categories="心情随笔"><span class="iconfont-archer">&#xe60a;</span>心情随笔</span>
     
         <span class="sidebar-category-name" data-categories="flask"><span class="iconfont-archer">&#xe60a;</span>flask</span>
     
