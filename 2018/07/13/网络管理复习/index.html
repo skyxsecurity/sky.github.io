@@ -415,11 +415,11 @@ height:50vh;
 <p>例如标签值91513(10110010101111001)<br>改写为：<br>xxx11111 10000101 11001010 01111001</p>
 <p>再例如标签值6(110)<br>写为<br>xxx00110</p>
 <h3 id="长度"><a href="#长度" class="headerlink" title="长度"></a>长度</h3><p>当长度小于127时：0xxx xxxx即可<br>当长度大于127时：<br>第一个八位组：1+后继八位组个数<br>例如：255<br>1000 0001 1111 11111<br>再如：256<br>1000 0010 0000 00001 0000 0000<br>又如：5<br>0000 0101</p>
-<h3 id="常见编码"><a href="#常见编码" class="headerlink" title="常见编码"></a>常见编码</h3><h4 id="BOOLEAN编码"><a href="#BOOLEAN编码" class="headerlink" title="BOOLEAN编码"></a>BOOLEAN编码</h4><p>tag:0000 0001(见标记中的universal)<br>length:0000 0001<br>vaule:<br>true: 1111 1111<br>false: 0000 0000<br>即<br>true: 01 01 00<br>false: 01 01 ff</p>
+<h3 id="常见编码"><a href="#常见编码" class="headerlink" title="常见编码"></a>常见编码</h3><h4 id="BOOLEAN编码"><a href="#BOOLEAN编码" class="headerlink" title="BOOLEAN编码"></a>BOOLEAN编码</h4><p>tag:0000 0001(见标记中的universal)<br>length:0000 0001<br>vaule:<br>true: 1111 1111<br>false: 0000 0000<br>即<br>true: 01 01 ff<br>false: 01 01 00</p>
 <h4 id="字符串类型的编码"><a href="#字符串类型的编码" class="headerlink" title="字符串类型的编码"></a>字符串类型的编码</h4><p>tag:0000 0100<br>length:后继八位组的个数<br>vaule:字符串的ascii码<br>例如：public<br>tag:04(见标记中的universal)<br>length:06<br>vaule:70 75 62 6c 69 63<br>最终答案:<br>04 06 70 75 62 6c 69 63</p>
 <h4 id="比特串类型的编码"><a href="#比特串类型的编码" class="headerlink" title="比特串类型的编码"></a>比特串类型的编码</h4><p>在bit串前增加一个八位组，取值0~7，表名最后补位的个数。补0/1由发送方决定<br>例如:1011011101011<br>1011 0111 0101 1<br>故最后需要补3位<br>1011 0111 0101 1xxx<br>假设补0(也可补1，由发送方决定)<br>1011 0111 0101 1000<br>计数八位组:0000 0011<br>tag:0000 0011(见标记中的universal)<br>length:后继八位组个数<br>最终答案<br>03 03 03 B7 58<br>再如：10101<br>补位后<br>1010 1000<br>计数八位组<br>0000 0011<br>最终答案<br>03 02 03 A8</p>
 <h4 id="十六进制字节串类型的编码"><a href="#十六进制字节串类型的编码" class="headerlink" title="十六进制字节串类型的编码"></a>十六进制字节串类型的编码</h4><p>tag:04<br>length:后继八位组个数<br>例如：<br>0A1B<br>答案：<br>04 02 0A 1B<br>再如：<br>01 23 45 67 89 ab cd ef<br>答案<br>04 08 01 23 45 67 89 ab cd ef<br>又如：ACE<br>答案：<br>04 02 AC E0</p>
-<h4 id="INTEGER类型的编码"><a href="#INTEGER类型的编码" class="headerlink" title="INTEGER类型的编码"></a>INTEGER类型的编码</h4><p>若value中的最高位为1，0则需在前面补全一个全0的八位组<br>对于负数，value的最高位为1<br>tag：02<br>length:后继八位组的个数</p>
+<h4 id="INTEGER类型的编码"><a href="#INTEGER类型的编码" class="headerlink" title="INTEGER类型的编码"></a>INTEGER类型的编码</h4><p>若value中的最高位为1，则需在前面补全一个全0的八位组<br>对于负数，value的最高位为1<br>tag：02<br>length:后继八位组的个数</p>
 <blockquote>
 <p>对于正数<br>例如：64<br>64的二进制为：<br>0100 0000<br>故此答案为：<br>02 01 40<br>再如：128<br>二进制为：<br>1000 0000<br>故此答案为<br>02 02 00 80<br>对于负数<br>绝对值二进制+按位取反+末位加1即可<br>例如：<br>-64<br>绝对值的二进制为<br>0100 0000<br>按位取反<br>1011 1111<br>末位加1<br>1100 0000<br>所以答案为<br>02 01 C0<br>再如：-257<br>二进制为：0000000100000001<br>按位取反<br>1111 1110 1111 1110<br>末位加一<br>1111 1110 1111 1111<br>答案为<br>02 02 FE FF<br>快捷运算方法<br>对于大数，强行取余倒叙排列计算2进制肯定太慢了，这里选择拆分成256(256的幂数)的因子形式<br>例如：<br>49468=193<em>256+60<br>我们知道<br>193为1100 0001即C1<br>256为1 0000 0000即100<br>60为0011 1100即3C<br>故此可以写成<br>`C1</em>100+3C<code>因此编码直接可以写为
 C1 3C
@@ -2618,80 +2618,9 @@ top:50vh;
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 119
+        Total : 120
         </div>
         <!-- search  -->
         
@@ -2704,6 +2633,11 @@ top:50vh;
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2018/07/17/configs/sorts/" >[Untitled Post]</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -2792,12 +2726,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
         </li>
     
     
@@ -3286,7 +3220,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -3296,12 +3235,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
@@ -3316,9 +3250,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="web"><span class="iconfont-archer">&#xe606;</span>web</span>
     
-        <span class="sidebar-tag-name" data-tags="CRC"><span class="iconfont-archer">&#xe606;</span>CRC</span>
-    
         <span class="sidebar-tag-name" data-tags="CBC"><span class="iconfont-archer">&#xe606;</span>CBC</span>
+    
+        <span class="sidebar-tag-name" data-tags="CRC"><span class="iconfont-archer">&#xe606;</span>CRC</span>
     
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
