@@ -449,7 +449,7 @@ height:50vh;
 <p>同样出自N1CTF（hard-php）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://xz.aliyun.com/t/2148</span><br></pre></td></tr></table></figure></p>
 <p>这样的文件一般情况无法删除的问题<br>还有比较常用的可让unlink不运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/.</span><br></pre></td></tr></table></figure></p>
 <p>绕过的问题</p>
-<h3 id="PHP底层问题"><a href="#PHP底层问题" class="headerlink" title="PHP底层问题"></a>PHP底层问题</h3><h2 id="Pass-19"><a href="#Pass-19" class="headerlink" title="Pass-19"></a>Pass-19</h2><p>关键代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (file_exists(UPLOAD_PATH)) &#123;</span><br><span class="line">       $deny_ext = <span class="keyword">array</span>(<span class="string">"php"</span>,<span class="string">"php5"</span>,<span class="string">"php4"</span>,<span class="string">"php3"</span>,<span class="string">"php2"</span>,<span class="string">"html"</span>,<span class="string">"htm"</span>,<span class="string">"phtml"</span>,<span class="string">"pht"</span>,<span class="string">"jsp"</span>,<span class="string">"jspa"</span>,<span class="string">"jspx"</span>,<span class="string">"jsw"</span>,<span class="string">"jsv"</span>,<span class="string">"jspf"</span>,<span class="string">"jtml"</span>,<span class="string">"asp"</span>,<span class="string">"aspx"</span>,<span class="string">"asa"</span>,<span class="string">"asax"</span>,<span class="string">"ascx"</span>,<span class="string">"ashx"</span>,<span class="string">"asmx"</span>,<span class="string">"cer"</span>,<span class="string">"swf"</span>,<span class="string">"htaccess"</span>);</span><br><span class="line"></span><br><span class="line">       $file_name = $_POST[<span class="string">'save_name'</span>];</span><br><span class="line">       $file_ext = pathinfo($file_name,PATHINFO_EXTENSION);</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span>(!in_array($file_ext,$deny_ext)) &#123;</span><br><span class="line">           $img_path = UPLOAD_PATH . <span class="string">'/'</span> .$file_name;</span><br><span class="line">           <span class="keyword">if</span> (move_uploaded_file($_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>], $img_path)) &#123; </span><br><span class="line">               $is_upload = <span class="keyword">true</span>;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="PHP底层问题"><a href="#PHP底层问题" class="headerlink" title="PHP底层问题"></a>PHP底层问题</h2><h3 id="Pass-19"><a href="#Pass-19" class="headerlink" title="Pass-19"></a>Pass-19</h3><p>关键代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (file_exists(UPLOAD_PATH)) &#123;</span><br><span class="line">       $deny_ext = <span class="keyword">array</span>(<span class="string">"php"</span>,<span class="string">"php5"</span>,<span class="string">"php4"</span>,<span class="string">"php3"</span>,<span class="string">"php2"</span>,<span class="string">"html"</span>,<span class="string">"htm"</span>,<span class="string">"phtml"</span>,<span class="string">"pht"</span>,<span class="string">"jsp"</span>,<span class="string">"jspa"</span>,<span class="string">"jspx"</span>,<span class="string">"jsw"</span>,<span class="string">"jsv"</span>,<span class="string">"jspf"</span>,<span class="string">"jtml"</span>,<span class="string">"asp"</span>,<span class="string">"aspx"</span>,<span class="string">"asa"</span>,<span class="string">"asax"</span>,<span class="string">"ascx"</span>,<span class="string">"ashx"</span>,<span class="string">"asmx"</span>,<span class="string">"cer"</span>,<span class="string">"swf"</span>,<span class="string">"htaccess"</span>);</span><br><span class="line"></span><br><span class="line">       $file_name = $_POST[<span class="string">'save_name'</span>];</span><br><span class="line">       $file_ext = pathinfo($file_name,PATHINFO_EXTENSION);</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span>(!in_array($file_ext,$deny_ext)) &#123;</span><br><span class="line">           $img_path = UPLOAD_PATH . <span class="string">'/'</span> .$file_name;</span><br><span class="line">           <span class="keyword">if</span> (move_uploaded_file($_FILES[<span class="string">'upload_file'</span>][<span class="string">'tmp_name'</span>], $img_path)) &#123; </span><br><span class="line">               $is_upload = <span class="keyword">true</span>;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
 <p>这里可以直接使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sky.php/.</span><br></pre></td></tr></table></figure></p>
 <p>去绕过<br><img src="/images/2018-08-06-15-35-43.png" alt=""><br>访问<br><img src="/images/2018-08-06-15-36-53.png" alt=""><br>具体原因来自于<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">move_uploaded_file()</span><br></pre></td></tr></table></figure></p>
 <p>该函数会递归删除文件名最后的/.<br>详细分析可看<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://wonderkun.cc/index.html/?p=626</span><br><span class="line">http://pupiles.com/%E7%94%B1%E4%B8%80%E9%81%93ctf%E9%A2%98%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83.html</span><br></pre></td></tr></table></figure></p>
@@ -601,7 +601,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前端校验"><span class="toc-number">2.</span> <span class="toc-text">前端校验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-01"><span class="toc-number">2.1.</span> <span class="toc-text">Pass-01</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后端代码校验"><span class="toc-number">3.</span> <span class="toc-text">后端代码校验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-02"><span class="toc-number">3.1.</span> <span class="toc-text">Pass-02</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-03"><span class="toc-number">3.2.</span> <span class="toc-text">Pass-03</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#solution1"><span class="toc-number">3.2.1.</span> <span class="toc-text">solution1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#solution2"><span class="toc-number">3.2.2.</span> <span class="toc-text">solution2</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-04"><span class="toc-number">3.3.</span> <span class="toc-text">Pass-04</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-05"><span class="toc-number">3.4.</span> <span class="toc-text">Pass-05</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-06"><span class="toc-number">3.5.</span> <span class="toc-text">Pass-06</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-07"><span class="toc-number">3.6.</span> <span class="toc-text">Pass-07</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-08"><span class="toc-number">3.7.</span> <span class="toc-text">Pass-08</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-09"><span class="toc-number">3.8.</span> <span class="toc-text">Pass-09</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-10"><span class="toc-number">3.9.</span> <span class="toc-text">Pass-10</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-11"><span class="toc-number">3.10.</span> <span class="toc-text">Pass-11</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-12"><span class="toc-number">3.11.</span> <span class="toc-text">Pass-12</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图片渲染解析问题"><span class="toc-number">4.</span> <span class="toc-text">图片渲染解析问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-13"><span class="toc-number">4.1.</span> <span class="toc-text">Pass-13</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-14"><span class="toc-number">4.2.</span> <span class="toc-text">Pass-14</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-15"><span class="toc-number">4.3.</span> <span class="toc-text">Pass-15</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-16"><span class="toc-number">4.4.</span> <span class="toc-text">Pass-16</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#条件竞争问题"><span class="toc-number">5.</span> <span class="toc-text">条件竞争问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP底层问题"><span class="toc-number">5.1.</span> <span class="toc-text">PHP底层问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-19"><span class="toc-number">6.</span> <span class="toc-text">Pass-19</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#畸形解析"><span class="toc-number">7.</span> <span class="toc-text">畸形解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IIS-6-0"><span class="toc-number">7.1.</span> <span class="toc-text">IIS 6.0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IIS-7-0-7-5"><span class="toc-number">7.2.</span> <span class="toc-text">IIS 7.0/7.5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache"><span class="toc-number">7.3.</span> <span class="toc-text">Apache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-lt-8-03"><span class="toc-number">7.4.</span> <span class="toc-text">Nginx&lt;8.03</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">8.</span> <span class="toc-text">后记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">9.</span> <span class="toc-text">参考链接</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前端校验"><span class="toc-number">2.</span> <span class="toc-text">前端校验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-01"><span class="toc-number">2.1.</span> <span class="toc-text">Pass-01</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后端代码校验"><span class="toc-number">3.</span> <span class="toc-text">后端代码校验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-02"><span class="toc-number">3.1.</span> <span class="toc-text">Pass-02</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-03"><span class="toc-number">3.2.</span> <span class="toc-text">Pass-03</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#solution1"><span class="toc-number">3.2.1.</span> <span class="toc-text">solution1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#solution2"><span class="toc-number">3.2.2.</span> <span class="toc-text">solution2</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-04"><span class="toc-number">3.3.</span> <span class="toc-text">Pass-04</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-05"><span class="toc-number">3.4.</span> <span class="toc-text">Pass-05</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-06"><span class="toc-number">3.5.</span> <span class="toc-text">Pass-06</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-07"><span class="toc-number">3.6.</span> <span class="toc-text">Pass-07</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-08"><span class="toc-number">3.7.</span> <span class="toc-text">Pass-08</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-09"><span class="toc-number">3.8.</span> <span class="toc-text">Pass-09</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-10"><span class="toc-number">3.9.</span> <span class="toc-text">Pass-10</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-11"><span class="toc-number">3.10.</span> <span class="toc-text">Pass-11</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-12"><span class="toc-number">3.11.</span> <span class="toc-text">Pass-12</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图片渲染解析问题"><span class="toc-number">4.</span> <span class="toc-text">图片渲染解析问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-13"><span class="toc-number">4.1.</span> <span class="toc-text">Pass-13</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-14"><span class="toc-number">4.2.</span> <span class="toc-text">Pass-14</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-15"><span class="toc-number">4.3.</span> <span class="toc-text">Pass-15</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-16"><span class="toc-number">4.4.</span> <span class="toc-text">Pass-16</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#条件竞争问题"><span class="toc-number">5.</span> <span class="toc-text">条件竞争问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP底层问题"><span class="toc-number">6.</span> <span class="toc-text">PHP底层问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pass-19"><span class="toc-number">6.1.</span> <span class="toc-text">Pass-19</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#畸形解析"><span class="toc-number">7.</span> <span class="toc-text">畸形解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IIS-6-0"><span class="toc-number">7.1.</span> <span class="toc-text">IIS 6.0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IIS-7-0-7-5"><span class="toc-number">7.2.</span> <span class="toc-text">IIS 7.0/7.5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache"><span class="toc-number">7.3.</span> <span class="toc-text">Apache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-lt-8-03"><span class="toc-number">7.4.</span> <span class="toc-text">Nginx&lt;8.03</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">8.</span> <span class="toc-text">后记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">9.</span> <span class="toc-text">参考链接</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -614,6 +614,98 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -3121,12 +3213,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
         </li>
     
     
@@ -3436,12 +3528,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
@@ -3451,7 +3538,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
@@ -3474,9 +3566,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="hexo"><span class="iconfont-archer">&#xe606;</span>hexo</span>
     
-        <span class="sidebar-tag-name" data-tags="RSA"><span class="iconfont-archer">&#xe606;</span>RSA</span>
-    
         <span class="sidebar-tag-name" data-tags="php_black_magic"><span class="iconfont-archer">&#xe606;</span>php_black_magic</span>
+    
+        <span class="sidebar-tag-name" data-tags="RSA"><span class="iconfont-archer">&#xe606;</span>RSA</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
@@ -3514,9 +3606,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="微机实验"><span class="iconfont-archer">&#xe606;</span>微机实验</span>
     
-        <span class="sidebar-tag-name" data-tags="马原考试"><span class="iconfont-archer">&#xe606;</span>马原考试</span>
-    
         <span class="sidebar-tag-name" data-tags="微机考试"><span class="iconfont-archer">&#xe606;</span>微机考试</span>
+    
+        <span class="sidebar-tag-name" data-tags="马原考试"><span class="iconfont-archer">&#xe606;</span>马原考试</span>
     
         <span class="sidebar-tag-name" data-tags="微机实验考试"><span class="iconfont-archer">&#xe606;</span>微机实验考试</span>
     
@@ -3587,9 +3679,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="微机实验"><span class="iconfont-archer">&#xe60a;</span>微机实验</span>
     
-        <span class="sidebar-category-name" data-categories="马原考试"><span class="iconfont-archer">&#xe60a;</span>马原考试</span>
-    
         <span class="sidebar-category-name" data-categories="微机考试"><span class="iconfont-archer">&#xe60a;</span>微机考试</span>
+    
+        <span class="sidebar-category-name" data-categories="马原考试"><span class="iconfont-archer">&#xe60a;</span>马原考试</span>
     
         <span class="sidebar-category-name" data-categories="Algorithm"><span class="iconfont-archer">&#xe60a;</span>Algorithm</span>
     
