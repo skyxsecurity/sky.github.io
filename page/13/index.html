@@ -354,25 +354,24 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/06/16/椭圆加密算法ECC/" >
+        <a class="abstract-title" href = "/2017/06/22/闲着无聊随便写的微机代码/" >
             
-                <span>椭圆加密算法ECC</span>
+                <span>闲着无聊随便写的微机代码</span>
         </a>
         <div class="abstract-content">
-            0x00 心酸的开头今天下午本想做完一道加密，快乐的去学习，结果这个加密愣是给我做到晚上，一怒之下，决定写下来，总不能浪费一下午的时光吧~
-0x01 ECC简介参考链接：http://www.8btc.com/eccmath大体上的意思是说，给你一个曲线F：y^2=x^3+ax+b你确定下来a和b，然后找一个在曲线F上的点G（x1,y1）然后自己随机生成一个k（私钥）然后生成公钥S=kG注意，这里的kG可不是k*G这么简单，这是几何意义上的：S=G+G+G+G+……+G（K个G）然后把公钥丢出去，私钥留给自己和RSA差不多啦重点应该是在于如何求S1G（x1,y1）,P（x2,y2）
-重点...
+            0809的多通道采集题目描述：1利用0809设计一个多通道的数据采集卡，要求采样率为500HZ，用8253通道0查询的方式实现采样率的控制（8253A的通道0工作于方式2，当OUT输出变低时启动一次A/D转换，8253的CLK0输出为1MHZ。），采集1000个数据存入内存BUFFER开始的缓冲区。
+首先进行计算：500HZ的采样率，即2ms一次又因为8253的CLK0的输入为1MHZ因此1MHZ/500HZ = 2000所以通道0的初值为2000因此程序如下：1234567891011121314151617181920212223242526272829303132333435363...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/16</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/22</span>
             </div>
             <!-- tags  -->
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "ECC">ECC</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "微机考试">微机考试</a>
     
 </div>
             
@@ -385,23 +384,273 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/05/17/2017-CUMTCTF-Final/" >
+        <a class="abstract-title" href = "/2017/06/21/微机实验考试代码/" >
             
-                <span>2017-CUMTCTF-Final</span>
+                <span>微机实验考试代码</span>
         </a>
         <div class="abstract-content">
-            WebAppl3’s Fish拿到题目是个游戏界面，想到校平台上的一道贪吃蛇题目，先抓包后改包，把分数改成5001发送无果，说token错误，但是并不存在post表单，所以猜想是js的题目。然后查看源代码，在&lt;script type=&quot;text/javascript&quot; src=&quot;js/data.js&quot;&gt;&lt;/script&gt;发现问题，关键代码如下：1234567891011121314151617181920$.ajax(&#123;    type: &quot;GET&quot;,    contentType: &quot...
+            8255键盘专题8255-用发光二极管显示键值（顺序6）要求：1利用8255对键盘的行列扫描控制，键值由8255输出至发光二极管显示。8255口地址290H
+注意，此时用C口输出到二极管（不用接数码管了），所以直接把键值打到C口输出到二极管就行实现代码：12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879PORT_A EQU 290H		;825...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/17</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/21</span>
             </div>
             <!-- tags  -->
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "微机实验考试">微机实验考试</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/06/21/RSA算法研究/" >
+            
+                <span>RSA算法研究</span>
+        </a>
+        <div class="abstract-content">
+            
+RSA算法原理1.选定密钥长度2.生成n(n是两个大质数p、q的积,n的二进制表示时所占用的位数就是之前选定的密钥长度)3.随机选定一个e1(要求e1与(p-1)(q-1)互质)4.选择一个e2(要求(e2e1)mod((p-1)*(q-1))=1)5.公开(n，e1)为公钥6.保留(n，e2)为私钥
+至此：明文:plain,密文:crypto故别人可以使用公钥对明文加密$$crypto=plain^{e1}\mod n$$然后你可以使用私钥对密文解密$$plain=crypto^{e2}\mod n$$
+RSA论证密钥长度目前来看1024位以上的RSA尚且是安全的，密钥长度越长越安全...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/21</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "RSA">RSA</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/06/20/GCTF的一道php反序列化题目/" >
+            
+                <span>GCTF的一道php反序列化题目</span>
+        </a>
+        <div class="abstract-content">
+            分析源码首页源码：1234567891011&lt;?php//error_reporting(E_ERROR &amp; ~E_NOTICE);ini_set('session.serialize_handler', 'php_serialize');header("content-type;text/html;charset=utf-8");session_start();if(isset($_GET['src']))&#123;    $_SESSION['src'] = $_GET['src'];    highlight_file(__FILE__);    print_r($...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "serialize">serialize</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/06/19/CRC爆破总结/" >
+            
+                <span>CRC32爆破总结</span>
+        </a>
+        <div class="abstract-content">
+            0x00 前言说到CRC想必大家都知道，它的全称是循环冗余校验(Cyclic Redundancy Check, CRC)可以根据数据求出对应的CRC，用来发现传送过程中是否有比特错误然而，我们也应当知道，正面根据数据可以算出对应的CRC，那么根据CRC能否求出数据呢？答案是肯定的，对于低位数的CRC肯定是可以爆破出来的：最近在各个CTF平台的加密题里，遇到不少CRC32爆破的题目，今天来做个总结
+0x01 5位及5位以下的CRC32爆破相对4~5位的CRC爆破，时间上也并不算长这里注意一下，dic的顺序个人感觉挺重要的5位以下就算了，33~127直接循环也可以但是我觉得5位的，如果顺序...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/19</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "CRC">CRC</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/06/18/陕西杯web详解/" >
+            
+                <span>陕西杯web详解</span>
+        </a>
+        <div class="abstract-content">
+            so easy（Bool注入）没有回显，构造盲注，用ascii比较，爆出密码ascii(mid(passwd,%d,1))=%d本来可以用这个方法比较，但是逗号被过滤了所以思考构造方法假设passwd=abc123123mid((passwd)from(-1)):3mid((passwd)from(-2)):23mid((passwd)from(-3)):123
+倒叙输出from的位数观察可知123323123
+倒着看的第一位都是3，显然不行，无法截取出来，于是想到反转123332321
+然后取最后一位即可故构造为：REVERSE(MID((passwd)from(-%s))先反转mid...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/18</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/06/18/微机实验代码/" >
+            
+                <span>微机实验代码</span>
+        </a>
+        <div class="abstract-content">
+            实验一微机实验(基于8086的阶乘)（仅限于8以内）12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394                      ;--------------------------------------------DATA  SEGMENT    INPUT_TI...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/18</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "微机实验">微机实验</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/06/16/Bugku-writeup/" >
+            
+                <span>Bugku-writeup</span>
+        </a>
+        <div class="abstract-content">
+            0x00 签到题没什么好说的，自己加群吧
+0x01 web2查看源代码就有flag,不解释
+0x02 文件上传测试直接改后缀即可拿到flag
+0x03 计算题1&lt;input type=&quot;text&quot; class=&quot;input&quot; maxlength=&quot;1&quot; /&gt;
+就是个前端限制，把maxlength改成99，直接做数学题吧，出flag
+0x04 web3查看源代码,unicode编码转化，在线有工具，转了就出flag
+0x05 sql注入带回显的宽字节注入，按照套路吧，爆库名，表名，字段名都告诉你了，爆出库名即可，后面的...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/16</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/06/16/CUMTCTF-初赛/" >
+            
+                <span>CUMTCTF-初赛</span>
+        </a>
+        <div class="abstract-content">
+            0x00 Basic签到题根据题目，百度得知，使用本地hosts文件进行域名解析。（虽然用hosts翻过墙，但并不知道原来是这么一回事）WIN10 hosts目录：C:\Windows\System32\drivers\etc
+
+添加如上字段即可。再刷新DNS即可。
+
+encode 101CUMTCTF=~[];CUMTCTF=&#123;___:++CUMTCTF,$$$$:(![]+"")[CUMTCTF],__$:++CUMTCTF,$_$_:(![]+"")[CUMTCTF],_$_:++CUMTCTF,$_$$:(&#123;&#125;+"")[CUMTCTF],$$_$:(...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/16</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/06/16/CBC字节翻转攻击/" >
+            
+                <span>CBC字节翻转攻击</span>
+        </a>
+        <div class="abstract-content">
+            0x00 相关介绍首先让我们看看CBC是如何工作的：加密过程：Plaintext：待加密的数据。IV：用于随机化加密的比特块，保证即使对相同明文多次加密，也可以得到不同的密文。Key：被一些如AES的对称加密算法使用。Ciphertext：加密后的数据。在这里重要的一点是，CBC工作于一个固定长度的比特组，将其称之为块。在本文中，我们将使用包含16字节的块。所以正如你所见：前一块的密文用来产生后一块的密文。所以由此我们就可以得出解密过程：值得注意的地方：前一块的密文是用来产生下一块明文；这就是字节翻转攻击开始发挥作用的地方。如果我们改变前一块密文的一个字节，然后与下一个解密后的组块异或，...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/16</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "CBC">CBC</a>
     
 </div>
             
@@ -411,7 +660,7 @@ height:50vh;
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/page/12/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span>
+        <a class="extend prev" rel="prev" href="/page/12/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/14/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -2752,9 +3001,73 @@ height:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 122
+        Total : 132
         </div>
         <!-- search  -->
         
@@ -2767,6 +3080,56 @@ height:50vh;
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/29</span><a class="archive-post-title" href= "/2018/08/29/浅析xml及其安全问题/" >浅析xml及其安全问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2018/08/28/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2018/08/27/php函数默认配置引发的安全问题/" >php函数默认配置引发的安全问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2018/08/26/Upload-labs&Upload Bypass Summarize/" >Upload-labs&Upload Bypass Summarize</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2018/08/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/SOAP及相关漏洞研究/" >SOAP及相关漏洞研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/从一道CTF题引发的思考/" >从一道CTF题引发的思考</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/inndy-crypto-writeup/" >inndy-crypto-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/xss-ssrf-redis/" >xss->ssrf->redis</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href= "/2018/08/15/一道CTF题引发的思考-sql注入/" >一道CTF题引发的思考-sql注入</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -2995,12 +3358,12 @@ height:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
         </li>
     
     
@@ -3049,12 +3412,12 @@ height:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
         </li>
     
     
@@ -3364,12 +3727,7 @@ height:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
@@ -3379,7 +3737,12 @@ height:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
