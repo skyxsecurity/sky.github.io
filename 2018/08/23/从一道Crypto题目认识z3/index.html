@@ -261,7 +261,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">1,784</span> / Reading time: <span class="post-count">8 min</span></span>
+                        <span>Word count: <span class="post-count">1,785</span> / Reading time: <span class="post-count">8 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -390,11 +390,7 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-
-<blockquote>
-<p>文章首发于安全客 <a href="https://www.anquanke.com/post/id/156915" target="_blank" rel="noopener">https://www.anquanke.com/post/id/156915</a> </p>
-</blockquote>
+        <p><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">文章首发于安全客 https://www.anquanke.com/post/id/156915</span><br></pre></td></tr></table></figure></p>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在看Crypto，一直听闻z3的强大，近日终于体验了一次，做一下记录</p>
 <h2 id="题干分析"><a href="#题干分析" class="headerlink" title="题干分析"></a>题干分析</h2><p>题目直接给出了密文生成文本：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">import</span> sympy</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">m = sympy.randprime(<span class="number">2</span>**<span class="number">257</span>, <span class="number">2</span>**<span class="number">258</span>)</span><br><span class="line">M = sympy.randprime(<span class="number">2</span>**<span class="number">257</span>, <span class="number">2</span>**<span class="number">258</span>)</span><br><span class="line">a, b, c = [(sympy.randprime(<span class="number">2</span>**<span class="number">256</span>, <span class="number">2</span>**<span class="number">257</span>) % m) <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">3</span>)]</span><br><span class="line"></span><br><span class="line">x = (a + b * <span class="number">3</span>) % m</span><br><span class="line">y = (b - c * <span class="number">5</span>) % m</span><br><span class="line">z = (a + c * <span class="number">8</span>) % m</span><br><span class="line"></span><br><span class="line">flag = int(open(<span class="string">'flag'</span>, <span class="string">'rb'</span>).read().strip().hex(), <span class="number">16</span>)</span><br><span class="line">p = pow(flag, a, M)</span><br><span class="line">q = pow(flag, b, M)</span><br><span class="line"></span><br><span class="line">json.dump(&#123; key: globals()[key] <span class="keyword">for</span> key <span class="keyword">in</span> <span class="string">"Mmxyzpq"</span> &#125;, open(<span class="string">'crypted'</span>, <span class="string">'w'</span>))</span><br></pre></td></tr></table></figure></p>
 <p>题目的意思很简单：<br>1.生成两个随机大素数m,M<br>2.利用m再生成3个随机大数a,b,c<br>3.再利用a,b,c,m生成3个随机大数x,y,z<br>4.类RSA，将flag用公钥a加密，模数为M<br>5.类RSA，将flag用公钥b加密，模数为M<br>（注：这里不准确，并不是真RSA，说公钥和模数是方便类比）<br>然后我们已知的信息为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;p&quot;: 240670121804208978394996710730839069728700956824706945984819015371493837551238, </span><br><span class="line">&quot;q&quot;: 63385828825643452682833619835670889340533854879683013984056508942989973395315, </span><br><span class="line">&quot;M&quot;: 349579051431173103963525574908108980776346966102045838681986112083541754544269, </span><br><span class="line">&quot;z&quot;: 213932962252915797768584248464896200082707350140827098890648372492180142394587, </span><br><span class="line">&quot;m&quot;: 282832747915637398142431587525135167098126503327259369230840635687863475396299, </span><br><span class="line">&quot;x&quot;: 254732859357467931957861825273244795556693016657393159194417526480484204095858, </span><br><span class="line">&quot;y&quot;: 261877836792399836452074575192123520294695871579540257591169122727176542734080</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -573,6 +569,30 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
