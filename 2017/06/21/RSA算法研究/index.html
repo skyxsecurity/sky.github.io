@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">767</span> / Reading time: <span class="post-count">3 min</span></span>
+                        <span>Word count: <span class="post-count">621</span> / Reading time: <span class="post-count">2 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -398,15 +398,42 @@ height:50vh;
     <article class="article-entry">
         <p><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script></p>
 <h2 id="RSA算法原理"><a href="#RSA算法原理" class="headerlink" title="RSA算法原理"></a>RSA算法原理</h2><p>1.选定密钥长度<br>2.生成n(n是两个大质数p、q的积,n的二进制表示时所占用的位数就是之前选定的密钥长度)<br>3.随机选定一个e1(要求e1与(p-1)<em>(q-1)互质)<br>4.选择一个e2(要求(e2</em>e1)mod((p-1)*(q-1))=1)<br>5.公开(n，e1)为公钥<br>6.保留(n，e2)为私钥</p>
-<p>至此：明文:plain,密文:crypto<br>故别人可以使用公钥对明文加密<br>$$<br>crypto=plain^{e1}\mod n<br>$$<br>然后你可以使用私钥对密文解密<br>$$<br>plain=crypto^{e2}\mod n<br>$$</p>
-<h2 id="RSA论证"><a href="#RSA论证" class="headerlink" title="RSA论证"></a>RSA论证</h2><h3 id="密钥长度"><a href="#密钥长度" class="headerlink" title="密钥长度"></a>密钥长度</h3><p>目前来看1024位以上的RSA尚且是安全的，密钥长度越长越安全，因为由2个大质数相乘得到n容易<br>但由一个大数n拆分出2个质数非常难<br>密钥长度越长（即n越大），分解起来就越困难（显而易见）<br>目前看来，想要靠暴力拆解大数n，需要的时间是显然不可能的（远远超过数据本身价值）</p>
+<p>至此：明文:plain,密文:crypto<br>故别人可以使用公钥对明文加密</p>
+<script type="math/tex; mode=display">
+crypto=plain^{e1}\mod n</script><p>然后你可以使用私钥对密文解密</p>
+<script type="math/tex; mode=display">
+plain=crypto^{e2}\mod n</script><h2 id="RSA论证"><a href="#RSA论证" class="headerlink" title="RSA论证"></a>RSA论证</h2><h3 id="密钥长度"><a href="#密钥长度" class="headerlink" title="密钥长度"></a>密钥长度</h3><p>目前来看1024位以上的RSA尚且是安全的，密钥长度越长越安全，因为由2个大质数相乘得到n容易<br>但由一个大数n拆分出2个质数非常难<br>密钥长度越长（即n越大），分解起来就越困难（显而易见）<br>目前看来，想要靠暴力拆解大数n，需要的时间是显然不可能的（远远超过数据本身价值）</p>
 <h3 id="欧拉定理及推论"><a href="#欧拉定理及推论" class="headerlink" title="欧拉定理及推论"></a>欧拉定理及推论</h3><p>首先是欧拉定理(Euler’s theorem)<br>n是一个正整数，<br><code>ϕ(n) = 总数(总数为从1~n-1，与n互质的整数的个数)</code><br>举例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">比如5这个数,那么1,2,3,4,都与5互质，所以ϕ(5)=4</span><br><span class="line">再比如6这个数,只有1,5与它互质，所以ϕ(6)=2</span><br></pre></td></tr></table></figure></p>
 <p>那么容易得到，对于一个质数p,<code>ϕ(p)=p-1</code></p>
-<h4 id="欧拉定理"><a href="#欧拉定理" class="headerlink" title="欧拉定理"></a>欧拉定理</h4><p>如果n是一个正整数，a是任意一个非0整数，且n和a互质，那么<br>$$<br>a^{\phi(n)}\equiv1\mod n<br>$$</p>
-<h4 id="推论1"><a href="#推论1" class="headerlink" title="推论1"></a>推论1</h4><p>如果m和n是互质的正整数,那么：<br>$$<br>ϕ(mn)=ϕ(m)ϕ(n)<br>$$</p>
-<h4 id="推论2"><a href="#推论2" class="headerlink" title="推论2"></a>推论2</h4><p>$$<br>({a}\times{b})\mod n = (({a}\mod n)\times({b}\mod n))\mod n<br>$$</p>
-<h3 id="RSA的加解密证明"><a href="#RSA的加解密证明" class="headerlink" title="RSA的加解密证明"></a>RSA的加解密证明</h3><p>证明：<br>假设a和b除以n的余数为c1,c2<br>a和b可以写成<br>$$<br>a=nt_1+c_1<br>$$<br>$$<br>b=nt_2+c_2<br>$$<br>故<br>$$<br>ab=n^2t_1t_2+nt_1c_2+nt_2c_1+c_1c_2<br>$$<br>所以ab除以n的余数为c1c2。<br>$$<br>ab/n = nt_1t_2+t_1c_2+t_2c_1 \cdots c_1c_2<br>$$<br>即<br>$$<br>ab\mod n = ({a}\mod n)\times({b}\mod n)<br>$$<br>有以上定理后，由此可以推导出RSA算法的内在原理：<br>根据欧拉定理，对于任意z，如果z与n互质，那么：<br>$$<br>{z^{ϕ(n)}}\mod n = {z^k}\mod n= 1\mod n<br>$$<br>因此<br>$$<br>({z^{de}}\mod n)=({z^{kt+1}}\mod n)=({(z^{kt})\times(z)}\mod n)=(({z^{kt}}\mod n)\times(z\mod n))= (z\mod n )<br>$$<br>因为<br>$$<br>{z^k}\mod n = 1\mod n<br>$$<br>上面主要使用了<code>d*e=kt+1</code>以及推论2。<br>也就是说：<br>$$<br>{z^{de}}\mod n = z\mod n<br>$$<br>根据2的推论，有<br>$$<br>({z^e}\mod n)^d = z\mod n<br>$$<br>即d个余数相乘，因为其乘积可能大于n，所以由<br>$$<br>({a}\times{b})\mod n = (({a}\mod n)\times({b}\mod n))\mod n<br>$$<br>例如令a和b都为5，n为3，可知该结论<br>故上式可描述为<br>$$<br>(z^e\mod n)^d\mod n=(z\mod n) =z<br>$$</p>
-<h3 id="RSA本质"><a href="#RSA本质" class="headerlink" title="RSA本质"></a>RSA本质</h3><p>就用一句话概括：<br>（原数字乘方求余数得到，然后对余数再乘方求余数后得到原来数字的过程）<br>即a乘方求余数，得到b<br>再对b乘方求余数，得到c<br>最后a=c</p>
+<h4 id="欧拉定理"><a href="#欧拉定理" class="headerlink" title="欧拉定理"></a>欧拉定理</h4><p>如果n是一个正整数，a是任意一个非0整数，且n和a互质，那么</p>
+<script type="math/tex; mode=display">
+a^{\phi(n)}\equiv1\mod n</script><h4 id="推论1"><a href="#推论1" class="headerlink" title="推论1"></a>推论1</h4><p>如果m和n是互质的正整数,那么：</p>
+<script type="math/tex; mode=display">
+ϕ(mn)=ϕ(m)ϕ(n)</script><h4 id="推论2"><a href="#推论2" class="headerlink" title="推论2"></a>推论2</h4><script type="math/tex; mode=display">
+({a}\times{b})\mod n = (({a}\mod n)\times({b}\mod n))\mod n</script><h3 id="RSA的加解密证明"><a href="#RSA的加解密证明" class="headerlink" title="RSA的加解密证明"></a>RSA的加解密证明</h3><p>证明：<br>假设a和b除以n的余数为c1,c2<br>a和b可以写成</p>
+<script type="math/tex; mode=display">
+a=nt_1+c_1</script><script type="math/tex; mode=display">
+b=nt_2+c_2</script><p>故</p>
+<script type="math/tex; mode=display">
+ab=n^2t_1t_2+nt_1c_2+nt_2c_1+c_1c_2</script><p>所以ab除以n的余数为c1c2。</p>
+<script type="math/tex; mode=display">
+ab/n = nt_1t_2+t_1c_2+t_2c_1 \cdots c_1c_2</script><p>即</p>
+<script type="math/tex; mode=display">
+ab\mod n = ({a}\mod n)\times({b}\mod n)</script><p>有以上定理后，由此可以推导出RSA算法的内在原理：<br>根据欧拉定理，对于任意z，如果z与n互质，那么：</p>
+<script type="math/tex; mode=display">
+{z^{ϕ(n)}}\mod n = {z^k}\mod n= 1\mod n</script><p>因此</p>
+<script type="math/tex; mode=display">
+({z^{de}}\mod n)=({z^{kt+1}}\mod n)=({(z^{kt})\times(z)}\mod n)=(({z^{kt}}\mod n)\times(z\mod n))= (z\mod n )</script><p>因为</p>
+<script type="math/tex; mode=display">
+{z^k}\mod n = 1\mod n</script><p>上面主要使用了<code>d*e=kt+1</code>以及推论2。<br>也就是说： </p>
+<script type="math/tex; mode=display">
+{z^{de}}\mod n = z\mod n</script><p>根据2的推论，有</p>
+<script type="math/tex; mode=display">
+({z^e}\mod n)^d = z\mod n</script><p>即d个余数相乘，因为其乘积可能大于n，所以由</p>
+<script type="math/tex; mode=display">
+({a}\times{b})\mod n = (({a}\mod n)\times({b}\mod n))\mod n</script><p>例如令a和b都为5，n为3，可知该结论<br>故上式可描述为</p>
+<script type="math/tex; mode=display">
+(z^e\mod n)^d\mod n=(z\mod n) =z</script><h3 id="RSA本质"><a href="#RSA本质" class="headerlink" title="RSA本质"></a>RSA本质</h3><p>就用一句话概括：<br>（原数字乘方求余数得到，然后对余数再乘方求余数后得到原来数字的过程）<br>即a乘方求余数，得到b<br>再对b乘方求余数，得到c<br>最后a=c</p>
 
     </article>
     <!-- license  -->
@@ -2911,9 +2938,23 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 135
+        Total : 137
         </div>
         <!-- search  -->
         
@@ -2926,6 +2967,16 @@ top:50vh;
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/Crypto之击破多层加密/" >Crypto之击破多层加密</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/RSA之拒绝套路(1)/" >RSA之拒绝套路(1)</a>
+        </li>
     
     
         <li class="archive-post-item">

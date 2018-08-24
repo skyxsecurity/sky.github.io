@@ -392,8 +392,8 @@ height:50vh;
     <article class="article-entry">
         <blockquote>
 <p>文章首发在 <a href="https://xz.aliyun.com/t/2500" target="_blank" rel="noopener">https://xz.aliyun.com/t/2500</a></p>
-</blockquote>
 <h2 id="IZ"><a href="#IZ" class="headerlink" title="IZ"></a>IZ</h2><p>题目链接：<code>http://35.185.178.212/</code><br>题目直接给出了源码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">include</span> <span class="string">"config.php"</span>; </span><br><span class="line">$number1 = rand(<span class="number">1</span>,<span class="number">100000000000000</span>); </span><br><span class="line">$number2 = rand(<span class="number">1</span>,<span class="number">100000000000</span>); </span><br><span class="line">$number3 = rand(<span class="number">1</span>,<span class="number">100000000</span>); </span><br><span class="line">$url = urldecode($_SERVER[<span class="string">'REQUEST_URI'</span>]); </span><br><span class="line">$url = parse_url($url, PHP_URL_QUERY); </span><br><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">"/_/i"</span>, $url))  </span><br><span class="line">&#123; </span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"..."</span>); </span><br><span class="line">&#125; </span><br><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">"/0/i"</span>, $url))  </span><br><span class="line">&#123; </span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"..."</span>); </span><br><span class="line">&#125; </span><br><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">"/\w+/i"</span>, $url))  </span><br><span class="line">&#123; </span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"..."</span>); </span><br><span class="line">&#125;     </span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'_'</span>]) &amp;&amp; !<span class="keyword">empty</span>($_GET[<span class="string">'_'</span>])) </span><br><span class="line">&#123; </span><br><span class="line">    $control = $_GET[<span class="string">'_'</span>];         </span><br><span class="line">    <span class="keyword">if</span>(!in_array($control, <span class="keyword">array</span>(<span class="number">0</span>,$number1))) </span><br><span class="line">    &#123; </span><br><span class="line">        <span class="keyword">die</span>(<span class="string">"fail1"</span>); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">if</span>(!in_array($control, <span class="keyword">array</span>(<span class="number">0</span>,$number2))) </span><br><span class="line">    &#123; </span><br><span class="line">        <span class="keyword">die</span>(<span class="string">"fail2"</span>); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">if</span>(!in_array($control, <span class="keyword">array</span>(<span class="number">0</span>,$number3))) </span><br><span class="line">    &#123; </span><br><span class="line">        <span class="keyword">die</span>(<span class="string">"fail3"</span>); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">echo</span> $flag; </span><br><span class="line">&#125; </span><br><span class="line">show_source(<span class="keyword">__FILE__</span>); </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
 <p>看到<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$url = urldecode($_SERVER[<span class="string">'REQUEST_URI'</span>]); </span><br><span class="line">$url = parse_url($url, PHP_URL_QUERY);</span><br></pre></td></tr></table></figure></p>
 <p>不难想到///的trick<br>同时，我知道in_array()，在没有设置松紧比较的时候，是默认存在弱比较的<br>于是随手构造弱比较，请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://35.185.178.212///?_=0a</span><br></pre></td></tr></table></figure></p>
 <p>即可得到flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ISITDTU&#123;php_bad_language&#125;</span><br></pre></td></tr></table></figure></p>
@@ -2923,9 +2923,23 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 135
+        Total : 137
         </div>
         <!-- search  -->
         
@@ -2938,6 +2952,16 @@ top:50vh;
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/Crypto之击破多层加密/" >Crypto之击破多层加密</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/RSA之拒绝套路(1)/" >RSA之拒绝套路(1)</a>
+        </li>
     
     
         <li class="archive-post-item">

