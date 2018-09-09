@@ -15,7 +15,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>RSA之拒绝套路(2) · Sky&#39;s blog</title>
+    <title>浅析RSA Padding Attack · Sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -210,7 +210,7 @@
                 <a href="/" >Sky&#39;s blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">RSA之拒绝套路(2)</a>
+                <a href="#" class="post-name">浅析RSA Padding Attack</a>
             </div>
     </div>
     
@@ -242,7 +242,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            RSA之拒绝套路(2)
+            浅析RSA Padding Attack
             <!-- 404 -->
             
         </h1>
@@ -261,12 +261,12 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">688</span> / Reading time: <span class="post-count">3 min</span></span>
+                        <span>Word count: <span class="post-count">842</span> / Reading time: <span class="post-count">4 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/08/21</span>
+                    <span class="post-intro-time">2018/09/15</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -390,97 +390,111 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">文章首发在合天智汇</span><br></pre></td></tr></table></figure></p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>话不多说，接着前一期，继续探讨RSA的相关问题，上一期，我们讨论了，如果泄露了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(n,e,dp,c)</span><br></pre></td></tr></table></figure></p>
-<p>可以导致密文被解密的危害。<br>这一次，我们探讨如果泄露<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(dp,dq,q,p,c)</span><br></pre></td></tr></table></figure></p>
-<p>会带来什么严重影响？</p>
-<h2 id="题干"><a href="#题干" class="headerlink" title="题干"></a>题干</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dp= 90494486973243104756298311175705002887155440121025946664275790548694955799661434870163629541771658812502682012435200659355928618529521731475360236486362525996535354732687624609637012830178545914960485330748345108757203508531117591067570383564779625954776907685968592668868046507450242047759226407026094726359</span><br><span class="line">dq= 92386717102324384872139253931247976320472847834037799716676564640678692924258053130751618730959510913784801723023536527134208843358920592320351399005428347188639433875570867152865970587272904695272790831679276818402117343413503376057524788386479263579869430615501089905630519162146030369086836183772975252551</span><br><span class="line">p= 121869669684596731118740111360803257498670698122183387353481580136405322481841982461820301261370579505460038281590785837096967719889404913176714663774999789266522508163678949469953184327222227297952119212490499582581953510522212981687122483764873187827531047946130999532741388680549345732675732040579796067001</span><br><span class="line">q= 128363031923139297392077349407719417788135630403499671848196425800900870531452570499668481104884553795224784931947824885511134525485570129640119439950191944938407656926280993408854767711557863016197167505998324659906146937423415404059310560359693643987781862684489401368519777953281060013045590132161625607377</span><br><span class="line">c= 4176193749773450562408160796325873473193702511560805285554329767573726211097194419198463203488792792756598428753745425419950423161673497255820731183746106463781291156892140581651301528184812357534808298071893380519977926677138246941946185699346532140641376461516107672722425971178865758049759985915001009787241295292157744353554548314911531918044654676691927347018033509499136103964942830581407087547565204232556314726045307279963709599952745342811947421707024572981812906869557834491207590418553244020621858083633564878305733114484857827620268881100166090837841224767358579366482347136224695333980041913268394994302</span><br></pre></td></tr></table></figure>
-<p>题目很清晰，我们没有公钥和私钥，却要从密文推出明文，我们下面来尝试公式推导</p>
-<h2 id="公式推导之万事俱备"><a href="#公式推导之万事俱备" class="headerlink" title="公式推导之万事俱备"></a>公式推导之万事俱备</h2><p>还是先摆出已知条件</p>
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近日在复盘一些Crypto的题目，做到了N1CTF的一道rsapadding，进行了一些拓展，于是进行了一些分析记录，有了这篇文章</p>
+<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><p>题目已开源在<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/Nu1LCTF/n1ctf-2018/tree/master/source/crypto/rsapadding</span><br></pre></td></tr></table></figure></p>
+<p>主要代码为<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">m = <span class="string">'*****************'</span></span><br><span class="line">n = <span class="number">21727106551797231400330796721401157037131178503238742210927927256416073956351568958100038047053002307191569558524956627892618119799679572039939819410371609015002302388267502253326720505214690802942662248282638776986759094777991439524946955458393011802700815763494042802326575866088840712980094975335414387283865492939790773300256234946983831571957038601270911425008907130353723909371646714722730577923843205527739734035515152341673364211058969041089741946974118237091455770042750971424415176552479618605177552145594339271192853653120859740022742221562438237923294609436512995857399568803043924319953346241964071252941</span></span><br><span class="line">e = <span class="number">3</span></span><br><span class="line">welcom()</span><br><span class="line"><span class="keyword">if</span> cmd():</span><br><span class="line">    f = open(<span class="string">"/root/crypto/file.py"</span>)</span><br><span class="line">    print(f.read())</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">mm = bytes_to_long(m)</span><br><span class="line"><span class="keyword">assert</span> pow(mm, e) != pow(mm, e, n)</span><br><span class="line">sys.stdout.write(<span class="string">"Please give me a padding: "</span>)</span><br><span class="line">padding = input().strip()</span><br><span class="line">padding = int(sha256(padding.encode()).hexdigest(),<span class="number">16</span>)</span><br><span class="line">c = pow(mm+padding, e, n)</span><br><span class="line">print(<span class="string">"Your Ciphertext is: %s"</span>%c)</span><br></pre></td></tr></table></figure></p>
+<p>意思很简单<br>1.pow(mm, e) != pow(mm, e, n)<br>2.输入一个值<br>3.将输入的值sha256，记做padding<br>4.利用rsa加密m+padding<br>值得注意的是，e=3，padding可控<br>那么我们拥有的条件只有<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">n,e,c,padding</span><br></pre></td></tr></table></figure></p>
+<p>所以这里的攻击肯定是要从可控的padding入手了</p>
+<h2 id="初步推导"><a href="#初步推导" class="headerlink" title="初步推导"></a>初步推导</h2><p>我们可以随便构造一对已知padding的密文，得到</p>
 <script type="math/tex; mode=display">
-c \equiv m^{e} \text{ } mod \text{ } n \\
-m \equiv c^{d} \text{ } mod \text{ } n \\
-\phi (n) = (p-1)*(q-1) \\
-d*e \equiv 1 \text{ } mod \text{ } \phi (n) \\
-dp \equiv d \text{ } mod \text{ } (p-1) \\
-dq \equiv d \text{ } mod \text{ } (q-1)</script><p>我们的目标很简单，如何从这些式子得到答案</p>
+c_1 \equiv (m+padding_1)^3 \text{ }  mod \text{ } n \\
+c_2 \equiv (m+padding_2)^3 \text{ }  mod \text{ } n</script><p>此时，我们可以设</p>
 <script type="math/tex; mode=display">
-c^{d}</script><p>首先根据</p>
+M_1 = m+padding_1 \\
+M_2 =m+padding_2</script><p>利用这两个式子，我们可以得到如下线性关系</p>
 <script type="math/tex; mode=display">
-m \equiv c^{d} \text{ } mod \text{ } n</script><p>因为</p>
+M_1 = M_2-padding_2+padding_1</script><p>即方程形式为</p>
 <script type="math/tex; mode=display">
-gcd(p,q)=1 \\
-n=p*q</script><p>利用中国剩余定理,我们可以得到</p>
+f(x) = ax+b</script><p>其中</p>
 <script type="math/tex; mode=display">
-\begin{cases}
-m_1 \equiv c^{d} \text{ } mod \text{ } p \\
-m_2 \equiv c^{d} \text{ } mod \text{ } q \\
-\end{cases}</script><p>这里肯定有很多人不理解，我简单证明一下</p>
+a=1 \\
+b=padding_1-padding_2</script><p>即</p>
 <script type="math/tex; mode=display">
-m \equiv c^{d} \text{ } mod \text{ } n</script><p>可以得到式子</p>
+M_1=f(M_2)</script><p>我们有</p>
 <script type="math/tex; mode=display">
-m = c^{d}+k*n</script><p>因为</p>
+c1 \equiv M_1^3 \text{ } mod \text{ } n \\
+c2 \equiv M_2^3 \text{ } mod \text{ } n \\</script><p>我们知道</p>
 <script type="math/tex; mode=display">
-n = p*q</script><p>所以可以得到</p>
+M_1 = aM_2+b</script><p>那么将其带入得到</p>
 <script type="math/tex; mode=display">
-m = c^{d}+p*q*k</script><p>上述式子，同时取余q和p，可以分别得到</p>
+c1 \equiv (aM_2+b)^3 \text{ } mod \text{ } n \\
+c2 \equiv M_2^3 \text{ } mod \text{ } n \\</script><p>我们将c1展开得到</p>
 <script type="math/tex; mode=display">
-m_1 \equiv c^{d} \text{ } mod \text{ } q \\
-m_2 \equiv c^{d} \text{ } mod \text{ } p</script><p>为什么<code>kpq</code>没了,因为这是p或者q的倍数呀~<br>然后我们继续<br>由式1可以得到</p>
+(aM_2+b)^3 = a^3M_2^3+3(aM_2)^2b+3aM_2b^2+b^3</script><p>我们将这个式子带入得到</p>
 <script type="math/tex; mode=display">
-c^{d}=kp+m1</script><p>我们把这个带入式2<br>可以得到</p>
+c1 \equiv a^3M_2^3+3(aM_2)^2b+3aM_2b^2+b^3 \text{ } mod \text{ } n \\</script><p>于是便一筹莫展</p>
+<h2 id="可求证明"><a href="#可求证明" class="headerlink" title="可求证明"></a>可求证明</h2><p>上述的推导我们漏了一个非常重要的信息</p>
 <script type="math/tex; mode=display">
-m_2 \equiv (kp+m1) \text{ } mod \text{ } q</script><p>等式两边同时减去m1,可以得到</p>
+f(x) = ax+b \\
+M_1=f(M_2) \\
+c1 \equiv M_1^e \text{ } mod \text{ } n</script><p>那么不难发现</p>
 <script type="math/tex; mode=display">
-(m2-m1) \equiv kp \text{ } mod \text{ } q</script><p>这里因为</p>
+c1 \equiv f(x)^e \text{ } mod \text{ } n \\
+c1 \equiv f(M_2)^e \text{ } mod \text{ } n \\
+x=M_2</script><p>同理，我们还可以构造方程</p>
 <script type="math/tex; mode=display">
-gcd(p,q)=1</script><p>所以可以求p的逆元，得到</p>
+c2 \equiv x^e \text{ } mod \text{ } n \\
+c2 \equiv M_2^e \text{ } mod \text{ } n \\
+x=M_2</script><p>如此一来，我们可以得到</p>
 <script type="math/tex; mode=display">
-(m2-m1)*p^{-1} \equiv k \text{ } mod \text{ } q</script><p>所以这里得到如下两个式子</p>
-<script type="math/tex; mode=display">
-k \equiv (m2-m1)*p^{-1} \text{ } mod \text{ } q \\
-c^{d}=kp+m1 \\
-m \equiv c^{d} \text{ } mod \text{ } n</script><p>我们上下两个式子合并，得到</p>
-<script type="math/tex; mode=display">
-c^{d}=((m2-m1)*p^{-1} \text{ } mod \text{ } q)p+m1 \\
-m \equiv c^{d} \text{ } mod \text{ } n</script><p>最后可以有</p>
-<script type="math/tex; mode=display">
-m \equiv (((m2-m1)*p^{-1} \text{ } mod \text{ } q)p+m1) \text{ } mod \text{ } n</script><h2 id="公式推导之只欠东风"><a href="#公式推导之只欠东风" class="headerlink" title="公式推导之只欠东风"></a>公式推导之只欠东风</h2><p>现在只剩最后一步了，即</p>
-<script type="math/tex; mode=display">
-m_1 \equiv c^{d} \text{ } mod \text{ } q \\
-m_2 \equiv c^{d} \text{ } mod \text{ } p</script><p>这里的m1和m2怎么求？<br>这时候我们有</p>
+x \equiv M_2 \text{ } mod \text{ } n</script><p>是下列方程组的一个解</p>
 <script type="math/tex; mode=display">
 \begin{cases}
-d \equiv dp \text{ } mod \text{ } (p-1) \\
-d \equiv dq \text{ } mod \text{ } (q-1)
-\end{cases}</script><p>那么分别带入，有</p>
+f(x)=ax+b \\
+f(x)^e-c1 \equiv 0 \text{ } mod \text{ } n \\
+x^e-c2 \equiv 0 \text{ } mod \text{ } n 
+\end{cases}</script><p>那么一定可以有</p>
+<script type="math/tex; mode=display">
+s(x)=x^e-c2 \\
+t(x)=f(x)^e-c1</script><p>可以被写成</p>
+<script type="math/tex; mode=display">
+s(x) \equiv (x-M_2)*k_1 \text{ } mod \text{ } n \\
+t(x) \equiv (x-M_2)*k_2 \text{ } mod \text{ } n \\
+k_1,k_2为多项式</script><p>如此一来，只要</p>
+<script type="math/tex; mode=display">
+gcd(k_1,k_2)=1 \\
+则 \\
+gcd(s(x),t(x))=x-M_2 \\
+则 \\
+M_2 = x-gcd(s(x),t(x))</script><p>我们由e=3可以得知</p>
+<script type="math/tex; mode=display">
+s(x)=x^3-c2 \\</script><p>只有唯一解，所以k1和k2必互素，所以这里是M2一定是可求的</p>
+<h2 id="Related-Message-Attack"><a href="#Related-Message-Attack" class="headerlink" title="Related Message Attack"></a>Related Message Attack</h2><p>前面做了这么多证明铺垫，最后当然要祭出大招，即求解方法<br>这里的攻击是有方法名称的，即Related Message Attack<br>在e=3的情况下，我们可以利用rsa padding得到明文<br>根据之前第一步的推导，我们得到了</p>
+<script type="math/tex; mode=display">
+c1 \equiv a^3M_2^3+3(aM_2)^2b+3aM_2b^2+b^3 \text{ } mod \text{ } n \\</script><p>我们将式子变形为</p>
+<script type="math/tex; mode=display">
+c1 \equiv a^3M_2^3+3b(a^2M_2^2+aM_2b+b^2)-2b^3 \text{ } mod \text{ } n \\</script><p>移项得到</p>
+<script type="math/tex; mode=display">
+c1-a^3M_2^3+2b^3 \equiv 3b(a^2M_2^2+aM_2b+b^2) \text{ } mod \text{ } n \\</script><p>根据立方差公式，我们又有</p>
+<script type="math/tex; mode=display">
+(aM_2)^3-b^3 = (aM_2-b)(a^2M_2^2+aM_2b+b^2)</script><p>联立</p>
 <script type="math/tex; mode=display">
 \begin{cases}
-m_1 \equiv c^{dq \text{ } mod \text{ } (q-1)} \text{ } mod \text{ } q \\
-m_2 \equiv c^{dp \text{ } mod \text{ } (p-1)} \text{ } mod \text{ } p
-\end{cases}</script><p>这里肯定有人又不理解为什么可以直接带入了，我们再证明一下，这里用到了费马小定理<br>即假如p是质数，且<code>gcd(a,p)=1</code>，</p>
+c1-a^3M_2^3+2b^3 \equiv 3b(a^2M_2^2+aM_2b+b^2) \text{ } mod \text{ } n \\
+(aM_2)^3-b^3 \equiv (aM_2-b)(a^2M_2^2+aM_2b+b^2) \text{ } mod \text{ } n \\ 
+c_2 \equiv M_2^3  \text{ } mod \text{ } n 
+\end{cases}</script><p>我们将式子1左右同乘<code>aM2-b</code>，将式子2左右同乘<code>3b</code><br>然后即可得到如下式子</p>
 <script type="math/tex; mode=display">
- a^{(p-1)}  \equiv 1 \text{ } mod \text{ } p \\</script><p>所以如果我们有等式</p>
+(c1-a^3M_2^3+2b^3)(aM_2-b) \equiv 3b((aM_2)^3-b^3) \text{ } mod \text{ } n  \\
+c_2 \equiv M_2^3  \text{ } mod \text{ } n</script><p>我们再把c2带入得到</p>
 <script type="math/tex; mode=display">
-d = dp+k*(p-1)</script><p>我们直接带入，有</p>
+(c1-a^3c_2+2b^3)(aM_2-b) \equiv 3b(a^3c_2-b^3) \text{ } mod \text{ } n</script><p>则最后可以有</p>
 <script type="math/tex; mode=display">
-m_2 \equiv c^{dp+k*(p-1)} \text{ } mod \text{ } p</script><p>这里的指数，我们拆开，为</p>
+aM_2-b \equiv  \frac{3b(a^3c_2-b^3)}{c1-a^3c_2+2b^3} \text{ } mod \text{ } n \\</script><p>即可求得M2<br>而我们知道</p>
 <script type="math/tex; mode=display">
-m_2 \equiv c^{dp}*c^{k*(p-1)} \text{ } mod \text{ } p</script><p>这里的</p>
+M_2 = m+padding2 \\
+所以 \\
+m = M_2-padding2</script><p>所以最后有</p>
 <script type="math/tex; mode=display">
-c^{k*(p-1)}  \equiv 1 \text{ } mod \text{ } p</script><p>注：因为p是大素数，显然和c互素<br>所以可以直接得到</p>
+m \equiv \frac{\frac{3b(a^3c_2-b^3)}{c1-a^3c_2+2b^3}+b}{a}-padding2  \text{ } mod \text{ } n</script><p>注意，这里的分式不是除法，是逆元</p>
+<h2 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h2><p>既然推导出了公式，写脚本即可<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getM2</span><span class="params">(a,b,c1,c2,n)</span>:</span></span><br><span class="line">    a3 = pow(a,<span class="number">3</span>,n)</span><br><span class="line">    b3 = pow(b,<span class="number">3</span>,n)</span><br><span class="line">    first = c1-a3*c2+<span class="number">2</span>*b3</span><br><span class="line">    first = first % n</span><br><span class="line">    second = <span class="number">3</span>*b*(a3*c2-b3)</span><br><span class="line">    second = second % n</span><br><span class="line">    third = second*gmpy2.invert(first,n)</span><br><span class="line">    third = third % n</span><br><span class="line">    fourth = (third+b)*gmpy2.invert(a,n)</span><br><span class="line">    <span class="keyword">return</span> fourth % n</span><br><span class="line">m = getM2(a,b,c1,c2,n)-padding2</span><br><span class="line"><span class="keyword">print</span> libnum.n2s(m)</span><br></pre></td></tr></table></figure></p>
+<h2 id="Coppersmith’s-short-pad-attack"><a href="#Coppersmith’s-short-pad-attack" class="headerlink" title="Coppersmith’s short-pad attack"></a>Coppersmith’s short-pad attack</h2><p>上述情况是e=3时候，我们可以根据</p>
 <script type="math/tex; mode=display">
-m_2 \equiv c^{dp} \text{ } mod \text{ } p</script><p>那么m1根据对称性也可以同理得到</p>
-<script type="math/tex; mode=display">
-m_1 \equiv c^{dq} \text{ } mod \text{ } q</script><p>故此，我们现在拥有了所有条件，下面归纳一下为</p>
-<script type="math/tex; mode=display">
-\begin{cases}
-m_1 \equiv c^{dq} \text{ } mod \text{ } q \\
-m_2 \equiv c^{dp} \text{ } mod \text{ } p \\
-m \equiv (((m2-m1)*p^{-1} \text{ } mod \text{ } q)p+m1) \text{ } mod \text{ } n 
-\end{cases}</script><h2 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h2><p>万事俱备，那我们开始写脚本吧~<br>脚本如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decrypt</span><span class="params">(dp,dq,p,q,c)</span>:</span></span><br><span class="line">    InvQ = gmpy2.invert(q, p)</span><br><span class="line">    mp = pow(c, dp, p)</span><br><span class="line">    mq = pow(c, dq, q)</span><br><span class="line">    m = (((mp-mq)*InvQ) % p)*q+mq</span><br><span class="line">    <span class="keyword">print</span> libnum.n2s(m)</span><br><span class="line"></span><br><span class="line">dp= <span class="number">24417628139330679432551095868116968814142396193102639509841676574931690513464588523684381397207121003439385360929299071710433231196678202942915347185802024747158497456267595000613289619481116892073493417896024118597833611923086327107489774162727006791982668721110819684552525393969199138125692085053266311867</span></span><br><span class="line">dq= <span class="number">39019112110614280252241495036646034807151213716557526376274345944263453299622818575225245299195523420254672088668617876062998490653404750105272510633841394184860866942704080992475543547501372565259180366123356119418623253283732615682878021900318153700726522250094020806743598752556541454865233668070931534349</span></span><br><span class="line">p= <span class="number">114461439704891616590422134857421869878753559940962522699708885701308630438427731936479777010552391068812199529467348873013239528376604282404207321401876195560830474695517139918118078685078197948576662138382523308600480733574419071424466292785993331731881271557573094521160051353184489095799816579282742140953</span></span><br><span class="line">q= <span class="number">173407999660109485520889209734134041910836523881475540116955713891631837403964097088089751678165465931150331234455699896350201315926126639981461748491240790317968076899655657331112140939100897570439934688992874242416328330344836429844042122956843979375681077968897817612357468397424082494911472122421034561779</span></span><br><span class="line">c= <span class="number">13156088528156801357013836665002509320288819562687150049688430847488062217199478847649128772442129783962344653461951822569890099822350753026372449754819799394899656016487248023042927376134885257136511477879900672582593964626335310995748816166750941755394630154620318544805488209700324391789948495807096701620546557726907853315159542234979480907794659188799145765761654813882682456135251746607111274015475601810166327843158879230660349983897375641623569327757258851636029354634714133778666281729500815659100876558161468140039778498553902396380237570072543395294246750182054410091138654202418836971487515663618000662737</span></span><br><span class="line">decrypt(dp,dq,p,q,c)</span><br></pre></td></tr></table></figure></p>
-<p>最后我们愉快的得到了flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;dp_dq_is_very_dangerous!_47325684736584&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="反思"><a href="#反思" class="headerlink" title="反思"></a>反思</h2><p>这一题告诉我们，如果dp,dq,p,q泄露，就算e,d都保密，也可以被解密<br>而这种方法也存在于实际中，是用于RSA的加快解密的，专业称为RSA_CRT leaks<br>今天推导一遍，感觉又复习了不少东西XD</p>
+c_1 \equiv (m+padding_1)^3 \text{ }  mod \text{ } n \\
+c_2 \equiv (m+padding_2)^3 \text{ }  mod \text{ } n</script><p>推导出m<br>那么当e不是3的时候怎么办呢？<br>这里稍作拓展，我们可以用Coppersmith’s short-pad attack，即padding过短引起的攻击<br>脚本如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/ValarDragon/CTF-Crypto/blob/master/RSA/FranklinReiter.sage</span><br></pre></td></tr></table></figure></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>根据这一次学习，不难发现在存在padding的情况下，rsa也存在各种风险：<br>1.若e=3，则可以利用Related Message Attack<br>2.若e不为3，但padding过短，则可以利用Coppersmith’s short-pad attack</p>
 
     </article>
     <!-- license  -->
@@ -489,17 +503,12 @@ m \equiv (((m2-m1)*p^{-1} \text{ } mod \text{ } q)p+m1) \text{ } mod \text{ } n
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2018/08/23/从一道Crypto题目认识z3/" title= 从一道Crypto题目认识z3 >
-                    <div class="nextTitle">从一道Crypto题目认识z3</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2018/08/20/2018WhiteHat-writeup/" title= 2018WhiteHat-writeup >
-                    <div class="prevTitle">2018WhiteHat-writeup</div>
+                <a href= "/2018/09/13/Crypto-RSA多等式攻击总结/" title= Crypto-RSA多等式攻击总结 >
+                    <div class="prevTitle">Crypto-RSA多等式攻击总结</div>
                 </a>
             
         </li>
@@ -515,7 +524,7 @@ m \equiv (((m2-m1)*p^{-1} \text{ } mod \text{ } q)p+m1) \text{ } mod \text{ } n
 <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
     var gitment = new Gitment({
-        id: "Tue Aug 21 2018 17:35:44 GMT+0800", // 可选。默认为 location.href
+        id: "Sat Sep 15 2018 14:01:29 GMT+0800", // 可选。默认为 location.href
         owner: 'skyofkinglove',
         repo: 'sky.github.io',
         oauth: {
@@ -619,7 +628,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题干"><span class="toc-number">2.</span> <span class="toc-text">题干</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#公式推导之万事俱备"><span class="toc-number">3.</span> <span class="toc-text">公式推导之万事俱备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#公式推导之只欠东风"><span class="toc-number">4.</span> <span class="toc-text">公式推导之只欠东风</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#payload"><span class="toc-number">5.</span> <span class="toc-text">payload</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反思"><span class="toc-number">6.</span> <span class="toc-text">反思</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目分析"><span class="toc-number">2.</span> <span class="toc-text">题目分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初步推导"><span class="toc-number">3.</span> <span class="toc-text">初步推导</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可求证明"><span class="toc-number">4.</span> <span class="toc-text">可求证明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Related-Message-Attack"><span class="toc-number">5.</span> <span class="toc-text">Related Message Attack</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#payload"><span class="toc-number">6.</span> <span class="toc-text">payload</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Coppersmith’s-short-pad-attack"><span class="toc-number">7.</span> <span class="toc-text">Coppersmith’s short-pad attack</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">8.</span> <span class="toc-text">后记</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -3069,9 +3078,80 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 139
+        Total : 142
         </div>
         <!-- search  -->
         
@@ -3087,7 +3167,27 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2018/09/15/浅析RSA-Padding-Attack/" >浅析RSA Padding Attack</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2018/09/13/Crypto-RSA多等式攻击总结/" >Crypto-RSA多等式攻击总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2018/09/10/Pwnhub-Crypto-韩国欧巴/" >Pwnhub-Crypto-韩国欧巴</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/2018安恒8月赛Writeup/" >2018安恒8月赛Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/RSA之拒绝套路-2/" >RSA之拒绝套路(2)</a>
         </li>
     
     
@@ -3103,11 +3203,6 @@ top:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2018/08/23/从一道Crypto题目认识z3/" >从一道Crypto题目认识z3</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2018/08/21/RSA之拒绝套路-2/" >RSA之拒绝套路(2)</a>
         </li>
     
     
@@ -3272,12 +3367,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
         </li>
     
     
@@ -3766,22 +3861,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
@@ -3812,9 +3907,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
-        <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
-    
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
     
         <span class="sidebar-tag-name" data-tags=".git"><span class="iconfont-archer">&#xe606;</span>.git</span>
     
@@ -3822,9 +3917,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
-        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
-    
         <span class="sidebar-tag-name" data-tags="ShadowSocks"><span class="iconfont-archer">&#xe606;</span>ShadowSocks</span>
+    
+        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
     
         <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
     
@@ -3832,11 +3927,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags=".htaccess"><span class="iconfont-archer">&#xe606;</span>.htaccess</span>
     
-        <span class="sidebar-tag-name" data-tags="ECC"><span class="iconfont-archer">&#xe606;</span>ECC</span>
-    
         <span class="sidebar-tag-name" data-tags="计网考试"><span class="iconfont-archer">&#xe606;</span>计网考试</span>
     
         <span class="sidebar-tag-name" data-tags="心情随笔"><span class="iconfont-archer">&#xe606;</span>心情随笔</span>
+    
+        <span class="sidebar-tag-name" data-tags="ECC"><span class="iconfont-archer">&#xe606;</span>ECC</span>
     
         <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
     
@@ -3893,9 +3988,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="hexo"><span class="iconfont-archer">&#xe60a;</span>hexo</span>
     
-        <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
-    
         <span class="sidebar-category-name" data-categories="docker"><span class="iconfont-archer">&#xe60a;</span>docker</span>
+    
+        <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
     
         <span class="sidebar-category-name" data-categories="git"><span class="iconfont-archer">&#xe60a;</span>git</span>
     
