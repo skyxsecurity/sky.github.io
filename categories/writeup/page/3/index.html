@@ -339,17 +339,21 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/06/20/GCTF的一道php反序列化题目/" >
+        <a class="abstract-title" href = "/2018/01/31/moctf-Web题解/" >
             
-                <span>GCTF的一道php反序列化题目</span>
+                <span>moctf-Web题解</span>
         </a>
         <div class="abstract-content">
-            分析源码首页源码：1234567891011&lt;?php//error_reporting(E_ERROR &amp; ~E_NOTICE);ini_set('session.serialize_handler', 'php_serialize');header("content-type;text/html;charset=utf-8");session_start();if(isset($_GET['src']))&#123;    $_SESSION['src'] = $_GET['src'];    highlight_file(__FILE__);    print_r($...
+            签到加群就有flag就不说啦(滑稽脸)xishir师傅弄的oj，打电话打电话！！
+一道水题f12源代码里就有flag，23333
+还是水题常规的前端1&lt;input type=&quot;password&quot; value=&quot;&quot; disabled=&quot;disabled&quot; name=&quot;password&quot; maxlength=&quot;4&quot;&gt;
+改一下限制就行啦，改成5，输入moctf就有flag
+访问限制抓包，然后发包12345678GET /web3/ HTTP/1.1Host: 119.23.73.3:...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/20</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/31</span>
             </div>
             <!-- tags  -->
             
@@ -357,7 +361,7 @@
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "serialize">serialize</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
     
 </div>
             
@@ -370,25 +374,281 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/06/16/CBC字节翻转攻击/" >
+        <a class="abstract-title" href = "/2018/01/22/2018安恒一月月赛部分题解/" >
             
-                <span>CBC字节翻转攻击</span>
+                <span>2018安恒一月月赛部分题解</span>
         </a>
         <div class="abstract-content">
-            0x00 相关介绍首先让我们看看CBC是如何工作的：加密过程：Plaintext：待加密的数据。IV：用于随机化加密的比特块，保证即使对相同明文多次加密，也可以得到不同的密文。Key：被一些如AES的对称加密算法使用。Ciphertext：加密后的数据。在这里重要的一点是，CBC工作于一个固定长度的比特组，将其称之为块。在本文中，我们将使用包含16字节的块。所以正如你所见：前一块的密文用来产生后一块的密文。所以由此我们就可以得出解密过程：值得注意的地方：前一块的密文是用来产生下一块明文；这就是字节翻转攻击开始发挥作用的地方。如果我们改变前一块密文的一个字节，然后与下一个解密后的组块异或，...
+            来个友情链接容易得到文件泄露：.git拿到源码后发现了用户名和密码123define(&apos;USERNAME&apos;, &apos;ambulong&apos;);define(&apos;PASSWORD&apos;, &apos;d5cae3acc4070jc359f4012f3ddc5f53&apos;);define(&apos;SALT&apos;, &apos;.KIJ03,;owas&apos;);
+但是并不知道登录界面在哪里，猜想源码泄露可能没有给全……翻了git的记录也没发现什么，还是等大佬的官方题解吧
+SecNote在源码中得到提示www.zip成功下到源码...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/16</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/22</span>
             </div>
             <!-- tags  -->
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "aes">aes</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >
+            
+                <span>XCTF-赛博地球杯工业互联网安全大赛web部分题解</span>
+        </a>
+        <div class="abstract-content">
+            工控云管理系统项目管理页面解析漏洞题目首先给出了源码:http://47.104.156.32:20007/view-source.php关键代码如下：第一层绕过：12345678910111213141516171819&lt;?php     if (isset($_GET[id]) &amp;&amp; floatval($_GET[id]) !== '1' &amp;&amp; substr($_GET[id], -1) === '9') &#123;       include 'config.php';       $id = mysql_real_escape_string...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/18</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/01/07/hackme网站边做边记录/" >
+            
+                <span>hackme网站边做边记录</span>
+        </a>
+        <div class="abstract-content">
+            WEBhide and seek查看源代码即可
+guestbook简单注入https://hackme.inndy.tw/gb/?mod=read&amp;id=-1 union select 1,2,database(),4 -- 1可以得到数据库名guestbook1https://hackme.inndy.tw/gb/?mod=read&amp;id=-1 union select 1,2,(select TABLE_NAME from information_schema.TABLES where TABLE_SCHEMA=&apos;guestbook&apos; limit ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/07</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/12/17/安恒杯-12月月赛/" >
+            
+                <span>安恒杯-12月月赛</span>
+        </a>
+        <div class="abstract-content">
+            与时俱进拿到题目后发现80端口无法访问，于是扫了一波端口发现5984开放搜了一下，发现是CouchDB漏洞然后发现2017的CVE：CVE-2017-12635可以创建一个管理员用户1curl -X PUT &apos;http://192.168.5.39:5984/_users/org.couchdb.user:sky&apos; --data-binary &apos;&#123;&quot;type&quot;: &quot;user&quot;,&quot;name&quot;: &quot;sky&quot;,&quot;roles&quot;: [&quot;_admin&...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/17</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/12/11/Jarvis-OJ-Crypto/" >
+            
+                <span>Jarvis-OJ-Crypto</span>
+        </a>
+        <div class="abstract-content">
+            Medium RSA题目到手后给了一个公钥和一个密文我们对这个公钥提取信息：可以得到N = 0xC2636AE5C3D8E43FFB97AB09028F1AAC6C0BF6CD3D70EBCA281BFFE97FBE30DDE = 65537C = 0x6D3EB7DF23EEE1D38710BEBA78A0878E0E9C65BD3D08496DDA64924199110C79公钥极短，我们可以直接分解N，得到p和qP = 275127860351348928173285174381581152299Q = 319576316814478949870590164193048041239...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/11</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "crypto">crypto</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/11/25/湖湘杯复赛web题解/" >
+            
+                <span>湖湘杯复赛web题解</span>
+        </a>
+        <div class="abstract-content">
+            web150拿到题目先分析了一下，猜测可能有文件泄露，于是扫描得到文件泄露：http://114.215.138.89:10080/.index.php.swp12345678910111213141516171819202122232425262728293031&lt;?phperror_reporting(0);$flag = "*********************";echo "please input a rand_num !";function create_password($pw_length =  10)&#123;	$randpwd = "";	for ($i ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/11/25</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/11/12/hctf的3道web题题解/" >
+            
+                <span>hctf的3道web题题解</span>
+        </a>
+        <div class="abstract-content">
+            前言这次比赛最大的感想就是:神仙打架……蓝猫20小时+的akweb的速度，真是膜到不行，平均20分钟一道web……再看我就像个智障……一天打一道……差距真的是大到无与伦比，真的希望今年不管哪一场，能有一次打进XCTF线下赛，膜一膜大佬的风姿！
+level1-easy_sign_in一道简单的签到题访问https://112.74.88.38/可以发现证书有问题，网页也给了提示:1Why does your browser issue a warning?
+用火狐打开后：1234112.74.88.38 使用了无效的安全证书。 该证书因为其自签名而不被信任。 该证书对名称 112.74.8...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/11/12</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/11/05/上海线上赛web题解/" >
+            
+                <span>上海线上赛web题解</span>
+        </a>
+        <div class="abstract-content">
+            web100这题是报错注入但是updatexml被过滤随机尝试extractvalue()，发现可用，于是容易得到payload1http://e0ec92f66d4f4f92b97c8bf2db8924889ebe29e65a794f86.game.ichunqiu.com/index.php?id=-1 || extractvalue(1,concat(0x7e,database(),0x7e)) -- 1
+得到数据库:XPATH syntax error: &#39;~words~&#39;但是后来想要爆表的时候，发现=被过滤了，于是想到用like代替:1http://e0ec92...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/11/05</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/10/28/geekgame部分题解/" >
+            
+                <span>geekgame部分web题解</span>
+        </a>
+        <div class="abstract-content">
+            故道白云简单的注入，还要跨库是最坑的。。。。。。。1http://game.sycsec.com:2006/?submit=submit&amp;id=-1&apos; union select 1,(select f4ag from f1ag.flag) -- 1
+得到flag：SYC{HACKEr_By-cL0und}
+粗心的李超存在index.php.bak泄露1234567891011121314151617&lt;?phpinclude &quot;flag.php&quot;;if(isset($_POST[&apos;user&apos;])&amp;&amp;isset(...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/28</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
     
 </div>
             
@@ -398,7 +658,7 @@
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/categories/web/page/8/">&#60; PREV</a><a class="page-number" href="/categories/web/">1</a><span class="space">&hellip;</span><a class="page-number" href="/categories/web/page/7/">7</a><a class="page-number" href="/categories/web/page/8/">8</a><span class="page-number current">9</span>
+        <a class="extend prev" rel="prev" href="/categories/writeup/page/2/">&#60; PREV</a><a class="page-number" href="/categories/writeup/">1</a><a class="page-number" href="/categories/writeup/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/categories/writeup/page/4/">4</a><a class="page-number" href="/categories/writeup/page/5/">5</a><a class="extend next" rel="next" href="/categories/writeup/page/4/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -479,6 +739,90 @@
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -3823,17 +4167,17 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
@@ -3959,8 +4303,6 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="学业"><span class="iconfont-archer">&#xe60a;</span>学业</span>
     
         <span class="sidebar-category-name" data-categories="流量分析"><span class="iconfont-archer">&#xe60a;</span>流量分析</span>
-    
-        <span class="sidebar-category-name" data-categories="websummary"><span class="iconfont-archer">&#xe60a;</span>websummary</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

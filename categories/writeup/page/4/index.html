@@ -339,37 +339,6 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/10/27/江苏第六届省赛线下AWD感触/" >
-            
-                <span>江苏第六届省赛线下AWD感触</span>
-        </a>
-        <div class="abstract-content">
-            比赛过程上午场上午给了我们2台服务器，分别是一台Linux和一台windowslinux开了2个服务，一个是80端口的php网页，一个是18888端口的疑似pwn服务windows开了4个服务，80端口的展示页面（应该没用），88端口的jsp服务，89端口的php服务，445端口的smb服务我们进入比赛后：首先登入了linux服务器，修改了密码，备份了文件，在php服务中，只找到一个获取shell的点，然后果断注释了一波。这里也是我们上午收分的关键点，有大概4-5支队伍，刚开始并没有及时注释，被我们拿了一波分数，放了一波表哥的框架shell，但是听说这次crontab没有开启？而且目录没...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/27</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "awd">awd</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
         <a class="abstract-title" href = "/2017/10/23/BDCTF第一轮初赛web题解/" >
             
                 <span>BDCTF第一轮初赛web题解</span>
@@ -537,23 +506,20 @@ level-5payload:1&quot;&gt;&lt;a ...
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/09/06/过气的00截断/" >
+        <a class="abstract-title" href = "/2017/08/16/jarvisoj-web/" >
             
-                <span>过气的00截断</span>
+                <span>jarvisoj-web</span>
         </a>
         <div class="abstract-content">
-            前记为什么说%00过气了呢……因为需要满足以下条件：
-
-php版本小于5.3.4
-php的magic_quotes_gpc为OFF状态
-
-%00截断原理截断的核心，就是chr(0)这个字符先说一下这个字符，这个字符不为空(Null)，也不是空字符(“”)，更不是空格。当程序在输出含有chr(0)变量时chr(0)后面的数据会被停止，换句话说，就是误把它当成结束符，后面的数据直接忽略，这就导致漏洞产生
-一些应用读文件12345&lt;?php$file = $_GET['file'].'PNG';$contents =  file_get_contents($file);file_put_...
+            PORT51直接在vps上用curl命令即可
+LOCALHOST加一个xff,ip为127.0.0.1即可
+Login在header里有提示根据这篇文章:http://www.am0s.com/functions/204.html可以得到一个字符串:ffifdyop提交即可获得flag
+神盾局的秘密header里有猫腻:发现可以任意读文件先看看showimg.phpview-source:http://web.jarvisoj.com:32768/showimg.php?img=c2hvd2ltZy5waHA=123456789101112&lt;?php	$f = $_GET['img...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/09/06</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/16</span>
             </div>
             <!-- tags  -->
             
@@ -561,7 +527,7 @@ php的magic_quotes_gpc为OFF状态
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "upload">upload</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
     
 </div>
             
@@ -574,63 +540,20 @@ php的magic_quotes_gpc为OFF状态
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/09/06/有趣的-htaccess/" >
+        <a class="abstract-title" href = "/2017/07/23/SQLi-LABS(Challenges)(Less-54-Less-65)/" >
             
-                <span>有趣的.htaccess</span>
+                <span>SQLi-LABS(Challenges)(Less-54 ~ Less-65)</span>
         </a>
         <div class="abstract-content">
-            .htaccess功能开启条件
-mod_rewrite模块开启
-AllowOverride All
-
-.htaccess功能开启方法在apache下http.conf改配置：
-
-将工作目录下的AllowOverride None 改为AllowOverride All。
-
-开启.mod_rewrite模块。将#LoadModule rewrite_module modules/mod_rewrite.so前的#去掉即可
-
-
-.htaccess注意点.htaccess文件中的配置指令作用于.htaccess文件所在的目录及其所有子目录,但是很重要的、需要注意的是，其上级目录也可能会有.ht...
+            前言终于要写最后一部分了，看起来这部分的题目应该比较有意思大致扫了一下题目树，会限定查询次数，应该做起来比较有挑战性吧~也是第一次遇到这种会限制查询次数的题目233333
+Less-54一共10次机会：1.http://localhost/sql/Less-54/?id=1&#39;--+发现可以闭合引号
+2.http://localhost/sql/Less-54/?id=1&#39; order by 3--+3.http://localhost/sql/Less-54/?id=1&#39; order by 4--+发现一共3列
+4.http://localhost/sql/Les...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/09/06</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "upload">upload</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/08/28/sql注入—into-outfile、load-file/" >
-            
-                <span>sql注入—into outfile、load_file()</span>
-        </a>
-        <div class="abstract-content">
-            前言两种方式都具有很大局限性，作为了解使用
-into outfile1:要知道网站绝对路径，可以通过报错，phpinfo界面，404界面等一些方式知道
-2:要有file权限，默认情况下只有root有
-3:对目录要有写权限，一般image之类的存放突破的目录就有
-如果存在以上条件，还可以注入，那么就可以用into outfile写文件例如:http://127.0.0.1/index.php?age=-1 union select 1,2,3,4,0x3c3f706870206576616c28245f504f53545b27736b79275d293f3e into outfile ‘H...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/28</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/23</span>
             </div>
             <!-- tags  -->
             
@@ -651,17 +574,17 @@ into outfile1:要知道网站绝对路径，可以通过报错，phpinfo界面�
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2017/08/21/Xman线下赛源码审计/" >
+        <a class="abstract-title" href = "/2017/07/23/SQLi-LABS(Stacked)(Less-39 ~ Less-53)/" >
             
-                <span>Xman线下赛源码审计</span>
+                <span>SQLi-LABS(Stacked)(Less-39 ~ Less-53)</span>
         </a>
         <div class="abstract-content">
-            Webupload.php之任意文件上传12345678910111213141516171819202122232425262728if (isset($_FILES['file'])) &#123;	$uploadsCount = count($_FILES['file']['name']);	if($uploadsCount &gt; 0) &#123;	 $errors = array();	 $messages = array();	 for ($i=0; $i &lt; $uploadsCount; $i++) &#123;		if ($_FILES["file"]["err...
+            前言查了一下stacked query是堆叠注入原理：在SQL中，分号（;）是用来表示一条sql语句的结束。试想一下我们在分号（;）结束一个sql语句后继续构造下一条语句，会不会一起执行？因此这个想法也就造就了堆叠注入。而union injection（联合注入）也是将两条语句合并在一起，两者之间有什么区别么？区别就在于union 或者union all执行的语句类型是有限的，可以用来执行查询语句，而堆叠注入可以执行的是任意的语句。例如以下这个例子：用户输入：1; DELETE FROM products服务器端生成的sql语句为：（因未对输入的参数进行过滤）Select * from ...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/21</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/23</span>
             </div>
             <!-- tags  -->
             
@@ -669,7 +592,71 @@ into outfile1:要知道网站绝对路径，可以通过报错，phpinfo界面�
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "coding">coding</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/07/20/SQLi-LABS(Adv)(Less-23 ~ Less-38)/" >
+            
+                <span>SQLi-LABS(Adv)(Less-23 ~ Less-38)</span>
+        </a>
+        <div class="abstract-content">
+            Less-23上来得到信息：Please input the ID as parameter with numeric value随便注了一下：http://localhost/sql/Less-23/?id=1&#39; or &#39;a&#39;=&#39;a发现引号闭合成功于是直接上updatexml()payload:123http://localhost/sql/Less-23/?id=1&apos; and updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.TAB...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/07/18/SQLi-LABS(Basic)(Less-1 ~ Less-22)/" >
+            
+                <span>SQLi-LABS(Basic)(Less-1 ~ Less-22)</span>
+        </a>
+        <div class="abstract-content">
+            前言因为暑假在家无聊，想着开学要做培训，就拿出了珍藏许久的注入天书，先做着玩玩
+Sqli-labs下载：https://github.com/Audi-1/sqli-labs
+Sqli-labs安装:需要安装以下环境（1）apache+mysql+php（2）Tomcat+mysql+java（部分关卡需要）如果可以的话，推荐在windows和linux下分别安装：Windows下可以用wamp、phpstudy、apmserv等直接安装，linux下可在网上搜索教程进行安装。例如ubuntu下，新手基本靠软件中心和apt-get进行安装。这里就不赘述环境的安装了。我的测试环境是:win...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/18</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
     
 </div>
             
@@ -679,7 +666,7 @@ into outfile1:要知道网站绝对路径，可以通过报错，phpinfo界面�
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/categories/web/page/6/">&#60; PREV</a><a class="page-number" href="/categories/web/">1</a><span class="space">&hellip;</span><a class="page-number" href="/categories/web/page/5/">5</a><a class="page-number" href="/categories/web/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/categories/web/page/8/">8</a><a class="page-number" href="/categories/web/page/9/">9</a><a class="extend next" rel="next" href="/categories/web/page/8/">NEXT &#62;</a>
+        <a class="extend prev" rel="prev" href="/categories/writeup/page/3/">&#60; PREV</a><a class="page-number" href="/categories/writeup/">1</a><a class="page-number" href="/categories/writeup/page/2/">2</a><a class="page-number" href="/categories/writeup/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/categories/writeup/page/5/">5</a><a class="extend next" rel="next" href="/categories/writeup/page/5/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -760,6 +747,90 @@ into outfile1:要知道网站绝对路径，可以通过报错，phpinfo界面�
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -4104,17 +4175,17 @@ into outfile1:要知道网站绝对路径，可以通过报错，phpinfo界面�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
@@ -4240,8 +4311,6 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="学业"><span class="iconfont-archer">&#xe60a;</span>学业</span>
     
         <span class="sidebar-category-name" data-categories="流量分析"><span class="iconfont-archer">&#xe60a;</span>流量分析</span>
-    
-        <span class="sidebar-category-name" data-categories="websummary"><span class="iconfont-archer">&#xe60a;</span>websummary</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
