@@ -421,6 +421,10 @@ height:50vh;
 <p>这个题看着好烦（嘤嘤嘤，用3个芯片）<br>将ua接到0809的INO上，EOC还是接PC0，8255的B口输出，C口低位输入，A口输入<br>还是有计算<br><code>1/0.01953=51</code><br><code>2.5/0.01953=128</code><br>5直接就是FFH了<br>1是33H<br>2.5是80H<br>实现代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">PORT_A EQU 290H		;8255A口地址</span><br><span class="line">PORT_B EQU 291H		;8255B口地址</span><br><span class="line">PORT_C EQU 292H		;8255C口地址</span><br><span class="line">PORT_CTL EQU 293H	;8255控制口地址</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">CODE SEGMENT</span><br><span class="line">	ASSUME CS:CODE</span><br><span class="line">START:</span><br><span class="line">	MOV DX,PORT_CTL		;8255初始化</span><br><span class="line">	MOV AL,10010001B</span><br><span class="line">	OUT DX,AL	</span><br><span class="line">	MOV AL,0FFH</span><br><span class="line">AGAIN:	</span><br><span class="line">	INC AL</span><br><span class="line">	CMP AL,33H		;一连串比较，是不是1V</span><br><span class="line">	JZ SHUCHU</span><br><span class="line">	CMP AL,80H		;一连串比较，是不是2.5V</span><br><span class="line">	JZ SHUCHU</span><br><span class="line">	CMP AL,0FFH		;一连串比较，是不是5V</span><br><span class="line">	JZ SHUCHU		</span><br><span class="line">	JMP AGAIN		;都不是，跳回AGAIN，继续增加电压</span><br><span class="line">SHUCHU:</span><br><span class="line">	MOV DX,288H		;指向0832的输出</span><br><span class="line">	OUT DX,AL		;电压输出</span><br><span class="line">NEXT:	MOV DX,280H		;指向0809ADC通道0</span><br><span class="line">	OUT DX,AL		;启动转换</span><br><span class="line">	MOV DX,PORT_C		;指向8255的C口</span><br><span class="line">POLL:</span><br><span class="line">	IN AL,DX		;读C口值</span><br><span class="line">	TEST AL,01H		;测试PC0是否为1,即EOC是否为1</span><br><span class="line">	JZ POLL			;是0，转换未结束，继续等待</span><br><span class="line">	MOV DX,280H		;是1，转换结束，指向ADC通道0</span><br><span class="line">	IN AL,DX		;读取转换后数据</span><br><span class="line">	MOV DX,PORT_B		;将数据显示在二极管上</span><br><span class="line">	OUT DX,AL	</span><br><span class="line">	MOV BX,80H		;延时</span><br><span class="line">DELAY:</span><br><span class="line">	MOV CX,16EAH</span><br><span class="line">DELAY1:</span><br><span class="line">	LOOP DELAY1</span><br><span class="line">	DEC BX</span><br><span class="line">	JNZ DELAY</span><br><span class="line">	JMP AGAIN</span><br><span class="line">CODE ENDS</span><br><span class="line">	END</span><br></pre></td></tr></table></figure></p>
 
     </article>
+    <!-- reward  -->
+    <div style='text-align:center;margin:100px auto auto auto;'>点击赞赏二维码，您的支持将鼓励我继续创作！</div>
+    <a class="fancy-link" href="/intro/alipay.png" alt="" data-fancybox="group" data-caption=""><img style='width:30%;margin:auto 50px auto 50px;' src="/intro/alipay.png" alt=""></a>
+    <a class="fancy-link" href="/intro/wechat.jpg" alt="" data-fancybox="group" data-caption=""><img style='width:30%;margin:auto 50px auto 50px;' src="/intro/wechat.jpg" alt=""></a>
     <!-- license  -->
     
     <!-- paginator  -->
@@ -577,22 +581,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -3423,12 +3411,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
         </li>
     
     
@@ -3917,17 +3905,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
