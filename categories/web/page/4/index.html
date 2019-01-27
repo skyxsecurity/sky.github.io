@@ -346,6 +346,40 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2018/03/21/从一道题深入mysql字符集与比对方法collation/" >
+            
+                <span>从一道题深入mysql字符集与比对方法collation</span>
+        </a>
+        <div class="abstract-content">
+            前记今天做了一道审计题目，决定是时候好好研究一下这个字符集问题了，于是有了这篇文章首先我们看一下题目的整体流程（注：因为核心代码就100行，所以都贴上来了）
+题目描述首先发现存在robots.txt1http://cheaplottery.solveme.peng.kr/robots.txt
+发现12User-agent: *Disallow: /backup/
+存在文件泄露，其中sql文件12345678CREATE TABLE `lottery` (  `name` char(30) NOT NULL,  `time` int(4) NOT NULL,  `nums` char(30...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/03/21</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2018/03/15/Some trick in ssrf and unserialize()/" >
             
                 <span>Some trick in ssrf and unserialize()</span>
@@ -629,38 +663,6 @@ eval()/assert()/system()知识前提这里不再多提，相信大家已经对�
         <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/12/11/2017-12-11学习笔记/" >
-            
-                <span>2017.12.11学习笔记</span>
-        </a>
-        <div class="abstract-content">
-            前记什么都不写就凉了，于是又开始努力学习新知识了~~
-一个审计的小trick12345678910111213141516171819&lt;?phpfunction is_valid($title, $data)&#123;    $data = $title . $data;    return preg_match('|\A[ _a-zA-Z0-9]+\z|is', $data);&#125;function write_cache($title, $content)&#123;    if (!is_valid($title, $content)) &#123;        e...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/11</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "php">php</a>
     
 </div>
             
@@ -3500,9 +3502,440 @@ eval()/assert()/system()知识前提这里不再多提，相信大家已经对�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 155
+        Total : 162
         </div>
         <!-- search  -->
         
@@ -3513,12 +3946,56 @@ eval()/assert()/system()知识前提这里不再多提，相信大家已经对�
     
     
     
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019-Hgame-Web-Week1/" >2019-Hgame-Web-Week1</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019安恒1月月赛Writeip/" >2019安恒1月月赛Writeip</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2019/01/22/JavaScript侧信道时间测量/" >JavaScript侧信道时间测量</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2018/12/24/Cross-Browser-Tracking-Summary-Part-4/" >Cross-Browser-Tracking-Summary-Part-4</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/21</span><a class="archive-post-title" href= "/2018/12/21/Cross-Browser-Tracking-Summary-Part-3/" >Cross-Browser-Tracking-Summary-Part-3</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/20</span><a class="archive-post-title" href= "/2018/12/20/Cross-Browser-Tracking-Summary-Part-2/" >Cross Browser Tracking Summary Part-2</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2018/12/17/2018SWPUCTF-Web/" >2018SWPUCTF-Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/15</span><a class="archive-post-title" href= "/2018/12/15/Cross-Browser-Tracking-Summary-Part-1/" >Cross Browser Tracking Summary Part-1</a>
         </li>
     
     
@@ -3783,12 +4260,12 @@ eval()/assert()/system()知识前提这里不再多提，相信大家已经对�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/数据分析-企业渗透过程/" >数据分析-企业渗透过程</a>
+            <span class="archive-post-date">04/21</span><a class="archive-post-title" href= "/2018/04/21/流量分析-CTF题目实战/" >流量分析-CTF题目实战</a>
         </li>
     
     
@@ -4282,17 +4759,17 @@ eval()/assert()/system()知识前提这里不再多提，相信大家已经对�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CUMTCTF-初赛/" >CUMTCTF-初赛</a>
         </li>
     
     
@@ -4313,15 +4790,13 @@ eval()/assert()/system()知识前提这里不再多提，相信大家已经对�
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
-    
-        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
-    
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
         <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
     
         <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
+    
+        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
@@ -4339,11 +4814,13 @@ eval()/assert()/system()知识前提这里不再多提，相信大家已经对�
     
         <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
     
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+    
         <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
     
-        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
-    
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
+    
+        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
     
         <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
     
