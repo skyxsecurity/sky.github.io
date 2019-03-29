@@ -346,6 +346,142 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2018/03/23/从sql注入到xslt再到xxe的一道ctf题目/" >
+            
+                <span>从sql注入到xslt再到xxe的一道ctf题目</span>
+        </a>
+        <div class="abstract-content">
+            前记最近比较闲，看到一道web题目，学到了一些知识，于是有了这篇文章
+题目描述打开题目发现是一个笔记管理系统然后发现有注册和登录，随手注册了一个账号登入后发现几个功能分别是1.新建笔记2.生成xml文件3.将生成的xml文件导出为html文件于是开始随意尝试第一个想法：是不是flag在管理员的笔记里呢？我只要登入管理员账号即可？于是开始尝试在登录和注册处进行sql注入发现未果,后台对注入处理比较完善会过滤了union,select，空格等多种必要符号随即暂且放弃了这个想法。第二个想法：新建笔记可否写xml，进行xxe攻击呢，或者xss？尝试了一下1&lt;script&gt;
+容易发现转...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/03/23</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "xml">xml</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/03/21/从一道题深入mysql字符集与比对方法collation/" >
+            
+                <span>从一道题深入mysql字符集与比对方法collation</span>
+        </a>
+        <div class="abstract-content">
+            前记今天做了一道审计题目，决定是时候好好研究一下这个字符集问题了，于是有了这篇文章首先我们看一下题目的整体流程（注：因为核心代码就100行，所以都贴上来了）
+题目描述首先发现存在robots.txt1http://cheaplottery.solveme.peng.kr/robots.txt
+发现12User-agent: *Disallow: /backup/
+存在文件泄露，其中sql文件12345678CREATE TABLE `lottery` (  `name` char(30) NOT NULL,  `time` int(4) NOT NULL,  `nums` char(30...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/03/21</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/03/15/Some trick in ssrf and unserialize()/" >
+            
+                <span>Some trick in ssrf and unserialize()</span>
+        </a>
+        <div class="abstract-content">
+            some trick in ssrftrick1 filter_var() bypass之前看到一篇文章，觉得写得很不错，于是在此总结一下比如说如下代码12345678910111213141516&lt;?php   $url = $_GET['url'];   echo "Argument: ".$url."\n";   if(filter_var($url, FILTER_VALIDATE_URL)) &#123;      $r = parse_url($url);      var_dump($r);      if(preg_match('/skysec\.top$/', $...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/03/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "serialize">serialize</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "ssrf">ssrf</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/03/09/php-command or code-injection-summary/" >
+            
+                <span>php-command/code-injection summary</span>
+        </a>
+        <div class="abstract-content">
+            常见php命令注入函数eval(),，assert(), system()，preg_replace(), create_function, call_user_func, call_user_func_array，array_map()，反引号，ob_start()，exec()，shell_exec()，passthru()，escapeshellcmd()，popen()，proc_open()，pcntl_exec()
+eval()/assert()/system()知识前提这里不再多提，相信大家已经对这几个函数轻车熟路了，常见小马均在使用1234567891011&lt;?ph...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/03/09</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "php">php</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2018/02/02/skysql之union绕waf/" >
             
                 <span>skysql之union绕waf</span>
@@ -532,134 +668,6 @@
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >
-            
-                <span>pwnhub成功就是要梭哈之学习记录</span>
-        </a>
-        <div class="abstract-content">
-            前记pwnhub前几天出了个公开赛，赛后学习了下writeup，又有新的收获
-题目代码如下:12345678910111213141516171819202122232425262728&lt;?phphighlight_file('index.txt');$url = "https://sqlchop.chaitin.cn/demo/detect/";$sqlque = 'select 1 from dual where 1=';if(isset($_GET['a']))$payload = str_replace(';','',(string)$_GET['a']);else$pay...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/12/11/2017-12-11学习笔记/" >
-            
-                <span>2017.12.11学习笔记</span>
-        </a>
-        <div class="abstract-content">
-            前记什么都不写就凉了，于是又开始努力学习新知识了~~
-一个审计的小trick12345678910111213141516171819&lt;?phpfunction is_valid($title, $data)&#123;    $data = $title . $data;    return preg_match('|\A[ _a-zA-Z0-9]+\z|is', $data);&#125;function write_cache($title, $content)&#123;    if (!is_valid($title, $content)) &#123;        e...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/11</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "php">php</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/11/27/湖湘杯复赛web400/" >
-            
-                <span>湖湘杯复赛web400</span>
-        </a>
-        <div class="abstract-content">
-            Web400(注：研究出来的时候题目已经关了，自己本地尝试的，所有没有css和js很丑，这个其实重要）最开始拿到题目：http://118.190.113.111:10080/index.php?act=user的时候挺没有头绪的一开始以为是ssrf摸内网，又发现好像有上传，各种尝试302打进去探测端口，发现都挺奇怪的，一直没get到考点后来发现有一个redirect.php，会重定向于是在photo url处尝试了一下http://118.190.113.111:10080/redirect.php?redirect=file:///etc/passwd但是这里会被waf拦下，只允许通...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/11/27</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/11/19/近期做的其他平台的3道注入题/" >
-            
-                <span>近期做的其他平台的3道注入题</span>
-        </a>
-        <div class="abstract-content">
-            注入正传这一题来自浙警的MCTF的第二期（题目好像已经关了）打开是一个登陆页面，尝试了一下，如果被过滤会提示”hacker?”，然而感觉过滤的并不多但是这个题的难点是在于注入的当前表没有数据，所以无论怎么闭合都是username error我的尝试:123456username = admin&apos;#username = admin&apos; or 1=1#username = admin&apos;) or 1=1#username = admin or 1=1#username = admin&quot; or 1=1#username = admin&quot;) or 1...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/11/19</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
     
 </div>
             
@@ -3874,9 +3882,427 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 170
+        Total : 174
         </div>
         <!-- search  -->
         
@@ -3889,6 +4315,16 @@
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/2019/03/25/2019-0CTF-Web-WriteUp/" >2019 0CTF Web WriteUp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-3-phplimit/" >2018 Code Breaking(3) & phplimit</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -3908,6 +4344,16 @@
     
         <li class="archive-post-item">
             <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2019/02/24/2019安恒杯-2月月赛Writeup/" >2019安恒杯-2月月赛Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2019/02/22/2019-Hgame-Week4-Crypto-MixedRSA-Easy/" >2019-Hgame-Week4-Crypto&MixedRSA_Easy</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/21</span><a class="archive-post-title" href= "/2019/02/21/浅谈RSA公钥非素数问题/" >浅谈RSA公钥非素数问题</a>
         </li>
     
     
@@ -4745,12 +5191,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/椭圆加密算法ECC/" >椭圆加密算法ECC</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -4771,13 +5217,13 @@
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
-    
-        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
-    
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
         <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+    
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+    
+        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
         <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
