@@ -346,6 +346,105 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2018/02/02/skysql之union绕waf/" >
+            
+                <span>skysql之union绕waf</span>
+        </a>
+        <div class="abstract-content">
+            前记以前校赛的时候出了一道skysql灵感来自于bendawang师傅的一篇博客（像巨佬致敬orz）今天正好有空写了一下题解
+题目解法题目过滤比较严格盲注和报错注入都不太容易实现但是不难发现单个fuzz的话union和select都没有被过滤但是联合一起的话,union select是被过滤的所以我可以猜想他的waf正则写法是:1|union select|
+所以我们可以尝试绕过1union%0bselect
+此时发现union select是可以用的但是问题又出现了：没有逗号那么如何解决呢？这里也是比较长谈的绕过问题了我们先看正常使用的时候而当逗号被过滤时，我们可以使用join绕过此时...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/02/02</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/01/27/最近复现的几个CVE题目/" >
+            
+                <span>最近复现的几个CVE题目</span>
+        </a>
+        <div class="abstract-content">
+            CVE-2017-12635(CouchDB)拿到题目后发现80端口无法访问，于是扫了一波端口发现5984开放搜了一下，发现是CouchDB漏洞然后发现2017的CVE：CVE-2017-12635可以创建一个管理员用户1curl -X PUT &apos;http://192.168.5.39:5984/_users/org.couchdb.user:sky&apos; --data-binary &apos;&#123;&quot;type&quot;: &quot;user&quot;,&quot;name&quot;: &quot;sky&quot;,&quot;roles&qu...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/27</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "cve">cve</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2018/01/27/有点意思的3道web题/" >
+            
+                <span>有点意思的3道web题</span>
+        </a>
+        <div class="abstract-content">
+            前言昨晚看完了前任3，虐的有点厉害……写篇博客压压惊（哎……所有的分手总有一个人先放弃，两情相悦总归也有付出更多的那一方，选择一个更爱你的人，还是你更爱的人是一个值得思考的问题）
+绕过云waf题目简述题目来自最近的xctf赛博地球杯工业互联网安全大赛,是一道比较有趣的云waf绕过题目，题目过滤比较多，留下能用的只有like,regexp等为数不多的函数，这里我将介绍两种方法：
+题目解法一这是属于比较常规的思路，即fuzz一下过滤参数，然后找到未被过滤的参数，进行拼接绕过waf，这里题目限制严格，而手动测试容易得知：121.	or的过滤可以用||绕过2.	空格的过滤可用%0a绕过
+而后我们...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/01/27</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/12/29/Time-Based-RCE/" >
             
                 <span>Time_Based_RCE</span>
@@ -561,100 +660,6 @@
         <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/11/18/第三届上海AWD线下赛感悟/" >
-            
-                <span>第三届上海AWD线下赛感悟</span>
-        </a>
-        <div class="abstract-content">
-            比赛经过这次给了2台服务器，一台web一台pwn，分配比较合理今天的pwn看起来非常难……成信的pwn大佬全场也没打起来(队友说是给看雪出题的巨佬)，所以今天的pwn就不谈了（最后pwn放提示了还是没人打出来，看来是真的蛇皮~）今天的这台web我认为比较好，用的是Metinfo cms，但是版本很新，所以应该没有洞？我反正没找到吧……但是主办方故意写了几个洞让我们自己省，我觉得这个是比较好的做法吧……花式搜payload挺没意思的……根据前两场awd的经验，我们都蛇皮了，上来就套路3连……改密码，备份源码，crontab走一波……然后我这次尝试挂了通防，但是似乎icq的check比较强，...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/11/18</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "awd">awd</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/11/12/MCTF-flappybird题解/" >
-            
-                <span>MCTF-flappybird题解</span>
-        </a>
-        <div class="abstract-content">
-            前记题目出的不好，有脑洞……虽然叫diffcult，脑洞过了就很简单
-题目分析题目链接http://116.196.124.92:32774/进去后是一个注册和一个登陆我在这里测试了大概20分钟，发现应该不是二次注入然后转战里面的bird在Bird.js看到这个12345678function Update(SomeThing)&#123;	var form = new FormData();	form.append(&quot;score&quot;,SomeThing);	form.append(&quot;check_code&quot;,md5(SomeThing));	var ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/11/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/10/30/XDCTF线下赛经历及感悟/" >
-            
-                <span>XDCTF线下赛经历及感悟</span>
-        </a>
-        <div class="abstract-content">
-            比赛经过今天比赛方一共给了5台服务器：1台windows和4台linux其中2台Linux是pwn，2台Linux是web，1台linux是mobile然后我们都不太擅长pwn和Mobile，所以一天只打了2台web的linux，所以后面就写一些web的经过了。首先第一台web是一个海洋cms，版本号非常老，我们由于以前有做过这方面渗透。所以上来打的十分得心应手我直接用了前一晚准备好的群杀脚本，上去就疯狂输出了一波，然后前3轮里，只有我们在疯狂得分，然后我们意识到这样不行，开始种shell，当时不知道，因为python一般都是Linux自带的，所以我们想都没想，就执行了表哥的框架，然后就...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "awd">awd</a>
     
 </div>
             
@@ -4191,46 +4196,9 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 177
+        Total : 180
         </div>
         <!-- search  -->
         
@@ -4243,6 +4211,21 @@
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/25</span><a class="archive-post-title" href= "/2019/04/25/2019西湖论剑AD攻防Web题解/" >2019西湖论剑AD攻防Web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/12</span><a class="archive-post-title" href= "/2019/04/12/从PHP底层看open-basedir-bypass/" >从PHP底层看open_basedir bypass</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/08</span><a class="archive-post-title" href= "/2019/04/08/Some-Trick-About-LFI/" >Some Trick About LFI</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -4261,7 +4244,7 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-4-phpmagic/" >2018 Code Breaking(4) & phpmagic</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
         </li>
     
     
@@ -4271,12 +4254,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-4-phpmagic/" >2018 Code Breaking(4) & phpmagic</a>
         </li>
     
     
@@ -4809,12 +4792,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
         </li>
     
     
@@ -4849,12 +4832,12 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/2017-12-11学习笔记/" >2017.12.11学习笔记</a>
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/Jarvis-OJ-Crypto/" >Jarvis-OJ-Crypto</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/Jarvis-OJ-Crypto/" >Jarvis-OJ-Crypto</a>
+            <span class="archive-post-date">12/11</span><a class="archive-post-title" href= "/2017/12/11/2017-12-11学习笔记/" >2017.12.11学习笔记</a>
         </li>
     
     
@@ -5160,13 +5143,13 @@
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
-    
-        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
-    
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
         <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+    
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+    
+        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
         <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
