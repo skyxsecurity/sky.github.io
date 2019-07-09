@@ -346,6 +346,69 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/07/04/2019-神盾杯-final-Writeup（2）/" >
+            
+                <span>2019 神盾杯 final Writeup（2）</span>
+        </a>
+        <div class="abstract-content">
+            前言接之前的分析文章，本篇文章将2019 神盾杯线下赛后续两道web题也解析一下。
+web3预置后门扫描打开源码发现是主流cms typecho，先上工具扫一波：同时注意到版本号：根据github的开源项目回滚到当前版本：并进行diff：
+用户名RCE容易发现/admin/login.php处，$rememberName被反引号包裹，可以进行RCE。
+SSRF漏洞/var/Widget/XmlRpc.php：该漏洞应该为typecho对应版本的原生漏洞，可以搜到相关信息：那么关键点就在于过滤时，未把file协议过滤掉：/var/Typecho/Http/Client/Adapter.ph...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/04</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/07/03/2019 神盾杯 final Writeup（1）/" >
+            
+                <span>2019 神盾杯 final Writeup（1）</span>
+        </a>
+        <div class="abstract-content">
+            前言队友去参加了2019神盾杯上海市网络安全竞赛，线下有4道web题，就跟队友要来了源码进行了一波分析，由于题目较多，分为2篇撰写，本篇先写dedecms和另一个出题人手写的cms。
+web1预置简单后门查杀打开源码发现是dedecms，使用主流webshell查杀工具得到如下结果：由于静态分析具有较高的误报率，所以我先选择了diff一下：发现后门文件为include/guess.class.php，事实证明还是D盾nb~
+内置混淆后门我们先去查看文件：include/guess.class.php发现明显后门：123456789101112131415161718&lt;?php$p=...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/06/16/2019-强网杯final-Web-Writeup/" >
             
                 <span>2019 强网杯final Web Writeup</span>
@@ -376,7 +439,7 @@ yxtcmf信息搜集拿到这道题时，我先去搜集了相关信息，可以�
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2019/06/10/2019-0ctf-final-Web-Writeup/" >
+        <a class="abstract-title" href = "/2019/06/10/2019 0ctf final Web Writeup（1）/" >
             
                 <span>2019 0ctf final Web Writeup（1）</span>
         </a>
@@ -573,67 +636,6 @@ ini_set覆盖问题探索为什么连续使用ini_set不会...
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/04/08/Some-Trick-About-LFI/" >
-            
-                <span>Some Trick About LFI</span>
-        </a>
-        <div class="abstract-content">
-            前言最近遇到一些文件包含的题目，在本篇文章记录两个trick~
-环境背景复现环境还是很容易搭建的：例题1（php7）index.php12345678&lt;?php$a = @$_GET['file'];echo 'include $_GET[\'file\']';if (strpos($a,'flag')!==false) &#123;	die('nonono');&#125;include $a;?&gt;
-dir.php123456&lt;?php$a = @$_GET['dir'];if(!$a)&#123;$a = '/tmp';&#125;var_dump(scandir(...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/08</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/03/29/Pwnhub-Always-be-with-U-Writeup/" >
-            
-                <span>Pwnhub-Always be with U-Writeup</span>
-        </a>
-        <div class="abstract-content">
-            前言正逢pwnhub有比赛，于是做了一下题目，以下是题解
-Happy Tree Friends题目概述拿到题目12345678910111213141516171819#!/usr/bin/env python3import zlibfrom Crypto.Cipher import AESimport sysimport osfrom hashlib import md5flag = open("flag.txt").read()while True:    data = input()    data = "message: %s, flag: %s" % (data, flag) ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/29</span>
             </div>
             <!-- tags  -->
             
@@ -3986,9 +3988,81 @@ Happy Tree Friends题目概述拿到题目12345678910111213141516171819#!/usr/bi
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 186
+        Total : 188
         </div>
         <!-- search  -->
         
@@ -4004,12 +4078,22 @@ Happy Tree Friends题目概述拿到题目12345678910111213141516171819#!/usr/bi
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span><a class="archive-post-title" href= "/2019/07/04/2019-神盾杯-final-Writeup（2）/" >2019 神盾杯 final Writeup（2）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/03</span><a class="archive-post-title" href= "/2019/07/03/2019 神盾杯 final Writeup（1）/" >2019 神盾杯 final Writeup（1）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2019/06/16/2019-强网杯final-Web-Writeup/" >2019 强网杯final Web Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/10</span><a class="archive-post-title" href= "/2019/06/10/2019-0ctf-final-Web-Writeup/" >2019 0ctf final Web Writeup（1）</a>
+            <span class="archive-post-date">06/10</span><a class="archive-post-title" href= "/2019/06/10/2019 0ctf final Web Writeup（1）/" >2019 0ctf final Web Writeup（1）</a>
         </li>
     
     
@@ -4064,12 +4148,12 @@ Happy Tree Friends题目概述拿到题目12345678910111213141516171819#!/usr/bi
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
         </li>
     
     
@@ -4612,12 +4696,12 @@ Happy Tree Friends题目概述拿到题目12345678910111213141516171819#!/usr/bi
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
         </li>
     
     
@@ -4961,25 +5045,23 @@ Happy Tree Friends题目概述拿到题目12345678910111213141516171819#!/usr/bi
     
         <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
+        <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
+    
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
         <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
     
-        <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
-    
-        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
     
         <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
-        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
+        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
         <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
-        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
     
         <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
     
@@ -4995,9 +5077,11 @@ Happy Tree Friends题目概述拿到题目12345678910111213141516171819#!/usr/bi
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
-        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
+        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
     
         <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
+    
+        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
     
         <span class="sidebar-tag-name" data-tags="Flow-Analysis"><span class="iconfont-archer">&#xe606;</span>Flow-Analysis</span>
     
@@ -5050,9 +5134,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="writeup"><span class="iconfont-archer">&#xe60a;</span>writeup</span>
     
-        <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
-    
         <span class="sidebar-category-name" data-categories="study"><span class="iconfont-archer">&#xe60a;</span>study</span>
+    
+        <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
     
         <span class="sidebar-category-name" data-categories="crypto"><span class="iconfont-archer">&#xe60a;</span>crypto</span>
     

