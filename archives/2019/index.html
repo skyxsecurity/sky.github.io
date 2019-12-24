@@ -346,6 +346,193 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/12/13/2019-FudanCTF-Writeup/" >
+            
+                <span>2019 FudanCTF Writeup</span>
+        </a>
+        <div class="abstract-content">
+            前言最近学校有招新赛，难度比较低。于是节选了几道稍微有点意思的题目记录一下。
+你再注试试本题是一道Web堆叠查询注入题，改编自2019 强网杯online 随便注，在其基础上限制了多个关键词：1prepare、set、execute……
+但是我们可以利用mysql新特性handler：1https://dev.mysql.com/doc/refman/8.0/en/handler.html
+例如：我们可以用如下方式查询：最后写出exp：111&apos;; handler `1919810931114514` open as `tgt`;handler `tgt` read next;-...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/12/13</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/12/06/2019-SWPU-CTF-Web-Writeup/" >
+            
+                <span>2019 SWPU CTF Web Writeup</span>
+        </a>
+        <div class="abstract-content">
+            前言12月比赛有点少，手有点生了，发现SWPU又开始了，还记得去年质量挺高的，于是来玩玩，下面是web的解题记录。
+easy_web随便注册一个用户进入，发现有广告发送的地方，随手测试：点入发现触发了sql报错：随手又试了一下：发现确实可以闭合：首先尝试联合查询注入:12345exp：0&apos; union select  1,2,3,&apos;a&apos;=&apos;awaf:0&apos;unionselect1,2,3,&apos;a&apos;=&apos;a
+发现空格会被替换成空，于是尝试用如下方式bypass:10&apos;/**/union/**/select/...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/12/06</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/12/06/Paper-Summary-Prototype-pollution-attack-in-NodeJS-application/" >
+            
+                <span>Paper Summary:Prototype pollution attack in NodeJS application</span>
+        </a>
+        <div class="abstract-content">
+            前言本篇paper来自于 NSEC 2018 ：Prototype pollution attack in NodeJS application，写summary的原因因为本篇文章介绍的攻击点和实际问题密切相关，同时在CTF各大比赛中经常出现。
+背景知识为了介绍什么是原型链污染漏洞，我们得先有一些前置知识，首先观察一段代码：123456789a=&#123;&#125;;a.__proto__.test2 = '456';b=&#123;&#125;;console.log(a.test2);console.log(b.test2);b.__proto__.test2 = '789';c...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/12/06</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/10/19/2019-巅峰极客-Online-WriteUp/" >
+            
+                <span>2019 巅峰极客 Online WriteUp</span>
+        </a>
+        <div class="abstract-content">
+            lol拿到题目后，发现有一个上传页面：点进去发现可控参数名较多，但最可疑的还是上传文件位置：尝试上传一个文件，发现有两个路径，一个是upload，一个是download：经过测试发现，文件名不是通过filename控制，而是通过phpsessionid控制：尝试目录穿越，发现upload路径突然变成了绝对路径= =，估计代码哪里出现了问题：同时访问文件，可以发现文件内容确实有写入：然后就陷入了沉思，直到题目提示，注意download功能，又经过大量测试发现download功能的下载路径，是拼接了phpsessionid的路径的，于是我们首先创立upload目录：然后进行任意源码读取：我们...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/10/19</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/09/28/2019-OGeek-Final-Java-Web/" >
+            
+                <span>2019 OGeek Final &amp; Java Web</span>
+        </a>
+        <div class="abstract-content">
+            前言前段时间参加了OPPO举办的OGeek网络安全比赛线下赛，遇到一道Java Web，由于不太擅长，只是做了防御没有攻击成功，趁周末复盘一下~
+代码分析拿到题目，发现没有啥功能：顺势看了一眼源码：看到shiro后立刻可以想到shiro的反序列化漏洞：1https://paper.seebug.org/shiro-rememberme-1-2-4/
+可以看到存在漏洞的shiro版本号为：1.2.4，我们查看题目当前版本：那么显然，是存在shiro反序列化攻击的。
+shiro反序列化查阅相关资料可以知道，该漏洞的利用，涉及如下几个重要的点：
+
+rememberMe cookie
+Cooki...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/09/28</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/09/27/2019-Trend-Micro-CTF-Java-Web/" >
+            
+                <span>2019 Trend Micro CTF &amp; Java Web</span>
+        </a>
+        <div class="abstract-content">
+            前言之前写的文章都是偏重于php，本篇文章就以2019 Trend Micro CTF的一道300分的Java Web开始我的Java之路吧~
+题目分析题目给了1个war包，那么很明显是一道代码审计题目，我们使用JD-GUI打开分析一下代码，代码结构大致如下：zhao我们在Office类中看到需要接收2个参数：继续往下跟进，我们看到一个明显的spel表达式注入点：而nametag正是我们传入的参数，同时未做任何过滤，便带入了表达式中进行解析，那么这明显是一个可控利用点。但是如何进入该if条件句成为了一个问题，我们注意到：123String keyParam = request.getPa...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/09/27</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/08/15/2019网络与信息安全领域专项赛Web Writeup/" >
             
                 <span>2019网络与信息安全领域专项赛Web Writeup</span>
@@ -463,197 +650,10 @@ phpggc流程分析当我们运行：1phpggc Laravel/RCE1 system id
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/07/22/CyBRICS-CTF-Quals-2019-Web-Writeup/" >
-            
-                <span>CyBRICS CTF Quals 2019 Web Writeup</span>
-        </a>
-        <div class="abstract-content">
-            前言周末参加了LCBC主办的2019 CyBRICS CTF Quals，在金砖五国中，获得了top5的成绩，以下是web的题解。
-Bitkoff Bank点一次mine btc，获得0.0000000001 BTC，而购买auto-miner需要0.1 USD。购买auto-miner后，我们的网页会多出这样一个script，每秒帮我们点击1000次，但实际上并非1秒能获得这么多BTC：然后获取flag需要1USD，显然即便依靠auto-miner也是遥遥无期的。通过做题的经验，给了的功能一般不会白给，我们测试一下转换功能，发现不断将BTC转成USD，将USD转成BTC，就会因为汇率问...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/07/18/Summary-of-serialization-attacks-Part-3/" >
-            
-                <span>Summary of serialization attacks Part 3</span>
-        </a>
-        <div class="abstract-content">
-            前言接之前的两篇文章：12https://www.4hou.com/web/17835.htmlhttps://www.4hou.com/web/17976.html
-之前分别介绍了php序列化攻击的魔法方法、session序列化引擎以及原生类序列化问题。本篇文章则主要从真实案例来看序列化的pop链构造。
-typecho序列化这一节就简单说一下构造链，因为之前的文章分析过，可详见：1https://skysec.top/2017/12/29/cms%E5%B0%8F%E7%99%BD%E5%AE%A1%E8%AE%A1-typecho%E5%8F%8D%E5%BA%8F%E5%88%97...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/18</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/07/12/2019-0ctf-final-Web-Writeup（2）/" >
-            
-                <span>2019 0ctf final Web Writeup（2）</span>
-        </a>
-        <div class="abstract-content">
-            前言这篇文章接之前留下的坑，主要分析了java Tapestry的一个从文件读取到反序列化RCE的一个漏洞和ocaml的一个小trick。
-hotel booking system发现Tapestry版本号，同时发现该网站是Tapestry的demo，在github已开源：1https://github.com/ccordenier/tapestry5-hotel-booking
-同时题目功能极少，只有search功能：以及hint信息：1234Anyway, As the project has no usable gadget libraries,		I added C3P0 to ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/07/09/2019-WCTF-P-door/" >
-            
-                <span>2019 WCTF &amp; P-door</span>
-        </a>
-        <div class="abstract-content">
-            前言2019 WCTF看到有一道web题目开源了：https://github.com/paul-axe/ctf.git。同时看到wupco的题解：https://hackmd.io/@ZzDmROodQUynQsF9je3Q5Q/HkzsDzRxr。感觉这道题非常有趣，于是在此分析一下。
-信息搜集拿到题目后，粗略的看了一下几个功能：1.注册2.登录3.写文章同时注意到cookie：看到有序列化的值，那么猜测可能有源码泄露：1http://192.168.1.106:10003/.git/
-扫描后发现确实存在文件泄露。
-目录穿越代码量非常少，但挑战不小。我们关注到主要有3个大类：User...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/09</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/07/04/2019-神盾杯-final-Writeup（2）/" >
-            
-                <span>2019 神盾杯 final Writeup（2）</span>
-        </a>
-        <div class="abstract-content">
-            前言接之前的分析文章，本篇文章将2019 神盾杯线下赛后续两道web题也解析一下。
-web3预置后门扫描打开源码发现是主流cms typecho，先上工具扫一波：同时注意到版本号：根据github的开源项目回滚到当前版本：并进行diff：
-用户名RCE容易发现/admin/login.php处，$rememberName被反引号包裹，可以进行RCE。
-SSRF漏洞/var/Widget/XmlRpc.php：该漏洞应该为typecho对应版本的原生漏洞，可以搜到相关信息：那么关键点就在于过滤时，未把file协议过滤掉：/var/Typecho/Http/Client/Adapter.ph...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/04</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/07/03/2019 神盾杯 final Writeup（1）/" >
-            
-                <span>2019 神盾杯 final Writeup（1）</span>
-        </a>
-        <div class="abstract-content">
-            前言队友去参加了2019神盾杯上海市网络安全竞赛，线下有4道web题，就跟队友要来了源码进行了一波分析，由于题目较多，分为2篇撰写，本篇先写dedecms和另一个出题人手写的cms。
-web1预置简单后门查杀打开源码发现是dedecms，使用主流webshell查杀工具得到如下结果：由于静态分析具有较高的误报率，所以我先选择了diff一下：发现后门文件为include/guess.class.php，事实证明还是D盾nb~
-内置混淆后门我们先去查看文件：include/guess.class.php发现明显后门：123456789101112131415161718&lt;?php$p=...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/03</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/archives/2019/page/2/">2</a><a class="page-number" href="/archives/2019/page/3/">3</a><a class="page-number" href="/archives/2019/page/4/">4</a><a class="extend next" rel="next" href="/archives/2019/page/2/">NEXT &#62;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/archives/2019/page/2/">2</a><a class="page-number" href="/archives/2019/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2019/page/5/">5</a><a class="extend next" rel="next" href="/archives/2019/page/2/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -4180,9 +4180,115 @@ web1预置简单后门查杀打开源码发现是dedecms，使用主流webshell�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 196
+        Total : 202
         </div>
         <!-- search  -->
         
@@ -4195,6 +4301,36 @@ web1预置简单后门查杀打开源码发现是dedecms，使用主流webshell�
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/13</span><a class="archive-post-title" href= "/2019/12/13/2019-FudanCTF-Writeup/" >2019 FudanCTF Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2019/12/06/2019-SWPU-CTF-Web-Writeup/" >2019 SWPU CTF Web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2019/12/06/Paper-Summary-Prototype-pollution-attack-in-NodeJS-application/" >Paper Summary:Prototype pollution attack in NodeJS application</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href= "/2019/10/19/2019-巅峰极客-Online-WriteUp/" >2019 巅峰极客 Online WriteUp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/28</span><a class="archive-post-title" href= "/2019/09/28/2019-OGeek-Final-Java-Web/" >2019 OGeek Final & Java Web</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/27</span><a class="archive-post-title" href= "/2019/09/27/2019-Trend-Micro-CTF-Java-Web/" >2019 Trend Micro CTF & Java Web</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -4802,12 +4938,12 @@ web1预置简单后门查杀打开源码发现是dedecms，使用主流webshell�
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
         </li>
     
     
@@ -5223,27 +5359,27 @@ web1预置简单后门查杀打开源码发现是dedecms，使用主流webshell�
     
         <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
     
+        <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
+    
         <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
-    
-        <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
     
         <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
     
         <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
     
-        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
-    
         <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
     
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
+        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
     
-        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
+        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
+    
+        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
     
         <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
     
@@ -5253,9 +5389,9 @@ web1预置简单后门查杀打开源码发现是dedecms，使用主流webshell�
     
         <span class="sidebar-tag-name" data-tags="des"><span class="iconfont-archer">&#xe606;</span>des</span>
     
-        <span class="sidebar-tag-name" data-tags="cve"><span class="iconfont-archer">&#xe606;</span>cve</span>
-    
         <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
+    
+        <span class="sidebar-tag-name" data-tags="cve"><span class="iconfont-archer">&#xe606;</span>cve</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
