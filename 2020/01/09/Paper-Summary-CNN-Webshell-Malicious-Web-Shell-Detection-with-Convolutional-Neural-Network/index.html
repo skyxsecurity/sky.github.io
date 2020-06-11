@@ -266,13 +266,13 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "paper">paper</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1,490</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1,500</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -402,18 +402,18 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇paper来自ICNCC 2017，论文中指出，本篇文章是第一篇将CNN应用到恶意webshell检测上的文章。其对于webshell的检测主要集中于HTTP Requests检测。</p>
-<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>Webshell对网络服务会产生巨大的恶意作用，攻击者将Webshell上传至受害者服务器，达到持久化控制的目的。而本篇文章旨在检测恶意webshell，防止攻击者利用webshell进行二次攻击。<br>作者将检测放在HTTP Requests中，主要对用户的GET请求和POST请求进行检测分析。考虑到CNN在text分类上已经有重大突破，工具word2vec在text分类上已经有比较好的效果。<br>同时作者考虑到HTTP Requests流量和text很相似，但比较不同的是，HTTP Requests数据不同于普通的文本，它包含了许多的特殊符号，因此不能简单将word2vec迁移至HTTP Requests流量检测。</p>
-<h2 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h2><p>作者设计了如下一个CNN-webshell模型：</p>
+<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>Webshell对网络服务会产生巨大的恶意作用，攻击者将Webshell上传至受害者服务器，达到持久化控制的目的。而本篇paper旨在检测恶意webshell，防止攻击者利用webshell进行二次攻击。<br>作者将检测放在HTTP Requests中，主要对用户的GET请求和POST请求进行检测分析。考虑到CNN在文本分类上已经有重大突破，工具word2vec在text分类上已经有比较好的效果，同时HTTP Requests流量和文本内容很相似，可以尝试将文本分类上比较成熟的方法应用于webshell检测。<br>但比较不同的是，HTTP Requests内容不同于普通的文本，它包含了许多的特殊符号，因此不能简单将word2vec迁移至HTTP Requests流量检测。</p>
+<h2 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h2><p>因此可设计如下CNN-webshell模型，并从4个层面进行分析：</p>
 <ul>
 <li>数据输入层/ Input layer</li>
 <li>卷积计算层/ CONV layer</li>
 <li>ReLU激励层 / ReLU layer &amp; 池化层 / Pooling layer</li>
-<li>全连接层 / FC layer<br><img src="/images/2020-01-10-11-06-09.png" alt=""><h3 id="数据输入层-Input-layer"><a href="#数据输入层-Input-layer" class="headerlink" title="数据输入层/ Input layer"></a>数据输入层/ Input layer</h3>在HTTP Requests流量中，文本没有空格进行分割，所以想要实现在text分类上应用比较好的技术，首先需要进行词切分。<br>作者发现，例如中国菜刀的流量中，有如下特征：其对于每个参数字符串，有很多部分被<code>\&amp;</code>分割开，同时在流量中还有许多诸如：<code>( ) {  }  /  \  @</code>的符号，这些符号也可用于文本的分割。<br><img src="/images/2020-01-09-10-40-29.png" alt=""><br>例如如上中国菜刀流量，作者可以利用特殊符号将其分割成如上文本。<br>然后作者将分割后的文本进行如下操作：<br>对于给定的一个单词i，作者给其对应的一个向量：<br><img src="/images/2020-01-10-10-38-45.png" alt=""><br>其中d为向量空间的维数。那么对于一个由n个单词组成的句子，它可以表示为如下矩阵：<br><img src="/images/2020-01-10-10-39-55.png" alt=""><br>这样一来，长度为n的句子，可以转化为大小为n<em>d的矩阵。同时，每一条句子的长度都规定为n，若不足n个单词的句子的会使用零向量进行补齐。如此一来，就可以得到n</em>d的矩阵输入。<h3 id="卷积计算层-CONV-layer"><a href="#卷积计算层-CONV-layer" class="headerlink" title="卷积计算层/ CONV layer"></a>卷积计算层/ CONV layer</h3>在这一个层，需要做局部关联，每个神经元看做一个滤波器filter：<br><img src="/images/2020-01-13-10-19-44.png" alt=""><br>此处h是滑动窗口的宽度，在当前环境里就是每次h个单词。此处作者使用的是1D卷积，即使用宽度为h的滑动窗口对每行进行卷积：<br><img src="/images/2020-01-13-11-15-57.png" alt=""><br>对于矩阵：<br><img src="/images/2020-01-13-10-20-49.png" alt=""><br>我们可以得到卷积结果为：<br><img src="/images/2020-01-13-10-21-07.png" alt=""><br>其中b是偏差，f是非线性校正函数。对于整个句子，其卷积结果是一个特征向量：<br><img src="/images/2020-01-13-10-22-11.png" alt=""><br>这一层我们可以简单理解，从输入的单词矩阵中提取features。<h3 id="ReLU激励层-ReLU-layer-amp-池化层-Pooling-layer"><a href="#ReLU激励层-ReLU-layer-amp-池化层-Pooling-layer" class="headerlink" title="ReLU激励层 / ReLU layer &amp; 池化层 / Pooling layer"></a>ReLU激励层 / ReLU layer &amp; 池化层 / Pooling layer</h3>在结束了卷积后，作者需要在feature map上选出最大值<img src="/images/2020-01-13-10-34-16.png" alt="">来作为和特定滤波器W对应的特征。<br>Max pooling的思想大致如下：<br><img src="/images/2020-01-13-13-51-33.png" alt=""><br>对于每个2<em>2的窗口选出最大的数作为输出矩阵的相应元素的值，比如输入矩阵第一个2</em>2窗口中最大的数是6，那么输出矩阵的第一个元素就是6，如此类推。<br>作者利用池化层获取的结果串联起来，得到特征向量Z：<br><img src="/images/2020-01-13-10-36-05.png" alt=""><br>再交由ReLU进行激活操作：<br><img src="/images/2020-01-13-10-37-24.png" alt=""><br>激励函数一般采用ReLU(The Rectified Linear Unit/修正线性单元)，原因是其收敛快，求梯度简单，但较脆弱。<br>在这一层中，我们可以简单理解成从众多的features中选出最有影响力的features，用以压缩数据和参数的量。<br><img src="/images/2020-01-13-16-38-34.png" alt=""><h3 id="全连接层-FC-layer"><a href="#全连接层-FC-layer" class="headerlink" title="全连接层 / FC layer"></a>全连接层 / FC layer</h3>两层之间所有神经元都有权重连接，通常全连接层在卷积神经网络尾部。也就是跟传统的神经网络神经元的连接方式是一样的：<br><img src="/images/2020-01-13-13-53-43.png" alt=""><br>在本层中，作者加入了Dropout来抑制过拟合问题。dropout是指在深度学习网络的训练过程中，对于神经网络单元，按照一定的概率将其暂时从网络中丢弃。每次做完dropout，相当于从原始的网络中找到一个更瘦的网络，如下图所示：<br><img src="/images/2020-01-13-10-47-14.png" alt=""><br>经过softmax函数后，结果输出是一个概率分布: 每个元素都是非负的, 并且所有元素的总和都是1。<br>softmax log-loss函数：<br><img src="/images/2020-01-13-10-51-32.png" alt=""><br>在本层中，我们可以理解为，在提取出众多的features后，我们需要做一个整合，对其进行权重划分，最后再进行判别。<h2 id="数据实验"><a href="#数据实验" class="headerlink" title="数据实验"></a>数据实验</h2>作者收集了如下数据集：3691个webshell，3990个正常样本。<br>作者首先分析了工具word2vec的作用，word2vec生成的向量可用于度量词之间的相似性，我们从下图中可以看出，恶意操作词(webshell中常见的词)彼此非常接近，但正常的词则分散很远。<br><img src="/images/2020-01-09-10-40-14.png" alt=""><br>同时作者为了验证自己的模型的性能，其与几种经典的分类器做了对比：</li>
+<li>全连接层 / FC layer<br><img src="/images/2020-01-10-11-06-09.png" alt=""><h3 id="数据输入层-Input-layer"><a href="#数据输入层-Input-layer" class="headerlink" title="数据输入层/ Input layer"></a>数据输入层/ Input layer</h3>在HTTP Requests流量中，文本没有空格进行分割，所以想要实现在文本分类上应用比较好的技术，首先需要进行词切分。<br>paper中指出，诸如中国菜刀的流量中，有如下特征：其对于每个参数字符串，有很多部分被<code>\&amp;</code>分割开，同时在流量中还有许多诸如：<code>( ) {  }  /  \  @</code>的符号，这些符号也可用于文本的分割。<br><img src="/images/2020-01-09-10-40-29.png" alt=""><br>例如如上中国菜刀流量，可以利用特殊符号将其分割成如上文本。然后将分割后的文本进行如下操作：<br>对于给定的一个单词i，给其对应的一个向量：<br><img src="/images/2020-01-10-10-38-45.png" alt=""><br>其中d为向量空间的维数。那么对于一个由n个单词组成的句子，它可以表示为如下矩阵：<br><img src="/images/2020-01-10-10-39-55.png" alt=""><br>这样一来，长度为n的句子，可以转化为大小为n<em>d的矩阵。同时，每一条句子的长度都规定为n，若不足n个单词的句子的会使用零向量进行补齐。如此一来，就可以得到n</em>d的矩阵输入。<h3 id="卷积计算层-CONV-layer"><a href="#卷积计算层-CONV-layer" class="headerlink" title="卷积计算层/ CONV layer"></a>卷积计算层/ CONV layer</h3>在这一个层，需要做局部关联，每个神经元看做一个滤波器filter：<br><img src="/images/2020-01-13-10-19-44.png" alt=""><br>此处h是滑动窗口的宽度，在当前环境里就是每次h个单词。此处使用的是1D卷积，即使用宽度为h的滑动窗口对每行进行卷积：<br><img src="/images/2020-01-13-11-15-57.png" alt=""><br>对于矩阵：<br><img src="/images/2020-01-13-10-20-49.png" alt=""><br>我们可以得到卷积结果为：<br><img src="/images/2020-01-13-10-21-07.png" alt=""><br>其中b是偏差，f是非线性校正函数。对于整个句子，其卷积结果是一个特征向量：<br><img src="/images/2020-01-13-10-22-11.png" alt=""><br>这一层我们可以简单理解，从输入的单词矩阵中提取features。<h3 id="ReLU激励层-ReLU-layer-amp-池化层-Pooling-layer"><a href="#ReLU激励层-ReLU-layer-amp-池化层-Pooling-layer" class="headerlink" title="ReLU激励层 / ReLU layer &amp; 池化层 / Pooling layer"></a>ReLU激励层 / ReLU layer &amp; 池化层 / Pooling layer</h3>在结束了卷积后，需要在feature map上选出最大值<img src="/images/2020-01-13-10-34-16.png" alt="">来作为和特定滤波器W对应的特征。<br>Max pooling的思想大致如下：<br><img src="/images/2020-01-13-13-51-33.png" alt=""><br>对于每个2<em>2的窗口选出最大的数作为输出矩阵的相应元素的值，比如输入矩阵第一个2</em>2窗口中最大的数是6，那么输出矩阵的第一个元素就是6，如此类推。<br>那么利用池化层获取的结果串联起来，得到特征向量Z：<br><img src="/images/2020-01-13-10-36-05.png" alt=""><br>再交由ReLU进行激活操作：<br><img src="/images/2020-01-13-10-37-24.png" alt=""><br>激励函数一般采用ReLU(The Rectified Linear Unit/修正线性单元)，原因是其收敛快，求梯度简单，但较脆弱。<br>在这一层中，我们可以简单理解成从众多的features中选出最有影响力的features，用以压缩数据和参数的量。<br><img src="/images/2020-01-13-16-38-34.png" alt=""><h3 id="全连接层-FC-layer"><a href="#全连接层-FC-layer" class="headerlink" title="全连接层 / FC layer"></a>全连接层 / FC layer</h3>两层之间所有神经元都有权重连接，通常全连接层在卷积神经网络尾部。也就是跟传统的神经网络神经元的连接方式是一样的：<br><img src="/images/2020-01-13-13-53-43.png" alt=""><br>在本层中，加入了Dropout来抑制过拟合问题。dropout是指在深度学习网络的训练过程中，对于神经网络单元，按照一定的概率将其暂时从网络中丢弃。每次做完dropout，相当于从原始的网络中找到一个更瘦的网络，如下图所示：<br><img src="/images/2020-01-13-10-47-14.png" alt=""><br>经过softmax函数后，结果输出是一个概率分布: 每个元素都是非负的, 并且所有元素的总和都是1。<br>softmax log-loss函数：<br><img src="/images/2020-01-13-10-51-32.png" alt=""><br>在本层中，我们可以理解为，在提取出众多的features后，我们需要做一个整合，对其进行权重划分，最后再进行判别。<h2 id="数据实验"><a href="#数据实验" class="headerlink" title="数据实验"></a>数据实验</h2>在实验部分，收集了如下数据集：3691个webshell，3990个正常样本。<br>实验中首先分析了工具word2vec的作用，word2vec生成的向量可用于度量词之间的相似性，我们从下图中可以看出，恶意操作词(webshell中常见的词)彼此非常接近，但正常的词则分散很远。<br><img src="/images/2020-01-09-10-40-14.png" alt=""><br>同时为了验证模型的性能，其与几种经典的分类器做了对比：</li>
 <li>Naive Bayes (NB)</li>
 <li>k-Near Neighbour (kNN)</li>
 <li>Decision Tree (DT)</li>
 <li>Support Vector Machine (SVM)</li>
-<li>traditional Neural Network (NN) using the TF-IDF feature representation<br>所有的分类器都使用相同的feature。<br><img src="/images/2020-01-13-11-05-05.png" alt=""><br>同时考虑到向量空间的维度对word2vec的能力有显著的影响，作者测试不同维数来评价其性能：<br><img src="/images/2020-01-13-11-10-35.png" alt=""><br>在维度200时，word2vec实现了最佳的性能。但是由于训练时间随维度增加而增加，还要考虑到效率问题。<br>所以最后作者证明了模型训练过程可以快速收敛：<br><img src="/images/2020-01-13-11-27-56.png" alt=""><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2>本篇paper基于word2vec和CNN提出了一种新型检测WebShell的技术，同时和其他经典分类器相比，取得了最好的性能。</li>
+<li>traditional Neural Network (NN) using the TF-IDF feature representation<br>所有的分类器都使用相同的feature。<br><img src="/images/2020-01-13-11-05-05.png" alt=""><br>同时考虑到向量空间的维度有显著的影响，可测试不同维数来评价其性能：<br><img src="/images/2020-01-13-11-10-35.png" alt=""><br>在维度200时，实现了最佳的性能。但是由于训练时间随维度增加而增加，还要考虑到效率问题。<br>同时实验也证明了模型训练过程可以快速收敛：<br><img src="/images/2020-01-13-11-27-56.png" alt=""><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2>本篇paper基于word2vec和CNN提出了一种新型检测WebShell的技术，同时和其他经典分类器相比，取得了最好的性能。</li>
 </ul>
 
     </article>
@@ -428,16 +428,16 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2020/01/13/Paper-Summary-Detecting-Webshell-Based-on-Random-Forest-with-FastText/" title= "Paper Summary & Detecting Webshell Based on Random Forest with FastText">
-                    <div class="nextTitle">Paper Summary & Detecting Webshell Based on Random Forest with FastText</div>
+                <a href= "/2020/01/09/Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications/" title= "Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications">
+                    <div class="nextTitle">Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2019/12/13/2019-FudanCTF-Writeup/" title= "2019 FudanCTF Writeup">
-                    <div class="prevTitle">2019 FudanCTF Writeup</div>
+                <a href= "/2020/01/09/Peeves & Physical Event Verification in Smart Homes/" title= "Paper Summary & Peeves ：Physical Event Verification in Smart Homes">
+                    <div class="prevTitle">Paper Summary & Peeves ：Physical Event Verification in Smart Homes</div>
                 </a>
             
         </li>
@@ -4253,9 +4253,93 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 207
+        Total : 213
         </div>
         <!-- search  -->
         
@@ -4276,6 +4360,11 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Web缓存利用分析(一)/" >Web缓存利用分析(一)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2020/01/13/Paper-Summary-Evaluating-CNN-and-LSTM-for-Web-Attack-Detection/" >Paper Summary & Evaluating CNN and LSTM for Web Attack Detection</a>
         </li>
     
@@ -4286,7 +4375,32 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/2020 CodeGate Web Writeup/" >2020 CodeGate Web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/2020 De1CTF & Animal Crossing/" >2020 De1CTF & Animal Crossing</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing/" >Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications/" >Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper-Summary-CNN-Webshell-Malicious-Web-Shell-Detection-with-Convolutional-Neural-Network/" >Paper Summary & CNN-Webshell & Malicious Web Shell Detection with Convolutional Neural Network</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Peeves & Physical Event Verification in Smart Homes/" >Paper Summary & Peeves ：Physical Event Verification in Smart Homes</a>
         </li>
     
     
@@ -4455,12 +4569,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-4-phpmagic/" >2018 Code Breaking(4) & phpmagic</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-3-phplimit/" >2018 Code Breaking(3) & phplimit</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-3-phplimit/" >2018 Code Breaking(3) & phplimit</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-4-phpmagic/" >2018 Code Breaking(4) & phpmagic</a>
         </li>
     
     
@@ -5356,31 +5470,33 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+    
         <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
     
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
         <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
     
-        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
-    
         <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
+    
+        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
     
         <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
     
-        <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
-    
         <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
+    
+        <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
     
-        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
-    
         <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
     
@@ -5429,9 +5545,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="web"><span class="iconfont-archer">&#xe60a;</span>web</span>
     
-        <span class="sidebar-category-name" data-categories="Flow-Analysis"><span class="iconfont-archer">&#xe60a;</span>Flow-Analysis</span>
-    
         <span class="sidebar-category-name" data-categories="writeup"><span class="iconfont-archer">&#xe60a;</span>writeup</span>
+    
+        <span class="sidebar-category-name" data-categories="Flow-Analysis"><span class="iconfont-archer">&#xe60a;</span>Flow-Analysis</span>
     
         <span class="sidebar-category-name" data-categories="crypto"><span class="iconfont-archer">&#xe60a;</span>crypto</span>
     
@@ -5440,6 +5556,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
     
         <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
+    
+        <span class="sidebar-category-name" data-categories="paper"><span class="iconfont-archer">&#xe60a;</span>paper</span>
     
         <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
     

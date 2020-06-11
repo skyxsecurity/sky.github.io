@@ -266,13 +266,13 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "paper">paper</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1,312</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1,308</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -402,17 +402,17 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇paper来自ICMLC 2018，与前一篇文章《CNN-Webshell &amp; Malicious Web Shell Detection with Convolutional Neural Network》出自同一学校，应该是之前工作的改进版。其对于webshell的检测也是主要集中于HTTP Requests检测。</p>
-<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>与2017年的paper《CNN-Webshell: Malicious Web Shell Detection with Convolutional Neural Network》不同，作者在本篇文章中改良了之前对HTTP Requests流量文本分割，变为input的方式。<br>根据之前的工作，通过符号<code>\&amp;</code>进行分割后，每一个单词可以变为一个one-hot向量，对于一个长为L的序列，其可以得到一组one-hot向量：<br><img src="/images/2020-01-13-19-17-32.png" alt=""><br>但作者认为这样是非常浪费时间的，不仅其是高维向量，并且忽略了单词与单词之间的关系。受到word embedding的启发，作者将one-hot向量转换成一个低维连续向量：<br><img src="/images/2020-01-13-19-20-44.png" alt=""><br>其可以通过one-hot向量左乘权重矩阵来实现：<br><img src="/images/2020-01-13-19-21-35.png" alt=""><br>其中：<br><img src="/images/2020-01-13-19-21-44.png" alt="">，|V|是词汇表中唯一单词的数目。<br>对于矩阵M，其可以通过随机分配或学习具有一个隐藏层的网络来获得。在此作者通过输入一个词（一个one-hot向量）并输出下一个词（一个one-hot向量）来训练网络，以学习两个共现词之间的关系。同时经过实验，这样得到的矩阵M比随机分配具有更好的性能。<br>经过这样转换，之前的one-hot向量序列转换为如下矩阵：<br><img src="/images/2020-01-13-19-25-07.png" alt=""></p>
+<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>与2017年的paper《CNN-Webshell: Malicious Web Shell Detection with Convolutional Neural Network》不同，作者在本篇文章中改良了之前对HTTP Requests流量文本分割的方式。<br>根据之前的工作，通过符号<code>\&amp;</code>进行分割后，每一个单词可以变为一个one-hot向量，对于一个长为L的序列，其可以得到一组one-hot向量：<br><img src="/images/2020-01-13-19-17-32.png" alt=""><br>但这样是非常浪费时间的，不仅因为其是高维向量，并且忽略了单词与单词之间的关系。受到word embedding的启发，作者将one-hot向量转换成一个低维连续向量：<br><img src="/images/2020-01-13-19-20-44.png" alt=""><br>其可以通过one-hot向量左乘权重矩阵来实现：<br><img src="/images/2020-01-13-19-21-35.png" alt=""><br>其中：<br><img src="/images/2020-01-13-19-21-44.png" alt="">，|V|是词汇表中唯一单词的数目。<br>对于矩阵M，其可以通过随机分配或学习具有一个隐藏层的网络来获得。在此作者通过输入一个词（一个one-hot向量）并输出下一个词（一个one-hot向量）来训练网络，以学习两个共现词之间的关系。同时经过实验，这样得到的矩阵M比随机分配具有更好的性能。<br>经过这样转换，之前的one-hot向量序列转换为如下矩阵：<br><img src="/images/2020-01-13-19-25-07.png" alt=""></p>
 <h2 id="研究方法"><a href="#研究方法" class="headerlink" title="研究方法"></a>研究方法</h2><p>众所周知，CNN可以通过卷积层和池化层，提取较为重要的features，而LSTM可以存储长期依赖关系，那么很自然的想到，可以将二者融合，用来处理webshell检测的问题。<br><img src="/images/2020-01-13-16-49-26.png" alt=""><img src="/images/2020-01-13-16-49-41.png" alt=""><br>首先通过CNN的卷积，我们可以得到如下结果：<br><img src="/images/2020-01-13-19-10-26.png" alt=""><br>其中b是偏差，φ是非线性校正函数，n个滤波器为：<br><img src="/images/2020-01-13-19-10-42.png" alt=""><br>但是由于卷积层和池化层产生的结果是一个向量，并不能直接和LSTM进行结合，所以为了解决这个问题，作者将全局最大池替换为局部最大池，那么在t位置时，局部最大池的结果为：<br><img src="/images/2020-01-13-16-51-06.png" alt=""><br>故此我们可以得到一组新的向量：<br><img src="/images/2020-01-13-16-52-18.png" alt=""><br>此时：<br><img src="/images/2020-01-13-16-52-26.png" alt=""><br><img src="/images/2020-01-13-16-52-32.png" alt=""><br>那么此时，即可将gt序列输入LSTM，完成组合分类：<br><img src="/images/2020-01-13-16-44-43.png" alt=""><br>对于CNN+LSTM的算法，输入单词维数为40，每个序列固定长度为56个单词。对于CNN，其具有100个宽度为5的滤波器和一个大小为5的本地最大池层，然后使用rate为0.9的dropout层来抑制过拟合。并将输出输入LSTM，而对于LSTM，其隐藏变量维数为100，其最后的输出同样连接到rate为0.9的dropout层。</p>
-<h2 id="数据实验"><a href="#数据实验" class="headerlink" title="数据实验"></a>数据实验</h2><p>作者使用数据集为CSIC2010。在实验中，测试集中有超过36000个正常请求和25000个异常请求。异常请求包含大量的web攻击，如SQL注入、信息收集、文件泄漏、CRLF注入、XSS和参数篡改等。<br>同样的，本篇文章也将自己的算法与传统方法进行了比较，比较对象如下：</p>
+<h2 id="数据实验"><a href="#数据实验" class="headerlink" title="数据实验"></a>数据实验</h2><p>实验中使用的数据集为CSIC2010。在实验中，测试集中有超过36000个正常请求和25000个异常请求。异常请求包含大量的web攻击，如SQL注入、信息收集、文件泄漏、CRLF注入、XSS和参数篡改等。<br>同样的，实验中也将提出的算法与传统方法进行了比较，比较对象如下：</p>
 <ul>
 <li>Multinomial Naive Bayes (NB)</li>
 <li>Linear Support Vector Machine (Linear SVM)</li>
 <li>Neural Network (NN)</li>
 <li>k-Nearest Neighbour (kNN)</li>
-<li>Decision Tree (DT)<br>结果如下：<br><img src="/images/2020-01-13-16-42-34.png" alt=""><br>可以发现CNN+LSTM的算法取得了最好的性能。<br>同时由于卷积网络中滤波器的数目和滑动窗口的宽度是关键参数，因此作者测试了不同数量的滤波器和滤波器宽度。结果如下：<br><img src="/images/2020-01-13-16-22-30.png" alt=""><br>可以发现，对于滤波器数量，性能在100个时表现最好，而对于滤波器宽度，性能在5时达到高值，而后缓慢增长。<br>同时考虑到LSTM的关键参数是隐藏变量的维数，所以作者对于不同维数也做了相应的测试，结果如下：<br><img src="/images/2020-01-13-16-25-04.png" alt=""><br>可以发现维数在20~300这个区间内，LSTM的性能一直在提升，但是考虑到时间消耗会随维数上升而上升，所以需要权衡二者之前的关系，达到最佳性价比。<br>同时作者测试了不同局部最大池大小对CNN+LSTM的性能影响，结果如下：<br><img src="/images/2020-01-13-16-28-56.png" alt=""><br>可以发现，当本地最大池大小设置为3时，会取得最佳性能。<br>除此之外，针对于小规模的CSIC2010数据集，过拟合问题也是关注的一个点，作者使用dropout方法进行抑制拟合，并对其进行评估，结果如下：<br><img src="/images/2020-01-13-16-30-07.png" alt=""><br>可以发现LSTM对于dropout rate有较大的变化，而CNN和CNN+LSTM方法更加具有鲁棒性，其在rate大于0.3后，性能缓慢增长。<br>最后，对于前文所提到的矩阵M的获取也是一个关键因素，作者使用了随机分配和机器学习两种方式进行比对测试，结果如下：<br><img src="/images/2020-01-13-16-32-40.png" alt=""><br>不难发现经过机器学习后的模型拥有更好的性能。</li>
+<li>Decision Tree (DT)<br>结果如下：<br><img src="/images/2020-01-13-16-42-34.png" alt=""><br>可以发现CNN+LSTM的算法取得了最好的性能。同时由于卷积网络中滤波器的数目和滑动窗口的宽度是关键参数，因此实验测试了不同数量的滤波器和滤波器宽度。结果如下：<br><img src="/images/2020-01-13-16-22-30.png" alt=""><br>可以发现，对于滤波器数量，性能在100个时表现最好，而对于滤波器宽度，性能在5时达到高值，而后缓慢增长。<br>同时考虑到LSTM的关键参数是隐藏变量的维数，所以实验对于不同维数也做了相应的测试，结果如下：<br><img src="/images/2020-01-13-16-25-04.png" alt=""><br>可以发现维数在20~300这个区间内，LSTM的性能一直在提升，但是考虑到时间消耗会随维数上升而上升，所以需要权衡二者之前的关系，达到最佳性价比。<br>并且实验还测试了不同局部最大池大小对CNN+LSTM的性能影响，结果如下：<br><img src="/images/2020-01-13-16-28-56.png" alt=""><br>可以发现，当本地最大池大小设置为3时，会取得最佳性能。<br>除此之外，针对于小规模的CSIC2010数据集，过拟合问题也是关注的一个点，实验使用dropout方法进行抑制拟合，并对其进行评估，结果如下：<br><img src="/images/2020-01-13-16-30-07.png" alt=""><br>可以发现LSTM对于dropout rate有较大的变化，而CNN和CNN+LSTM方法更加具有鲁棒性，其在rate大于0.3后，性能缓慢增长。<br>最后，对于前文所提到的矩阵M的获取也是一个关键因素，实验使用了随机分配和机器学习两种方式进行比对测试，结果如下：<br><img src="/images/2020-01-13-16-32-40.png" alt=""><br>不难发现经过机器学习后的模型拥有更好的性能。</li>
 </ul>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>本篇文章将CNN和LSTM进行了结合，用于webshell检测，获得了不错的效果，同时分析了不同的因素对模型性能的影响，对后人工作具有一定的指导意义。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>该工作将CNN和LSTM进行了结合，用于webshell检测，获得了不错的效果，同时分析了不同的因素对模型性能的影响，对后人工作具有一定的指导意义。</p>
 
     </article>
     <!-- reward  -->
@@ -426,8 +426,8 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2020/01/14/Paper-Summary-Webshell-Detection-Based-on-Random-Forest–Gradient-Boosting-Decision-Tree-Algorithm/" title= "Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm">
-                    <div class="nextTitle">Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm</div>
+                <a href= "/2020/01/14/Web缓存利用分析(一)/" title= "Web缓存利用分析(一)">
+                    <div class="nextTitle">Web缓存利用分析(一)</div>
                 </a>
             
         </li>
@@ -4251,9 +4251,93 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 207
+        Total : 213
         </div>
         <!-- search  -->
         
@@ -4274,6 +4358,11 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Web缓存利用分析(一)/" >Web缓存利用分析(一)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2020/01/13/Paper-Summary-Evaluating-CNN-and-LSTM-for-Web-Attack-Detection/" >Paper Summary & Evaluating CNN and LSTM for Web Attack Detection</a>
         </li>
     
@@ -4284,7 +4373,32 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/2020 CodeGate Web Writeup/" >2020 CodeGate Web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/2020 De1CTF & Animal Crossing/" >2020 De1CTF & Animal Crossing</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing/" >Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications/" >Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper-Summary-CNN-Webshell-Malicious-Web-Shell-Detection-with-Convolutional-Neural-Network/" >Paper Summary & CNN-Webshell & Malicious Web Shell Detection with Convolutional Neural Network</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Peeves & Physical Event Verification in Smart Homes/" >Paper Summary & Peeves ：Physical Event Verification in Smart Homes</a>
         </li>
     
     
@@ -4453,12 +4567,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-4-phpmagic/" >2018 Code Breaking(4) & phpmagic</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-3-phplimit/" >2018 Code Breaking(3) & phplimit</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-3-phplimit/" >2018 Code Breaking(3) & phplimit</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-4-phpmagic/" >2018 Code Breaking(4) & phpmagic</a>
         </li>
     
     
@@ -5354,31 +5468,33 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
+        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+    
         <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
     
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
         <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
     
-        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
-    
         <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
+    
+        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
     
         <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
     
-        <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
-    
         <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
+    
+        <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
         <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
     
-        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
-    
         <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
+    
+        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
         <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
     
@@ -5427,9 +5543,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="web"><span class="iconfont-archer">&#xe60a;</span>web</span>
     
-        <span class="sidebar-category-name" data-categories="Flow-Analysis"><span class="iconfont-archer">&#xe60a;</span>Flow-Analysis</span>
-    
         <span class="sidebar-category-name" data-categories="writeup"><span class="iconfont-archer">&#xe60a;</span>writeup</span>
+    
+        <span class="sidebar-category-name" data-categories="Flow-Analysis"><span class="iconfont-archer">&#xe60a;</span>Flow-Analysis</span>
     
         <span class="sidebar-category-name" data-categories="crypto"><span class="iconfont-archer">&#xe60a;</span>crypto</span>
     
@@ -5438,6 +5554,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
     
         <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
+    
+        <span class="sidebar-category-name" data-categories="paper"><span class="iconfont-archer">&#xe60a;</span>paper</span>
     
         <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
     
