@@ -346,6 +346,135 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2017/07/23/SQLi-LABS(Stacked)(Less-39 ~ Less-53)/" >
+            
+                <span>SQLi-LABS(Stacked)(Less-39 ~ Less-53)</span>
+        </a>
+        <div class="abstract-content">
+            前言查了一下stacked query是堆叠注入原理：在SQL中，分号（;）是用来表示一条sql语句的结束。试想一下我们在分号（;）结束一个sql语句后继续构造下一条语句，会不会一起执行？因此这个想法也就造就了堆叠注入。而union injection（联合注入）也是将两条语句合并在一起，两者之间有什么区别么？区别就在于union 或者union all执行的语句类型是有限的，可以用来执行查询语句，而堆叠注入可以执行的是任意的语句。例如以下这个例子：用户输入：1; DELETE FROM products服务器端生成的sql语句为：（因未对输入的参数进行过滤）Select * from ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/23</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/07/22/PHP函数黑魔法小总结/" >
+            
+                <span>PHP函数黑魔法小总结</span>
+        </a>
+        <div class="abstract-content">
+            前言暑假在家闲得慌，做了一些题，每次都能遇到一个php黑魔法的小trick题……今天就来总结一下其实所谓黑魔法，无非就是php弱比较，一些函数遇到数组返回null这些问题……
+弱比较若字符串以数字开头，则取开头数字作为转换结果，若无则输出0
+md5(),sha1()md5()是不能处理数组的，md5(数组)会返回null，两个null相等绕过sha1()也是同理
+转换php会自动进行转换，比如16进制，科学计数法等，有时也用这点绕过
+intval()intval()转换的时候，会将从字符串的开始进行转换知道遇到一个非数字的字符。即使出现无法转换的字符串，intval()不会报错而是返回0...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "php">php</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/07/20/SQLi-LABS(Adv)(Less-23 ~ Less-38)/" >
+            
+                <span>SQLi-LABS(Adv)(Less-23 ~ Less-38)</span>
+        </a>
+        <div class="abstract-content">
+            Less-23上来得到信息：Please input the ID as parameter with numeric value随便注了一下：http://localhost/sql/Less-23/?id=1&#39; or &#39;a&#39;=&#39;a发现引号闭合成功于是直接上updatexml()payload:123http://localhost/sql/Less-23/?id=1&apos; and updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.TAB...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2017/07/19/sql注入的一些技巧原理/" >
+            
+                <span>sql注入的一些技巧原理</span>
+        </a>
+        <div class="abstract-content">
+            前言本篇文章大致上是基于mysql数据库……提及的问题和技巧都比较基础，望大佬勿喷……
+基础函数user() ：当前使用者的用户名database()：当前数据库名version()：数据库版本datadir：读取数据库的绝对路径@@vasedir：mysql安装路径@@version_compile_os：操作系统concat()：连接一个或者多个字符串group_concat()：连接一个组的所有字符串，并以逗号分隔每一条数据length()：返回字符串的长度substr()：截取字符串mid()：截取字符串ascii()：返回字符的ascii码sleep()： 函数延迟代码执行若干...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/19</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "sql">sql</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2017/07/18/SQLi-LABS(Basic)(Less-1 ~ Less-22)/" >
             
                 <span>SQLi-LABS(Basic)(Less-1 ~ Less-22)</span>
@@ -4193,9 +4322,101 @@ Sqli-labs安装:需要安装以下环境（1）apache+mysql+php（2）Tomcat+mys
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 203
+        Total : 207
         </div>
         <!-- search  -->
         
@@ -4205,6 +4426,35 @@ Sqli-labs安装:需要安装以下环境（1）apache+mysql+php（2）Tomcat+mys
     
     
     
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Paper-Summary-Webshell-Detection-Based-on-Random-Forest–Gradient-Boosting-Decision-Tree-Algorithm/" >Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2020/01/13/Paper-Summary-Evaluating-CNN-and-LSTM-for-Web-Attack-Detection/" >Paper Summary & Evaluating CNN and LSTM for Web Attack Detection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2020/01/13/Paper-Summary-Detecting-Webshell-Based-on-Random-Forest-with-FastText/" >Paper Summary & Detecting Webshell Based on Random Forest with FastText</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper-Summary-CNN-Webshell-Malicious-Web-Shell-Detection-with-Convolutional-Neural-Network/" >Paper Summary & CNN-Webshell & Malicious Web Shell Detection with Convolutional Neural Network</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
@@ -4361,12 +4611,12 @@ Sqli-labs安装:需要安装以下环境（1）apache+mysql+php（2）Tomcat+mys
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-4-phpmagic/" >2018 Code Breaking(4) & phpmagic</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-4-phpmagic/" >2018 Code Breaking(4) & phpmagic</a>
         </li>
     
     
@@ -4850,12 +5100,12 @@ Sqli-labs安装:需要安装以下环境（1）apache+mysql+php（2）Tomcat+mys
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/最近复现的几个CVE题目/" >最近复现的几个CVE题目</a>
+            <span class="archive-post-date">01/27</span><a class="archive-post-title" href= "/2018/01/27/有点意思的3道web题/" >有点意思的3道web题</a>
         </li>
     
     
@@ -5219,12 +5469,12 @@ Sqli-labs安装:需要安装以下环境（1）apache+mysql+php（2）Tomcat+mys
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -5271,19 +5521,19 @@ Sqli-labs安装:需要安装以下环境（1）apache+mysql+php（2）Tomcat+mys
     
         <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
     
-        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
-    
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
         <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
+    
+        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
         <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
     
         <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
     
-        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
-    
         <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
+    
+        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
     
         <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
     
@@ -5291,9 +5541,9 @@ Sqli-labs安装:需要安装以下环境（1）apache+mysql+php（2）Tomcat+mys
     
         <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
     
-        <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
-    
         <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
+    
+        <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
     
         <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
     
@@ -5301,9 +5551,9 @@ Sqli-labs安装:需要安装以下环境（1）apache+mysql+php（2）Tomcat+mys
     
         <span class="sidebar-tag-name" data-tags="des"><span class="iconfont-archer">&#xe606;</span>des</span>
     
-        <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
-    
         <span class="sidebar-tag-name" data-tags="cve"><span class="iconfont-archer">&#xe606;</span>cve</span>
+    
+        <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
