@@ -405,24 +405,24 @@ height:50vh;
 <h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>Cache是一种经典的用空间换时间的做法，其应用场景非常广泛，而本篇文章的聚焦点仅在于Web领域上，对于DNS等基础设施的相关cache攻击，也不在此讨论。<br>那么我们可以大致将Web Cache攻击分为2类：</p>
 <ul>
 <li>User Browser Cache</li>
-<li>Web Server Cache<br>对于浏览器，我们知道在请求网站时，会遇到js，css，图片等等的加载，如果每次请求都加载一次，那么可能会消耗许多时间，因此浏览器中可引入Cache机制，用以缓存这些静态资源，以加快访问速度。<br>对于服务器，可能某个网站页面每天要被数以万计的人访问，那么如果每次都处理一次同样的请求，则会消耗大量服务器的资源，因此服务器缓存也显得尤为重要，其中CDN就是Web Server Cache的一个典例：<br><img src="./_image/2020-05-07/2020-05-07-15-40-45.png" alt=""><br>例如访问链接:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/index.html</span><br></pre></td></tr></table></figure>
+<li>Web Server Cache<br>对于浏览器，我们知道在请求网站时，会遇到js，css，图片等等的加载，如果每次请求都加载一次，那么可能会消耗许多时间，因此浏览器中可引入Cache机制，用以缓存这些静态资源，以加快访问速度。<br>对于服务器，可能某个网站页面每天要被数以万计的人访问，那么如果每次都处理一次同样的请求，则会消耗大量服务器的资源，因此服务器缓存也显得尤为重要，其中CDN就是Web Server Cache的一个典例：<br><img src="/images/2020-05-07-15-40-45.png" alt=""><br>例如访问链接:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/index.html</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<p>在第一个人访问后，其页面response将会被CDN缓存，下一个请求者则会直接从CDN获取response，以此减轻服务器处理请求的压力，同时达到了防止Dos攻击的目的。如下图示例：<br><img src="./_image/2020-05-07/2020-05-07-15-41-57.png" alt=""><br>CDN不仅能起到防止Dos的作用，还能加快我们的请求速度，例如我们访问服务器，请求首先会被CDN处理，计算出response给我们的最优ip地址。举一个简单的例子，就好比原来只有北京一个车站卖票，南京的想要买票就要千里迢迢前往北京，而如今有了CDN就好比在南京也有卖票点，如此一来，省时省力，不仅减轻了北京卖票点的压力，也方便了顾客。<br>但凡是皆有利有弊，如果Cache被攻击者利用，也可以产生一些严重的攻击，本篇文章中，我们则聚焦于以下3种攻击：</p>
+<p>在第一个人访问后，其页面response将会被CDN缓存，下一个请求者则会直接从CDN获取response，以此减轻服务器处理请求的压力，同时达到了防止Dos攻击的目的。如下图示例：<br><img src="/images/2020-05-07-15-41-57.png" alt=""><br>CDN不仅能起到防止Dos的作用，还能加快我们的请求速度，例如我们访问服务器，请求首先会被CDN处理，计算出response给我们的最优ip地址。举一个简单的例子，就好比原来只有北京一个车站卖票，南京的想要买票就要千里迢迢前往北京，而如今有了CDN就好比在南京也有卖票点，如此一来，省时省力，不仅减轻了北京卖票点的压力，也方便了顾客。<br>但凡是皆有利有弊，如果Cache被攻击者利用，也可以产生一些严重的攻击，本篇文章中，我们则聚焦于以下3种攻击：</p>
 <ul>
 <li>User Browser Cache Poisoning</li>
 <li>Server Cache Poisoning</li>
 <li>Web Cache Deception</li>
 </ul>
-<h2 id="User-Browser-Cache-Poisoning"><a href="#User-Browser-Cache-Poisoning" class="headerlink" title="User Browser Cache Poisoning"></a>User Browser Cache Poisoning</h2><p>对于浏览器缓存投毒，那么很好理解，其应该是影响浏览器缓存的文件，将其污染以达到攻击目的。那么可能被污染的文件有哪些呢？我们之前提过，浏览器一般缓存静态资源，那么攻击者的攻击目标也就是诸如JS、CSS的静态资源了。<br>这种攻击会产生什么样的危害呢？<br><img src="./_image/2020-05-07/2020-05-07-15-46-49.png" alt=""><br><img src="./_image/2020-05-07/2020-05-07-15-46-59.png" alt=""><br>我们可以看到，一旦我们的浏览器缓存资源被污染，当我们请求网站时，应用了污染的静态资源，则会产生xss一类的攻击。但这种攻击持久性会随缓存时间的到期而终止，又或者用户勤清缓存而解除。<br>但这样一种攻击是如何实现的呢？我们可以看下图：<br><img src="./_image/2020-05-07/2020-05-07-15-48-41.png" alt=""><br>当攻击者和受害者处于同一WiFi下，攻击者可以利用一些攻击手段，让自己成为受害者的代理，而当受害者请求目标网站资源时，攻击者可在中间修改。当目标网站response需要缓存的资源时，攻击者可将其替换为自己篡改的同名文件，以达到污染浏览器缓存的目的。<br>但考虑到缓存存在时效性，如果目标网站认为缓存过期，则污染缓存就会失效，因此如何最大化污染缓存时间成为一个新的问题，但这里我们可以采用如下做法：<br><img src="./_image/2020-05-07/2020-05-07-15-51-13.png" alt=""><br>我们可以首先对一些知名网站进行分析，查看他们缓存时间最长的文件，以决定我们污染文件的文件名。那么如何知道缓存时间呢？我们可利用Http Header的如下属性来查看：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control : max-age=1000</span><br></pre></td></tr></table></figure></p>
+<h2 id="User-Browser-Cache-Poisoning"><a href="#User-Browser-Cache-Poisoning" class="headerlink" title="User Browser Cache Poisoning"></a>User Browser Cache Poisoning</h2><p>对于浏览器缓存投毒，那么很好理解，其应该是影响浏览器缓存的文件，将其污染以达到攻击目的。那么可能被污染的文件有哪些呢？我们之前提过，浏览器一般缓存静态资源，那么攻击者的攻击目标也就是诸如JS、CSS的静态资源了。<br>这种攻击会产生什么样的危害呢？<br><img src="/images/2020-05-07-15-46-49.png" alt=""><br><img src="/images/2020-05-07-15-46-59.png" alt=""><br>我们可以看到，一旦我们的浏览器缓存资源被污染，当我们请求网站时，应用了污染的静态资源，则会产生xss一类的攻击。但这种攻击持久性会随缓存时间的到期而终止，又或者用户勤清缓存而解除。<br>但这样一种攻击是如何实现的呢？我们可以看下图：<br><img src="/images/2020-05-07-15-48-41.png" alt=""><br>当攻击者和受害者处于同一WiFi下，攻击者可以利用一些攻击手段，让自己成为受害者的代理，而当受害者请求目标网站资源时，攻击者可在中间修改。当目标网站response需要缓存的资源时，攻击者可将其替换为自己篡改的同名文件，以达到污染浏览器缓存的目的。<br>但考虑到缓存存在时效性，如果目标网站认为缓存过期，则污染缓存就会失效，因此如何最大化污染缓存时间成为一个新的问题，但这里我们可以采用如下做法：<br><img src="/images/2020-05-07-15-51-13.png" alt=""><br>我们可以首先对一些知名网站进行分析，查看他们缓存时间最长的文件，以决定我们污染文件的文件名。那么如何知道缓存时间呢？我们可利用Http Header的如下属性来查看：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control : max-age=1000</span><br></pre></td></tr></table></figure></p>
 <p>如此一来即可水到渠成，进行用户浏览器污染。工具如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/EtherDream/mitm-http-cache-poisoning.git</span><br></pre></td></tr></table></figure></p>
-<h2 id="Server-Cache-Poisoning"><a href="#Server-Cache-Poisoning" class="headerlink" title="Server Cache Poisoning"></a>Server Cache Poisoning</h2><p>在介绍完用户浏览器投毒后，我们再来看一下服务器缓存投毒。之前我们有说过，服务器会缓存某个链接的第一个访问者的response内容，那么如果第一个人是攻击者，就很有可能让CDN错误的缓存污染内容，达成攻击：<br><img src="./_image/2020-05-07/2020-05-07-15-55-04.png" alt=""><br>但是服务器是如何判断2个请求者请求的是不是同一个页面呢？这里就要引入Cache Key的概念：<br><img src="./_image/2020-05-07/2020-05-07-15-55-41.png" alt=""><br>如上请求，服务器会判断橙色字部分，看其是否相同，若相同则对应同一个cache，但我们不难发现蓝色字体部分，此时2个访问者的response理应不同，因为他们对应的不同语言，但因为缓存机制的问题，导致第2个请求者看到了错误语言的页面。<br>再同理，我们看如下请求：<br><img src="./_image/2020-05-07/2020-05-07-15-57-27.png" alt=""><br>我们发现response页面中会拼接X-Forwarded-Host，那么假设我们是第一个请求者，此response将会被缓存，那么当下一个请求者再次访问如下链接：<br><img src="./_image/2020-05-07/2020-05-07-15-57-36.png" alt=""><br>很显然其将受到xss的攻击。<br>但是此类攻击有一个前提，即我们需要是第一个请求某个页面的人，那么如何做到这一点呢？<br><img src="./_image/2020-05-07/2020-05-07-15-59-50.png" alt=""><br>我们可以利用response里的Age和max-age，Age代表当前response的时间，而max-age代表该页面缓存何时会过期，以此我们即可计算出投毒时机。<br>那么如何保护网站免收此类攻击呢？这就要和我们之前提到的cache key有关，我们看如下请求：<br><img src="./_image/2020-05-07/2020-05-07-16-01-38.png" alt=""><br>如果我们利用Vary指定Cache Key为User-Agent，那么不仅需要2个访问者请求域名和url相同，同时需要2人拥有同样的User-Agent，才会命中同一块cache。</p>
-<h2 id="Web-Cache-Deception"><a href="#Web-Cache-Deception" class="headerlink" title="Web Cache Deception"></a>Web Cache Deception</h2><p>在说完Web Server缓存投毒后，我们再来看一下Web缓存欺骗。相较于前两种攻击，该攻击更为普遍，利用也相对容易。不乏其在CTF中出现的频频身影。<br><img src="./_image/2020-05-07/2020-05-07-16-04-13.png" alt=""><br>我们看如上案例，我们可以诱导管理员访问链接：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.2.122.1/secret.php/test.css</span><br></pre></td></tr></table></figure></p>
+<h2 id="Server-Cache-Poisoning"><a href="#Server-Cache-Poisoning" class="headerlink" title="Server Cache Poisoning"></a>Server Cache Poisoning</h2><p>在介绍完用户浏览器投毒后，我们再来看一下服务器缓存投毒。之前我们有说过，服务器会缓存某个链接的第一个访问者的response内容，那么如果第一个人是攻击者，就很有可能让CDN错误的缓存污染内容，达成攻击：<br><img src="/images/2020-05-07-15-55-04.png" alt=""><br>但是服务器是如何判断2个请求者请求的是不是同一个页面呢？这里就要引入Cache Key的概念：<br><img src="/images/2020-05-07-15-55-41.png" alt=""><br>如上请求，服务器会判断橙色字部分，看其是否相同，若相同则对应同一个cache，但我们不难发现蓝色字体部分，此时2个访问者的response理应不同，因为他们对应的不同语言，但因为缓存机制的问题，导致第2个请求者看到了错误语言的页面。<br>再同理，我们看如下请求：<br><img src="/images/2020-05-07-15-57-27.png" alt=""><br>我们发现response页面中会拼接X-Forwarded-Host，那么假设我们是第一个请求者，此response将会被缓存，那么当下一个请求者再次访问如下链接：<br><img src="/images/2020-05-07-15-57-36.png" alt=""><br>很显然其将受到xss的攻击。<br>但是此类攻击有一个前提，即我们需要是第一个请求某个页面的人，那么如何做到这一点呢？<br><img src="/images/2020-05-07-15-59-50.png" alt=""><br>我们可以利用response里的Age和max-age，Age代表当前response的时间，而max-age代表该页面缓存何时会过期，以此我们即可计算出投毒时机。<br>那么如何保护网站免收此类攻击呢？这就要和我们之前提到的cache key有关，我们看如下请求：<br><img src="/images/2020-05-07-16-01-38.png" alt=""><br>如果我们利用Vary指定Cache Key为User-Agent，那么不仅需要2个访问者请求域名和url相同，同时需要2人拥有同样的User-Agent，才会命中同一块cache。</p>
+<h2 id="Web-Cache-Deception"><a href="#Web-Cache-Deception" class="headerlink" title="Web Cache Deception"></a>Web Cache Deception</h2><p>在说完Web Server缓存投毒后，我们再来看一下Web缓存欺骗。相较于前两种攻击，该攻击更为普遍，利用也相对容易。不乏其在CTF中出现的频频身影。<br><img src="/images/2020-05-07-16-04-13.png" alt=""><br>我们看如上案例，我们可以诱导管理员访问链接：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.2.122.1/secret.php/test.css</span><br></pre></td></tr></table></figure></p>
 <p>而服务器在处理该链接时，由于test.css不存在，其会向前解析，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.2.122.1/secret.php</span><br></pre></td></tr></table></figure></p>
 <p>此时response页面即为secret.php的页面内容，而CDN对此不知，其认为当请求链接为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.2.122.1/secret.php/test.css</span><br></pre></td></tr></table></figure></p>
 <p>response应为管理员的secret.php页面内容。<br>而后攻击者再次请求：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.2.122.1/secret.php/test.css</span><br></pre></td></tr></table></figure></p>
-<p>CDN将作出响应，将管理员的secret.php页面内容返回，造成信息泄露。<br>那么此种攻击在2019 CyBRICS CTF Quals或2019 XCTF Final都有出现，我们以2019 CyBRICS CTF Quals的一道题为例：<br><img src="./_image/2020-05-07/2020-05-07-16-10-07.jpg" alt=""><br>题目预设了request功能，同时注意到其http header：<br><img src="./_image/2020-05-07/2020-05-07-16-10-43.jpg" alt=""><br>同时结合题目提示：cache is vulnerabilities，那么可以判断此处应该为Web缓存欺骗的情况。<br>我们需要利用request功能，让其去请求flag页面，再利用缓存信息将内容带出。<br>因此我们首先可以读取主页内容，这里构造：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://95.179.190.31/index.php/skyiscool.js</span><br></pre></td></tr></table></figure></p>
-<p>此时缓存将会将此url记录，对应内容则为index.php的内容。<br>然后我们再次访问该链接，即可获取index.php内容：<br><img src="./_image/2020-05-07/2020-05-07-16-12-38.jpg" alt=""><br>那么再让题目携带csrf-token去请求flag即可：<br><img src="./_image/2020-05-07/2020-05-07-16-13-04.jpg" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://95.179.190.31/index.php/skyiscool.js?csrf-token=b04d2bc2f3d3654947ba82d59a2b367630743d3447dbc0af46182359f166c4bd%26flag=1</span><br></pre></td></tr></table></figure></p>
+<p>CDN将作出响应，将管理员的secret.php页面内容返回，造成信息泄露。<br>那么此种攻击在2019 CyBRICS CTF Quals或2019 XCTF Final都有出现，我们以2019 CyBRICS CTF Quals的一道题为例：<br><img src="/images/2020-05-07-16-10-07.jpg" alt=""><br>题目预设了request功能，同时注意到其http header：<br><img src="/images/2020-05-07-16-10-43.jpg" alt=""><br>同时结合题目提示：cache is vulnerabilities，那么可以判断此处应该为Web缓存欺骗的情况。<br>我们需要利用request功能，让其去请求flag页面，再利用缓存信息将内容带出。<br>因此我们首先可以读取主页内容，这里构造：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://95.179.190.31/index.php/skyiscool.js</span><br></pre></td></tr></table></figure></p>
+<p>此时缓存将会将此url记录，对应内容则为index.php的内容。<br>然后我们再次访问该链接，即可获取index.php内容：<br><img src="/images/2020-05-07-16-12-38.jpg" alt=""><br>那么再让题目携带csrf-token去请求flag即可：<br><img src="/images/2020-05-07-16-13-04.jpg" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://95.179.190.31/index.php/skyiscool.js?csrf-token=b04d2bc2f3d3654947ba82d59a2b367630743d3447dbc0af46182359f166c4bd%26flag=1</span><br></pre></td></tr></table></figure></p>
 <p>此时再请求缓存页面，即可获取flag:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cybrics&#123;Bu9s_C4N_83_uN1N73Nd3D!&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="http://drops.xmd5.com/static/drops/tips-9947.html" target="_blank" rel="noopener">http://drops.xmd5.com/static/drops/tips-9947.html</a><br><a href="https://skysec.top/2019/07/22/CyBRICS-CTF-Quals-2019-Web-Writeup/#Fixaref">https://skysec.top/2019/07/22/CyBRICS-CTF-Quals-2019-Web-Writeup/#Fixaref</a><br><a href="https://www.blackhat.com/docs/us-17/wednesday/us-17-Gil-Web-Cache-Deception-Attack-wp.pdf" target="_blank" rel="noopener">https://www.blackhat.com/docs/us-17/wednesday/us-17-Gil-Web-Cache-Deception-Attack-wp.pdf</a><br><a href="https://i.blackhat.com/us-18/Thu-August-9/us-18-Kettle-Practical-Web-Cache-Poisoning-Redefining-Unexploitable.pdf" target="_blank" rel="noopener">https://i.blackhat.com/us-18/Thu-August-9/us-18-Kettle-Practical-Web-Cache-Poisoning-Redefining-Unexploitable.pdf</a></p>
 
@@ -4342,9 +4342,99 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 214
+        Total : 216
         </div>
         <!-- search  -->
         
@@ -4357,6 +4447,16 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/12</span><a class="archive-post-title" href= "/2020/06/12/Web缓存利用分析(三)/" >Web缓存利用分析(三)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/12</span><a class="archive-post-title" href= "/2020/06/12/Web缓存利用分析(二)/" >Web缓存利用分析(二)</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -5432,12 +5532,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -5470,19 +5570,19 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
+        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
+    
         <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
         <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
-    
-        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
     
         <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
-        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
-    
         <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+    
+        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
     
         <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     

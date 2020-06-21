@@ -404,19 +404,19 @@ height:50vh;
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本次解读文章为2019 CCS的一篇paper《Peeves ：Physical Event Verification in Smart Homes》，主要介绍了一种防御IOT智能家具中事件欺骗的方式。同时作者提出了一种寻找最佳攻击点的方式。</p>
 <h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><h3 id="Event-Sensors"><a href="#Event-Sensors" class="headerlink" title="Event Sensors"></a>Event Sensors</h3><p>事件传感器可以用来提示某件物理事件的发生，例如：门关上了，灯打开了等等。</p>
 <h3 id="Physical-Sensors"><a href="#Physical-Sensors" class="headerlink" title="Physical Sensors"></a>Physical Sensors</h3><p>物理传感器主要用来测量当前物理数据，例如光线传感器，气压传感器等等。</p>
-<h3 id="Event-Spoofing"><a href="#Event-Spoofing" class="headerlink" title="Event Spoofing"></a>Event Spoofing</h3><p>在IOT设备中，存在一种攻击，称为Event Spoofing，其以攻击手段欺骗事件传感器，让其显示未发生的事情已发生，以达成进一步攻击的目的。<br>例如，在智能家居的设置中，必须要打开窗户，才会拉开窗帘。但是打开窗户必须要手动进行，攻击者不可能去打开受害者家中的窗户，那么怎么拉开窗帘呢？这里就需要进行Event Spoofing攻击，欺骗总控设备窗户已处于打开模式，然后让其打开窗帘。<br>那么这样的危害可想而知，作者在本篇paper中也提及了一些相关的攻击可能造成的危害性：<br><img src="./_image/2019-12-26/2019-12-26-16-28-52.png" alt=""><br>例如窗帘如果可以被攻击者控制，那么可以尝试进行光线的物理攻击，又或者可以进行间谍窥探活动。同理，如果窗户可以随意被打开，那么可能造成入室偷窃等问题。</p>
-<h2 id="研究问题"><a href="#研究问题" class="headerlink" title="研究问题"></a>研究问题</h2><p>在本篇文章中，作者的核心问题不在于如何打开窗户或者如何拉开窗帘，而在于如何防止事件欺骗。<br>简单来说，即打开窗户的前置条件是家门被打开，主人已回家。那么攻击者想要打开窗户的前一件事，就是欺骗总控，家门已经被打开，主人已经回来。<br>那么作者这里要做的，就是判断事件传感器的判断是否为真，即家房到底有没有打开过。以此来防御Event Spoofing攻击。<br>那么作者如何进行验证呢？这里作者巧妙的应用了物理传感器，作者发现，不同事件的发生，都会对周围的物理数据产生不同的影响，例如图中：<br><img src="./_image/2019-12-26/2019-12-26-16-28-38.png" alt=""><br>当门打开和关闭后，都会对物理数据中：加速计、气压传感器、光线传感器产生比较明显的波动，那么即可利用物理数据来验证事件传感器判断的事件是否真实发生。</p>
+<h3 id="Event-Spoofing"><a href="#Event-Spoofing" class="headerlink" title="Event Spoofing"></a>Event Spoofing</h3><p>在IOT设备中，存在一种攻击，称为Event Spoofing，其以攻击手段欺骗事件传感器，让其显示未发生的事情已发生，以达成进一步攻击的目的。<br>例如，在智能家居的设置中，必须要打开窗户，才会拉开窗帘。但是打开窗户必须要手动进行，攻击者不可能去打开受害者家中的窗户，那么怎么拉开窗帘呢？这里就需要进行Event Spoofing攻击，欺骗总控设备窗户已处于打开模式，然后让其打开窗帘。<br>那么这样的危害可想而知，作者在本篇paper中也提及了一些相关的攻击可能造成的危害性：<br><img src="/images/2019-12-26-16-28-52.png" alt=""><br>例如窗帘如果可以被攻击者控制，那么可以尝试进行光线的物理攻击，又或者可以进行间谍窥探活动。同理，如果窗户可以随意被打开，那么可能造成入室偷窃等问题。</p>
+<h2 id="研究问题"><a href="#研究问题" class="headerlink" title="研究问题"></a>研究问题</h2><p>在本篇文章中，作者的核心问题不在于如何打开窗户或者如何拉开窗帘，而在于如何防止事件欺骗。<br>简单来说，即打开窗户的前置条件是家门被打开，主人已回家。那么攻击者想要打开窗户的前一件事，就是欺骗总控，家门已经被打开，主人已经回来。<br>那么作者这里要做的，就是判断事件传感器的判断是否为真，即家房到底有没有打开过。以此来防御Event Spoofing攻击。<br>那么作者如何进行验证呢？这里作者巧妙的应用了物理传感器，作者发现，不同事件的发生，都会对周围的物理数据产生不同的影响，例如图中：<br><img src="/images/2019-12-26-16-28-38.png" alt=""><br>当门打开和关闭后，都会对物理数据中：加速计、气压传感器、光线传感器产生比较明显的波动，那么即可利用物理数据来验证事件传感器判断的事件是否真实发生。</p>
 <h2 id="攻击模型"><a href="#攻击模型" class="headerlink" title="攻击模型"></a>攻击模型</h2><p>在这里作者提出了两种攻击模型：</p>
 <ul>
 <li>Zero-effort攻击者 / 传感器故障</li>
 <li>机会主义攻击者<br>对于Zero-effort攻击者，作者将其认为普通的攻击者，其对即将进行欺骗的设备没有做任何先前工作，也不能获取要攻击的设备的任何信息。其可以在任意时刻发起攻击。<br>而对于机会主义攻击者，作者认为其已经对攻击做足了准备，其可以获得即将进行欺骗的设备所有数据，同时其会精心的策划这次攻击。对于机会主义攻击者，其攻击的时机有2点要素：</li>
 <li>最少的等待最佳攻击机会的时间</li>
-<li>最大的攻击欺骗成功率<br>对于机会主义攻击者，其会尽量一击致命，而并非不断的进行攻击，暴露自己。<br>但无论哪种攻击者都不能修改物理传感器的数据。同时作者假定所有的测试使用的事件传感器都是不可信的，可以被欺骗的。<h2 id="环境设置"><a href="#环境设置" class="headerlink" title="环境设置"></a>环境设置</h2>为了验证想法，作者先提出如下定义：<br>事件源：事件的发生是由事件源产生，例如门开和门关，其事件源即门。<br>状态：每一个事件源都有多种状态，一般为两种，例如门有开和关两种状态。<br>然后作者布置了如下环境：<br><img src="./_image/2019-12-26/2019-12-26-16-29-07.png" alt=""><br>首先在房间中设置若干智能家居，并将其按照事件源分为若干组：<br><img src="./_image/2019-12-26/2019-12-26-16-29-23.png" alt=""><br>例如第8组中，门和门铃为一组；第9组中电脑、显示器等为一组。<br>那么为了验证事件发生对环境中的物理数据的影响，作者在环境中布置了13个树莓派，其信息设置如下：<br><img src="./_image/2019-12-26/2019-12-26-16-29-38.png" alt=""><br><img src="./_image/2019-12-26/2019-12-26-16-36-19.png" alt=""><br>不同的树莓派可能用以收集不同的信息，例如Pi #1，其会收集信息：A/G、P/T、L、S、R，这里的字母缩写定义如下：<br><img src="./_image/2019-12-26/2019-12-26-16-29-50.png" alt=""><br>那么可以得知，其搜集了温度、光线等等物理数据。而后作者进行了为期2周的数据收集。<h2 id="研究方法"><a href="#研究方法" class="headerlink" title="研究方法"></a>研究方法</h2>在收集2周的数据后，作者开始构建自己的工具，并进行数据测试，首先作者将数据分为3个部分：development、training、testing。<br>在development数据中，作者主要用来计算事件传感器的窗口期和feature的选择：<br>事件传感器的窗口期即一件事发生后，我们需要利用其前后一段事件的物理数据，那么这个窗口期设置的大小就至关重要，太大则不具备参考意义，同时不能体现出事件对物理数据的影响；太小则可能不能完全涵盖其影响的物理数据。<br>于是作者利用网格，标记出了不同窗口期的RMI值，其定义事件发生时间为t，发生之前的时间为t-，发生之后的时间为t+，那么对于某个事件的窗口期为：(t+t-,t+t+)。<br>比如对于门的关闭，光线的窗口期网格图如下：<br><img src="./_image/2019-12-26/2019-12-26-16-30-18.png" alt=""><br>我们不难发现，对于门关闭对光线传感器的影响，窗口期设为(-3,1)比较合适，其值达到最高的0.559。<br>而对于门关闭，加速计的窗口期网格图如下：<br><img src="./_image/2019-12-26/2019-12-26-16-30-34.png" alt=""><br>从图中也能看出，对于门关闭对加速计的影响，窗口期设为(0,4)比较合适，其值达到最高的0.523。<br>那么采用这样的方式，即可找出对于不同事件对应feature最佳的窗口期。<br>那么如何查找对于某一事件的发生，变化最大的feature呢？这里作者利用了RMI，对development数据进行评估计算。<br>其中RMI的公式如下：<br><img src="./_image/2019-12-26/2019-12-26-16-30-44.png" alt=""><br>H(A)为A的熵，H(A|B)为A在B情况下的熵。<br>而后作者对自己设置的所有智能家居涉及的feature进行熵计算：<br><img src="./_image/2019-12-26/2019-12-26-16-30-53.png" alt=""><br>我们不难发现，像是咖啡机的使用，会对电功率，加速计产生比较大的影响；而对于门的关闭，则加速计，光线等等都会有比较大的波动。<br>因此通过development数据集，作者可以确认，对于某一事件的发生，受到其影响最大的features有哪些，同时对应的feature应该设置多大的窗口期比较合适。<br>那么既然选定好窗口期和features，接下来就是使用机器学习，来使工具Peeves可以根据环境数据的变化，判断是否发生了事件。<br>那么对于机器学习，作者使用SVM作为分类器，并由于样本量比较大，同时有大量的features，作者使用了linear kernel。<br>同时作者还提出了机会主义者攻击的方法：</li>
+<li>最大的攻击欺骗成功率<br>对于机会主义攻击者，其会尽量一击致命，而并非不断的进行攻击，暴露自己。<br>但无论哪种攻击者都不能修改物理传感器的数据。同时作者假定所有的测试使用的事件传感器都是不可信的，可以被欺骗的。<h2 id="环境设置"><a href="#环境设置" class="headerlink" title="环境设置"></a>环境设置</h2>为了验证想法，作者先提出如下定义：<br>事件源：事件的发生是由事件源产生，例如门开和门关，其事件源即门。<br>状态：每一个事件源都有多种状态，一般为两种，例如门有开和关两种状态。<br>然后作者布置了如下环境：<br><img src="/images/2019-12-26-16-29-07.png" alt=""><br>首先在房间中设置若干智能家居，并将其按照事件源分为若干组：<br><img src="/images/2019-12-26-16-29-23.png" alt=""><br>例如第8组中，门和门铃为一组；第9组中电脑、显示器等为一组。<br>那么为了验证事件发生对环境中的物理数据的影响，作者在环境中布置了13个树莓派，其信息设置如下：<br><img src="/images/2019-12-26-16-29-38.png" alt=""><br><img src="/images/2019-12-26-16-36-19.png" alt=""><br>不同的树莓派可能用以收集不同的信息，例如Pi #1，其会收集信息：A/G、P/T、L、S、R，这里的字母缩写定义如下：<br><img src="/images/2019-12-26-16-29-50.png" alt=""><br>那么可以得知，其搜集了温度、光线等等物理数据。而后作者进行了为期2周的数据收集。<h2 id="研究方法"><a href="#研究方法" class="headerlink" title="研究方法"></a>研究方法</h2>在收集2周的数据后，作者开始构建自己的工具，并进行数据测试，首先作者将数据分为3个部分：development、training、testing。<br>在development数据中，作者主要用来计算事件传感器的窗口期和feature的选择：<br>事件传感器的窗口期即一件事发生后，我们需要利用其前后一段事件的物理数据，那么这个窗口期设置的大小就至关重要，太大则不具备参考意义，同时不能体现出事件对物理数据的影响；太小则可能不能完全涵盖其影响的物理数据。<br>于是作者利用网格，标记出了不同窗口期的RMI值，其定义事件发生时间为t，发生之前的时间为t-，发生之后的时间为t+，那么对于某个事件的窗口期为：(t+t-,t+t+)。<br>比如对于门的关闭，光线的窗口期网格图如下：<br><img src="/images/2019-12-26-16-30-18.png" alt=""><br>我们不难发现，对于门关闭对光线传感器的影响，窗口期设为(-3,1)比较合适，其值达到最高的0.559。<br>而对于门关闭，加速计的窗口期网格图如下：<br><img src="/images/2019-12-26-16-30-34.png" alt=""><br>从图中也能看出，对于门关闭对加速计的影响，窗口期设为(0,4)比较合适，其值达到最高的0.523。<br>那么采用这样的方式，即可找出对于不同事件对应feature最佳的窗口期。<br>那么如何查找对于某一事件的发生，变化最大的feature呢？这里作者利用了RMI，对development数据进行评估计算。<br>其中RMI的公式如下：<br><img src="/images/2019-12-26-16-30-44.png" alt=""><br>H(A)为A的熵，H(A|B)为A在B情况下的熵。<br>而后作者对自己设置的所有智能家居涉及的feature进行熵计算：<br><img src="/images/2019-12-26-16-30-53.png" alt=""><br>我们不难发现，像是咖啡机的使用，会对电功率，加速计产生比较大的影响；而对于门的关闭，则加速计，光线等等都会有比较大的波动。<br>因此通过development数据集，作者可以确认，对于某一事件的发生，受到其影响最大的features有哪些，同时对应的feature应该设置多大的窗口期比较合适。<br>那么既然选定好窗口期和features，接下来就是使用机器学习，来使工具Peeves可以根据环境数据的变化，判断是否发生了事件。<br>那么对于机器学习，作者使用SVM作为分类器，并由于样本量比较大，同时有大量的features，作者使用了linear kernel。<br>同时作者还提出了机会主义者攻击的方法：</li>
 </ul>
 <ol>
 <li>攻击者也仿照之前的方式，利用development数据集计算最佳的窗口期</li>
 <li>然后选择相似的规则，去挑选分类器和features</li>
-<li>攻击者在没有事件发生时，一直进行分类，寻找最佳攻击点<h2 id="研究结果"><a href="#研究结果" class="headerlink" title="研究结果"></a>研究结果</h2>作者使用了48个物理传感器验证了22个事件，在22个项目中有9个达到接近完美的能效比0.00%，其中15个事件在检测率超过99.9%时达到0%的误报率。<br><img src="./_image/2019-12-26/2019-12-26-16-37-00.png" alt=""><br>同时对于攻击者来说，Zero-effort攻击者的成功概率只有1%，而机会主义攻击者的成功率如下：<br><img src="./_image/2019-12-26/2019-12-26-16-46-13.png" alt=""><br>其中tto为等待攻击时间，SR为攻击成功率。同时作者发现冰箱、门窗事件的欺骗机会最容易找到。<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2>作者本篇paper的主要贡献为设计了一款利用物理数据验证事件是否真实发生的工具：Peeves，同时提出了一种强大的攻击模型，并验证了Peeves在这种攻击模型下依旧可以抵御攻击者的攻击。</li>
+<li>攻击者在没有事件发生时，一直进行分类，寻找最佳攻击点<h2 id="研究结果"><a href="#研究结果" class="headerlink" title="研究结果"></a>研究结果</h2>作者使用了48个物理传感器验证了22个事件，在22个项目中有9个达到接近完美的能效比0.00%，其中15个事件在检测率超过99.9%时达到0%的误报率。<br><img src="/images/2019-12-26-16-37-00.png" alt=""><br>同时对于攻击者来说，Zero-effort攻击者的成功概率只有1%，而机会主义攻击者的成功率如下：<br><img src="/images/2019-12-26-16-46-13.png" alt=""><br>其中tto为等待攻击时间，SR为攻击成功率。同时作者发现冰箱、门窗事件的欺骗机会最容易找到。<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2>作者本篇paper的主要贡献为设计了一款利用物理数据验证事件是否真实发生的工具：Peeves，同时提出了一种强大的攻击模型，并验证了Peeves在这种攻击模型下依旧可以抵御攻击者的攻击。</li>
 </ol>
 
     </article>
@@ -4335,9 +4335,99 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 214
+        Total : 216
         </div>
         <!-- search  -->
         
@@ -4350,6 +4440,16 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/12</span><a class="archive-post-title" href= "/2020/06/12/Web缓存利用分析(三)/" >Web缓存利用分析(三)</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/12</span><a class="archive-post-title" href= "/2020/06/12/Web缓存利用分析(二)/" >Web缓存利用分析(二)</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -5425,12 +5525,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/Bugku-writeup/" >Bugku-writeup</a>
+            <span class="archive-post-date">06/16</span><a class="archive-post-title" href= "/2017/06/16/CBC字节翻转攻击/" >CBC字节翻转攻击</a>
         </li>
     
     
@@ -5463,19 +5563,19 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
+        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
+    
         <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
     
         <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
-    
-        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
     
         <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
     
         <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
     
-        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
-    
         <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
+    
+        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
     
         <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
     
