@@ -359,6 +359,264 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/04/08/Some-Trick-About-LFI/" >
+            
+                <span>Some Trick About LFI</span>
+        </a>
+        <div class="abstract-content">
+            前言最近遇到一些文件包含的题目，在本篇文章记录两个trick~
+环境背景复现环境还是很容易搭建的：例题1（php7）index.php12345678&lt;?php$a = @$_GET['file'];echo 'include $_GET[\'file\']';if (strpos($a,'flag')!==false) &#123;	die('nonono');&#125;include $a;?&gt;
+dir.php123456&lt;?php$a = @$_GET['dir'];if(!$a)&#123;$a = '/tmp';&#125;var_dump(scandir(...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/29/Pwnhub-Always-be-with-U-Writeup/" >
+            
+                <span>2019 Pwnhub-Always be with U-Writeup</span>
+        </a>
+        <div class="abstract-content">
+            前言正逢pwnhub有比赛，于是做了一下题目，以下是题解
+Happy Tree Friends题目概述拿到题目12345678910111213141516171819#!/usr/bin/env python3import zlibfrom Crypto.Cipher import AESimport sysimport osfrom hashlib import md5flag = open("flag.txt").read()while True:    data = input()    data = "message: %s, flag: %s" % (data, flag) ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/29</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "crypto">crypto</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/29/PHP-Parametric-Function-RCE/" >
+            
+                <span>PHP Parametric Function RCE</span>
+        </a>
+        <div class="abstract-content">
+            前言最近做了一些php 无参数函数执行的题目，这里做一个总结，以便以后bypass各种正则过滤。大致思路如下：1.利用超全局变量进行bypass，进行RCE2.进行任意文件读取
+什么是无参数函数RCE传统意义上，如果我们有1eval($_GET['code']);
+即代表我们拥有了一句话木马，可以进行getshell，例如但是如果有如下限制123if(';' === preg_replace('/[^\W]+\((?R)?\)/', '', $_GET['code'])) &#123;        eval($_GET['code']);&#125;
+我们会发现我们使用参数则无法通过正...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/29</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/25/2019-0CTF-Web-WriteUp/" >
+            
+                <span>2019 0CTF Web WriteUp</span>
+        </a>
+        <div class="abstract-content">
+            前言二刷0ctf，去年被虐的很惨，今年还是一样 :(
+Ghost Pepperjolokia/list发现karaf，动态路由安装webconsole……直接结束
+Wallbreaker Easy拿到题目12345Imagick is a awesome library for hackers to break `disable_functions`.So I installed php-imagick in the server, opened a `backdoor` for you.Let&apos;s try to execute `/readflag` to get the f...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/25</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/10/2018-Code-Breaking-4-phpmagic/" >
+            
+                <span>2018 Code Breaking(4) &amp; phpmagic</span>
+        </a>
+        <div class="abstract-content">
+            前言前些日子有些忙，没有继续做，现在跟进，先看下之前做的几道题：2018 Code Breaking(1) &amp; function ：关于\的trick2018 Code Breaking(2) &amp; pcrewaf：关于正则回溯的bypass手段2018 Code Breaking(3) &amp; phplimit：php无参数函数执行RCE今天研究一下phpmagic这道题
+题目概述拿到题目1http://106.14.114.127:24004/?read-source=1
+发现源代码如下1234567891011121314151617181920212223242...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/10</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/10/2018-Code-Breaking-3-phplimit/" >
+            
+                <span>2018 Code Breaking(3) &amp; phplimit</span>
+        </a>
+        <div class="abstract-content">
+            前言本次是phplimit这道题，本篇文章提供了3种解法，即如何利用无参数函数进行RCE/任意文件读取
+题目概述题目源码如下：123456&lt;?phpif(';' === preg_replace('/[^\W]+\((?R)?\)/', '', $_GET['code'])) &#123;        eval($_GET['code']);&#125; else &#123;    show_source(__FILE__);&#125;
+代码非常清晰，首先1preg_replace('/[^\W]+\((?R)?\)/', '', $_GET['code'])
+代码会将$_G...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/10</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >
+            
+                <span>2018 Code Breaking(2) &amp; pcrewaf</span>
+        </a>
+        <div class="abstract-content">
+            题目概述题目源码如下123456789101112131415161718&lt;?phpfunction is_php($data)&#123;    return preg_match('/&lt;\?.*[(`;?&gt;].*/is', $data);&#125;if(empty($_FILES)) &#123;    die(show_source(__FILE__));&#125;$user_dir = 'data/' . md5($_SERVER['REMOTE_ADDR']);$data = file_get_contents($_FILES['file']['tmp_n...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/10</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/10/2018-Code-Breaking-1-function/" >
+            
+                <span>2018 Code Breaking(1) &amp; function</span>
+        </a>
+        <div class="abstract-content">
+            前言Code Breaking是ph牛搭建的代码审计挑战赛：https://code-breaking.com刚发布的时候一直忙于开展研究生的生活和一些琐事，没法认真研究和学习，最近闲下来了，于是打算填下这个坑~题目ph牛均已开源至github：https://github.com/phith0n/code-breaking（必须star XD）
+题目概述123456789&lt;?php$action = $_GET['action'] ?? '';$arg = $_GET['arg'] ?? '';if(preg_match('/^[a-z0-9_]*$/isD', $action)...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/10</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/02/25/从一道题看imap_open() RCE/" >
             
                 <span>从一道题看imap_open() rce</span>
@@ -418,264 +676,10 @@ Webbabycms打开题目，发现是Yii2框架写的平台，首先进行信息搜
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/02/21/浅谈RSA公钥非素数问题/" >
-            
-                <span>浅谈RSA公钥非素数问题</span>
-        </a>
-        <div class="abstract-content">
-            前言最近刷题，遇到2道公钥不互素的题目，这里简单记录一下解决方案，主要还是灵活掌握公式推导。
-例题1题干如下123456e = 12p = 58380004430307803367806996460773123603790305789098384488952056206615768274527q = 81859526975720060649380098193671612801200505029127076539457680155487669622867ciphertext = 20608721532369020246787892668194449176965915672645869081...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/21</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "crypto">crypto</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/02/19/2019-Hgame-Week4-Crypto&Sign_in_SemiHard/" >
-            
-                <span>2019 Hgame Week4 Crypto&amp;Sign_in_SemiHard</span>
-        </a>
-        <div class="abstract-content">
-            前言为了防止整天沉迷switch智力降低，于是刷了一道有意思的Crypto题，其中涉及大概2个考点：Hash Length Extension Attacks &amp; CBC Byte Flipping Attack，虽然利用有些麻烦，但是锻炼脑力，从CTF开始~
-程序分析先看主程序代码123456789101112131415161718192021222324252627282930313233if __name__ == '__main__':    unprintable = b""    for i in range(256):        if chr(i) not i...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/19</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "crypto">crypto</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/02/18/2019-Hgame-Web-Week4/" >
-            
-                <span>2019 Hgame Web Week4 Writeup</span>
-        </a>
-        <div class="abstract-content">
-            happyPython信息搜集发现是flask，随手测试一下1http://118.25.18.223:3001/&#123;&#123;1+1&#125;&#125;
-发现可能存在SSTI，打了几发payload，发现都是500，想到测试一下过滤1http://118.25.18.223:3001/%7B%7B&apos;aa&apos;.upper()%7D%7D
-发现将()替换成了空
-SECRET_KEY`获取那么执行命令应该变得非常困难，但是发现网站有登录，注册功能随手解了一下session猜测可能要伪造user_id=1那么不能执行命令，我们可以进行信息读取，获得SECRET_...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/18</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/02/10/2019-Hgame-Web&Crypto-Week3/" >
-            
-                <span>2019 Hgame Web&amp;Crypto Week3 Writeup</span>
-        </a>
-        <div class="abstract-content">
-            Web神奇的MD5发现文件泄露1http://118.25.89.91:8080/question/.login.php.swp
-得到源码123456789101112131415161718192021222324&lt;?phpsession_start();error_reporting(0);    if (@$_POST['username'] and @$_POST['password'] and @$_POST['code'])    &#123;        $username = (string)$_POST['username'];        $password...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/10</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/02/05/2019-Hgame-Web-Week2/" >
-            
-                <span>2019 Hgame Web Week2 Writeup</span>
-        </a>
-        <div class="abstract-content">
-            easy_php发现信息1http://118.24.25.25:9999/easyphp/robots.txt
-得到1img/index.php
-访问得到12345678&lt;?php    error_reporting(0);    $img = $_GET['img'];    if(!isset($img))        $img = '1';    $img = str_replace('../', '', $img);    include_once($img.".php");    highlight_file(__FILE__);
-发现可以文件读取，用..././绕...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/02/05</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/01/25/2019-Hgame-Web-Week1/" >
-            
-                <span>2019 Hgame Web Week1</span>
-        </a>
-        <div class="abstract-content">
-            谁吃了我的flag按照题目描述以及题目信息容易想到是.index.html.swp下载后得到flag1hgame&#123;3eek_diScl0Sure_fRom+wEbsit@&#125; 
-换头大作战按照要求改http header即可得到flag1hgame&#123;hTTp_HeaDeR_iS_Ez&#125;
-very easy web拿到源码1234567891011121314&lt;?phperror_reporting(0);include("flag.php");if(strpos("vidar",$_GET['id'])!==FALSE)  die("&lt;p...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/25</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "web">web</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/01/25/2019安恒1月月赛Writeip/" >
-            
-                <span>2019 安恒杯 1月月赛 Writeup</span>
-        </a>
-        <div class="abstract-content">
-            1文章首发于安全客 https://www.anquanke.com/post/id/170341
-Webbabygo拿到题目12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061&lt;?php  @error_reporting(1); include 'flag.php';class baby &#123;       protected $skyobj;      public $aaa;    public ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/25</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "writeup">writeup</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/01/22/JavaScript侧信道时间测量/" >
-            
-                <span>JavaScript侧信道时间测量</span>
-        </a>
-        <div class="abstract-content">
-            1文章首发于安全客 https://www.anquanke.com/post/id/170268
-前言最近因为需求，需要测量JavaScript单个函数的执行时间，但由于精度问题，遇到了各种各样的问题，在此做简单记录。
-JavaScript高精度时间函数首先得明确，JavaScript单个函数执行时间应该是微秒级的，所以必须需要高精度。那么第一反应自然是查找是否有相关函数，以往的时间函数new Date().getTime()肯定是不够了，因为其精度为毫秒级，测量函数执行时间，得到的结果必然为0。这里我们查阅手册，将目光定位到performance.now()我们不妨做个测试12345...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "paper">paper</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/page/5/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/7/">NEXT &#62;</a>
+        <a class="extend prev" rel="prev" href="/page/5/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/7/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -4738,9 +4742,183 @@ JavaScript高精度时间函数首先得明确，JavaScript单个函数执行时
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 218
+        Total : 226
         </div>
         <!-- search  -->
         
@@ -4753,6 +4931,46 @@ JavaScript高精度时间函数首先得明确，JavaScript单个函数执行时
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span><a class="archive-post-title" href= "/2020/08/27/2020-首届钓鱼城杯国际网络安全创新赛Web-WriteUp/" >2020 首届钓鱼城杯国际网络安全创新赛Web WriteUp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href= "/2020/08/23/2020-第四届强网杯全国网络安全挑战赛Online-Writeup/" >2020 第四届强网杯全国网络安全挑战赛Online Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2020/08/20/2020-全国大学生信息安全竞赛Online-Web题解/" >2020 全国大学生信息安全竞赛Online Web题解</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span><a class="archive-post-title" href= "/2020/08/11/Paper-Summary-ABSynthe-Automatic-Blackbox-Side-channel-Synthesis-on-Commodity-Microarchitectures/" >Paper Summary & ABSynthe &  Automatic Blackbox Side-channel Synthesis onCommodity Microarchitectures</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/01</span><a class="archive-post-title" href= "/2020/08/01/2020-WMCTF-Online-Web-Writeup/" >2020 WMCTF Online Web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/2020/07/25/2020-Cybrics-CTF-Web-Writeup/" >2020 Cybrics CTF Web Writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/22</span><a class="archive-post-title" href= "/2020/07/22/Laravel-5-Deserialization-Chain-Summary/" >Laravel 5 Deserialization Chain Summary</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2020/07/19/Laravel-Deserialization-Chain-Summary/" >Laravel 7 Deserialization Chain Summary</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -4995,12 +5213,12 @@ JavaScript高精度时间函数首先得明确，JavaScript单个函数执行时
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-2-pcrewaf/" >2018 Code Breaking(2) & pcrewaf</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/2018-Code-Breaking-1-function/" >2018 Code Breaking(1) & function</a>
         </li>
     
     
